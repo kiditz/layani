@@ -63,10 +63,11 @@ Point Of Sales Project
    python3 entity/models.py db upgrade
    ```
 7. Setelah database terbentuk, jalankan proyek cash-oauth-api
-  ```
-  cd cash-oauth-service
-  mvn clean install
-  cd cash-oauth-api
-  mvn clean package
-  ```   
+   ```
+   cd cash-oauth-service
+   mvn clean install
+   cd cash-oauth-api
+   mvn clean package
+   java -jar target/cash-oauth-api.jar
+   ```   
 
