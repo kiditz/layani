@@ -1,0 +1,9 @@
+{
+  "name":"cash-api",
+  "interval":"20s",
+  "httpcheck": "http://0.0.0.0:5002/health",
+  "namespace": "config/cash-api,dev/data",
+  "log_file":"cash-api.log",
+  "address": "172.17.0.1",
+  "port":5002
+}
