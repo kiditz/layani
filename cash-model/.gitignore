@@ -1,0 +1,15 @@
+/include/*
+/bin/*
+/lib/*
+/lib64/*
+/share/*
+/.idea/*
+/app/**.log.*
+**.log
+**.log.**
+*.pyc
+lib64
+**.egg-info
+**/__pycache__/*
+/migrations/*
+/dist/*

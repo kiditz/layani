@@ -1,0 +1,8 @@
+{
+  "name":"task-service",
+  "interval":"20s",
+  "httpcheck": "http://0.0.0.0:5005/health",
+  "namespace": "config/task-service/dev",
+  "log_file":"teachme-rest-api.log",
+  "address": "172.17.0.1"
+}
