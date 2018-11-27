@@ -1,0 +1,1 @@
+clear && mvn clean spring-boot:run -Drun.jvmArguments="-Xmx256m"

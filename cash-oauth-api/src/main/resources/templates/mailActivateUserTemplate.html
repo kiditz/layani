@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<style>
+.button {
+	background-color: #4CAF50;
+	border: none;
+	color: white;
+	padding: 2px 16px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	cursor: pointer;
+}
+</style>
+</head>
+<body>
+	<h2>Registration Account Success</h2>
+	<p>
+		Please click link activation code and then put your activation info to
+		be <b>Slerp </b>user
+	</p>
+	<label><b>Username :</b></label>
+	<span th:text="${username}"></span>
+	<br />
+	<label><b>Activation Code : </b></label>
+	<span th:text="${activationCode}"></span>
+	<br />
+	<br />
+	<a class="button" href="localhost:8020/url">Activate Account</a>
+</body>
+</html>
