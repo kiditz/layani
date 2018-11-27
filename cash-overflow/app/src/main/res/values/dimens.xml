@@ -1,0 +1,18 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_margin">16dp</dimen>
+    <dimen name="payment_margin">10dp</dimen>
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="nav_header_height">176dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+    <dimen name="grid_margin">5dp</dimen>
+
+    <!--Calculator-->
+    <dimen name="min_widget_width">250dp</dimen>
+    <dimen name="min_widget_height">250dp</dimen>
+
+    <dimen name="button_text_size">28sp</dimen>
+    <dimen name="formula_text_size">20sp</dimen>
+    <dimen name="display_text_size">40sp</dimen>
+</resources>

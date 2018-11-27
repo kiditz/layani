@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.ProductFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+
+        android:layout_height="?actionBarSize"
+        android:background="@color/colorPrimary"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <EditText
+            android:id="@+id/edCustomer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_edit_text"
+
+            android:drawableLeft="@drawable/ic_customer"
+            android:drawableStart="@drawable/ic_customer"
+
+            android:drawableTint="@color/colorAccent"
+            android:hint="@string/customer_name"
+            android:inputType="text"
+            android:maxLines="1"
+            android:padding="5dp" />
+
+        <ImageView
+            android:id="@+id/btnSaveCustomer"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_check" />
+    </LinearLayout>
+
+    <include
+        layout="@layout/fragment_blank"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?actionBarSize" />
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:layout_marginTop="?actionBarSize"
+        android:id="@+id/refresh"
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/receycler"
+            android:name="com.overflow.cash.fragment.ProductFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            tools:listitem="@layout/adapter_product" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+</RelativeLayout>

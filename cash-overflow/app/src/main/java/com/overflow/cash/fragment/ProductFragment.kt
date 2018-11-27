@@ -1,0 +1,160 @@
+package com.overflow.cash.fragment
+
+import android.content.Context
+import android.os.Bundle
+import android.support.v4.app.Fragment
+import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.GridLayoutManager
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.overflow.cash.Constant
+import com.overflow.cash.R
+import com.overflow.cash.adapter.ProductListAdapter
+import com.overflow.cash.mvp.product.ProductListContract
+import com.overflow.cash.mvp.product.ProductListPresenter
+import com.overflow.cash.net.API
+import com.overflow.cash.net.ImageService
+import com.overflow.cash.net.NetworkExHandler
+import com.overflow.cash.utils.AbstractRecyclerPagination
+import com.overflow.cash.utils.decoration.MarginItemDecoration
+import com.overflow.cash.utils.snack
+import com.overflow.libs.core.Data
+import com.overflow.libs.core.Translations
+import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.fragment_blank.*
+import kotlinx.android.synthetic.main.fragment_blank.view.*
+import kotlinx.android.synthetic.main.fragment_product_recycler.*
+import timber.log.Timber
+import javax.inject.Inject
+
+/**
+ * @author Rifky Aditya Bastara
+ * Load Product From Rest API Into View
+ */
+class ProductFragment : Fragment(), ProductListContract.View {
+
+    var currentPage: Int = API.MIN_PAGE
+    var categoryId:Long = -1L
+    lateinit var adapter: ProductListAdapter
+    @Inject
+    lateinit var presenter: ProductListPresenter
+    @Inject
+    lateinit var networkExHandler: NetworkExHandler
+    @Inject
+    lateinit var imageService: ImageService
+    @Inject
+    lateinit var translations: Translations
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            categoryId = it.getLong(ARG_CATEGORY_ID)
+        }
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        AndroidSupportInjection.inject(this)
+        presenter.attach(this)
+    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_product_recycler, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        this.adapter = ProductListAdapter(imageService)
+        val manager  = GridLayoutManager(context, 2)
+        receycler?.layoutManager =  manager
+        receycler?.isNestedScrollingEnabled = false
+        receycler?.setHasFixedSize(true)
+        receycler?.itemAnimator = DefaultItemAnimator()
+        val spaceInPixel = resources.getDimensionPixelSize(R.dimen.grid_margin)
+        receycler?.addItemDecoration(MarginItemDecoration(spaceInPixel))
+        receycler?.adapter = adapter
+        receycler?.addOnScrollListener(object :AbstractRecyclerPagination(manager){
+            override val isLoading: Boolean
+                get() = presenter.loading
+            override val isLastPage: Boolean
+                get() = presenter.lastPage
+            override val totalItemCount: Int
+                get() = presenter.getSize()
+
+            override fun loadMoreItems() {
+                currentPage += 1
+                presenter.loadProduct(currentPage, categoryId, Constant.TEXT_EMPTY)
+            }
+        })
+        refresh?.setOnRefreshListener {
+            currentPage = 1
+            presenter.loadProduct(currentPage, categoryId, Constant.TEXT_EMPTY)
+        }
+    }
+
+    fun order(orderBy:String){
+        currentPage = API.MIN_PAGE
+        this.presenter.loadProduct(currentPage, categoryId, Constant.TEXT_EMPTY, orderBy)
+    }
+    fun searchProduct(search:String){
+        currentPage = API.MIN_PAGE
+        this.presenter.loadProduct(currentPage, categoryId, search)
+    }
+    override fun onProductLoaded(productList: List<Data>) {
+        dismiss()
+        if(currentPage == 1){
+            this.adapter.clearValues()
+        }
+        this.adapter.addValues(productList)
+    }
+
+    override fun showError(error: Throwable) {
+        dismiss()
+        activity?.let {
+            networkExHandler.errorHandle(it, error)
+        }
+    }
+
+    override fun showNoOk(res: String) {
+        dismiss()
+        activity?.snack(res)?.show()
+    }
+
+    override fun showEmpty() {
+        receycler?.visibility = View.GONE
+        showMessage(getString(R.string.no_product_title), getString(R.string.no_product_description))
+    }
+
+    private fun showMessage(title:String, message:String){
+        try {
+            blankLayout?.visibility = View.VISIBLE
+            blankLayout?.tvDescription?.text = message
+            blankLayout?.tvTitle?.text = title
+        }catch (e:Exception){
+            Timber.e(e)
+        }
+    }
+
+    override fun showNotConnected(res: String) {
+        dismiss()
+        activity?.snack(res)?.show()
+    }
+
+    private fun dismiss(){
+        refresh?.isRefreshing = false
+        receycler?.visibility = View.VISIBLE
+        blankLayout?.visibility = View.GONE
+    }
+
+    companion object {
+        const val ARG_CATEGORY_ID = "category_id"
+        @JvmStatic
+        fun newInstance(categoryId: Long) =
+                ProductFragment().apply {
+                    arguments = Bundle().apply {
+                        putLong(ARG_CATEGORY_ID, categoryId)
+                    }
+                }
+    }
+
+}

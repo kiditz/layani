@@ -1,0 +1,52 @@
+package com.overflow.cash.mvp.payment
+
+import android.content.Context
+import android.content.SharedPreferences
+import com.overflow.cash.Constant
+import com.overflow.cash.net.API
+import com.overflow.cash.net.OrderService
+import com.overflow.cash.net.RxUtils
+import com.overflow.cash.realm.OrderRealm
+import com.overflow.libs.core.Data
+import com.overflow.libs.core.Translations
+import io.reactivex.disposables.CompositeDisposable
+
+class PaymentTransactionPresenter(
+        private val context: Context,
+        private val orderRealm: OrderRealm,
+        private val preferences: SharedPreferences,
+        private val translations: Translations,
+        private val orderService: OrderService,
+        private val disposable: CompositeDisposable
+) : PaymentTransactionContract.Presenter {
+
+    lateinit var view: PaymentTransactionContract.View
+    fun deleteAllItems() {
+        orderRealm.removeAllItems()
+    }
+    override fun saveOrder(data: Data) {
+        val merchant = Data(preferences.getString("merchant", "{}"))
+        data["merchant_id"] = merchant.getLong("id")
+        if (API.isConnected(context)) {
+            this.disposable.add(this.orderService.addOrder(data).compose(RxUtils.applySingleAsync()).subscribe({
+                if (API.ok(it)) {
+                    this.view.onOrderCreated(API.payload(it))
+                } else {
+                    this.view.showNoOk(translations.get(API.getError(it)))
+                }
+            }, { error ->
+                this.view.showError(error)
+            }))
+        } else {
+            this.view.showNotConnected(this.translations.get(Constant.TranslationsKey.NO_INTERNET))
+        }
+    }
+
+    override fun attach(view: PaymentTransactionContract.View) {
+        this.view = view
+    }
+
+    override fun detach() {
+        this.disposable.clear()
+    }
+}

@@ -1,0 +1,12 @@
+{
+  "required.value.phone_number": "Required value phone number",
+  "required.value.store_name": "Required value store name",
+  "required.value.address": "Required value address",
+  "required.value.mail": "Required value Email",
+  "invalid.phone.number": "Phone number is invalid",
+
+
+  "invalid.password.length": "Password minimum length is 8 character",
+  "no.internet": "No internet connection found",
+  "connection.timeout": "Timeout while connecting to server."
+}

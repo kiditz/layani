@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".fragment.AccountReceiveableFragment">
+
+    <include
+        layout="@layout/fragment_blank"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:visibility="visible">
+
+        <android.support.v4.widget.NestedScrollView
+            android:fillViewport="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="280dp"
+                    android:layout_margin="5dp"
+
+                    app:contentPadding="5dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tvGraphTitle"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginStart="10dp"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical"
+                                android:text="@string/in_age"
+
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+
+                            <ImageView
+                                android:id="@+id/btnChooser"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:src="@drawable/ic_dots" />
+                        </LinearLayout>
+
+                        <include layout="@layout/line_vert" />
+
+                        <FrameLayout
+                            android:id="@+id/accountReceiveableGraph"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+                <include layout="@layout/line_vert" />
+
+                <!--<android.support.v7.widget.CardView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="280dp"-->
+                    <!--android:layout_margin="5dp"-->
+                    <!--android:visibility="gone"-->
+                    <!--app:contentPadding="5dp">-->
+
+                    <!--<LinearLayout-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:orientation="vertical">-->
+
+                        <!--<LinearLayout-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginBottom="5dp"-->
+                            <!--android:orientation="horizontal">-->
+
+                            <!--<TextView-->
+                                <!--android:layout_width="0dp"-->
+                                <!--android:layout_height="match_parent"-->
+                                <!--android:layout_marginLeft="10dp"-->
+                                <!--android:layout_marginStart="10dp"-->
+                                <!--android:layout_weight="1"-->
+                                <!--android:gravity="center_vertical"-->
+                                <!--android:text="@string/out_of_age"-->
+
+                                <!--android:textSize="18sp"-->
+                                <!--android:textStyle="bold" />-->
+                        <!--</LinearLayout>-->
+
+                        <!--<include layout="@layout/line_vert" />-->
+
+                        <!--<FrameLayout-->
+                            <!--android:id="@+id/accountReceiveableOutOfAge"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="match_parent" />-->
+                    <!--</LinearLayout>-->
+                <!--</android.support.v7.widget.CardView>-->
+
+                <include layout="@layout/line_vert" />
+                <TextView
+                    android:background="@drawable/bg_linear"
+                    android:textColor="@color/textLight"
+                    android:padding="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/payer"
+                    android:textSize="14sp" />
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/receycler"
+                    android:name="com.overflow.cash.fragment.ProductFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                    tools:listitem="@layout/adapter_account_receiveable" />
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+</RelativeLayout>

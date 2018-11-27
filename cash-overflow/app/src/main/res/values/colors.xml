@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--006078-->
+    <color name="colorPrimaryDark">#303f9f</color>
+    <color name="colorPrimary">#303f9f</color>
+    <color name="colorAccent">#45cafc</color>
+    <color name="textLight">#fff</color>
+    <color name="transparent">#50000000</color>
+    <color name="layoutEditImage">#9bc6c6c6</color>
+    <color name="loginBackground">#005064</color>
+    <color name="startGreen">#018caf</color>
+    <color name="endGreen">#0088AA</color>
+    <color name="separator_line">#ECECEC</color>
+</resources>
