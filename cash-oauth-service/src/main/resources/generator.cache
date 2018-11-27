@@ -1,0 +1,7 @@
+{
+  "packageRepo" : "com.slerpio.teachme.repository",
+  "packageService" : "com.slerpio.teachme.service.oauth2",
+  "enablePrepare" : true,
+  "packageEntity" : "com.slerpio.teachme.entity",
+  "packageController" : "com.slerpio.teachme.controller"
+}
