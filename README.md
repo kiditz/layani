@@ -25,7 +25,8 @@ Point Of Sales Project
    ```
 4. Proyek ini menggunakan service discovery consul, maka sebelum memulai kita perlu menjalankan consul
    ```
-   docker pull consuldocker run -d \
+   docker pull consul
+   docker run -d \
      --net=host  \
     --hostname consul-server \
     --name consul-server \
