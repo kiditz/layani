@@ -23,15 +23,50 @@ Point Of Sales Project
    ```
    CREATE DATABASE cash_overflow;
    ```
-4. Masuk ke folder cash-model
+4. Proyek ini menggunakan service discovery consul, maka sebelum memulai kita perlu menjalankan consul
    ```
-   cd cash-model    
+   docker pull consul
+   docker run -d --net=host  --hostname consul-server --name consul-server --env "SERVICE_IGNORE=true" --volume consul_data:/consul/data --publish 8500:8500 consul:latest consul agent -server -ui -bootstrap -client=0.0.0.0 -advertise=${YOUR_PUBLIC_IP} -data-dir="/consul"   
+   ```
+   a. Script diatas akan menjadikan consul-server sebagai container
+   b. sekarang coba cek container dengan menggunakan 
+   ```
+   docker ps
+   ------------------------------------------------------------------------------------------------------------------
+   CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
+   85cf0c92307b        consul:latest       "docker-entrypoint.s…"   11 months ago       Up 2 seconds                                 consul-server
+   ```
+   c. untuk mematikan consul, anda dapat menggunakan script
+   ```
+   docker stop consul-server
+   ```
+   d. untuk menjalankan kembali.
+   ```
+   docker start consul-server
+   ```
+   e. Masuk ke web admin consul
+   ```
+   Buka chrome arahkan ke alamat
+   http://localhost:8500
    ```
 5. Buat virtual environtment untuk proyek cash-model
+   ```
+   virtualenv -p python3 cash-model
+   cd cash-model
+   pip3 install -r requirements.txt
+   pip3 install psycopg2
+   ```
 6. Kemudian Jalankan script migration
    ```
    python3 entity/models.py db init
    python3 entity/models.py db migrate
    python3 entity/models.py db upgrade
    ```
+7. Setelah database terbentuk, jalankan proyek cash-oauth-api
+  ```
+  cd cash-oauth-service
+  mvn clean install
+  cd cash-oauth-api
+  mvn clean package
+  ```   
 
