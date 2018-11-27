@@ -1,0 +1,84 @@
+version: '3.1'
+services:  
+  cash-api:
+    image: cash-api
+    build: cash-api
+    environment:
+      - "CONSUL_HOST=172.17.0.1"
+      - "CONSUL_PORT=8500"
+      - "SERVICE_NAME=cash-api"
+      - "SERVICE_TAGS=service"      
+    networks:
+      - cash_overlay_net
+    volumes:
+      - cash_data_vol:/cash-overflow/data/cash-api/
+    deploy:
+      mode: global      
+      placement:
+        constraints: [node.role == worker]
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    ports:
+      - 5002:5002/tcp    
+  cash-oauth-api:
+    environment:
+      CONSUL_HOST: 172.17.0.1
+      CONSUL_PORT: 8500
+      SPRING_PROFILES_ACTIVE: dev
+    ports:      
+      - "5001:5001"
+    image: cash-oauth-api
+    build: cash-oauth-api
+    networks:
+      - cash_overlay_net
+    volumes:
+      - cash_data_vol:/cash-overflow/data/cash-oauth-api
+    deploy:
+      mode: global      
+      placement:
+        constraints: [node.role == worker]
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    logging:
+      options:
+        max-size: 10m
+        max-file: '10'
+  cash-gateway-api:
+    environment:
+      CONSUL_HOST: 172.17.0.1
+      CONSUL_PORT: 8500
+      SPRING_PROFILES_ACTIVE: dev
+    ports:      
+      - "5000:5000"
+    image: cash-gateway-api
+    build: cash-gateway-api
+    networks:
+      - cash_overlay_net
+    volumes:
+      - cash_data_vol:/cash-gateway-api/data
+    deploy:
+      mode: global      
+      placement:
+        constraints: [node.role == worker]
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    logging:
+      options:
+        max-size: 10m
+        max-file: '10'  
+networks:
+    cash_overlay_net:
+      external: true
+
+volumes:
+    cash_data_vol:
+      external: true
