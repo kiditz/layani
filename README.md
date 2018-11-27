@@ -25,8 +25,20 @@ Point Of Sales Project
    ```
 4. Proyek ini menggunakan service discovery consul, maka sebelum memulai kita perlu menjalankan consul
    ```
-   docker pull consul
-   docker run -d --net=host  --hostname consul-server --name consul-server --env "SERVICE_IGNORE=true" --volume consul_data:/consul/data --publish 8500:8500 consul:latest consul agent -server -ui -bootstrap -client=0.0.0.0 -advertise=${YOUR_PUBLIC_IP} -data-dir="/consul"   
+   docker pull consuldocker run -d \
+     --net=host  \
+    --hostname consul-server \
+    --name consul-server \
+    --env "SERVICE_IGNORE=true" \
+    --volume consul_data:/consul/data \
+    --publish 8500:8500 \
+    consul:latest \
+    consul agent -server -ui \
+    -bootstrap-expect=1 \
+    -client=0.0.0.0 \
+    -advertise=172.17.0.1 \
+    -data-dir="/consul" \
+  
    ```
    a. Script diatas akan menjadikan consul-server sebagai container
    b. sekarang coba cek container dengan menggunakan 
