@@ -17,10 +17,16 @@ class MerchantService(object):
 	@Key(['store.name', 'store.phone_number', 'store.address', 'store.email', 'username', 'fullname', 'password'])
 	def add_merchant(self, domain):
 		password = domain['password']
+		phone_number = domain['store']['phone_number']
+		if phone_number.startswith('0'):
+			phone_number = phone_number.replace('0', '+62', 1)		
 		user = User(domain)
 		user.username = domain['username']
 		user.fullname = domain['password']
-		user.phone_number = domain['store']['phone_number']
+		
+		user.phone_number = phone_number
+		
+
 		user.hash_password = bcrypt.generate_password_hash(password, 10).replace(b'$2b$', b'$2a$')
 		user.save()
 		# Save into authority admin
