@@ -1,10 +1,10 @@
 version: '3.1'
 services:  
   cash-api:
-    image: cash-api
+    image: slerp/cash-api
     build: cash-api
     environment:
-      - "CONSUL_HOST=172.17.0.1"
+      - "CONSUL_HOST=172.31.21.33"
       - "CONSUL_PORT=8500"
       - "SERVICE_NAME=cash-api"
       - "SERVICE_TAGS=service"      
@@ -22,15 +22,15 @@ services:
         max_attempts: 3
         window: 120s
     ports:
-      - 5002:5002/tcp    
+      - "5010:5010"
   cash-oauth-api:
     environment:
-      CONSUL_HOST: 172.17.0.1
+      CONSUL_HOST: 172.31.21.33
       CONSUL_PORT: 8500
       SPRING_PROFILES_ACTIVE: dev
     ports:      
       - "5001:5001"
-    image: cash-oauth-api
+    image: slerp/cash-oauth-api
     build: cash-oauth-api
     networks:
       - cash_overlay_net
@@ -39,7 +39,7 @@ services:
     deploy:
       mode: global      
       placement:
-        constraints: [node.role == worker]
+        constraints: [node.role == manager]
       restart_policy:
         condition: on-failure
         delay: 5s
@@ -51,12 +51,12 @@ services:
         max-file: '10'
   cash-gateway-api:
     environment:
-      CONSUL_HOST: 172.17.0.1
+      CONSUL_HOST: 172.31.21.33
       CONSUL_PORT: 8500
       SPRING_PROFILES_ACTIVE: dev
     ports:      
       - "5000:5000"
-    image: cash-gateway-api
+    image: slerp/cash-gateway-api
     build: cash-gateway-api
     networks:
       - cash_overlay_net
@@ -65,7 +65,7 @@ services:
     deploy:
       mode: global      
       placement:
-        constraints: [node.role == worker]
+        constraints: [node.role == manager]
       restart_policy:
         condition: on-failure
         delay: 5s
@@ -82,3 +82,4 @@ networks:
 volumes:
     cash_data_vol:
       external: true
+
