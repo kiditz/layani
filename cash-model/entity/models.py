@@ -300,7 +300,7 @@ class CashboxHistory(db.Model, Entity):
 		Entity.__init__(self, obj)
 
 if __name__ == '__main__':
-	app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('db.name', 'postgresql://kiditz:rioters7@172.17.0.1:2070/cash_overflow')
+	app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('db.name', 'postgresql://kiditz:rioters7@layaniio.ci9ii2u2cpyu.ap-southeast-1.rds.amazonaws.com:5432/layani')
 	migrate = Migrate(app, db)
 	manager = Manager(app)
 	manager.add_command('db', MigrateCommand)

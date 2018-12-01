@@ -15,9 +15,12 @@ import com.overflow.cash.mvp.login.LoginPresenter
 import com.overflow.cash.net.NetworkExHandler
 import com.overflow.cash.utils.moveTo
 import com.overflow.cash.utils.snack
+import com.overflow.cash.utils.validateNotEmpty
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
 import dagger.android.AndroidInjection
+import io.reactivex.Observable
+import io.reactivex.functions.BiFunction
 import kotlinx.android.synthetic.main.activity_login.*
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -61,6 +64,16 @@ class LoginActivity : AccountAuthenticatorActivity(), LoginContract.View {
             data["username"]= edUsername.text.toString()
             data["password"]= edPassword.text.toString()
             presenter.login(data)
+        }
+
+        validateInput()
+    }
+
+    private fun validateInput(){
+        val usernameObserve = this.validateNotEmpty(edUsername, usernameWrapper, translations.get(Constant.TranslationsKey.REQUIRED_VALUE_USERNAME))
+        val passwordObserve = this.validateNotEmpty(edPassword, passwordWrapper, translations.get(Constant.TranslationsKey.REQUIRED_VALUE_PASSWORD))
+        Observable.combineLatest(usernameObserve, passwordObserve, BiFunction{ username:Boolean, password:Boolean -> username && password}).subscribe { isValid ->
+            btnLogin.isEnabled = isValid
         }
     }
 
