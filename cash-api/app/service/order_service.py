@@ -7,7 +7,7 @@ from slerp.app import db
 from slerp.logger import logging
 from slerp.validator import Number, Blank, Key, ValidationException
 from sqlalchemy import between, and_, cast, func, Interval
-
+from sqlalchemy.dialects.mssql import DATE
 from utils.api_constant import StockRef, ErrorCode, PaymentMethod
 from utils.date_utils import get_day_of_year, get_day_of_week
 
@@ -262,9 +262,9 @@ def get_order_chart_count_query(start_date, end_date, status, fmt, merchant_id):
 		func.to_char(stmt.c.day, fmt).label('datetime')
 	)
 	if status:
-		join = stmt.outerjoin(Order, and_(Order.order_at == stmt.c.day, Order.status == status, Order.merchant_id == merchant_id))
+		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE), Order.status == status, Order.merchant_id == merchant_id))
 	else:
-		join = stmt.outerjoin(Order, and_(Order.order_at == stmt.c.day, Order.merchant_id == merchant_id))
+		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE), Order.merchant_id == merchant_id))
 	return entities, join
 
 
@@ -276,9 +276,9 @@ def get_order_profit_query(start_date, end_date, status, fmt, merchant_id):
 		func.to_char(stmt.c.day, fmt).label('datetime')
 	)
 	if status:
-		join = stmt.outerjoin(Order, and_(Order.order_at == stmt.c.day, Order.status == status, Order.merchant_id == merchant_id))
+		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE) == stmt.c.day, Order.status == status, Order.merchant_id == merchant_id))
 	else:
-		join = stmt.outerjoin(Order, and_(Order.order_at == stmt.c.day, Order.merchant_id == merchant_id))
+		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE) == stmt.c.day, Order.merchant_id == merchant_id))
 	return entities, join
 
 
@@ -290,9 +290,9 @@ def get_order_income_query(start_date, end_date, status, fmt, merchant_id):
 		func.to_char(stmt.c.day, fmt).label('datetime')
 	)
 	if status:
-		join = stmt.outerjoin(Order, and_(Order.order_at == stmt.c.day, Order.status == status, Order.merchant_id == merchant_id))
+		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE) == stmt.c.day, Order.status == status, Order.merchant_id == merchant_id))
 	else:
-		join = stmt.outerjoin(Order, and_(Order.order_at == stmt.c.day, Order.merchant_id == merchant_id))
+		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE) == stmt.c.day, Order.merchant_id == merchant_id))
 	return entities, join
 
 
