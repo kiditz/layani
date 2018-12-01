@@ -20,7 +20,7 @@ class TopProductChartPresenter(private val context: Context, private val prefere
         data["page"] = 1L
         data["size"] = 5L
         if(API.isConnected(context)){
-            this.disposable.add(this.orderService.getTopProduct(data).compose(RxUtils.applySingleAsync()).subscribe({ response ->
+            this.disposable.add(this.orderService.getTopProduct(data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){
                     this.view.onChartLoaded(API.payloads(response))
 

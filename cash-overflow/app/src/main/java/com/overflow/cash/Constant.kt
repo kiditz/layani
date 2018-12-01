@@ -19,6 +19,8 @@ class Constant {
         const val SALES = "sales"
         const val MAX_PAGE = "MAX_PAGE"
         const val TEXT_EMPTY = ""
+        const val SPACE = " "
+        const val CREATE_ACCOUNT_SUCCESS = "create.account.success"
     }
 
     interface Sort{
@@ -107,6 +109,7 @@ class Constant {
             //LOGIN
             const val USER_NOT_FOUND = "user.not.found"
             const val USER_WRONG_PASSWORD = "user.wrong.password"
+            const val INVALID_EMAIL = "invalid.email.address"
 
 
         }

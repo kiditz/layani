@@ -51,8 +51,10 @@ class ReceiptActivity : AppCompatActivity() {
         if(order.containsKey("customer_name")){
             val customerName = addCustomInfo("Nama Pelanggan", order.getString("customer_name"))
             source = source.replace("{{customer}}", customerName)
+            source = source.replace("{{tgl_jatuh_tempo}}", Constant.TEXT_EMPTY)
         }else{
-            source = source.replace("{{customer}}", "")
+            source = source.replace("{{customer}}",  Constant.TEXT_EMPTY)
+            source = source.replace("{{tgl_jatuh_tempo}}", Constant.TEXT_EMPTY)
         }
         source = source.replace("{{title}}",merchant.getString("name"))
         source = source.replace("{{order.code}}",order.getString("order_code"))
@@ -64,8 +66,8 @@ class ReceiptActivity : AppCompatActivity() {
                 source = source.replace("{{cashback_title}}", "Kembali")
                 source = source.replace("{{order.cashback}}", rupiah(order.getDouble("cashback")))
             }else{
-                source = source.replace("{{cashback_title}}", "")
-                source = source.replace("{{order.cashback}}", "")
+                source = source.replace("{{cashback_title}}", Constant.TEXT_EMPTY)
+                source = source.replace("{{order.cashback}}", Constant.TEXT_EMPTY)
             }
         }else{
             source = source.replace("{{cashback_title}}", "Hutang")
@@ -112,7 +114,7 @@ class ReceiptActivity : AppCompatActivity() {
 
     fun screenshoot():Boolean{
         try {
-            var dest = File("${Environment.getExternalStorageDirectory()}/${getString(R.string.app_name).replace(" ", "")}/order", "${order.getString("order_code")}.png")
+            var dest = File("${Environment.getExternalStorageDirectory()}/${getString(R.string.app_name).replace(" ", Constant.TEXT_EMPTY)}/order", "${order.getString("order_code")}.png")
             if(!dest.isDirectory){
                 dest.parentFile.mkdirs()
             }
@@ -132,7 +134,7 @@ class ReceiptActivity : AppCompatActivity() {
             fos.flush()
             fos.close()
             //Re initialize because the first one is unknown file
-            dest = File("${Environment.getExternalStorageDirectory()}/${getString(R.string.app_name).replace(" ", "")}/order", "${order.getString("order_code")}.png")
+            dest = File("${Environment.getExternalStorageDirectory()}/${getString(R.string.app_name).replace(Constant.SPACE, Constant.TEXT_EMPTY)}/order", "${order.getString("order_code")}.png")
             val uri = FileProvider.getUriForFile(this,BuildConfig.APPLICATION_ID + ".fileprovider", dest)
             Timber.i("Uri %s", uri)
             val intent = Intent(Intent.ACTION_VIEW)

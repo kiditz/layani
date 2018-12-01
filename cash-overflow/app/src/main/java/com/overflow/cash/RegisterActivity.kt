@@ -82,10 +82,12 @@ class RegisterActivity : AppCompatActivity(), RegisterContract.View {
     }
 
     override fun onAccountCreated(data: Data) {
-        this.preferences.edit().putString("merchant", data.toString()).apply()
         progressBar.visibility = View.GONE
         btnRegister.isEnabled = true
-        registerPresenter.login(data)
+        val bundle = Bundle()
+        bundle.putBoolean(Constant.CREATE_ACCOUNT_SUCCESS, true)
+        moveTo(LoginActivity::class.java, bundle)
+
     }
 
     override fun showEmpty() {

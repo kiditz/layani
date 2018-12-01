@@ -88,6 +88,9 @@ abstract class ActivityBuilder {
     internal abstract fun bindDashboardFragment(): DashboardFragment
 
     @ContributesAndroidInjector
+    internal abstract fun bindFragmentSetting(): SettingFragment
+
+    @ContributesAndroidInjector
     internal abstract fun bindAccountReceiveableChartInAgeFragment(): AccountReceiveableChartInAgeFragment
 
     @ContributesAndroidInjector

@@ -1,4 +1,4 @@
-from entity.models import Merchant, User, Authority
+from entity.models import Merchant, User, Authority, Cashbox
 from flask_bcrypt import Bcrypt
 from slerp.app import app
 from slerp.logger import logging
@@ -32,6 +32,16 @@ class MerchantService(object):
 		merchant_dict = merchant.to_dict()
 		merchant_dict['password'] = password
 		merchant_dict['username'] = domain["username"]
+		cashbox = Cashbox()
+		cashbox.name = 'Kas'
+		cashbox.total_amount = 0.0
+		cashbox.merchant_id = merchant.id
+		cashbox.save()
+		cashbox = Cashbox()
+		cashbox.name = 'Bank'
+		cashbox.total_amount = 0.0
+		cashbox.merchant_id = merchant.id
+		cashbox.save()
 		return {'payload': merchant_dict}
 	
 	@Blank(['username', 'password'])

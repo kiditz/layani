@@ -63,7 +63,7 @@ class LoginPresenter(private var context: Context, private var translations: Tra
         val data = Data()
         data["username"] = username
         data["password"] = password
-        disposable.add(accountService.findMerchant("Bearer $accessToken", data).compose(RxUtils.applySingleAsync()).subscribe({
+        disposable.add(accountService.findMerchant("Bearer $accessToken", data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({
             if(API.ok(it)){
                 preferences.edit().putString("merchant", API.payload(it).toString()).apply()
                 view.onLoginSuccess(intent)

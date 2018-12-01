@@ -38,7 +38,7 @@ class CategoryListPresenter(
     override fun loadCategory(data:Data) {
 
         if(API.isConnected(context)){
-            this.disposable.add(this.productService.getCategory(data).compose(RxUtils.applySingleAsync()).subscribe({ response ->
+            this.disposable.add(this.productService.getCategory(data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){
                     val payloads = API.payloads(response)
                     if(payloads.isEmpty()){

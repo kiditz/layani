@@ -18,7 +18,7 @@ class AccountReceiveableInAgeChartPresenter(private val context: Context, privat
         val data=Data()
         data["merchant_id"] = this.merchant.getLong("id")
         if(API.isConnected(context)){
-            this.disposable.add(this.orderService.getAccountReceiveableInAge(data).compose(RxUtils.applySingleAsync()).subscribe({ response ->
+            this.disposable.add(this.orderService.getAccountReceiveableInAge(data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){
                     this.view.onChartLoaded(API.payload(response))
 

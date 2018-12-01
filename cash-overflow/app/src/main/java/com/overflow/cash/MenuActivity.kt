@@ -132,6 +132,9 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 val accountReceiveableFragment = AccountReceiveableFragment()
                 replaceContent(accountReceiveableFragment)
             }
+            R.id.nav_settings ->{
+                replaceContent(SettingFragment())
+            }
         }
 
         drawer_layout.closeDrawer(GravityCompat.START)

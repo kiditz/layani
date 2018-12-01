@@ -72,11 +72,11 @@ class NetworkModule {
     internal fun provideRetrofitAuthEnabled(objectMapper: ObjectMapper, accountManager: AccountManager, context: Context): Retrofit {
         val client = OkHttpClient.Builder()
         client.addInterceptor(TokenInterceptor(context, accountManager))
-        //client.authenticator(TokenAuthenticator(context, accountManager))
+        client.authenticator(TokenAuthenticator(context, accountManager))
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
         client.addInterceptor(interceptor)
-        client.connectTimeout(10, TimeUnit.SECONDS)
+        client.connectTimeout(20, TimeUnit.SECONDS)
                 .readTimeout(60, TimeUnit.SECONDS)
                 .writeTimeout(60, TimeUnit.SECONDS).build()
         return Retrofit.Builder()

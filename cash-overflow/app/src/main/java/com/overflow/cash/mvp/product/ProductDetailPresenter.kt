@@ -16,7 +16,7 @@ class ProductDetailPresenter(private var context: Context, private var translati
     private lateinit var view: ProductDetailContract.View
     override fun addStock(data: Data) {
         if(API.isConnected(context)){
-            this.disposable.add(this.productService.addStock(data).compose(RxUtils.applySingleAsync()).subscribe({ response ->
+            this.disposable.add(this.productService.addStock(data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){
                     this.view.onStockCreated(API.payload(response))
                 }else{
@@ -31,7 +31,7 @@ class ProductDetailPresenter(private var context: Context, private var translati
     }
     override fun addDiscount(data: Data) {
         if(API.isConnected(context)){
-            this.disposable.add(this.productService.addDiscount(data).compose(RxUtils.applySingleAsync()).subscribe({ response ->
+            this.disposable.add(this.productService.addDiscount(data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){
                     this.view.onDiscountCreated(API.payload(response))
                 }else{

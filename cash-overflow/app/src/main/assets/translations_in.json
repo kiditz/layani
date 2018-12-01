@@ -43,5 +43,7 @@
   "discount.not.found":"Tidak ada diskon",
   "stock.is.not.enough": "Stok habis",
   "payment.in_progress": "Belum lunas",
-  "payment.done": "Lunas"
+  "payment.done": "Lunas",
+
+  "invalid.email.address": "Email tidak valid"
 }

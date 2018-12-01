@@ -37,7 +37,7 @@ class ProductListPresenter(private var context: Context, private var translation
         if(API.isConnected(context)){
             lastPage = false
             loading = true
-            this.disposable.add(this.productService.getProduct(input).compose(RxUtils.applySingleAsync()).subscribe({ response ->
+            this.disposable.add(this.productService.getProduct(input).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){
                     if (response.containsKey("total_pages")) {
                         val total = response.getInt("total_pages")

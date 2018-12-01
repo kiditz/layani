@@ -28,7 +28,7 @@ class PaymentTransactionPresenter(
         val merchant = Data(preferences.getString("merchant", "{}"))
         data["merchant_id"] = merchant.getLong("id")
         if (API.isConnected(context)) {
-            this.disposable.add(this.orderService.addOrder(data).compose(RxUtils.applySingleAsync()).subscribe({
+            this.disposable.add(this.orderService.addOrder(data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({
                 if (API.ok(it)) {
                     this.view.onOrderCreated(API.payload(it))
                 } else {

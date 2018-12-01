@@ -49,7 +49,7 @@ class PreviewSalesPresenter(private val context:Context, private val orderRealm:
 
     override fun loadDiscount(productId: Long, quantity: Long, holder:PreviewSalesAdapter.ViewHolder, position: Int) {
         if(API.isConnected(context)){
-            orderService.findDiscount(productId, quantity).compose(RxUtils.applySingleAsync()).subscribe({
+            orderService.findDiscount(productId, quantity).retry(3).compose(RxUtils.applySingleAsync()).subscribe({
                 if(API.ok(it)){
                     val payload = API.payload(it)
                     this.view.onDiscountLoaded(payload, holder, position)

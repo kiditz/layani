@@ -44,7 +44,7 @@ class AccountReceiveablePresenter(private val context:Context, private val prefe
         if(API.isConnected(context)){
             lastPage = false
             loading = true
-            this.disposable.add(this.orderService.getAccountReceiveable(input).compose(RxUtils.applySingleAsync()).subscribe({ response ->
+            this.disposable.add(this.orderService.getAccountReceiveable(input).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){
                     if (response.containsKey("total_pages")) {
                         val total = response.getInt("total_pages")

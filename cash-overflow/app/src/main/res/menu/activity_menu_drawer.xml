@@ -38,6 +38,7 @@
         <menu>
             <item
                 android:id="@+id/nav_settings"
+                android:checkable="true"
                 android:icon="@drawable/ic_gear"
                 android:title="@string/settings" />
             <!--<item-->

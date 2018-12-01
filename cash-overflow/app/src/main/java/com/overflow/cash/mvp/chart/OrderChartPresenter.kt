@@ -19,7 +19,7 @@ class OrderChartPresenter(private val context: Context,private val preferences: 
         data["merchant_id"] = this.merchant.getLong("id")
         data["period"] = period
         if(API.isConnected(context)){
-            this.disposable.add(this.orderService.getOrderChart(data).compose(RxUtils.applySingleAsync()).subscribe({ response ->
+            this.disposable.add(this.orderService.getOrderChart(data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){
                     this.view.onChartLoaded(API.payload(response))
                 }else{

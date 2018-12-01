@@ -1,10 +1,8 @@
 package com.overflow.cash.net
 
-import android.accounts.AccountManager
 import android.app.Activity
 import com.overflow.cash.Constant
 import com.overflow.cash.R
-import com.overflow.cash.account.AccountSyncAdapter
 import com.overflow.cash.utils.snack
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
@@ -22,17 +20,8 @@ class NetworkExHandler(internal var translations: Translations) {
             Timber.e(error)
             if (error is HttpException) {
                 val errString: String = error.response().errorBody()?.string().toString()
-                val errorBody = Data(errString)
-                if (error.response().code() == 401 || error.response().code() == 400) {
-                    if (errorBody.getString("error") == "invalid_token") {
-                        //val accountManager = AccountManager.get(activity.baseContext)
-                        //val account = accountManager.getAccountsByType(activity.getString(R.string.account_type)).first()
-                        //Timber.e("Synchronize account: %s", account.name)
-                        //AccountSyncAdapter.syncAccount(account, activity)
-                        return
-                    }
-                    val errorMessage = translations.get(errorBody.getString("error_description"))
-                    activity.snack(errorMessage).show()
+                if (error.response().code() == 500) {
+                    activity.snack(activity.getString(R.string.system_err)).show()
                 } else {
                     activity.snack(errString).show()
                 }

@@ -18,7 +18,7 @@ class DashboardHeaderPresenter(private val context: Context, private val prefere
         val data=Data()
         data["merchant_id"] = this.merchant.getLong("id")
         if(API.isConnected(context)){
-            this.disposable.add(this.orderService.getDashboardHeader(data).compose(RxUtils.applySingleAsync()).subscribe({ response ->
+            this.disposable.add(this.orderService.getDashboardHeader(data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){
                     this.view.onHeaderLoaded(API.payload(response))
                 }else{

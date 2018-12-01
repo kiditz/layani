@@ -40,7 +40,7 @@ class CustomerChooserPresenter(private val context:Context, private val preferen
         if(API.isConnected(context)){
             lastPage = false
             loading = true
-            this.disposable.add(this.customerService.getCustomers(input).compose(RxUtils.applySingleAsync()).subscribe({ response ->
+            this.disposable.add(this.customerService.getCustomers(input).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){
                     if (response.containsKey("total_pages")) {
                         val total = response.getInt("total_pages")
@@ -72,7 +72,7 @@ class CustomerChooserPresenter(private val context:Context, private val preferen
     override fun editCustomer(customer: Data) {
         customer["merchant_id"] = merchant.getLong("id")
         if(API.isConnected(context)){
-            this.disposable.add(this.customerService.editCustomer(customer).compose(RxUtils.applySingleAsync()).subscribe({ response ->
+            this.disposable.add(this.customerService.editCustomer(customer).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){
                     this.view.onCustomerEdited(API.payload(response))
                 }else{

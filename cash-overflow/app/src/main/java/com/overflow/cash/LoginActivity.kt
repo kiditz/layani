@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
+import com.jakewharton.rxbinding2.widget.RxTextView
 import com.overflow.cash.account.AccountGeneral
 import com.overflow.cash.mvp.login.LoginContract
 import com.overflow.cash.mvp.login.LoginPresenter
@@ -19,6 +20,7 @@ import com.overflow.libs.core.Translations
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_login.*
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class LoginActivity : AccountAuthenticatorActivity(), LoginContract.View {
@@ -35,9 +37,20 @@ class LoginActivity : AccountAuthenticatorActivity(), LoginContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         AndroidInjection.inject(this)
         setContentView(R.layout.activity_login)
         this.presenter.attach(this)
+        if(intent.getBooleanExtra(Constant.CREATE_ACCOUNT_SUCCESS, false)){
+            tv_success_message.visibility = View.VISIBLE
+            tv_success_message.setText(R.string.create_account_success)
+            RxTextView.textChanges(tv_success_message).debounce(2, TimeUnit.SECONDS).subscribe{
+                runOnUiThread{
+                    tv_success_message.visibility = View.GONE
+                }
+            }
+        }
         btnCreateStore?.setOnClickListener {
             moveTo(CreateStoreActivity::class.java)
         }

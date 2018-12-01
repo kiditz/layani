@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.overflow.cash.mvp.receiveable.AccountReceiveablePaymentContract
 import com.overflow.cash.mvp.receiveable.AccountReceiveablePaymentPresenter
@@ -20,6 +21,7 @@ import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_account_receiveable_payed.*
 import kotlinx.android.synthetic.main.dialog_cashbox_chooser.view.*
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -110,14 +112,16 @@ class PaymentAccountReceiveableActivity:AppCompatActivity(), AccountReceiveableP
             }
         }
 
-        cashboxView.btnPay.setOnClickListener {
-            dialog?.setCancelable(false)
-            cashboxView.payProgressBar.visibility = View.VISIBLE
-            val data = Data()
-            data["order_id"] = order.getLong("order_id")
-            data["cash_box_id"] = cashboxId
-            data["payment_amount"] = tv_result.text.replace(Regex("[^0-9]"), "").toDouble()
-            presenter.payAccount(data)
+        RxView.clicks(cashboxView.btnPay).subscribe {
+            runOnUiThread {
+                dialog?.setCancelable(false)
+                cashboxView.payProgressBar.visibility = View.VISIBLE
+                val data = Data()
+                data["order_id"] = order.getLong("order_id")
+                data["cash_box_id"] = cashboxId
+                data["payment_amount"] = parseRupiah(tv_result.text)
+                presenter.payAccount(data)
+            }
         }
 
     }

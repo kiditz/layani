@@ -28,7 +28,7 @@ class RegisterPresenter(private var context: Context, private var translations: 
 
     override fun addStore(data: Data) {
         if(API.isConnected(context)){
-            this.disposable.add(this.accountService.register(data).compose(RxUtils.applySingleAsync()).subscribe({ response ->
+            this.disposable.add(this.accountService.register(data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){
                     this.view.onAccountCreated(API.payload(response))
                 }else{

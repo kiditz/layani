@@ -18,13 +18,6 @@ class TokenInterceptor(private val context: Context, private val accountManager:
         }
         val account = accountManager.getAccountsByType(context.getString(R.string.account_type))[0]
         var authToken = accountManager.peekAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS)
-        return try {
-            chain.proceed(chain.request().newBuilder().addHeader("Authorization", "Bearer $authToken").build())
-        }catch (e:Exception){
-            authToken = accountManager.blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, true)
-            accountManager.setAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, authToken)
-            authToken = accountManager.peekAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS)
-            chain.proceed(chain.request().newBuilder().addHeader("Authorization", "Bearer $authToken").build())
-        }
+        return chain.proceed(chain.request().newBuilder().addHeader("Authorization", "Bearer $authToken").build())
     }
 }

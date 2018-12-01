@@ -48,7 +48,7 @@ class AccountReceiveablePaymentPresenter(private val context:Context, private va
         data["merchant_id"] = merchant.getLong("id")
 
         if(API.isConnected(context)){
-            this.disposable.add(this.orderService.payAccountReceiveable(data).compose(RxUtils.applySingleAsync()).subscribe({ response ->
+            this.disposable.add(this.orderService.payAccountReceiveable(data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){
                     val payload = API.payload(response)
                     if(payload.isEmpty()){

@@ -27,7 +27,7 @@ class AddProductPresenter(private var context: Context, private var translations
 
     override fun addCategory(data: Data) {
         if(API.isConnected(context)){
-            this.disposable.add(this.productService.addCategory(data).compose(RxUtils.applySingleAsync()).subscribe({ response ->
+            this.disposable.add(this.productService.addCategory(data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){
                     this.view.onCategoryCreated(API.payload(response))
                 }else{

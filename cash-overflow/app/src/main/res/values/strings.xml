@@ -21,6 +21,7 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
+    <string name="logout">Sign Out</string>
     <string name="create_store">Create Store</string>
     <string name="store_name">Store Name</string>
     <string name="phone_number">Phone Number</string>
@@ -105,5 +106,6 @@
     <string name="transaction">Transaction</string>
     <string name="are_you_sure">Apakah anda yakin</string>
     <string name="cashback">Kembali</string>
-    <string name="system_err">Terjadi kesalahan pada sistem</string>
+    <string name="system_err">Upps, Terjadi kesalahan pada sistem..</string>
+    <string name="add_outlet">Add New Outlet</string>
 </resources>

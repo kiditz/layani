@@ -24,7 +24,6 @@ class TokenAuthenticator(private val context: Context, private val accountManage
         }
         var authToken = accountManager.peekAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS)
         return if(response.code() == 400 || response.code() == 401){
-
             accountManager.invalidateAuthToken(context.getString(R.string.account_type), authToken)
             authToken = accountManager.blockingGetAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, false)
             Timber.i("Auth Token : %s", authToken)

@@ -29,7 +29,7 @@ class CashboxPresenter(private val context: Context, private val preferences: Sh
         input["merchant_id"] = merchant.getLong("id")
 
         if(API.isConnected(context)){
-            this.disposable.add(this.service.getCashboxs(input).compose(RxUtils.applySingleAsync()).subscribe({ response ->
+            this.disposable.add(this.service.getCashboxs(input).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){
                     val payloads = API.payloads(response)
                     if(payloads.isEmpty()){

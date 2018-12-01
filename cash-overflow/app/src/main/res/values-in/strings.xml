@@ -21,6 +21,7 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="login">Masuk</string>
+    <string name="logout">Keluar</string>
     <string name="create_store">Buat Toko</string>
     <string name="store_name">Nama toko</string>
     <string name="phone_number">No Handphone</string>
@@ -110,6 +111,7 @@
     <string name="transaction">Transaction</string>
     <string name="are_you_sure">Apakah anda yakin</string>
     <string name="system_err">Terjadi kesalahan pada sistem</string>
+    <string name="add_outlet">Tambahkan Outlet Baru</string>
     <string-array name="share_receipt_list">
         <item>Mail</item>
         <item>Sms</item>
