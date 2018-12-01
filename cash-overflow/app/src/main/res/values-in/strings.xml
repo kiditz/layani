@@ -112,6 +112,7 @@
     <string name="are_you_sure">Apakah anda yakin</string>
     <string name="system_err">Terjadi kesalahan pada sistem</string>
     <string name="add_outlet">Tambahkan Outlet Baru</string>
+    <string name="create_store_success">Pembuatan toko berhasil dilakukan</string>
     <string-array name="share_receipt_list">
         <item>Mail</item>
         <item>Sms</item>

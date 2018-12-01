@@ -44,7 +44,7 @@ class LoginActivity : AccountAuthenticatorActivity(), LoginContract.View {
         this.presenter.attach(this)
         if(intent.getBooleanExtra(Constant.CREATE_ACCOUNT_SUCCESS, false)){
             tv_success_message.visibility = View.VISIBLE
-            tv_success_message.setText(R.string.create_account_success)
+            tv_success_message.setText(R.string.create_store_success)
             RxTextView.textChanges(tv_success_message).debounce(2, TimeUnit.SECONDS).subscribe{
                 runOnUiThread{
                     tv_success_message.visibility = View.GONE
