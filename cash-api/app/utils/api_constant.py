@@ -28,7 +28,7 @@ class ErrorCode(object):
 	FILE_CANNOT_BE_EMPTY = 'file.cannot.be.empty'
 	USER_NOT_FOUND = 'user.not.found'
 	USER_HAS_EXISTS = 'user.has.exists'
-	PHONE_NUMBER_HAS_EXISTS = 'PHONE_NUMBER_HAS_EXISTS.has.exists'
+	PHONE_NUMBER_HAS_EXISTS = 'phone_number.has.exists'
 	USER_WRONG_PASSWORD = 'user.wrong.password'
 	
 	REQUIRED_CATEGORY = 'required.valid.category_name',
