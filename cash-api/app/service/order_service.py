@@ -177,7 +177,7 @@ class OrderService(object):
 		)
 		item_q = OrderItem.query.with_entities(*entities)\
 			.join(Product, Product.id == OrderItem.product_id)\
-			.filter(Product.merchant_id == domain['merchant_id'])
+			.filter(Product.merchant_id == domain['merchant_id'])\
 			.group_by(Product.id).order_by("quantity desc")\
 			.paginate(page, size, error_out=False)
 		product_list = list(map(lambda x: x._asdict(), item_q.items))
