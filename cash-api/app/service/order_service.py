@@ -299,7 +299,6 @@ def get_order_income_query(start_date, end_date, status, fmt, merchant_id):
 
 weekly = ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"]
 
-
 def handle_chart_label(order_at, period):
 	if period == 'week':
 		return weekly[datetime.strptime(order_at, '%Y-%m-%d').weekday()]
