@@ -18,6 +18,7 @@ class MerchantService(object):
 	def add_merchant(self, domain):
 		password = domain['password']
 		phone_number = domain['store']['phone_number']
+		email = domain['store']['email']
 		user_count = User.query.filter_by(username=domain['username']).count()
 		# Validate unique by username
 		if user_count > 0:
@@ -26,6 +27,10 @@ class MerchantService(object):
 		merchant_count = Merchant.query.filter_by(phone_number = phone_number).count()		
 		if merchant_count > 0:
 			raise ValidationException(ErrorCode.PHONE_NUMBER_HAS_EXISTS)
+
+		merchant_count = Merchant.query.filter_by(email = phone_number).count()		
+		if merchant_count > 0:
+			raise ValidationException(ErrorCode.EMAIL_HAS_EXISTS)
 
 		if phone_number.startswith('0'):
 			phone_number = phone_number.replace('0', '+62', 1)		

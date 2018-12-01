@@ -29,6 +29,7 @@ class ErrorCode(object):
 	USER_NOT_FOUND = 'user.not.found'
 	USER_HAS_EXISTS = 'user.has.exists'
 	PHONE_NUMBER_HAS_EXISTS = 'phone_number.has.exists'
+	EMAIL_HAS_EXISTS = 'email.has.exists'
 	USER_WRONG_PASSWORD = 'user.wrong.password'
 	
 	REQUIRED_CATEGORY = 'required.valid.category_name',
