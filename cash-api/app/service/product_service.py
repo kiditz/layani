@@ -94,8 +94,8 @@ class ProductService(object):
 			ProductSellPrice.sell_price,
 			Product.use_stock,
 			ProductPurchasePrice.purchase_price,
-			Category.id.label('category_id'),
-			Category.name.label('category_name'),
+			func.coalesce(Category.id, -1).label('category_id'),
+			func.coalesce(Category.name, '').label('category_name'),
 			Product.unit.label("unit"),
 			func.count(Discount.id).label("count_discount")
 		)
@@ -107,7 +107,7 @@ class ProductService(object):
 			.join(ProductSellPrice, and_(Product.id == ProductSellPrice.product_id, ProductSellPrice.name == 'STANDARD')) \
 			.join(ProductPurchasePrice, and_(ProductPurchasePrice.product_id == Product.id, between(now, ProductPurchasePrice.start_at, ProductPurchasePrice.end_at)))\
 			.outerjoin(Discount, Discount.product_id == Product.id) \
-			.join(Category, Category.id == Product.category_id)
+			.outerjoin(Category, Category.id == Product.category_id)
 
 		if 'category_id' in domain and int(domain['category_id']) > 0:
 			product_q = product_q.filter(Category.id == domain['category_id'])
