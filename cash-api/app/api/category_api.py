@@ -61,3 +61,9 @@ def edit_category_by_id():
     """
     domain = request.get_json()
     return category_service.edit_category_by_id(domain)
+
+
+@api.route('/delete', methods=['DELETE'])
+def delete_category_by_id():
+    domain = request.args.to_dict()
+    return category_service.delete_category_by_id(domain)

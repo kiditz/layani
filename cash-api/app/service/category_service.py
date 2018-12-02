@@ -43,3 +43,9 @@ class CategoryService(object):
 		category = Category.query.filter_by(id=domain['id']).first()
 		category.update(domain)
 		return {'payload': category.to_dict()}
+	
+	@Key(['id'])
+	def delete_category_by_id(self, domain):
+		category = Category.query.filter_by(id=domain['id']).first()
+		category.delete()
+		return {'payload': {'success':True}}
