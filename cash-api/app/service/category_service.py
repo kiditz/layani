@@ -37,3 +37,9 @@ class CategoryService(object):
 	def find_category_by_id(self, domain):
 		category = Category.query.filter_by(id=domain['id']).first()
 		return {'payload': category.to_dict()}
+	
+	@Key(['id'])
+	def edit_category_by_id(self, domain):
+		category = Category.query.filter_by(id=domain['id']).first()
+		category.update(domain)
+		return {'payload': category.to_dict()}

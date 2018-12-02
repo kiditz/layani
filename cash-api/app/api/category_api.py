@@ -47,3 +47,17 @@ def find_category_by_id():
     """
     domain = request.args.to_dict()
     return category_service.find_category_by_id(domain)
+
+
+@api.route('/edit', methods=['PUT'])
+def edit_category_by_id():
+
+    """
+    {
+    "id": "Long",
+    "merchant_id": "Long",
+    "name": "String"
+    }
+    """
+    domain = request.get_json()
+    return category_service.edit_category_by_id(domain)
