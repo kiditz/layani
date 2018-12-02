@@ -25,7 +25,12 @@ class CategoryService(object):
 			.filter_by(merchant_id=domain['merchant_id'])\
 			.filter(Category.name.ilike('%' + domain['name'] + '%'))\
 			.order_by(Category.name.asc())
-		category_list = list(map(lambda x: x._asdict(), category_q.all()))
+		if 'page' in domain and 'size' in domain:
+			page = int(domain['page'])
+			size = int(domain['size'])
+			category_list = list(map(lambda x: x._asdict(), category_q.paginate(page, size, error_out=False)))
+		else:
+			category_list = list(map(lambda x: x._asdict(), category_q.all()))
 		return {'payload': category_list}
 	
 	@Number(['id'])
