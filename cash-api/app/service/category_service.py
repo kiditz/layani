@@ -2,7 +2,7 @@ from slerp.validator import Key, Number, Blank
 from slerp.logger import logging
 from slerp.app import db
 
-from entity.models import Category
+from entity.models import Category, Product
 
 
 log = logging.getLogger(__name__)
