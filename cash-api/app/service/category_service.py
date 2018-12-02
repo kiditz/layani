@@ -28,7 +28,7 @@ class CategoryService(object):
 		if 'page' in domain and 'size' in domain:
 			page = int(domain['page'])
 			size = int(domain['size'])
-			category_list = list(map(lambda x: x._asdict(), category_q.paginate(page, size, error_out=False)))
+			category_list = list(map(lambda x: x._asdict(), category_q.paginate(page, size, error_out=False).pages))
 		else:
 			category_list = list(map(lambda x: x._asdict(), category_q.all()))
 		return {'payload': category_list}
