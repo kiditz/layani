@@ -46,7 +46,7 @@ class CategoryService(object):
 	
 	@Key(['id'])
 	def delete_category_by_id(self, domain):
-		db.session.query().filter(Product.category_id == domain['id']).update({"category_id": None})
+		db.session.query(Product).filter(Product.category_id == domain['id']).update({"category_id": None})
 		category = Category.query.filter_by(id=domain['id']).first()
 		category.delete()
 		return {'payload': {'success':True}}
