@@ -115,14 +115,12 @@ class OrderService(object):
 	@Number(["merchant_id"])
 	def get_dashboard_header(self, domain):
 		merchant_id = domain['merchant_id']
-		cashbox = Cashbox.query.filter(Cashbox.merchant_id == merchant_id).first()
-		if cashbox is None:
-			raise ValidationException(ErrorCode.CASHBOX_NOT_FOUND)
+		cashbox = Cashbox.query.with_entities(func.coalesce(func.sum(Cashbox.total_amount), 0).label("total_amount")).filter(Cashbox.merchant_id == merchant_id).first()._asdict()
 		total_profit = Order.query.with_entities(func.coalesce(func.sum(Order.profit), 0).label("total_profit")).filter(Order.merchant_id == merchant_id).first()._asdict()
 		total_income = Order.query.with_entities(func.coalesce(func.sum(Order.total_amount), 0).label("total_income")).filter(Order.merchant_id == merchant_id).first()._asdict()
 		total_receiveable = AccountReceiveable.query.with_entities(func.coalesce(func.sum(AccountReceiveable.total_credit), 0).label("total_credit")).filter(AccountReceiveable.merchant_id == merchant_id).first()._asdict()
 		result = {
-			'cashbox_amount': cashbox.total_amount,
+			'cashbox_amount': cashbox['total_amount'],
 			'total_receiveable': total_receiveable["total_credit"],
 			'total_profit': total_profit["total_profit"],
 			'total_income': total_income["total_income"]

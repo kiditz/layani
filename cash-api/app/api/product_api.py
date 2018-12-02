@@ -58,3 +58,15 @@ def edit_product_by_id():
     """
     domain = request.get_json()
     return product_service.edit_product_by_id(domain)
+
+
+@api.route('/find_by_code', methods=['GET'])
+def find_product_by_code():
+
+    """
+    {
+        "code": "String"
+    }
+    """
+    domain = request.args.to_dict()
+    return product_service.find_product_by_code(domain)

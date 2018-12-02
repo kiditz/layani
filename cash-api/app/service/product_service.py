@@ -162,4 +162,7 @@ class ProductService(object):
 		
 		return {'payload': product.to_dict()}
 	
-	
+	@Key(['code'])
+	def find_product_by_code(self, domain):
+		product = Product.query.filter_by(code=domain['code']).first()
+		return {'payload': product.to_dict()}
