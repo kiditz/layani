@@ -66,14 +66,14 @@ class ProductFragment : Fragment(), ProductListContract.View {
         super.onViewCreated(view, savedInstanceState)
         this.adapter = ProductListAdapter(imageService)
         val manager  = GridLayoutManager(context, 2)
-        receycler?.layoutManager =  manager
-        receycler?.isNestedScrollingEnabled = false
-        receycler?.setHasFixedSize(true)
-        receycler?.itemAnimator = DefaultItemAnimator()
+        recycler?.layoutManager =  manager
+        recycler?.isNestedScrollingEnabled = false
+        recycler?.setHasFixedSize(true)
+        recycler?.itemAnimator = DefaultItemAnimator()
         val spaceInPixel = resources.getDimensionPixelSize(R.dimen.grid_margin)
-        receycler?.addItemDecoration(MarginItemDecoration(spaceInPixel))
-        receycler?.adapter = adapter
-        receycler?.addOnScrollListener(object :AbstractRecyclerPagination(manager){
+        recycler?.addItemDecoration(MarginItemDecoration(spaceInPixel))
+        recycler?.adapter = adapter
+        recycler?.addOnScrollListener(object :AbstractRecyclerPagination(manager){
             override val isLoading: Boolean
                 get() = presenter.loading
             override val isLastPage: Boolean
@@ -121,15 +121,16 @@ class ProductFragment : Fragment(), ProductListContract.View {
     }
 
     override fun showEmpty() {
-        receycler?.visibility = View.GONE
+        recycler?.visibility = View.GONE
+        refresh?.isRefreshing = false
         showMessage(getString(R.string.no_product_title), getString(R.string.no_product_description))
     }
 
     private fun showMessage(title:String, message:String){
         try {
-            blankLayout?.visibility = View.VISIBLE
-            blankLayout?.tvDescription?.text = message
-            blankLayout?.tvTitle?.text = title
+            blank_layout?.visibility = View.VISIBLE
+            blank_layout?.tv_description?.text = message
+            blank_layout?.tv_title?.text = title
         }catch (e:Exception){
             Timber.e(e)
         }
@@ -142,8 +143,8 @@ class ProductFragment : Fragment(), ProductListContract.View {
 
     private fun dismiss(){
         refresh?.isRefreshing = false
-        receycler?.visibility = View.VISIBLE
-        blankLayout?.visibility = View.GONE
+        recycler?.visibility = View.VISIBLE
+        blank_layout?.visibility = View.GONE
     }
 
     companion object {

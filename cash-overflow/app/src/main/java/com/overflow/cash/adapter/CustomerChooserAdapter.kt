@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.adapter_customer.view.*
 /**
  * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
  */
-class CustomerListAdapter() : RecyclerView.Adapter<CustomerListAdapter.ViewHolder>() {
+class CustomerChooserAdapter() : RecyclerView.Adapter<CustomerChooserAdapter.ViewHolder>() {
     lateinit var context: Context
     private val values: MutableList<Data> = mutableListOf()
     var onItemClick: ((Data, ViewHolder) -> Unit)? = null

@@ -62,12 +62,12 @@ class AccountReceiveableFragment : Fragment(), AccountReceiveableContract.View {
 
         val manager = LinearLayoutManager(activity)
         this.refresh?.visibility = View.GONE
-        receycler?.layoutManager = manager
-        receycler?.isNestedScrollingEnabled = false
-        receycler?.setHasFixedSize(true)
-        receycler?.itemAnimator = DefaultItemAnimator()
-        receycler?.adapter = adapter
-        receycler?.addOnScrollListener(object : AbstractRecyclerPagination(manager) {
+        recycler?.layoutManager = manager
+        recycler?.isNestedScrollingEnabled = false
+        recycler?.setHasFixedSize(true)
+        recycler?.itemAnimator = DefaultItemAnimator()
+        recycler?.adapter = adapter
+        recycler?.addOnScrollListener(object : AbstractRecyclerPagination(manager) {
             override val isLoading: Boolean
                 get() = presenter.loading
             override val isLastPage: Boolean
@@ -123,7 +123,7 @@ class AccountReceiveableFragment : Fragment(), AccountReceiveableContract.View {
     }
 
     override fun onReceiveableLoaded(receiveables: List<Data>) {
-        blankLayout?.visibility = View.GONE
+        blank_layout?.visibility = View.GONE
         refresh?.visibility = View.VISIBLE
         refresh?.isRefreshing = false
         if (currentPage == 1) {
@@ -148,9 +148,9 @@ class AccountReceiveableFragment : Fragment(), AccountReceiveableContract.View {
     }
 
     private fun showMessage(title: String, message: String) {
-        blankLayout?.visibility = View.VISIBLE
-        blankLayout?.tvDescription?.text = message
-        blankLayout?.tvTitle?.text = title
+        blank_layout?.visibility = View.VISIBLE
+        blank_layout?.tv_description?.text = message
+        blank_layout?.tv_title?.text = title
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

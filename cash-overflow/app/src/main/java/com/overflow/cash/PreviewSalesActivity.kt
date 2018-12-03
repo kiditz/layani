@@ -2,7 +2,6 @@ package com.overflow.cash
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -10,16 +9,10 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import com.jakewharton.rxbinding2.widget.RxTextView
-import com.overflow.cash.Constant.TranslationsKey.Companion.REQUIRED_VALUE_CUSTOMER_NAME
-import com.overflow.cash.Constant.TranslationsKey.Companion.TOTAL_AMOUNT_GREATER_THAN
-import com.overflow.cash.Constant.TranslationsKey.Companion.TOTAL_AMOUNT_LESS_THAN
 import com.overflow.cash.adapter.PreviewSalesAdapter
 import com.overflow.cash.mvp.order.PreviewSalesContract
 import com.overflow.cash.mvp.order.PreviewSalesPresenter
@@ -28,14 +21,9 @@ import com.overflow.cash.utils.*
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
 import dagger.android.AndroidInjection
-import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.functions.BiFunction
 import kotlinx.android.synthetic.main.activity_preview_sales.*
 import kotlinx.android.synthetic.main.dialog_order_payment.view.*
-import timber.log.Timber
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 
 class PreviewSalesActivity : AppCompatActivity(), PreviewSalesContract.View {
@@ -76,11 +64,11 @@ class PreviewSalesActivity : AppCompatActivity(), PreviewSalesContract.View {
         }
 
         val manager = LinearLayoutManager(this)
-        receycler?.layoutManager =  manager
-        receycler?.isNestedScrollingEnabled = false
-        receycler?.setHasFixedSize(true)
-        receycler?.itemAnimator = DefaultItemAnimator()
-        receycler?.adapter = adapter
+        recycler?.layoutManager =  manager
+        recycler?.isNestedScrollingEnabled = false
+        recycler?.setHasFixedSize(true)
+        recycler?.itemAnimator = DefaultItemAnimator()
+        recycler?.adapter = adapter
         cashBoxAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, mutableListOf<String>())
 
     }

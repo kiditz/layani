@@ -42,7 +42,13 @@ abstract class ActivityBuilder {
     internal abstract fun bindCustomerChooserActivity(): CustomerChooserActivity
 
     @ContributesAndroidInjector
+    internal abstract fun bindCustomerListAddActivity(): CustomerListAddActivity
+
+    @ContributesAndroidInjector
     internal abstract fun bindReceiptActivity(): ReceiptActivity
+
+    @ContributesAndroidInjector
+    internal abstract fun bindCategoryListActivity(): CategoryListActivity
 
     @ContributesAndroidInjector
     internal abstract fun bindReceiptAccountReceiveableActivity(): ReceiptAccountReceiveableActivity

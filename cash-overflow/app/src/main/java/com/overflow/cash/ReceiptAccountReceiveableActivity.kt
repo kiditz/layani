@@ -53,7 +53,7 @@ class ReceiptAccountReceiveableActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         listDialog = resources.getStringArray(R.array.share_receipt_list)
-        //Add Content scroll for draw web view to image
+        //Add Content scroll for draw web view to exitImage
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             WebView.enableSlowWholeDocumentDraw()
         }
@@ -133,7 +133,7 @@ class ReceiptAccountReceiveableActivity : AppCompatActivity() {
 
     private fun share():Boolean{
         val shareIntent = Intent(Intent.ACTION_SEND)
-        shareIntent.type = "image/*"
+        shareIntent.type = "exitImage/*"
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Tagihan")
         //shareIntent.putExtra(Intent.EXTRA_TEXT, "Tagihan transaksi dari $")
         shareIntent.putExtra(Intent.EXTRA_STREAM, shareAsImage())
@@ -145,7 +145,7 @@ class ReceiptAccountReceiveableActivity : AppCompatActivity() {
         val uri = shareAsImage()
         Timber.i("Uri %s", uri)
         val intent = Intent(Intent.ACTION_VIEW)
-        intent.setDataAndType(uri, "image/png")
+        intent.setDataAndType(uri, "exitImage/png")
         intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         startActivity(intent)

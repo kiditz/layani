@@ -128,7 +128,7 @@
                     android:text="@string/payer"
                     android:textSize="14sp" />
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/receycler"
+                    android:id="@+id/recycler"
                     android:name="com.overflow.cash.fragment.ProductFragment"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

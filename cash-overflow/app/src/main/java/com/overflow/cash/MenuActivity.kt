@@ -77,7 +77,7 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             tv_success_message.visibility = View.VISIBLE
             tv_success_message.text = intent.getStringExtra(Constant.SUCCESS_MESSAGE)
-            RxTextView.textChanges(tv_success_message).compose(RxUtils.applyObservableAsync()).debounce(3, TimeUnit.SECONDS).subscribe{
+            RxTextView.textChanges(tv_success_message).compose(RxUtils.applyObservableAsync()).debounce(5, TimeUnit.SECONDS).subscribe{
                 runOnUiThread {
                     tv_success_message.visibility = View.GONE
                 }

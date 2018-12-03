@@ -191,7 +191,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private fun handleAddStock() {
-        this.stockView?.progressBar?.visibility = View.VISIBLE
+        this.stockView?.progress_bar?.visibility = View.VISIBLE
         this.stockView?.btnSubmit?.isEnabled = false
         val data = Data()
         data["product_id"] = intent.extras.getLong("product_id")
@@ -220,7 +220,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private fun dismiss() {
-        this.stockView?.progressBar?.visibility = View.GONE
+        this.stockView?.progress_bar?.visibility = View.GONE
         this.stockView?.btnSubmit?.isEnabled = true
         this.discountView?.progressBarDiscount?.visibility = View.GONE
         this.discountView?.btnSubmitDiscount?.isEnabled = true

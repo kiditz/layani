@@ -53,9 +53,11 @@ class ProductListAdapter(private val imageService: ImageService) : RecyclerView.
         val sellPrice = context.rupiah(item.getDouble("sell_price"))
         val purchasePrice = context.rupiah(item.getDouble("purchase_price"))
         if(item.getBoolean("use_stock")){
-            val stock = item.getLong("stock").toInt().toString()
-            val unit  = item.getString("unit")
-            holder.qty.text = "$stock $unit"
+            if(item["stock"] != null){
+                val stock = item.getLong("stock").toInt().toString()
+                val unit  = item.getString("unit")
+                holder.qty.text = "$stock $unit"
+            }
         }
         holder.productCode.text = item.getString("product_code")
         holder.productName.text = item.getString("product_name")

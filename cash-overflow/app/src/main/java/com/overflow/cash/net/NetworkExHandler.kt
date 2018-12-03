@@ -33,7 +33,7 @@ class NetworkExHandler(internal var translations: Translations) {
             }
             else {
                 Timber.e(error)
-                activity.snack(translations.get(Constant.TranslationsKey.SYSTEM_ERROR)).show()
+                activity.snack(translations.get(activity.getString(R.string.system_err))).show()
             }
         } catch (e: Exception) {
             if(e !is NullPointerException){

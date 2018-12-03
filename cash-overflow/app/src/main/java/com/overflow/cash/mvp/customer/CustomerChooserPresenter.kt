@@ -26,12 +26,10 @@ class CustomerChooserPresenter(private val context:Context, private val preferen
         disposable.clear()
     }
 
-    fun getSize():Int{
-        return preferences.getInt(Constant.MAX_PAGE, API.SIZE)
-    }
+    fun getSize():Int= preferences.getInt(Constant.MAX_PAGE, API.SIZE)
+
 
     override fun loadCustomer(page:Int, name:String) {
-
         val input = Data()
         input["page"] = API.MIN_PAGE
         input["size"] = getSize()

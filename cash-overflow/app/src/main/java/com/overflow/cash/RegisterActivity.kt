@@ -13,10 +13,7 @@ import com.overflow.cash.account.AccountSyncAdapter
 import com.overflow.cash.mvp.register.RegisterContract
 import com.overflow.cash.mvp.register.RegisterPresenter
 import com.overflow.cash.net.NetworkExHandler
-import com.overflow.cash.utils.home
-import com.overflow.cash.utils.moveTo
-import com.overflow.cash.utils.snack
-import com.overflow.cash.utils.validateNotEmpty
+import com.overflow.cash.utils.*
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
 import dagger.android.AndroidInjection
@@ -50,10 +47,10 @@ class RegisterActivity : AppCompatActivity(), RegisterContract.View {
         validate()
         btnRegister.setOnClickListener {
             btnRegister.isEnabled = false
-            progressBar.visibility = View.VISIBLE
+            progress_bar.visibility = View.VISIBLE
             val data = Data()
-            data["password"] = edPassword.text.toString()
-            data["username"] = edUsername.text.toString()
+            data["password"] = ed_password.text.toString()
+            data["username"] = ed_username.text.toString()
             data["fullname"] = edStoreOwnerName.text.toString()
             data["store"] = store
             this.registerPresenter.addStore(data)
@@ -61,8 +58,8 @@ class RegisterActivity : AppCompatActivity(), RegisterContract.View {
     }
 
     private fun validate(){
-        val usernameObserve = this.validateNotEmpty(edUsername, usernameWrapper, translations.get(Constant.TranslationsKey.REQUIRED_VALUE_USERNAME))
-        val passwordObserve = this.validateNotEmpty(edPassword, passwordWrapper, translations.get(Constant.TranslationsKey.REQUIRED_VALUE_PASSWORD))
+        val usernameObserve = this.validateNotEmpty(ed_username, usernameWrapper, translations.get(Constant.TranslationsKey.REQUIRED_VALUE_USERNAME))
+        val passwordObserve = this.validateLengthGreaterThan(ed_password, password_wrapper,8 - 1,  translations.get(Constant.TranslationsKey.PASSWORD_MINIMUM_LENGTH))
         val ownerNameObserve = this.validateNotEmpty(edStoreOwnerName, storeOwnerNameWrapper, translations.get(Constant.TranslationsKey.REQUIRED_VALUE_STORE_OWNER_NAME))
         Observable.combineLatest(usernameObserve, passwordObserve, ownerNameObserve, Function3{username:Boolean, password:Boolean, ownerName:Boolean -> ownerName && username && password}).subscribe { isValid ->
             btnRegister.isEnabled = isValid
@@ -70,19 +67,19 @@ class RegisterActivity : AppCompatActivity(), RegisterContract.View {
     }
 
     override fun showError(error: Throwable) {
-        progressBar.visibility = View.GONE
+        progress_bar.visibility = View.GONE
         btnRegister.isEnabled = true
         networkExHandler.errorHandle(this, error)
     }
 
     override fun showNoOk(res: String) {
-        progressBar.visibility = View.GONE
+        progress_bar.visibility = View.GONE
         btnRegister.isEnabled = true
         snack(res).show()
     }
 
     override fun onAccountCreated(data: Data) {
-        progressBar.visibility = View.GONE
+        progress_bar.visibility = View.GONE
         btnRegister.isEnabled = true
         val bundle = Bundle()
         bundle.putBoolean(Constant.CREATE_ACCOUNT_SUCCESS, true)
@@ -95,7 +92,7 @@ class RegisterActivity : AppCompatActivity(), RegisterContract.View {
     }
 
     override fun showNotConnected(res: String) {
-        progressBar.visibility = View.GONE
+        progress_bar.visibility = View.GONE
         btnRegister.isEnabled = true
         snack(res).show()
     }

@@ -13,7 +13,7 @@ import com.overflow.cash.R
 class DefaultGlideModule : AppGlideModule(){
     override fun applyOptions(context: Context, builder: GlideBuilder) {
         super.applyOptions(context, builder)
-        builder.setLogLevel(Log.ERROR)
+        builder.setLogLevel(Log.DEBUG)
         builder.setDefaultRequestOptions(RequestOptions())
     }
 }

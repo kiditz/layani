@@ -12,6 +12,7 @@
     <string name="purchase">Pembelian</string>
     <string name="accounts_receiveable">Piutang</string>
     <string name="accounts_payable">Hutang</string>
+    <string name="transaction_history">Riwayat Transaksi</string>
     <string name="nav_customer">Pelanggan</string>
     <string name="settings">Pengatuan</string>
     <string name="other">Lainnya</string>
@@ -42,6 +43,8 @@
     <string name="submit">Simpan</string>
     <string name="add_product">Tambah Produk</string>
     <string name="edit_product">Ubah Produk</string>
+    <string name="edit_category">Ubah Kategori</string>
+    <string name="add_customer">Tambah pelanggan</string>
     <string name="date">Tanggal</string>
     <string name="add_price">Tambah Harga</string>
     <string name="name">Nama</string>
@@ -49,7 +52,7 @@
     <string name="no_product_title">Belum ada produk</string>
     <string name="no_product_description">Tekan tombol + untuk menambahkan produk</string>
     <string name="empty_data">No Data</string>
-    <string name="no_category_data">No category data</string>
+    <string name="no_category_data">Belum ada kategori</string>
     <string name="no_account_receiveable_description">Tidak ada piutang yang harus di bayar</string>
 
     <string name="content_authority">com.overflow.cash.provider</string>
@@ -110,7 +113,7 @@
     <string name="share_receiveable_receipt">Tagih</string>
     <string name="transaction">Transaction</string>
     <string name="are_you_sure">Apakah anda yakin</string>
-    <string name="system_err">Terjadi kesalahan pada sistem</string>
+    <string name="system_err">Upps, Terjadi kesalahan pada sistem</string>
     <string name="add_outlet">Tambahkan Outlet Baru</string>
     <string name="create_store_success">Pembuatan toko berhasil dilakukan</string>
     <string-array name="share_receipt_list">

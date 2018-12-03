@@ -24,7 +24,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@android:color/black"
-            tools:text="Rifky aditya" />
+             />
 
         <TextView
             android:id="@+id/tvPhoneNumber"

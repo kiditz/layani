@@ -1,8 +1,6 @@
 package com.overflow.cash.fragment
 
-import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
@@ -10,20 +8,18 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.overflow.cash.Constant
 import com.overflow.cash.MenuActivity
 import com.overflow.cash.R
-import com.overflow.cash.adapter.CustomerListAdapter
+import com.overflow.cash.adapter.CustomerChooserAdapter
 import com.overflow.cash.mvp.customer.CustomerChooserContract
 import com.overflow.cash.mvp.customer.CustomerChooserPresenter
 import com.overflow.cash.net.NetworkExHandler
 import com.overflow.cash.utils.AbstractRecyclerPagination
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
-import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_blank.*
-import kotlinx.android.synthetic.main.fragment_blank.view.*
 import kotlinx.android.synthetic.main.fragment_customer.*
 import javax.inject.Inject
 
-class CustomerFragment : Fragment(), CustomerChooserContract.View {
+class CustomerFragment : BaseFragment(), CustomerChooserContract.View {
 
 
     @Inject
@@ -32,7 +28,7 @@ class CustomerFragment : Fragment(), CustomerChooserContract.View {
     lateinit var translations: Translations
     @Inject
     lateinit var networkExHandler: NetworkExHandler
-    lateinit var adapter: CustomerListAdapter
+    lateinit var adapter: CustomerChooserAdapter
 
     private var currentPage: Int = 1
     lateinit var menuActivity: MenuActivity
@@ -46,22 +42,17 @@ class CustomerFragment : Fragment(), CustomerChooserContract.View {
         return inflater.inflate(R.layout.fragment_customer, container, false)
     }
 
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        AndroidSupportInjection.inject(this)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         this.presenter.attach(this)
-        this.adapter = CustomerListAdapter()
+        this.adapter = CustomerChooserAdapter()
         val manager = LinearLayoutManager(activity)
-        receycler?.layoutManager = manager
-        receycler?.isNestedScrollingEnabled = false
-        receycler?.setHasFixedSize(true)
-        receycler?.itemAnimator = DefaultItemAnimator()
-        receycler?.adapter = adapter
-        receycler?.addOnScrollListener(object : AbstractRecyclerPagination(manager) {
+        recycler?.layoutManager = manager
+        recycler?.isNestedScrollingEnabled = false
+        recycler?.setHasFixedSize(true)
+        recycler?.itemAnimator = DefaultItemAnimator()
+        recycler?.adapter = adapter
+        recycler?.addOnScrollListener(object : AbstractRecyclerPagination(manager) {
             override val isLoading: Boolean
                 get() = presenter.loading
             override val isLastPage: Boolean
@@ -97,7 +88,8 @@ class CustomerFragment : Fragment(), CustomerChooserContract.View {
     }
 
     override fun onCustomerLoaded(customerList: List<Data>) {
-        blankLayout?.visibility = View.GONE
+        recycler?.visibility = View.VISIBLE
+        blank_layout?.visibility = View.GONE
         refresh?.isRefreshing = false
         if (currentPage == 1) {
             this.adapter.clearValues()
@@ -120,11 +112,6 @@ class CustomerFragment : Fragment(), CustomerChooserContract.View {
         showMessage(getString(R.string.no_customer_title), "")
     }
 
-    private fun showMessage(title: String, message: String) {
-        blankLayout?.visibility = View.VISIBLE
-        blankLayout?.tvDescription?.text = message
-        blankLayout?.tvTitle?.text = title
-    }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.menu_customer, menu)

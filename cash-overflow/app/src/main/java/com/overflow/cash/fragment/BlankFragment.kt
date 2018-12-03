@@ -19,7 +19,7 @@ import com.overflow.cash.R
 class BlankFragment : Fragment() {
     /**
      * <pre>
-     *    Input: image, title, description
+     *    Input: exitImage, title, description
      * </pre>
      * */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -30,15 +30,15 @@ class BlankFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        tvTitle.text = arguments?.getString(ARG_TITLE)
-        tvDescription.text = arguments?.getString(ARG_DESCRIPTION)
+        tv_title.text = arguments?.getString(ARG_TITLE)
+        tv_description.text = arguments?.getString(ARG_DESCRIPTION)
     }
 
     companion object {
         const val ARG_TITLE = "title"
         const val ARG_DESCRIPTION = "description"
         @JvmStatic
-        fun newInstance(title: String, description:String) =
+        fun newInstance(title: String, description:String="") =
                 BlankFragment().apply {
                     arguments = Bundle().apply {
                         putString(ARG_TITLE, title)

@@ -5,24 +5,17 @@ import android.graphics.*
 import android.graphics.Paint.ANTI_ALIAS_FLAG
 import android.support.v4.content.ContextCompat
 import android.util.TypedValue
+import android.widget.ImageView
+import android.widget.TextView
 import com.overflow.libs.picker.EasyImageFiles
-import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
 import java.util.*
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
-import android.graphics.drawable.Drawable
-import android.view.View
-import android.widget.EditText
-import android.widget.TextView
 
 
-
-
-fun Context.drawText(text:String, width:Int, height:Int, textSize: Float = 12F, backgroundColor: Int = randomColor()): Bitmap {
+fun Context.drawText(text: String, width: Int, height: Int, textSize: Float = 12F, backgroundColor: Int = randomColor()): Bitmap {
     val fileToSave = File(EasyImageFiles.tempImageDirectory(this), "$text.png")
-    if(fileToSave.exists()){
+    if (fileToSave.exists()) {
         return BitmapFactory.decodeFile(fileToSave.absolutePath)
     }
     val textSizeSp = pxToSp(textSize.toInt())
@@ -57,10 +50,19 @@ fun Context.pxToSp(px: Int): Int {
     return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, px.toFloat(), r.displayMetrics))
 }
 
-fun randomColor(): Int{
+fun randomColor(): Int {
     val rnd = Random()
     return Color.argb(255, rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255))
 }
+
+//fun TextView.tinting(color: Int) {
+//    val col = ContextCompat.getColor(context, color)
+//    for (drawable in compoundDrawables) {
+//        if (drawable != null) {
+//            drawable.colorFilter = PorterDuffColorFilter(col, PorterDuff.Mode.SRC_IN)
+//        }
+//    }
+//}
 
 fun TextView.tinting(color: Int) {
     val col = ContextCompat.getColor(context, color)
@@ -71,11 +73,10 @@ fun TextView.tinting(color: Int) {
     }
 }
 
-fun EditText.tinting(color: Int) {
+fun ImageView.tinting(color: Int) {
     val col = ContextCompat.getColor(context, color)
-    for (drawable in compoundDrawables) {
-        if (drawable != null) {
-            drawable.colorFilter = PorterDuffColorFilter(col, PorterDuff.Mode.SRC_IN)
-        }
+    if (drawable != null) {
+        drawable.colorFilter = PorterDuffColorFilter(col, PorterDuff.Mode.SRC_IN)
     }
 }
+

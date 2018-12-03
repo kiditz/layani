@@ -25,7 +25,6 @@ import com.overflow.cash.utils.AbstractRecyclerPagination
 import com.overflow.cash.utils.decoration.MarginItemDecoration
 import com.overflow.cash.utils.snack
 import com.overflow.libs.core.Data
-import com.overflow.libs.picker.Constants
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.dialog_manage_order_item_qty.view.*
 import kotlinx.android.synthetic.main.fragment_blank.*
@@ -80,14 +79,14 @@ class SalesFragment : Fragment(), ProductListContract.View, OrderContract.View {
         super.onViewCreated(view, savedInstanceState)
         this.adapter = SalesListAdapter(imageService)
         val manager  = GridLayoutManager(context, 2)
-        receycler?.layoutManager =  manager
-        receycler?.isNestedScrollingEnabled = false
-        receycler?.setHasFixedSize(true)
-        receycler?.itemAnimator = DefaultItemAnimator()
+        recycler?.layoutManager =  manager
+        recycler?.isNestedScrollingEnabled = false
+        recycler?.setHasFixedSize(true)
+        recycler?.itemAnimator = DefaultItemAnimator()
         val spaceInPixel = resources.getDimensionPixelSize(R.dimen.grid_margin)
-        receycler?.addItemDecoration(MarginItemDecoration(spaceInPixel))
-        receycler?.adapter = adapter
-        receycler?.addOnScrollListener(object :AbstractRecyclerPagination(manager){
+        recycler?.addItemDecoration(MarginItemDecoration(spaceInPixel))
+        recycler?.adapter = adapter
+        recycler?.addOnScrollListener(object :AbstractRecyclerPagination(manager){
             override val isLoading: Boolean
                 get() = productListPresenter.loading
             override val isLastPage: Boolean
@@ -212,9 +211,9 @@ class SalesFragment : Fragment(), ProductListContract.View, OrderContract.View {
     }
 
     private fun showMessage(title:String, message:String){
-        blankLayout?.visibility = View.VISIBLE
-        blankLayout?.tvDescription?.text = message
-        blankLayout?.tvTitle?.text = title
+        blank_layout?.visibility = View.VISIBLE
+        blank_layout?.tv_description?.text = message
+        blank_layout?.tv_title?.text = title
     }
 
     override fun showNoOk(res: String) {
@@ -233,8 +232,8 @@ class SalesFragment : Fragment(), ProductListContract.View, OrderContract.View {
 
     private fun dismiss(){
         refresh?.isRefreshing = false
-        receycler?.visibility = View.VISIBLE
-        blankLayout?.visibility = View.GONE
+        recycler?.visibility = View.VISIBLE
+        blank_layout?.visibility = View.GONE
     }
 
     companion object {

@@ -101,6 +101,13 @@
         <activity
             android:name=".ReceiptAccountReceiveableActivity"
             android:label="" />
+        <activity
+            android:name=".CategoryListActivity"
+            android:label="@string/edit_category" />
+
+        <activity
+            android:name=".CustomerListAddActivity"
+            android:label="@string/add_customer" />
         <activity android:name=".AccountReceiveableDetailActivity" android:label="" android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".PaymentAccountReceiveableActivity" android:label="" android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".PaymentTransactionActivity" android:label="" />

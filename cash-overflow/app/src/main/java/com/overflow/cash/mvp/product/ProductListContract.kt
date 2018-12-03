@@ -10,6 +10,6 @@ class ProductListContract {
     }
 
     interface Presenter : BasePresenter<View> {
-        fun loadProduct(page: Int, categoryId: Long, query: String, order: String = "")
+        fun loadProduct(page: Int, categoryId: Long, query: String, order: String = "product_name asc")
     }
 }

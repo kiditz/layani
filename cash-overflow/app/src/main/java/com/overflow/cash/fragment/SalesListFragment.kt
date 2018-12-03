@@ -1,19 +1,17 @@
 package com.overflow.cash.fragment
 
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.view.*
 import com.miguelcatalan.materialsearchview.MaterialSearchView
-import com.overflow.cash.Constant
-import com.overflow.cash.MenuActivity
-import com.overflow.cash.PreviewSalesActivity
-import com.overflow.cash.R
+import com.overflow.cash.*
 import com.overflow.cash.model.OrderItem
 import com.overflow.cash.mvp.product.CategoryListContract
 import com.overflow.cash.mvp.product.CategoryListPresenter
@@ -57,27 +55,21 @@ class SalesListFragment : Fragment(), CategoryListContract.View, ViewPager.OnPag
         setHasOptionsMenu(true)
         this.merchant = Data(preferences.getString("merchant", "{}"))
         this.adapter = ViewPagerAdapter(activity!!.supportFragmentManager)
-        this.presenter.attach(this)
         realm = Realm.getDefaultInstance()
-        loadCategory()
+
     }
 
-    private fun loadCategory(){
-        val category = Data()
-        category["merchant_id"] = merchant.getLong("id")
-        category["name"] = ""
-        presenter.loadCategory(category)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         this.menuActivity = activity as MenuActivity
-        tabLayout.tabMode = TabLayout.MODE_SCROLLABLE
-        this.viewPager?.adapter = adapter
-        viewPager?.addOnPageChangeListener(this)
-        tabLayout.setupWithViewPager(viewPager)
+        tab_layout.tabMode = TabLayout.MODE_SCROLLABLE
+        this.view_pager?.adapter = adapter
+        view_pager?.addOnPageChangeListener(this)
+        tab_layout.setupWithViewPager(view_pager)
         showSumQuantity()
-
+        this.presenter.attach(this)
+        this.presenter.loadCategory(-1)
     }
 
     private fun showSumQuantity() {
@@ -108,20 +100,24 @@ class SalesListFragment : Fragment(), CategoryListContract.View, ViewPager.OnPag
 
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.action_sales, menu)
+        inflater?.inflate(R.menu.menu_sales, menu)
         menuActivity.search?.setMenuItem(menu!!.findItem(R.id.action_search))
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item!!.itemId){
+        return when(item!!.itemId){
             R.id.action_delete_transaction -> {
                 presenter.deleteAllOrderItems()
-                val salesFragment = (adapter.getItem(viewPager.currentItem) as SalesFragment)
+                val salesFragment = (adapter.getItem(view_pager.currentItem) as SalesFragment)
                 salesFragment.searchProduct(Constant.TEXT_EMPTY)
-                return true
+                true
             }
+            R.id.action_scan ->{
+                handleScanAction()
+                true
+            }
+            else -> false
         }
-        return false
     }
 
     override fun onCategoryLoaded(categoryList: List<Data>) {
@@ -138,7 +134,7 @@ class SalesListFragment : Fragment(), CategoryListContract.View, ViewPager.OnPag
             }
             this.categoryList.addAll(categoryList)
             adapter.notifyDataSetChanged()
-            handleSearchEvent(viewPager.currentItem)
+            handleSearchEvent(view_pager.currentItem)
         }catch (e:Exception){
             //Ignored
         }
@@ -157,7 +153,7 @@ class SalesListFragment : Fragment(), CategoryListContract.View, ViewPager.OnPag
     }
 
     override fun showEmpty() {
-        adapter.addFragment(BlankFragment.newInstance(getString(R.string.no_product_title), getString(R.string.no_product_description)), "")
+        adapter.addFragment(BlankFragment.newInstance(getString(R.string.no_product_title), Constant.TEXT_EMPTY), Constant.TEXT_EMPTY)
         adapter.notifyDataSetChanged()
     }
 
@@ -175,6 +171,7 @@ class SalesListFragment : Fragment(), CategoryListContract.View, ViewPager.OnPag
     override fun onPageSelected(position: Int) {
         handleSearchEvent(position)
     }
+
     private fun handleSearchEvent(position: Int) {
         val salesFragment = (adapter.getItem(position) as SalesFragment)
         menuActivity.search?.setOnQueryTextListener(object:MaterialSearchView.OnQueryTextListener{
@@ -189,4 +186,19 @@ class SalesListFragment : Fragment(), CategoryListContract.View, ViewPager.OnPag
             }
         })
     }
+
+    private fun handleScanAction() {
+        val intent = Intent(activity, ScannerActivity::class.java)
+        startActivityForResult(intent, Constant.REQUEST_CODE_SCANNER)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == Constant.REQUEST_CODE_SCANNER && resultCode == Activity.RESULT_OK) {
+            view_pager.setCurrentItem(0, true)
+            val salesFragment = (adapter.getItem(view_pager.currentItem) as SalesFragment)
+            salesFragment.searchProduct(data!!.getStringExtra("barcode"))
+        }
+    }
+
 }

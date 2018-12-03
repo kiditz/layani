@@ -6,23 +6,25 @@
     android:layout_height="match_parent"
     tools:context=".fragment.CustomerFragment">
 
-    <include
-        layout="@layout/fragment_blank"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="?actionBarSize" />
+
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refresh"
         android:background="@android:color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <include
+            layout="@layout/fragment_blank"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            />
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/receycler"
+            android:id="@+id/recycler"
             android:name="com.overflow.cash.fragment.ProductFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-            tools:listitem="@layout/adapter_product" />
+            tools:listitem="@layout/adapter_customer" />
     </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

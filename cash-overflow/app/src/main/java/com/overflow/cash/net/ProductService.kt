@@ -16,6 +16,14 @@ interface ProductService {
     fun addCategory(@Body data:Data): Single<Data>
 
     @Headers("Content-Type:application/json")
+    @PUT("/cash/category/edit")
+    fun editCategory(@Body data:Data): Single<Data>
+
+    @Headers("Content-Type:application/json")
+    @DELETE("/cash/category/delete")
+    fun deleteCategory(@Query("id") id:Long): Single<Data>
+
+    @Headers("Content-Type:application/json")
     @POST("/cash/product/add")
     fun addProduct(@Body data:Data): Single<Data>
 

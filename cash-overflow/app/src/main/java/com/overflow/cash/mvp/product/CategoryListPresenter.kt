@@ -2,7 +2,6 @@ package com.overflow.cash.mvp.product
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.text.TextUtils
 import com.overflow.cash.Constant
 import com.overflow.cash.net.API
 import com.overflow.cash.net.ProductService
@@ -16,31 +15,43 @@ class CategoryListPresenter(
         private var context: Context,
         private var translations: Translations,
         private var disposable: CompositeDisposable,
-        private var productService: ProductService,
+        private val productService: ProductService,
         private val preferences:SharedPreferences,
         private val orderRealm: OrderRealm
 ): CategoryListContract.Presenter {
     lateinit var view: CategoryListContract.View
-
+    var lastPage:Boolean = true
+    var loading:Boolean = true
+    var merchant:Data = Data()
+    init {
+        merchant = Data(this.preferences.getString("merchant", "{}"))
+    }
     override fun attach(view: CategoryListContract.View) {
         this.view = view
-        val merchant = Data(preferences.getString("merchant", "{}"))
-        val data = Data()
-        data["merchant_id"] =merchant.getLong("id")
-        data["name"] = Constant.TEXT_EMPTY
-        this.loadCategory(data)
     }
 
     override fun detach() {
         disposable.clear()
     }
 
-    override fun loadCategory(data:Data) {
-
+    override fun loadCategory(page:Int, name:String) {
+        val data = Data()
+        data["merchant_id"] = this.merchant.getLong("id")
+        if(page > 0){
+            data["size"] = getSize()
+            data["page"] = page
+        }
+        data["name"] = name
         if(API.isConnected(context)){
             this.disposable.add(this.productService.getCategory(data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){
                     val payloads = API.payloads(response)
+                    if (response.containsKey("total_pages")) {
+                        val total = response.getInt("total_pages")
+                        if (page == total) {
+                            this.lastPage = true
+                        }
+                    }
                     if(payloads.isEmpty()){
                         this.view.showEmpty()
                     }else{
@@ -50,10 +61,13 @@ class CategoryListPresenter(
                 }else{
                     this.view.showNoOk(translations.get(API.getError(response)))
                 }
+                loading = false
             }, {error ->
+                loading = false
                 this.view.showError(error)
             }))
         }else{
+            loading = false
             this.view.showNotConnected(this.translations.get(Constant.TranslationsKey.NO_INTERNET))
         }
     }
@@ -61,4 +75,6 @@ class CategoryListPresenter(
     override fun deleteAllOrderItems(){
         orderRealm.removeAllItems()
     }
+
+    fun getSize():Int= preferences.getInt(Constant.MAX_PAGE, API.SIZE)
 }

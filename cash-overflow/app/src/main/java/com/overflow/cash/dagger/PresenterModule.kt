@@ -52,6 +52,11 @@ class PresenterModule {
     }
 
     @Provides
+    internal fun provideEditAndRemoveCategoryPresenter(context: Context,translations: Translations, disposable: CompositeDisposable, productService: ProductService, preferences: SharedPreferences): EditAndRemoveCategoryPresenter {
+        return EditAndRemoveCategoryPresenter(context, translations, disposable, preferences,productService)
+    }
+
+    @Provides
     internal fun provideProductListPresenter(context: Context,translations: Translations, disposable: CompositeDisposable, productService: ProductService, preferences: SharedPreferences): ProductListPresenter {
         return ProductListPresenter(context, translations, disposable, productService, preferences)
     }

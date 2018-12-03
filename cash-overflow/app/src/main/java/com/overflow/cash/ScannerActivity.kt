@@ -33,7 +33,7 @@ class ScannerActivity:AppCompatActivity(), ZXingScannerView.ResultHandler {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.action_scanner, menu)
+        menuInflater.inflate(R.menu.menu_scanner, menu)
         val flashItem = menu!!.findItem(R.id.action_flash)
         flashItem.actionView?.switcher?.setText(R.string.flash)
         flashItem.actionView?.switcher?.setOnCheckedChangeListener { _, isChecked ->

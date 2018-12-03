@@ -15,6 +15,7 @@ import com.overflow.cash.mvp.login.LoginPresenter
 import com.overflow.cash.net.NetworkExHandler
 import com.overflow.cash.utils.moveTo
 import com.overflow.cash.utils.snack
+import com.overflow.cash.utils.validateLengthGreaterThan
 import com.overflow.cash.utils.validateNotEmpty
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
@@ -57,12 +58,12 @@ class LoginActivity : AccountAuthenticatorActivity(), LoginContract.View {
         btnCreateStore?.setOnClickListener {
             moveTo(CreateStoreActivity::class.java)
         }
-        btnLogin?.setOnClickListener {
+        btn_login?.setOnClickListener {
             val data = Data()
-            btnLogin?.isEnabled = true
-            progressBar?.visibility = View.VISIBLE
-            data["username"]= edUsername.text.toString()
-            data["password"]= edPassword.text.toString()
+            btn_login?.isEnabled = true
+            progress_bar?.visibility = View.VISIBLE
+            data["username"]= ed_username.text.toString()
+            data["password"]= ed_password.text.toString()
             presenter.login(data)
         }
 
@@ -70,10 +71,12 @@ class LoginActivity : AccountAuthenticatorActivity(), LoginContract.View {
     }
 
     private fun validateInput(){
-        val usernameObserve = this.validateNotEmpty(edUsername, usernameWrapper, translations.get(Constant.TranslationsKey.REQUIRED_VALUE_USERNAME))
-        val passwordObserve = this.validateNotEmpty(edPassword, passwordWrapper, translations.get(Constant.TranslationsKey.REQUIRED_VALUE_PASSWORD))
+        //Validate username must not empty
+        val usernameObserve = this.validateNotEmpty(ed_username, usernameWrapper, translations.get(Constant.TranslationsKey.REQUIRED_VALUE_USERNAME))
+        //Validate password length must gt 8
+        val passwordObserve = this.validateLengthGreaterThan(ed_password, password_wrapper, 8 - 1,translations.get(Constant.TranslationsKey.PASSWORD_MINIMUM_LENGTH))
         Observable.combineLatest(usernameObserve, passwordObserve, BiFunction{ username:Boolean, password:Boolean -> username && password}).subscribe { isValid ->
-            btnLogin.isEnabled = isValid
+            btn_login.isEnabled = isValid
         }
     }
 
@@ -90,10 +93,10 @@ class LoginActivity : AccountAuthenticatorActivity(), LoginContract.View {
 
     override fun onLoginSuccess(intent: Intent) {
         Timber.i("Login")
-        btnLogin?.isEnabled = true
-        progressBar?.visibility = View.GONE
+        btn_login?.isEnabled = true
+        progress_bar?.visibility = View.GONE
         val authtoken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN)
-        val account = Account(edUsername.text.toString(), intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE))
+        val account = Account(ed_username.text.toString(), intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE))
         accountManager.addAccountExplicitly(account, BuildConfig.auth_password, intent.extras)
         accountManager.setAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, authtoken)
         setAccountAuthenticatorResult(intent.extras)
@@ -102,8 +105,8 @@ class LoginActivity : AccountAuthenticatorActivity(), LoginContract.View {
     }
 
     override fun showError(error: Throwable) {
-        btnLogin?.isEnabled = true
-        progressBar?.visibility = View.GONE
+        btn_login?.isEnabled = true
+        progress_bar?.visibility = View.GONE
         networkExHandler.errorHandle(this, error)
     }
 
@@ -115,8 +118,8 @@ class LoginActivity : AccountAuthenticatorActivity(), LoginContract.View {
     }
 
     override fun showNotConnected(res: String) {
-        btnLogin?.isEnabled = true
-        progressBar?.visibility = View.GONE
+        btn_login?.isEnabled = true
+        progress_bar?.visibility = View.GONE
         snack(res).show()
     }
 }

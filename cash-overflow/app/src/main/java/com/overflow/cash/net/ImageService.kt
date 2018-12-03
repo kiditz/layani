@@ -12,17 +12,19 @@ import com.overflow.cash.R
 import com.overflow.cash.account.AccountGeneral
 import com.overflow.cash.dagger.GlideApp
 import com.overflow.cash.utils.drawText
+import timber.log.Timber
 
 class ImageService(private val context: Context, private val accountManager: AccountManager) {
 
     fun loadDocument(img: ImageView, documentId: Long?, defaultText: String = "FL") {
         val account = accountManager.getAccountsByType(context.getString(R.string.account_type)).first()
         val accessToken = accountManager.peekAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS)
-        val resourceUrl = BuildConfig.base_url + "cash/document/find?id=" + documentId
+        val resourceUrl = BuildConfig.base_url + "/cash/document/find?id=" + documentId
         val glideUrl = GlideUrl(resourceUrl, LazyHeaders.Builder().addHeader("Authorization", "Bearer $accessToken").build())
         val bmp = getDefaultImage(defaultText)
         if(documentId != null && documentId > 0L){
-            GlideApp.with(context).load(glideUrl).dontAnimate().dontTransform().error(bmp).into(img)
+            Timber.d("Load document with id %s", documentId)
+            GlideApp.with(context).load(glideUrl).placeholder(bmp).dontAnimate().dontTransform().error(bmp).into(img)
         }else{
             img.setImageBitmap(bmp.bitmap)
         }

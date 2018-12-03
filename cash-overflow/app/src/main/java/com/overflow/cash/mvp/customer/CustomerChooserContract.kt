@@ -11,10 +11,7 @@ class CustomerChooserContract {
     }
 
     interface Presenter : BasePresenter<View> {
-
         fun loadCustomer(page: Int, name: String)
         fun editCustomer(customer:Data)
     }
-
-
 }

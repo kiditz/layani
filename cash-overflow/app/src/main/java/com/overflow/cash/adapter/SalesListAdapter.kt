@@ -68,12 +68,15 @@ class SalesListAdapter(private val imageService: ImageService) : RecyclerView.Ad
         holder.itemView.setOnClickListener {
             onItemClick?.invoke(item, holder)
         }
-        if(item.getBoolean("use_stock")){
-            val stock = item.getLong("stock")
-            holder.remainingStock.text = "$stock $unit"
-            holder.remainingStock.visibility = View.VISIBLE
-        }else{
-            holder.remainingStock.visibility = View.GONE
+        try {
+            if(item.getBoolean("use_stock")){
+                val stock = item.getLong("stock")
+                holder.remainingStock.text = "$stock $unit"
+                holder.remainingStock.visibility = View.VISIBLE
+            }else{
+                holder.remainingStock.visibility = View.GONE
+            }
+        }catch (e:Exception){
         }
 
         holder.itemView.setOnLongClickListener{

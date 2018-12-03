@@ -40,6 +40,8 @@
     <string name="submit">Submit</string>
     <string name="add_product">Add Product</string>
     <string name="edit_product">Edit Product</string>
+    <string name="edit_category">Edit Category</string>
+    <string name="add_customer">Add Customer</string>
     <string name="date">Date</string>
     <string name="add_price">Add Price</string>
     <string name="name">Name</string>

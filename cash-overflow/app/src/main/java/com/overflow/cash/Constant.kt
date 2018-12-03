@@ -16,6 +16,7 @@ class Constant {
         const val ACTION_RECEIVE_MESSAGE = "com.slerpio.fl.notification.RECEIVE_MESSAGE"
         const val SUCCESS_MESSAGE = "success_message"
         const val GOTO = "goto"
+        const val POSITION = "index"
         const val SALES = "sales"
         const val MAX_PAGE = "MAX_PAGE"
         const val TEXT_EMPTY = ""
@@ -70,7 +71,7 @@ class Constant {
             const val REQUIRED_VALUE_NAME = "required.value.name"
             const val REQUIRED_VALUE_USERNAME = "required.value.username"
             const val REQUIRED_VALUE_FULLNAME = "required.value.fullname"
-            const val REQUIRED_VALUE_PASSWORD = "required.value.password"
+            const val PASSWORD_MINIMUM_LENGTH = "password.minimum.length"
             const val INVALID_PASSWORD_LENGTH = "invalid.password.length"
             const val REQUIRED_VALUE_ADDRESS = "required.value.address"
 
@@ -110,7 +111,8 @@ class Constant {
             const val USER_NOT_FOUND = "user.not.found"
             const val USER_WRONG_PASSWORD = "user.wrong.password"
             const val INVALID_EMAIL = "invalid.email.address"
-
+            const val CATEGORY_EDITED_SUCCESSFULLY = "category.edited.successfully"
+            const val CATEGORY_REMOVED_SUCCESSFULLY = "category.removed.successfully"
 
         }
     }

@@ -53,11 +53,11 @@ class AccountReceiveableDetailActivity : AppCompatActivity(), AccountReceiveable
         val manager = LinearLayoutManager(this)
         currentPage = 1
         presenter.loadDetail(currentPage, intent.getLongExtra("customer_id", -1L))
-        receycler?.layoutManager = manager
-        receycler?.itemAnimator = DefaultItemAnimator()
-        receycler?.isNestedScrollingEnabled = false
-        receycler?.adapter = adapter
-        receycler?.addOnScrollListener(object : AbstractRecyclerPagination(manager) {
+        recycler?.layoutManager = manager
+        recycler?.itemAnimator = DefaultItemAnimator()
+        recycler?.isNestedScrollingEnabled = false
+        recycler?.adapter = adapter
+        recycler?.addOnScrollListener(object : AbstractRecyclerPagination(manager) {
             override val isLoading: Boolean
                 get() = presenter.loading
             override val isLastPage: Boolean
@@ -96,7 +96,7 @@ class AccountReceiveableDetailActivity : AppCompatActivity(), AccountReceiveable
         return home(item!!)
     }
     override fun onDetailLoaded(receiveables: List<Data>) {
-        blankLayout?.visibility = View.GONE
+        blank_layout?.visibility = View.GONE
         refresh?.visibility = View.VISIBLE
         refresh?.isRefreshing = false
         if (currentPage == 1) {
@@ -125,9 +125,9 @@ class AccountReceiveableDetailActivity : AppCompatActivity(), AccountReceiveable
     }
 
     private fun showMessage(title: String, message: String) {
-        blankLayout?.visibility = View.VISIBLE
-        blankLayout?.tvDescription?.text = message
-        blankLayout?.tvTitle?.text = title
+        blank_layout?.visibility = View.VISIBLE
+        blank_layout?.tv_description?.text = message
+        blank_layout?.tv_title?.text = title
     }
 
 }

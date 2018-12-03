@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.overflow.cash.BuildConfig
+import com.overflow.cash.net.AccountService
 import com.overflow.cash.net.NetworkExHandler
-import com.overflow.cash.net.TokenAuthenticator
 import com.overflow.cash.net.TokenInterceptor
 import com.overflow.libs.core.Translations
 import dagger.Module
@@ -69,10 +69,10 @@ class NetworkModule {
 
     @Provides
     @Named(AUTHENTICATED)
-    internal fun provideRetrofitAuthEnabled(objectMapper: ObjectMapper, accountManager: AccountManager, context: Context): Retrofit {
+    internal fun provideRetrofitAuthEnabled(objectMapper: ObjectMapper, accountManager: AccountManager,accountService: AccountService, context: Context): Retrofit {
         val client = OkHttpClient.Builder()
-        client.addInterceptor(TokenInterceptor(context, accountManager))
-        client.authenticator(TokenAuthenticator(context, accountManager))
+        client.addInterceptor(TokenInterceptor(context, accountManager, accountService))
+        //client.authenticator(TokenAuthenticator(context, accountManager))
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
         client.addInterceptor(interceptor)

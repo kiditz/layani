@@ -8,11 +8,12 @@ import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.jakewharton.rxbinding2.widget.RxTextView
-import com.overflow.cash.adapter.CustomerListAdapter
+import com.overflow.cash.adapter.CustomerChooserAdapter
 import com.overflow.cash.mvp.customer.CustomerChooserContract
 import com.overflow.cash.mvp.customer.CustomerChooserPresenter
 import com.overflow.cash.net.NetworkExHandler
 import com.overflow.cash.utils.AbstractRecyclerPagination
+import com.overflow.cash.utils.moveTo
 import com.overflow.libs.core.Data
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_customer_chooser.*
@@ -26,10 +27,9 @@ class CustomerChooserActivity : AppCompatActivity(), CustomerChooserContract.Vie
     lateinit var presenter:CustomerChooserPresenter
     @Inject
     lateinit var networkExHandler: NetworkExHandler
-    lateinit var adapter:CustomerListAdapter
+    lateinit var adapter:CustomerChooserAdapter
 
     private var currentPage:Int = 1
-    private var customerId:Long = -1L
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
@@ -40,14 +40,14 @@ class CustomerChooserActivity : AppCompatActivity(), CustomerChooserContract.Vie
         }
 
         this.presenter.attach(this)
-        this.adapter = CustomerListAdapter()
+        this.adapter = CustomerChooserAdapter()
         val manager  = LinearLayoutManager(this)
-        receycler?.layoutManager =  manager
-        receycler?.isNestedScrollingEnabled = false
-        receycler?.setHasFixedSize(true)
-        receycler?.itemAnimator = DefaultItemAnimator()
-        receycler?.adapter = adapter
-        receycler?.addOnScrollListener(object : AbstractRecyclerPagination(manager){
+        recycler?.layoutManager =  manager
+        recycler?.isNestedScrollingEnabled = false
+        recycler?.setHasFixedSize(true)
+        recycler?.itemAnimator = DefaultItemAnimator()
+        recycler?.adapter = adapter
+        recycler?.addOnScrollListener(object : AbstractRecyclerPagination(manager){
             override val isLoading: Boolean
                 get() = presenter.loading
             override val isLastPage: Boolean
@@ -66,12 +66,9 @@ class CustomerChooserActivity : AppCompatActivity(), CustomerChooserContract.Vie
         }
 
         this.btnSaveCustomer?.setOnClickListener {
-            val data = Data()
-            data["id"] = customerId
-            data["name"] = this.edCustomer?.text.toString()
-            this.presenter.editCustomer(data)
+            moveTo(CustomerListAddActivity::class.java)
         }
-
+        // On customer choosed
         this.adapter.onItemClick = {data, _->
             onCustomerEdited(data)
         }
@@ -82,7 +79,7 @@ class CustomerChooserActivity : AppCompatActivity(), CustomerChooserContract.Vie
     }
 
     override fun onCustomerLoaded(customerList: List<Data>) {
-        blankLayout?.visibility = View.GONE
+        blank_layout?.visibility = View.GONE
         if(currentPage == 1){
             this.adapter.clearValues()
         }
@@ -101,9 +98,9 @@ class CustomerChooserActivity : AppCompatActivity(), CustomerChooserContract.Vie
         showMessage(getString(R.string.no_customer_title), "")
     }
     private fun showMessage(title:String, message:String){
-        blankLayout?.visibility = View.VISIBLE
-        blankLayout?.tvDescription?.text = message
-        blankLayout?.tvTitle?.text = title
+        blank_layout?.visibility = View.VISIBLE
+        blank_layout?.tv_description?.text = message
+        blank_layout?.tv_title?.text = title
     }
 
     override fun showNotConnected(res: String) {

@@ -2,18 +2,17 @@ package com.overflow.cash.fragment
 
 
 import android.content.Context
-import android.content.SharedPreferences
+import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.DecelerateInterpolator
 import android.widget.PopupMenu
 import com.jakewharton.rxbinding2.widget.RxTextView
+import com.overflow.cash.CategoryListActivity
 import com.overflow.cash.SaveProductActivity
 import com.overflow.cash.Constant
 import com.overflow.cash.R
@@ -26,12 +25,13 @@ import com.overflow.cash.utils.snack
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.fragment_customer.*
 import kotlinx.android.synthetic.main.fragment_product_list.*
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class ProductListFragment : Fragment(), CategoryListContract.View, ViewPager.OnPageChangeListener{
+class ProductListFragment : BaseFragment(), CategoryListContract.View, ViewPager.OnPageChangeListener{
 
     private lateinit var adapter: ViewPagerAdapter
     @Inject
@@ -56,20 +56,21 @@ class ProductListFragment : Fragment(), CategoryListContract.View, ViewPager.OnP
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         this.presenter.attach(this)
-        btnShowSearch?.setOnClickListener {
-
+        this.presenter.loadCategory(-1)
+        btn_edit_category?.setOnClickListener {
+            activity?.moveTo(CategoryListActivity::class.java)
         }
-        tabLayout.tabMode = TabLayout.MODE_SCROLLABLE
-        this.viewPager?.adapter = adapter
-        viewPager?.addOnPageChangeListener(this)
-        tabLayout.setupWithViewPager(viewPager)
-
+        tab_layout.tabMode = TabLayout.MODE_SCROLLABLE
+        this.view_pager?.adapter = adapter
+        view_pager?.addOnPageChangeListener(this)
+        tab_layout.setupWithViewPager(view_pager)
 
     }
 
 
     override fun onCategoryLoaded(categoryList: List<Data>) {
         try {
+            hideMessage()
             var productFragment = ProductFragment.newInstance(-1)
             adapter.addFragment(productFragment, getString(R.string.all_product))
             this.categoryList.add(Data())
@@ -77,11 +78,12 @@ class ProductListFragment : Fragment(), CategoryListContract.View, ViewPager.OnP
                 productFragment = ProductFragment.newInstance(it.getLong("category_id"))
                 adapter.addFragment(productFragment, it.getString("category_name"))
             }
+
             this.categoryList.addAll(categoryList)
             adapter.notifyDataSetChanged()
-            handleAddProduct(viewPager.currentItem)
-            handleChangeEvent(viewPager.currentItem)
-            handlePopUpMenu(viewPager.currentItem)
+            handleAddProduct(view_pager.currentItem)
+            handleChangeEvent(view_pager.currentItem)
+            handlePopUpMenu(view_pager.currentItem)
         }catch (e:Exception){
             Timber.e(e)
         }
@@ -89,11 +91,11 @@ class ProductListFragment : Fragment(), CategoryListContract.View, ViewPager.OnP
 
     private fun handleAddProduct(position: Int) {
         val category = this.categoryList[position]
-        fabAddProduct.setOnClickListener { activity!!.moveTo(SaveProductActivity::class.java, category.toBundle()) }
+        fab_add_product.setOnClickListener { activity!!.moveTo(SaveProductActivity::class.java, category.toBundle()) }
     }
 
     private fun handleChangeEvent(position: Int) {
-        RxTextView.textChangeEvents(edSearch).debounce(500, TimeUnit.MILLISECONDS).distinctUntilChanged().subscribe({
+        RxTextView.textChangeEvents(ed_search).debounce(100, TimeUnit.MILLISECONDS).distinctUntilChanged().subscribe({
             (adapter.getItem(position) as ProductFragment).searchProduct(it.text().toString())
         }, {
             Timber.e(it)
@@ -102,8 +104,8 @@ class ProductListFragment : Fragment(), CategoryListContract.View, ViewPager.OnP
 
     private fun handlePopUpMenu(position: Int) {
         val productFragment = (adapter.getItem(position) as ProductFragment)
-        btnSort.setOnClickListener {
-            val menu = PopupMenu(context, btnSort)
+        btn_sort.setOnClickListener {
+            val menu = PopupMenu(context, btn_sort)
             menu.inflate(R.menu.sort_menu)
             menu.setOnMenuItemClickListener{
                 when(it.itemId){
@@ -137,23 +139,24 @@ class ProductListFragment : Fragment(), CategoryListContract.View, ViewPager.OnP
     }
 
     override fun showNoOk(res: String) {
-        activity?.let {
-            it.snack(res).show()
-        }
+        showMessage(res)
     }
 
     override fun showEmpty() {
-        adapter.addFragment(BlankFragment.newInstance(getString(R.string.no_product_title), getString(R.string.no_product_description)), "")
-        adapter.notifyDataSetChanged()
-        fabAddProduct.setOnClickListener { activity!!.moveTo(SaveProductActivity::class.java) }
+        showMessage(getString(R.string.no_product_title), getString(R.string.no_product_description))
     }
 
     override fun showNotConnected(res: String) {
-        activity?.let {
-            it.snack(res).show()
-        }
+        showMessage(res)
     }
 
+    override fun showMessage(title: String, message: String) {
+        recycler?.visibility = View.GONE
+        //adapter.addFragment(BlankFragment.newInstance(getString(R.string.no_product_title), getString(R.string.no_product_description)), "")
+        adapter.notifyDataSetChanged()
+        fab_add_product.setOnClickListener { activity!!.moveTo(SaveProductActivity::class.java) }
+        super.showMessage(title, message)
+    }
 
     override fun onPageScrollStateChanged(p0: Int) {
     }
@@ -165,6 +168,11 @@ class ProductListFragment : Fragment(), CategoryListContract.View, ViewPager.OnP
         handleAddProduct(position)
         handleChangeEvent(position)
         handlePopUpMenu(position)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
     }
 
 }

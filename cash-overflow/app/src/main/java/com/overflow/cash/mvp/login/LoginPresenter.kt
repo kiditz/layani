@@ -42,19 +42,22 @@ class LoginPresenter(private var context: Context, private var translations: Tra
                 view.showError(t!!)
             }
             override fun onResponse(call: Call<Data>?, response: Response<Data>?) {
-                val resp = response!!.body()
-                val accessToken = resp!!.getString("access_token")
-                //preferences.edit().putString("accessToken", accessToken).apply()
-                val bundle = Bundle()
-                bundle.putString(AccountManager.KEY_ACCOUNT_NAME, input.getString("username"))
-                bundle.putString(AccountManager.KEY_ACCOUNT_TYPE, context.getString(R.string.account_type))
-                bundle.putString(AccountManager.KEY_AUTHTOKEN, accessToken)
-                bundle.putString(AccountManager.KEY_PASSWORD, BuildConfig.auth_password)
-                val intent = Intent()
-                intent.putExtras(bundle)
-                val username = input.getString("username")
-                val password = input.getString("password")
-                findMerchant(username, password, accessToken, intent)
+                try {
+                    val resp = response!!.body()
+                    val accessToken = resp!!.getString("access_token")
+                    val bundle = Bundle()
+                    bundle.putString(AccountManager.KEY_ACCOUNT_NAME, input.getString("username"))
+                    bundle.putString(AccountManager.KEY_ACCOUNT_TYPE, context.getString(R.string.account_type))
+                    bundle.putString(AccountManager.KEY_AUTHTOKEN, accessToken)
+                    bundle.putString(AccountManager.KEY_PASSWORD, BuildConfig.auth_password)
+                    val intent = Intent()
+                    intent.putExtras(bundle)
+                    val username = input.getString("username")
+                    val password = input.getString("password")
+                    findMerchant(username, password, accessToken, intent)
+                }catch (e:Exception){
+                    view.showError(e)
+                }
             }
         })
     }

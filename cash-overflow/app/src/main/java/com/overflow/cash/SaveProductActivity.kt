@@ -65,7 +65,7 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
     private var categoryList = mutableListOf<Data>()
     private var categoryId: Long? = null
     private var productId: Long? = null
-    private var imageBase64String:String? = null
+    private var imageBase64String: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -86,13 +86,13 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
             addCategoryDialog()
         }
 
-        if(intent.hasExtra("category_id")){
-            this.categoryId = intent.getLongExtra("category_id",-1L)
+        if (intent.hasExtra("category_id")) {
+            this.categoryId = intent.getLongExtra("category_id", -1L)
             this.edCategory?.setText(intent.getStringExtra("category_name"))
             this.edProductName?.requestFocus()
         }
 
-        if(intent.hasExtra("product_id")){
+        if (intent.hasExtra("product_id")) {
             supportActionBar?.setTitle(R.string.edit_product)
             this.productId = intent.getLongExtra("product_id", -1L)
             this.edProductCode.setText(intent.getStringExtra("product_code"))
@@ -101,13 +101,14 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
             this.edInitPrice.setText(intent.getDoubleExtra("purchase_price", 0.0).toInt().toString())
             this.edQuantity.setText(intent.getLongExtra("stock", 0L).toInt().toString())
             this.edUnit.setText(intent.getStringExtra("unit"))
-            if(intent.hasExtra("image")){
-                val image= intent.getByteArrayExtra("image")
+            if (intent.hasExtra("image")) {
+                val image = intent.getByteArrayExtra("image")
                 val bitmap = BitmapFactory.decodeByteArray(image, 0, image.size)
                 productImage?.setImageBitmap(bitmap)
             }
+            this.cbUseStock.isChecked = intent.getBooleanExtra("use_stock", true)
 
-        }else{
+        } else {
             supportActionBar?.setTitle(R.string.add_product)
         }
 
@@ -120,7 +121,7 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
         imageAction()
     }
 
-    private fun action(){
+    private fun action() {
         edCategory.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             val categoryName = categoryAdapter.getItem(position)
             if (getSelectedItem(categoryName) != null) {
@@ -136,53 +137,47 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
         }
     }
 
-    private fun handleScanAction(){
-        val intent = Intent(this,ScannerActivity::class.java)
+    private fun handleScanAction() {
+        val intent = Intent(this, ScannerActivity::class.java)
         startActivityForResult(intent, Constant.REQUEST_CODE_SCANNER)
     }
 
-    private fun handleAddProductAction(){
-
-        if (categoryId != null) {
-            this.progressBar.visibility = View.VISIBLE
-            this.btnSubmit.isEnabled = false
-            val data = Data()
-            data["name"] = edProductName.text.toString()
-            data["code"] = edProductCode.text.toString()
-            if(quantityWrapper.isEnabled){
-                data["use_stock"] = true
-                data["qty"] = edQuantity.text.toString().toLong()
-                data["product_type"] = "PRODUCT"
-                data["unit"] = edUnit.text.toString()
-            }else{
-                data["use_stock"] = false
-                data["product_type"] = "SERVICE"
-            }
-
-
-
-            data["sell_price"] = edSellPrice.text.toString().toDouble()
-            data["purchase_price"] = edInitPrice.text.toString().toDouble()
-            categoryId?.let {
-                if(it != -1L){
-                    data["category_id"] = it
-                }
-            }
-
-            imageBase64String?.let {
-                data["image"] = it
-            }
-            if(productId != null){
-                data["id"] = productId
-                this.presenter.editProduct(data)
-            }else{
-                this.presenter.addProduct(data)
-            }
-
+    private fun handleAddProductAction() {
+        this.progress_bar.visibility = View.VISIBLE
+        this.btnSubmit.isEnabled = false
+        val data = Data()
+        data["name"] = edProductName.text.toString()
+        data["code"] = edProductCode.text.toString()
+        if (quantityWrapper.isEnabled) {
+            data["use_stock"] = true
+            data["qty"] = edQuantity.text.toString().toLong()
+            data["product_type"] = "PRODUCT"
+            data["unit"] = edUnit.text.toString()
         } else {
-            categoryWrapper.isErrorEnabled = true
-            categoryWrapper.setErrorTextAppearance(R.style.AppTheme_TextInputLayout_ErrorPrimary)
-            categoryWrapper.error = translations.get(REQUIRED_VALUE_CATEGORY_NAME)
+            data["use_stock"] = false
+            data["product_type"] = "SERVICE"
+        }
+
+
+
+        data["sell_price"] = edSellPrice.text.toString().toDouble()
+        data["purchase_price"] = edInitPrice.text.toString().toDouble()
+        categoryId?.let {
+            if (it != -1L) {
+                data["category_id"] = it
+            } else {
+                data["category_id"] = null
+            }
+        }
+
+        imageBase64String?.let {
+            data["image"] = it
+        }
+        if (productId != null) {
+            data["id"] = productId
+            this.presenter.editProduct(data)
+        } else {
+            this.presenter.addProduct(data)
         }
     }
 
@@ -214,7 +209,7 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
             category["merchant_id"] = merchant.getLong("id")
             category["name"] = this.categoryView!!.edName.text.toString()
             presenter.addCategory(category)
-            this.categoryView?.progressBar!!.visibility = View.VISIBLE
+            this.categoryView?.progress_bar!!.visibility = View.VISIBLE
         }
         validateAddCategory(this.categoryView!!)
         this.dialog?.show()
@@ -222,7 +217,7 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
 
     private fun validateAddCategory(view: View) {
         val resIdPrimary = R.style.AppTheme_TextInputLayout_ErrorPrimary
-        this.validateNotEmpty(view.edName, view.nameWrapper, translations.get(REQUIRED_VALUE_CATEGORY_NAME), resIdPrimary).subscribe{
+        this.validateNotEmpty(view.edName, view.nameWrapper, translations.get(REQUIRED_VALUE_CATEGORY_NAME), resIdPrimary).subscribe {
             view.btnSubmit.isEnabled = it
         }
     }
@@ -275,11 +270,13 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
     }
 
     override fun onProductCreated(product: Data) {
-        val bundle = Bundle()
-        bundle.putString("product", product.toString())
-        moveTo(MenuActivity::class.java, bundle)
-        this.progressBar.visibility = View.GONE
+        this.progress_bar.visibility = View.GONE
         this.btnSubmit.isEnabled = true
+        val bundle = Bundle()
+        bundle.putString(Constant.SUCCESS_MESSAGE, translations.get(Constant.TranslationsKey.PRODUCT_CREATED_SUCCESSFULLY).replace("{0}", product.getString("name")))
+        bundle.putInt(Constant.GOTO, R.id.nav_product)
+        moveTo(MenuActivity::class.java, bundle)
+
     }
 
     override fun onCategoryLoaded(categoryList: List<Data>) {
@@ -294,14 +291,14 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
 
     private fun dismissCategory() {
         if (dialog != null && dialog?.isShowing!!) {
-            this.categoryView?.progressBar?.visibility = View.GONE
+            this.categoryView?.progress_bar?.visibility = View.GONE
             this.categoryView?.btnSubmit?.isEnabled = true
             this.dialog?.dismiss()
         }
     }
 
     private fun dismissProduct() {
-        this.progressBar?.visibility = View.GONE
+        this.progress_bar?.visibility = View.GONE
         this.btnSubmit?.isEnabled = true
     }
 
@@ -318,19 +315,19 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
             unitWrapper.isEnabled = isChecked
             quantityWrapper.isErrorEnabled = false
             unitWrapper.isErrorEnabled = false
-            unitLengthObserve = if(isChecked){
+            unitLengthObserve = if (isChecked) {
                 this.validateLengthLessThan(edUnit, unitWrapper, 4, translations.get(UNIT_MUST_LESS_THAN_THERR), resIdPrimary, 0)
-            }else{
+            } else {
                 Observable.just(true)
             }
-            unitObserve = if(isChecked){
+            unitObserve = if (isChecked) {
                 this.validateNotEmpty(edUnit, unitWrapper, translations.get(REQUIRED_VALUE_PRODUCT_UNIT), resIdPrimary, 0)
-            }else{
+            } else {
                 Observable.just(true)
             }
-            qtyObserve = if(isChecked){
-                this.validateGreaterThan(edQuantity, quantityWrapper,0, translations.get(REQUIRED_VALUE_PRODUCT_QTY), resIdPrimary, 1)
-            }else{
+            qtyObserve = if (isChecked) {
+                this.validateGreaterThan(edQuantity, quantityWrapper, 0, translations.get(REQUIRED_VALUE_PRODUCT_QTY), resIdPrimary, 1)
+            } else {
                 Observable.just(true)
             }
         }
@@ -339,7 +336,7 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
         val initPriceObserve = this.validateGreaterThan(edInitPrice, initPriceWrapper, 0, translations.get(INIT_PRICE_MUST_GREATER_THAN_ZERO), resIdPrimary, 0)
 
         Observable.combineLatest(unitObserve, unitLengthObserve, productNameObserve, productCodeObserve, qtyObserve, sellPriceObserve, initPriceObserve,
-                Function7 {unit:Boolean, unitLength:Boolean, productName: Boolean, productCode: Boolean, qty: Boolean, sellPrice: Boolean, initPrice:Boolean ->
+                Function7 { unit: Boolean, unitLength: Boolean, productName: Boolean, productCode: Boolean, qty: Boolean, sellPrice: Boolean, initPrice: Boolean ->
                     unit && unitLength && productName && productCode && qty && sellPrice && initPrice
                 }).subscribe { valid: Boolean -> btnSubmit.isEnabled = valid }
     }
@@ -362,18 +359,18 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
                 })
             } else if (requestCode == UCrop.REQUEST_CROP) {
                 val resultUri = UCrop.getOutput(data!!)
-                if(resultUri == null){
+                if (resultUri == null) {
 
-                }else{
+                } else {
                     showImage(resultUri)
                 }
-            }else if (requestCode == Constant.REQUEST_CODE_SCANNER){
+            } else if (requestCode == Constant.REQUEST_CODE_SCANNER) {
                 edProductCode.setText(data?.getStringExtra("barcode"))
             }
         }
     }
 
-    private fun showImage(uri:Uri){
+    private fun showImage(uri: Uri) {
         val file = uri.path
         val bitmap = BitmapFactory.decodeFile(file)
         imgAlt?.visibility = View.GONE
@@ -386,7 +383,7 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
     private fun cropImage(file: File) {
         val uri = Uri.fromFile(file)
         val dest = File("${Environment.getExternalStorageDirectory()}/${getString(R.string.app_name)}", file.name)
-        if(!dest.isDirectory){
+        if (!dest.isDirectory) {
             dest.parentFile.mkdirs()
         }
         try {
@@ -401,11 +398,11 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
     }
 
 
-
     override fun onCategorySelected(category: Data) {
         this.categoryId = category.getLong("id")
         this.edCategory.setText(category.getString("name"))
     }
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return home(item)
     }

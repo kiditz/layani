@@ -266,7 +266,7 @@ class Customer(db.Model, Entity):
 	merchant_id = db.Column(db.ForeignKey(u'co_merchant.id'), nullable=False)
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
-	
+	active = db.Column(db.Boolean, nullable=False, server_default='t', default=True)
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)
 

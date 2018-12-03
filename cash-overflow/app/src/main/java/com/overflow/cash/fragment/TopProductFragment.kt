@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
@@ -50,8 +51,8 @@ class TopProductFragment: Fragment(), TopProductChartContract.View{
         pieChart?.rotationAngle = 0f
         pieChart?.isRotationEnabled = true
         pieChart?.isHighlightPerTapEnabled = true
-
-        pieChart?.setEntryLabelColor(Color.WHITE)
+        //dataSet.valueTextColor =
+        pieChart?.setEntryLabelColor(ContextCompat.getColor(activity!!, R.color.textDefault))
         pieChart?.setEntryLabelTextSize(12f)
         val legend = pieChart?.legend
         legend?.verticalAlignment = Legend.LegendVerticalAlignment.TOP
@@ -109,7 +110,7 @@ class TopProductFragment: Fragment(), TopProductChartContract.View{
                 return@setValueFormatter "${value.toInt()}"
             }
             val data = PieData(dataSet)
-            data.setValueTextColor(Color.WHITE)
+            data.setValueTextColor(ContextCompat.getColor(activity!!, R.color.textDefault))
             data.setValueTextSize(11f)
             pieChart?.data = data
             pieChart?.highlightValue(null)

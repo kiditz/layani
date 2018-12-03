@@ -39,7 +39,7 @@ class ReceiptActivity : AppCompatActivity() {
         val format = SimpleDateFormat("dd/MM/yyyy HH:mm")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_receipt)
-        //Add Content scroll for draw web view to image
+        //Add Content scroll for draw web view to exitImage
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             WebView.enableSlowWholeDocumentDraw()
         }
@@ -138,7 +138,7 @@ class ReceiptActivity : AppCompatActivity() {
             val uri = FileProvider.getUriForFile(this,BuildConfig.APPLICATION_ID + ".fileprovider", dest)
             Timber.i("Uri %s", uri)
             val intent = Intent(Intent.ACTION_VIEW)
-            intent.setDataAndType(uri, "image/png")
+            intent.setDataAndType(uri, "exitImage/png")
             intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             startActivity(intent)
