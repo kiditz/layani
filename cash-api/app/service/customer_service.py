@@ -1,8 +1,9 @@
-from slerp.validator import Key, Number, Blank
+from slerp.validator import Key, Number, Blank, ValidationException
 from slerp.logger import logging
 from slerp.app import db
-
+import re
 from entity.models import Customer
+from utils.api_constant import ErrorCode
 
 
 log = logging.getLogger(__name__)
@@ -28,6 +29,13 @@ class CustomerService(object):
 	@Key(['id'])
 	def edit_customer_by_id(self, domain):
 		customer = Customer.query.filter_by(id=domain['id']).first()
+		if 'phone_number' in domain:			
+			if not re.match(r'[\+]?[0-9.-]+', domain['phone_number']):
+				raise ValidationException(ErrorCode.INVALID_PHONE_NUMBER)
+		if 'email' in domain:			
+			if not re.match(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$", domain['email']):
+				raise ValidationException(ErrorCode.INVALID_EMAIL_ADDRESS)
+
 		if customer is None:
 			customer = Customer()
 			domain.pop('id')
