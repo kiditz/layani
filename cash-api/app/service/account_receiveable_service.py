@@ -120,9 +120,10 @@ class AccountReceiveableService(object):
 		account_receiveable = AccountReceiveable.query.get(domain['order_id'])								
 		subtract_amount = payment_amount - account_receiveable.total_credit
 		if subtract_amount < 0:			
-			account_receiveable.payment_amount = payment_amount
-			account_receiveable.total_credit = subtract_amount * Decimal(-1.0)
 			order.total_payment = order.total_payment + payment_amount
+			account_receiveable.payment_amount = order.total_payment
+			account_receiveable.total_credit = subtract_amount * Decimal(-1.0)
+			
 		else:	
 			account_receiveable.payment_amount = account_receiveable.total_credit			
 			account_receiveable.total_credit = 0
