@@ -17,7 +17,11 @@ class CustomerService(object):
 	def get_customer_list(self, domain):
 		page = int(domain['page'])
 		size = int(domain['size'])
-		customer_q = Customer.query.filter_by(merchant_id=domain['merchant_id']).filter(Customer.name.ilike('%' + domain['name'] + '%')).order_by(Customer.name.asc()).paginate(page, size, error_out=False)
+		customer_q = Customer.query\
+			.filter_by(merchant_id=domain['merchant_id'])\
+			.filter(Customer.name.ilike('%' + domain['name'] + '%'))\
+			.filter(Customer.active == True)\
+			.order_by(Customer.name.asc()).paginate(page, size, error_out=False)
 		customer_list = list(map(lambda x: x.to_dict(), customer_q.items))
 		return {'payload': customer_list, 'total': customer_q.total, 'total_pages': customer_q.pages}
 	
