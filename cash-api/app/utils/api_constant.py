@@ -37,3 +37,5 @@ class ErrorCode(object):
 	NOT_ENOUGH_STOCK = 'stock.is.not.enough'
 	DISCOUNT_NOT_FOUND = 'discount.not.found'
 	ORDER_NOT_FOUND = 'order.not.found'
+	INVALID_PHONE_NUMBER = 'invalid.phone.number'
+	INVALID_EMAIL_ADDRESS = 'invalid.email.address'
