@@ -20,7 +20,7 @@ class ProductService(object):
 		super(ProductService, self).__init__()
 	
 	@Key(['name', 'code', 'product_type', 'sell_price', 'purchase_price'])
-	@Number(['merchant_id', 'category_id'])
+	@Number(['merchant_id'])
 	def add_product(self, domain):
 		self.validate_product(domain)
 		product = Product(domain)
@@ -121,12 +121,12 @@ class ProductService(object):
 	
 	@staticmethod
 	def validate_product(domain):
-		category = Category.query.get(domain['category_id'])
-		if category is None:
-			raise ValidationException(ErrorCode.REQUIRED_CATEGORY)
+		# category = Category.query.get(domain['category_id'])
+		# if category is None:
+		# 	raise ValidationException(ErrorCode.REQUIRED_CATEGORY)
 		product_count = Product.query.filter_by(code=domain['code']).count()
 		if product_count > 0:
-			raise ValidationException(ErrorCode.REQUIRED_CATEGORY)
+			raise ValidationException(ErrorCode.PRODUCT_CODE_EXIST)
 		pass
 	
 	@Key(['id', 'category_id', 'name', 'code', 'product_type', 'sell_price', 'purchase_price'])
