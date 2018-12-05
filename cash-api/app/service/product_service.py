@@ -145,21 +145,22 @@ class ProductService(object):
 		stock = Stock.query.filter_by(product_id=product.id).first()
 		if stock is not None:
 			latest_stock = StockHistory.query.with_entities(func.sum(StockHistory.quantity).label("quantity")).filter(StockHistory.stock_id == stock.id).first()._asdict()
-			if stock.quantity != domain['qty']:
-				stock_history = StockHistory()
-				stock_history.quantity = int(latest_stock['quantity']) * -1
-				stock_history.stock_id = stock.id
-				stock_history.remark = StockRef.CLEAR_STOCK
-				stock_history.ref_id = StockRef.OUT
-				
-				stock_history.save()
-				stock_history = StockHistory()
-				stock_history.stock_id = stock.id
-				stock_history.quantity = int(domain['qty'])
-				stock_history.remark = StockRef.EDIT_STOCK
-				stock_history.ref_id = StockRef.IN
-				stock_history.save()
-				stock.update({'quantity': domain['qty']})
+			if product.use_stock:
+				if stock.quantity != domain['qty']:
+					stock_history = StockHistory()
+					stock_history.quantity = int(latest_stock['quantity']) * -1
+					stock_history.stock_id = stock.id
+					stock_history.remark = StockRef.CLEAR_STOCK
+					stock_history.ref_id = StockRef.OUT
+					
+					stock_history.save()
+					stock_history = StockHistory()
+					stock_history.stock_id = stock.id
+					stock_history.quantity = int(domain['qty'])
+					stock_history.remark = StockRef.EDIT_STOCK
+					stock_history.ref_id = StockRef.IN
+					stock_history.save()
+					stock.update({'quantity': domain['qty']})			
 		else:
 			if product.use_stock and 'qty' in domain:
 				stock = Stock()
