@@ -161,7 +161,7 @@ class ProductService(object):
 				stock_history.save()
 				stock.update({'quantity': domain['qty']})
 		else:
-			if product.use_stock:
+			if product.use_stock and 'qty' in domain:
 				stock = Stock()
 				stock.product_id = product.id
 				stock.quantity = domain['qty']
