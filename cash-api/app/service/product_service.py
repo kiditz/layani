@@ -160,6 +160,19 @@ class ProductService(object):
 				stock_history.ref_id = StockRef.IN
 				stock_history.save()
 				stock.update({'quantity': domain['qty']})
+		else:
+			if product.use_stock:
+				stock = Stock()
+				stock.product_id = product.id
+				stock.quantity = domain['qty']
+				stock.save()
+				stock_history = StockHistory()
+				stock_history.quantity = stock.quantity
+				stock_history.stock_id = stock.id
+				stock_history.remark = StockRef.NEW_STOCK
+				stock_history.ref_id = StockRef.IN
+				stock_history.save()
+
 		
 		return {'payload': product.to_dict()}
 	
