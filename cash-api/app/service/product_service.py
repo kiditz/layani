@@ -131,7 +131,7 @@ class ProductService(object):
 	
 	@Key(['id', 'category_id', 'name', 'code', 'product_type', 'sell_price', 'purchase_price'])
 	def edit_product_by_id(self, domain):
-		self.validate_product(domain)
+		
 		product = Product.query.filter_by(id=domain['id']).first()
 		if 'image' in domain:
 			document_dict = self.handle_add_image(domain['image'])['payload']
