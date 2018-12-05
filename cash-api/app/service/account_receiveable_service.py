@@ -119,11 +119,10 @@ class AccountReceiveableService(object):
 			raise ValidationException(ErrorCode.ORDER_NOT_FOUND)
 		account_receiveable = AccountReceiveable.query.get(domain['order_id'])								
 		subtract_amount = payment_amount - account_receiveable.total_credit
-		if subtract_amount < 0:			
+		if subtract_amount < 0:											
+			account_receiveable.total_credit = subtract_amount * Decimal(-1.0)
 			order.total_payment = order.total_payment + payment_amount
 			account_receiveable.payment_amount = order.total_payment
-			account_receiveable.total_credit = subtract_amount * Decimal(-1.0)
-			
 		else:	
 			account_receiveable.payment_amount = account_receiveable.total_credit			
 			account_receiveable.total_credit = 0
@@ -135,7 +134,7 @@ class AccountReceiveableService(object):
 		order.save()
 		account_receiveable.save()
 		cashbox = Cashbox.query.get(domain['cash_box_id'])
-		cashbox.total_amount = cashbox.total_amount + account_receiveable.payment_amount
+		cashbox.total_amount = cashbox.total_amount + payment_amount
 		cashbox_history = CashboxHistory()
 		cashbox_history.cash_box_id = cashbox.id
 		cashbox_history.payment_amount = Decimal(account_receiveable.payment_amount)
