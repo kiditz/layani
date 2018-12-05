@@ -70,3 +70,23 @@ def find_product_by_code():
     """
     domain = request.args.to_dict()
     return product_service.find_product_by_code(domain)
+
+@api.route('/edit_by_code', methods=['PUT'])
+def edit_product_by_code():
+
+    """
+    {
+    "id": "Long",
+    "category_id": "Long",
+    "name": "String",
+    "code": "String",
+    "product_type": "String",
+    "document_id": "Long",
+    "description": "String",
+    "unit": "String",
+    "use_stock": "Boolean",
+    "merchant_id": "Long"
+    }
+    """
+    domain = request.get_json()
+    return product_service.edit_product_by_code(domain)

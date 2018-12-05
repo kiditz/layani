@@ -135,6 +135,7 @@ class Product(db.Model, Entity):
 	product_type = db.Column(db.String(60), nullable=False, server_default='')
 	document_id = db.Column(db.ForeignKey(u'co_document.id'))
 	description = db.Column(db.Text, nullable=False, server_default='')	
+	active = db.Column(db.Boolean, nullable=False, server_default='t', default=True)
 	unit = db.Column(db.String(10), nullable=False, server_default='pcs')
 	use_stock = db.Column(db.Boolean, nullable=False, server_default='t')
 	merchant_id = db.Column(db.ForeignKey(u'co_merchant.id'))	
