@@ -64,3 +64,8 @@ def get_top_product():
 def get_order_items():
     domain = request.args.to_dict()
     return order_service.get_order_items(domain)
+
+@api.route('/list', methods=['GET'])
+def get_order_list():
+    domain = request.args.to_dict()
+    return order_service.get_order_list(domain)
