@@ -58,7 +58,7 @@ class OrderService(object):
 			order.cashback = order.total_payment - order.total_amount			
 		else:			
 			cashbox.total_amount = cashbox.total_amount + Decimal(domain['total_payment'])
-			order.status = 'I'
+			order.status = 'P'
 			order.cashback = 0.0
 			account_receiveable = AccountReceiveable()
 			account_receiveable.total_credit = order.total_amount - order.total_payment
