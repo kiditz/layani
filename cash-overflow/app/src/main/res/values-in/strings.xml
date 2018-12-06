@@ -112,7 +112,8 @@
     <string name="pay_paid">Bayar Hutang</string>
     <string name="refund_paid">Batalkan Pembayaran</string>
     <string name="share_receiveable_receipt">Tagih</string>
-    <string name="transaction">Transaction</string>
+    <string name="transaction">Transaksi</string>
+
     <string name="are_you_sure">Apakah anda yakin</string>
     <string name="system_err">Upps, Terjadi kesalahan pada sistem</string>
     <string name="add_outlet">Tambahkan Outlet Baru</string>

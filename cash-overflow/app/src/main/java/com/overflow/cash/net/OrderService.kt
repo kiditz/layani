@@ -9,9 +9,6 @@ interface OrderService {
     @POST("/cash/order/add")
     fun addOrder(@Body data:Data): Single<Data>
 
-
-
-
     @Headers("Content-Type:application/json")
     @GET("/cash/order/items")
     fun getOrderItems(@Query("order_id") orderId:Long):Single<Data>
@@ -48,6 +45,9 @@ interface OrderService {
     @GET("/cash/order/dashboard_header")
     fun getDashboardHeader(@QueryMap data: Data):Single<Data>
 
+    @GET("/cash/order/list")
+    fun getOrderList(@QueryMap data: Data):Single<Data>
+
     @Headers("Content-Type:application/json")
     @GET("/cash/order/top_product")
     fun getTopProduct(@QueryMap data: Data):Single<Data>
@@ -59,4 +59,5 @@ interface OrderService {
     @Headers("Content-Type:application/json")
     @GET("/cash/account_receiveable/out_of_age")
     fun getAccountReceiveableOutOfAge(@QueryMap data: Data):Single<Data>
+
 }

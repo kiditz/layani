@@ -42,7 +42,7 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     @Inject
     lateinit var preferences: SharedPreferences
 
-    var search:MaterialSearchView?=null
+    var search: MaterialSearchView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -61,7 +61,7 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         bindHeader()
     }
 
-    private fun bindHeader(){
+    private fun bindHeader() {
         val accountManager = AccountManager.get(this)
         val accountType = accountManager.getAccountsByType(getString(R.string.account_type))
         val merchant = Data(preferences.getString("merchant", "{}"))
@@ -71,19 +71,19 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             onNotLogin()
             return
         }
-        if (intent.hasExtra(Constant.SUCCESS_MESSAGE)){
-            if(intent.hasExtra(Constant.GOTO)){
+        if (intent.hasExtra(Constant.SUCCESS_MESSAGE)) {
+            if (intent.hasExtra(Constant.GOTO)) {
                 this.onNavigationItemSelected(nav_view.menu.findItem(intent.getIntExtra(Constant.GOTO, R.id.nav_dashboard)))
             }
             tv_success_message.visibility = View.VISIBLE
             tv_success_message.text = intent.getStringExtra(Constant.SUCCESS_MESSAGE)
-            RxTextView.textChanges(tv_success_message).compose(RxUtils.applyObservableAsync()).debounce(5, TimeUnit.SECONDS).subscribe{
+            RxTextView.textChanges(tv_success_message).compose(RxUtils.applyObservableAsync()).debounce(5, TimeUnit.SECONDS).subscribe {
                 runOnUiThread {
                     tv_success_message.visibility = View.GONE
                 }
             }
             this.intent.removeExtra(Constant.SUCCESS_MESSAGE)
-        }else{
+        } else {
             onNavigationItemSelected(nav_view.menu.findItem(R.id.nav_dashboard))
         }
     }
@@ -96,7 +96,6 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             super.onBackPressed()
         }
     }
-
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -112,28 +111,31 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         supportActionBar?.title = item.title
         nav_view.setCheckedItem(item.itemId)
-        when(item.itemId){
-            R.id.nav_dashboard->{
+        when (item.itemId) {
+            R.id.nav_dashboard -> {
                 replaceContent(DashboardFragment())
             }
             R.id.nav_product -> {
                 val productListFragment = ProductListFragment()
                 replaceContent(productListFragment)
             }
-            R.id.nav_sales ->{
+            R.id.nav_sales -> {
                 val salesListFragment = SalesListFragment()
                 replaceContent(salesListFragment)
             }
-            R.id.nav_customer ->{
+            R.id.nav_customer -> {
                 val customerFragment = CustomerFragment()
                 replaceContent(customerFragment)
             }
-            R.id.nav_accounts_receiveable ->{
+            R.id.nav_accounts_receiveable -> {
                 val accountReceiveableFragment = AccountReceiveableFragment()
                 replaceContent(accountReceiveableFragment)
             }
-            R.id.nav_settings ->{
+            R.id.nav_settings -> {
                 replaceContent(SettingFragment())
+            }
+            R.id.nav_transaction_history -> {
+                replaceContent(TransactionHistoryFragment())
             }
         }
 
@@ -153,23 +155,23 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == Constant.REQUEST_LOGIN ){
-            if(resultCode == Activity.RESULT_CANCELED){
+        if (requestCode == Constant.REQUEST_LOGIN) {
+            if (resultCode == Activity.RESULT_CANCELED) {
                 Timber.i("LOGIN CANCEL")
                 finish()
             }
-            if(resultCode == Activity.RESULT_OK){
+            if (resultCode == Activity.RESULT_OK) {
                 Timber.i("LOGIN SUCCESS")
                 bindHeader()
             }
         }
 
     }
+
     override fun showNoOk(res: String) {
-        if(res == Constant.TranslationsKey.USER_NOT_FOUND){
+        if (res == Constant.TranslationsKey.USER_NOT_FOUND) {
             onNotLogin()
         }
     }
@@ -181,8 +183,6 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun showError(error: Throwable) {
 
     }
-
-
 
 
     override fun showEmpty() {

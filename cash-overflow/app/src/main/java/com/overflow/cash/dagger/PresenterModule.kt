@@ -9,6 +9,7 @@ import com.overflow.cash.mvp.dashboard.DashboardHeaderPresenter
 import com.overflow.cash.mvp.login.LoginPresenter
 import com.overflow.cash.mvp.menu.MenuPresenter
 import com.overflow.cash.mvp.order.CashboxPresenter
+import com.overflow.cash.mvp.order.TransactionHistoryPresenter
 import com.overflow.cash.mvp.order.OrderPresenter
 import com.overflow.cash.mvp.order.PreviewSalesPresenter
 import com.overflow.cash.mvp.payment.PaymentTransactionPresenter
@@ -93,6 +94,11 @@ class PresenterModule {
     @Provides
     internal fun provideCustomerChooserPresenter(context: Context, translations: Translations, disposable: CompositeDisposable,customerService:CustomerService,  preferences: SharedPreferences): CustomerChooserPresenter {
         return CustomerChooserPresenter(context, preferences, translations, customerService, disposable)
+    }
+
+    @Provides
+    internal fun provideTransactionHistoryPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, orderService:OrderService, preferences: SharedPreferences): TransactionHistoryPresenter {
+        return TransactionHistoryPresenter(context, preferences, translations, orderService, disposable)
     }
 
     @Provides

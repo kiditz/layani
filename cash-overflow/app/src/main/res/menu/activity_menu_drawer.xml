@@ -17,17 +17,13 @@
             android:icon="@drawable/ic_sales"
             android:title="@string/sales" />
         <item
-            android:id="@+id/nav_purchase"
-            android:icon="@drawable/ic_purchase"
-            android:title="@string/purchase" />
+            android:id="@+id/nav_transaction_history"
+            android:icon="@drawable/ic_history"
+            android:title="@string/transaction" />
         <item
             android:id="@+id/nav_accounts_receiveable"
             android:icon="@drawable/ic_money"
             android:title="@string/accounts_receiveable" />
-        <item
-            android:id="@+id/nav_transaction_history"
-            android:icon="@drawable/ic_money"
-            android:title="@string/accounts_payable" />
         <item
             android:id="@+id/nav_customer"
             android:icon="@drawable/ic_customer"

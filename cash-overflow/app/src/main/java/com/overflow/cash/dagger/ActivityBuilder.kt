@@ -102,6 +102,9 @@ abstract class ActivityBuilder {
     @ContributesAndroidInjector
     internal abstract fun bindAccountReceiveableChartOutOfAgeFragment(): AccountReceiveableChartOutOfAgeFragment
 
+    @ContributesAndroidInjector
+    internal abstract fun bindTransactionHistoryFragment(): TransactionHistoryFragment
+
     //Service
     @ContributesAndroidInjector
     internal abstract fun bindAuthenticatorService(): AccountAuthenticatorService
