@@ -187,7 +187,7 @@ class OrderService(object):
 		page = int(domain['page'])
 		size = int(domain['size'])
 		order_q = Order.query.filter_by(merchant_id=merchant_id)\
-					.order_by(Order.order_at.asc())\
+					.order_by(Order.order_at.desc())\
 					.paginate(page, size, error_out=False)
 		order_list = list(map(lambda x: x.to_dict(), order_q.items))
 		return {'payload': order_list, 'total': order_q.total, 'total_pages': order_q.pages}
