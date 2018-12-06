@@ -25,7 +25,7 @@ class AccountReceiveableService(object):
 		)
 		
 		account_receiveable_q = AccountReceiveable.query.with_entities(*entities)\
-			.join(Order, and_(Order.id == AccountReceiveable.order_id, Order.status == 'I')) \
+			.join(Order, and_(Order.id == AccountReceiveable.order_id, Order.status == 'P')) \
 			.join(Customer, Customer.id == Order.customer_id) \
 			.filter(AccountReceiveable.merchant_id == domain['merchant_id'])\
 			.filter(and_(Customer.name.ilike('%' + domain['name'] + '%'), Order.payment_method == PaymentMethod.CREDIT)) \
