@@ -8,10 +8,12 @@ class ProductDetailContract {
     interface View : BaseView {
         fun onStockCreated(data:Data)
         fun onDiscountCreated(data:Data)
+        fun onDeleteProductSuccess(data:Data)
     }
 
     interface Presenter : BasePresenter<View> {
         fun addStock(data: Data)
         fun addDiscount(data: Data)
+        fun deleteProduct(data:Data)
     }
 }

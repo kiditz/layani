@@ -3,21 +3,28 @@ package com.overflow.cash.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.PatternMatcher
+import android.support.design.widget.TextInputLayout
 import android.support.v7.widget.RecyclerView
+import android.telephony.PhoneNumberUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.ProgressBar
+import com.overflow.cash.Constant
 import com.overflow.cash.R
 import com.overflow.cash.fragment.dummy.DummyContent.DummyItem
+import com.overflow.cash.utils.validateNotEmpty
 import com.overflow.libs.core.Data
+import com.overflow.libs.core.Translations
 import kotlinx.android.synthetic.main.adapter_add_customer.view.*
 
 /**
  * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
  */
-class AddCustomerListAdapter() : RecyclerView.Adapter<AddCustomerListAdapter.ViewHolder>() {
+class AddCustomerListAdapter(private val translations: Translations) : RecyclerView.Adapter<AddCustomerListAdapter.ViewHolder>() {
     lateinit var context: Context
     private val values: MutableList<Data> = mutableListOf()
     var onDeleteClick: ((Data, ViewHolder) -> Unit)? = null
@@ -51,6 +58,10 @@ class AddCustomerListAdapter() : RecyclerView.Adapter<AddCustomerListAdapter.Vie
         holder.name.setText(item.getString("name"))
         holder.email.setText(item.getString("email"))
         holder.phoneNumber.setText(item.getString("phone_number"))
+        val nameObserve = context.validateNotEmpty(holder.name, holder.nameWrapper, translations.get(Constant.TranslationsKey.REQUIRED_VALUE_NAME))
+        nameObserve.subscribe {
+            holder.btnDone.isEnabled = it
+        }
         holder.btnDone.setOnClickListener {
             onDoneClick?.invoke(item, holder)
         }
@@ -71,5 +82,7 @@ class AddCustomerListAdapter() : RecyclerView.Adapter<AddCustomerListAdapter.Vie
         val email: EditText = view.ed_mail
         val btnDone: ImageView = view.done_image
         val btnDelete: ImageView = view.exit_image
+        val progressBar:ProgressBar = view.progress_bar
+        val nameWrapper:TextInputLayout = view.ed_name_wrapper
     }
 }

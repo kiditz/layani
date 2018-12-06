@@ -53,7 +53,7 @@ class ReceiptAccountReceiveableActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         listDialog = resources.getStringArray(R.array.share_receipt_list)
-        //Add Content scroll for draw web view to exitImage
+        //Add Content scroll for draw web view to image
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             WebView.enableSlowWholeDocumentDraw()
         }
@@ -133,7 +133,7 @@ class ReceiptAccountReceiveableActivity : AppCompatActivity() {
 
     private fun share():Boolean{
         val shareIntent = Intent(Intent.ACTION_SEND)
-        shareIntent.type = "exitImage/*"
+        shareIntent.type = "image/*"
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Tagihan")
         //shareIntent.putExtra(Intent.EXTRA_TEXT, "Tagihan transaksi dari $")
         shareIntent.putExtra(Intent.EXTRA_STREAM, shareAsImage())
@@ -145,7 +145,7 @@ class ReceiptAccountReceiveableActivity : AppCompatActivity() {
         val uri = shareAsImage()
         Timber.i("Uri %s", uri)
         val intent = Intent(Intent.ACTION_VIEW)
-        intent.setDataAndType(uri, "exitImage/png")
+        intent.setDataAndType(uri, "image/png")
         intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         startActivity(intent)
@@ -191,9 +191,13 @@ class ReceiptAccountReceiveableActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         val bundle = Bundle()
-        bundle.putString(Constant.SUCCESS_MESSAGE, translations.get(Constant.TranslationsKey.ACCOUNT_RECEIVEABLE_CREATED_SUCCESSFULY).replace("{0}", order.getString("customer_name")))
-        bundle.putInt(Constant.GOTO, R.id.nav_accounts_receiveable)
-        moveTo(MenuActivity::class.java, bundle)
+        if(intent.getBooleanExtra("show_message", false)){
+            bundle.putInt(Constant.GOTO, R.id.nav_accounts_receiveable)
+            bundle.putString(Constant.SUCCESS_MESSAGE, translations.get(Constant.TranslationsKey.ACCOUNT_RECEIVEABLE_SAVED_SUCCESSFULY).replace("{0}", order.getString("customer_name")).replace("{1}", rupiah(order.getDouble("total_payment"))))
+            moveTo(MenuActivity::class.java, bundle)
+        }else{
+            super.onBackPressed()
+        }
     }
 
 }

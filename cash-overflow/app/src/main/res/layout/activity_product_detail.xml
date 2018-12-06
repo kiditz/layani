@@ -16,7 +16,7 @@
             android:background="@color/layoutEditImage">
 
             <ImageView
-                android:id="@+id/productImage"
+                android:id="@+id/product_image"
                 android:layout_width="140dp"
                 android:layout_height="140dp"
                 android:layout_centerInParent="true"

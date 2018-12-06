@@ -31,6 +31,10 @@ interface ProductService {
     @PUT("/cash/product/edit")
     fun editProduct(@Body data:Data): Single<Data>
 
+    @Headers("Content-Type:application/json")
+    @PUT("/cash/product/edit_by_code")
+    fun editProductByCode(@Body data:Data): Single<Data>
+
     @GET("/cash/product/list")
     fun getProduct(@QueryMap data:Data): Single<Data>
 

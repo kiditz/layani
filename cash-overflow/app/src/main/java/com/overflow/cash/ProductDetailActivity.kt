@@ -69,7 +69,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         if (it.containsKey("image")) {
             val image = it.getByteArray("image")
             val bitmap = BitmapFactory.decodeByteArray(image, 0, image.size)
-            productImage.setImageBitmap(bitmap)
+            product_image.setImageBitmap(bitmap)
         }
         tvProductCode.text = it.getString("product_code")
         tvProductName.text = it.getString("product_name")
@@ -88,7 +88,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_edit, menu)
+        menuInflater.inflate(R.menu.menu_product, menu)
         val itemEdit = menu?.findItem(R.id.action_edit)
         itemEdit?.let {
             it.title = getString(R.string.edit_product)
@@ -99,6 +99,12 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_edit -> moveTo(SaveProductActivity::class.java, intent?.extras)
+            R.id.action_delete -> {
+                val input = Data()
+                input["code"] = intent.getStringExtra("product_code");
+                input["active"] = false
+                presenter.deleteProduct(input)
+            }
             else -> home(item)
         }
         return false
@@ -264,5 +270,13 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         dismiss()
         snack(translations.get(Constant.TranslationsKey.DISCOUNT_CREATED_SUCCESSFULLY)).show()
 
+    }
+
+    override fun onDeleteProductSuccess(data: Data) {
+        val bundle = Bundle()
+        val message = translations.get(Constant.TranslationsKey.PRODUCT_REMOVED_SUCCESSFULLY).replace("{0}", data.getString("code"))
+        bundle.putString(Constant.SUCCESS_MESSAGE, message)
+        bundle.putInt(Constant.GOTO, R.id.nav_product)
+        moveTo(MenuActivity::class.java, bundle)
     }
 }

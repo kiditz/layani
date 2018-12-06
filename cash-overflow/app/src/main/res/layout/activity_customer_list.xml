@@ -7,6 +7,20 @@
     android:layout_height="match_parent"
     tools:context=".CustomerListAddActivity">
 
+    <TextView
+        android:id="@+id/tv_success_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:gravity="center_horizontal"
+        android:padding="5dp"
+        android:textColor="@color/textLight"
+        android:textSize="18sp"
+        android:visibility="gone"
+        tools:text="Nilai pembelian Harus lebih kecil"
+
+        />
+
     <include
         layout="@layout/fragment_blank"
         android:layout_width="match_parent"

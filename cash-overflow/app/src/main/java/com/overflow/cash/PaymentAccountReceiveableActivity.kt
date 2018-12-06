@@ -14,14 +14,16 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import com.overflow.cash.mvp.receiveable.AccountReceiveablePaymentContract
 import com.overflow.cash.mvp.receiveable.AccountReceiveablePaymentPresenter
 import com.overflow.cash.net.NetworkExHandler
-import com.overflow.cash.utils.*
+import com.overflow.cash.utils.moveTo
+import com.overflow.cash.utils.parseRupiah
+import com.overflow.cash.utils.rupiah
+import com.overflow.cash.utils.snack
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_account_receiveable_payed.*
 import kotlinx.android.synthetic.main.dialog_cashbox_chooser.view.*
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -75,9 +77,11 @@ class PaymentAccountReceiveableActivity:AppCompatActivity(), AccountReceiveableP
                 ContextCompat.getDrawable(this, R.drawable.btn_default)
             }
         }
+        presenter.attach(this)
         this.btn_done.setOnClickListener {
-            presenter.attach(this)
+            payDialog()
         }
+
 
     }
 
@@ -95,22 +99,33 @@ class PaymentAccountReceiveableActivity:AppCompatActivity(), AccountReceiveableP
     private fun getButtonIds() = arrayOf(btn_clear, btn_0, btn_1, btn_2, btn_3, btn_4, btn_5, btn_6, btn_7, btn_8, btn_9)
 
     override fun onCashboxLoaded(item: List<Data>) {
-        val cashboxView = LayoutInflater.from(this).inflate(R.layout.dialog_cashbox_chooser, null, false)
-
         val cashboxList = item.map { it.getString("name") }
         val cashBoxAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, cashboxList)
-        cashboxView.sp_cashbox.adapter = cashBoxAdapter
-
-        val builder = AlertDialog.Builder(this).setTitle("Simpan Ke").setView(cashboxView)
-        dialog = builder.create()
-        dialog?.show()
-        cashboxView.sp_cashbox.onItemSelectedListener = object:AdapterView.OnItemSelectedListener{
+        sp_cashbox.adapter = cashBoxAdapter
+        sp_cashbox.onItemSelectedListener = object:AdapterView.OnItemSelectedListener{
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 cashboxId = item[position].getLong("id")
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
         }
+
+    }
+
+    private fun payDialog(){
+        val cashboxView = LayoutInflater.from(this).inflate(R.layout.dialog_cashbox_chooser, null, false)
+        cashboxView.tv_total_payment.text = tv_result.text
+        val cashBack = parseRupiah(tv_result.text) - parseRupiah(tv_paid.text)
+        cashboxView.tv_cashback.text = rupiah(Math.abs(cashBack))
+        cashboxView.tv_pay_type.text = if(cashBack > 0){
+            getString(R.string.cashback)
+        }else{
+            getString(R.string.paid)
+        }
+        val builder = AlertDialog.Builder(this).setView(cashboxView)
+        dialog = builder.create()
+        dialog?.show()
+
 
         RxView.clicks(cashboxView.btnPay).subscribe {
             runOnUiThread {
@@ -123,7 +138,6 @@ class PaymentAccountReceiveableActivity:AppCompatActivity(), AccountReceiveableP
                 presenter.payAccount(data)
             }
         }
-
     }
 
 
@@ -132,16 +146,18 @@ class PaymentAccountReceiveableActivity:AppCompatActivity(), AccountReceiveableP
         dialog?.dismiss()
         if(data.getString("status") == Constant.TransactionStatus.SUCCESS){
             val bundle = Bundle()
-            bundle.putString(Constant.SUCCESS_MESSAGE, translations.get(Constant.TranslationsKey.ACCOUNT_RECEIVEABLE_CREATED_SUCCESSFULY).replace("{0}", order.getString("customer_name")))
+            var message = translations.get(Constant.TranslationsKey.ACCOUNT_RECEIVEABLE_CREATED_SUCCESSFULY)
+            message = message.replace("{0}", order.getString("customer_name"))
+            message = message.replace("{1}", order.getString("order_code"))
+            bundle.putString(Constant.SUCCESS_MESSAGE, message)
             bundle.putInt(Constant.GOTO, R.id.nav_accounts_receiveable)
             moveTo(MenuActivity::class.java, bundle)
         }else{
             val bundle = Bundle()
-            bundle.putString(Constant.SUCCESS_MESSAGE, translations.get(Constant.TranslationsKey.ACCOUNT_RECEIVEABLE_CREATED_SUCCESSFULY).replace("{0}", order.getString("customer_name")))
             bundle.putInt(Constant.GOTO, R.id.nav_accounts_receiveable)
             order["total_payment"] = data.getDouble("total_payment")
             order["account_receiveable"] = data
-            bundle.putBoolean("show_menu", false)
+            bundle.putBoolean("show_message", true)
             bundle.putString("sales", order.toString())
             moveTo(ReceiptAccountReceiveableActivity::class.java, bundle)
         }

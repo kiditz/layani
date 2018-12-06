@@ -5,7 +5,7 @@
     android:id="@+id/calculator_holder"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="?android:colorBackground"
     android:orientation="vertical"
     
     tools:context=".activities.MainActivity"
@@ -45,7 +45,16 @@
             tools:text="Rp. 2000" />
     </LinearLayout>
 
+    <Spinner
+        android:id="@+id/sp_cashbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:layout_gravity="center_vertical"
+        android:fontFamily="sans-serif"
+        android:hint="@string/init_price" />
     <TextView
+        android:background="@android:color/white"
         android:id="@+id/tv_result"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

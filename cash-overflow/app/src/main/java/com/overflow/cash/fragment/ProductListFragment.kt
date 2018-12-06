@@ -1,11 +1,9 @@
 package com.overflow.cash.fragment
 
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TabLayout
-import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
@@ -13,15 +11,14 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.overflow.cash.CategoryListActivity
-import com.overflow.cash.SaveProductActivity
 import com.overflow.cash.Constant
 import com.overflow.cash.R
+import com.overflow.cash.SaveProductActivity
 import com.overflow.cash.mvp.product.CategoryListContract
 import com.overflow.cash.mvp.product.CategoryListPresenter
 import com.overflow.cash.net.NetworkExHandler
 import com.overflow.cash.pager.ViewPagerAdapter
 import com.overflow.cash.utils.moveTo
-import com.overflow.cash.utils.snack
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
 import dagger.android.support.AndroidSupportInjection
@@ -46,17 +43,23 @@ class ProductListFragment : BaseFragment(), CategoryListContract.View, ViewPager
         return inflater.inflate(R.layout.fragment_product_list, container, false)
     }
 
-    override fun onAttach(context: Context?) {
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
-        super.onAttach(context)
+        super.onCreate(savedInstanceState)
         this.adapter = ViewPagerAdapter(activity!!.supportFragmentManager)
+        this.presenter.attach(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        this.presenter.loadCategory(-1)
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        this.presenter.attach(this)
-        this.presenter.loadCategory(-1)
         btn_edit_category?.setOnClickListener {
             activity?.moveTo(CategoryListActivity::class.java)
         }
@@ -69,22 +72,23 @@ class ProductListFragment : BaseFragment(), CategoryListContract.View, ViewPager
 
 
     override fun onCategoryLoaded(categoryList: List<Data>) {
+        adapter.clear()
         try {
             hideMessage()
             var productFragment = ProductFragment.newInstance(-1)
             adapter.addFragment(productFragment, getString(R.string.all_product))
             this.categoryList.add(Data())
+            //Use Property because for bugfix
             categoryList.map {
                 productFragment = ProductFragment.newInstance(it.getLong("category_id"))
                 adapter.addFragment(productFragment, it.getString("category_name"))
             }
-
             this.categoryList.addAll(categoryList)
             adapter.notifyDataSetChanged()
             handleAddProduct(view_pager.currentItem)
             handleChangeEvent(view_pager.currentItem)
             handlePopUpMenu(view_pager.currentItem)
-        }catch (e:Exception){
+        }catch (e:UninitializedPropertyAccessException){
             Timber.e(e)
         }
     }
@@ -95,12 +99,14 @@ class ProductListFragment : BaseFragment(), CategoryListContract.View, ViewPager
     }
 
     private fun handleChangeEvent(position: Int) {
-        RxTextView.textChangeEvents(ed_search).debounce(100, TimeUnit.MILLISECONDS).distinctUntilChanged().subscribe({
+        (adapter.getItem(position) as ProductFragment).searchProduct(Constant.TEXT_EMPTY)
+        RxTextView.textChangeEvents(ed_search).skipInitialValue().debounce(300, TimeUnit.MILLISECONDS).distinctUntilChanged().subscribe({
             (adapter.getItem(position) as ProductFragment).searchProduct(it.text().toString())
         }, {
             Timber.e(it)
         })
     }
+
 
     private fun handlePopUpMenu(position: Int) {
         val productFragment = (adapter.getItem(position) as ProductFragment)
@@ -138,6 +144,7 @@ class ProductListFragment : BaseFragment(), CategoryListContract.View, ViewPager
 
     }
 
+
     override fun showNoOk(res: String) {
         showMessage(res)
     }
@@ -165,14 +172,17 @@ class ProductListFragment : BaseFragment(), CategoryListContract.View, ViewPager
     }
 
     override fun onPageSelected(position: Int) {
-        handleAddProduct(position)
-        handleChangeEvent(position)
-        handlePopUpMenu(position)
+        try {
+            handleAddProduct(position)
+            handleChangeEvent(position)
+            handlePopUpMenu(position)
+        }catch (e:UninitializedPropertyAccessException){
+            //Ignore property
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
     }
 
 }

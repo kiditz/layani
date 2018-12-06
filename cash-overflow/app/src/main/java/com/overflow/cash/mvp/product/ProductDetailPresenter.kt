@@ -45,12 +45,29 @@ class ProductDetailPresenter(private var context: Context, private var translati
         }
     }
 
+
     override fun attach(view: ProductDetailContract.View) {
         this.view = view
     }
 
     override fun detach() {
         disposable.clear()
+    }
+
+    override fun deleteProduct(data: Data) {
+        if(API.isConnected(context)){
+            this.disposable.add(this.productService.editProductByCode(data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
+                if(API.ok(response)){
+                    this.view.onDeleteProductSuccess(API.payload(response))
+                }else{
+                    this.view.showNoOk(translations.get(API.getError(response)))
+                }
+            }, {error ->
+                this.view.showError(error)
+            }))
+        }else{
+            this.view.showNotConnected(this.translations.get(Constant.TranslationsKey.NO_INTERNET))
+        }
     }
 
 }

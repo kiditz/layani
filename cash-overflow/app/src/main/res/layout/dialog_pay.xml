@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:gravity="center"
     android:padding="20dp"
-    tools:context=".AddPriceActivity">
+    android:orientation="vertical">
 
     <ImageView
         android:layout_width="120dp"
@@ -66,28 +64,12 @@
             tools:text="Rp. 25000" />
     </LinearLayout>
 
-    <!--<Spinner-->
-        <!--android:id="@+id/sp_cashbox"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="center_vertical"-->
-        <!--android:hint="@string/init_price"-->
-        <!--android:maxLines="1" />-->
     <Button
-        android:id="@+id/btnPay"
+        android:id="@+id/btn_pay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/default_margin"
         android:background="@drawable/btn_default"
         android:text="@string/pay"
-        android:textColor="@android:color/white"
-        android:textSize="16sp" />
-
-    <ProgressBar
-        android:id="@+id/payProgressBar"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:visibility="gone" />
+        android:textColor="@color/textLight" />
 </LinearLayout>

@@ -26,6 +26,7 @@ import com.overflow.cash.utils.decoration.MarginItemDecoration
 import com.overflow.cash.utils.snack
 import com.overflow.libs.core.Data
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.dialog_manage_order_item_qty.*
 import kotlinx.android.synthetic.main.dialog_manage_order_item_qty.view.*
 import kotlinx.android.synthetic.main.fragment_blank.*
 import kotlinx.android.synthetic.main.fragment_blank.view.*
@@ -117,15 +118,20 @@ class SalesFragment : Fragment(), ProductListContract.View, OrderContract.View {
     private fun handleEditOrder(data: Data, holder: SalesListAdapter.ViewHolder) {
         this.addOrSubtractOrderItemView = LayoutInflater.from(context).inflate(R.layout.dialog_manage_order_item_qty, null, false)
         var qty = holder.qty.text.replace("[^0-9]".toRegex(), "").trim().toLong()
-        this.addOrSubtractOrderItemView?.edQty?.setText(qty.toString())
+        this.addOrSubtractOrderItemView?.ed_qty?.setText(qty.toString())
+        this.addOrSubtractOrderItemView?.btn_add_qty?.setOnClickListener {
+            this.ed_qty.setText("${qty++ }")
+        }
+        this.addOrSubtractOrderItemView?.btn_sub_qty?.setOnClickListener {
+            this.ed_qty.setText("${qty-- }")
+        }
         val builder = AlertDialog.Builder(context!!)
         builder.setView(this.addOrSubtractOrderItemView).setCancelable(false)
         builder.setPositiveButton(R.string.submit){ _, _ ->
             val input = Data()
             input["product_id"] = data["product_id"]
-            val qtyParse = addOrSubtractOrderItemView?.edQty?.text.toString().toLong()
-
-            if(this.addOrSubtractOrderItemView?.edQty?.text.toString().toLong() <= 0){
+            val qtyParse = addOrSubtractOrderItemView?.ed_qty?.text.toString().toLong()
+            if(this.addOrSubtractOrderItemView?.ed_qty?.text.toString().toLong() <= 0){
                 holder.qty.visibility = View.GONE
                 orderPresenter.deleteItem(data.getLong("product_id"))
             }else{
@@ -161,9 +167,11 @@ class SalesFragment : Fragment(), ProductListContract.View, OrderContract.View {
         input["product_id"] = data["product_id"]
         val qty = viewHolder.qty.text.replace("[^0-9]".toRegex(), "").trim().toLong()
         if(data.getBoolean("use_stock")){
-            if(data.getLong("stock") - (qty + 1)  < 0){
-                activity?.snack(getString(R.string.not_enough_stock))?.show()
-                return
+            if(data["stock"] != null){
+                if(data.getLong("stock") - (qty + 1)  < 0){
+                    activity?.snack(getString(R.string.not_enough_stock))?.show()
+                    return
+                }
             }
         }
         val subTotal = data.getDouble("sell_price") * (qty + 1)

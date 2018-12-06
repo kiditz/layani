@@ -12,6 +12,7 @@ import android.os.Environment
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.text.TextUtils
 import android.util.Base64
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -24,6 +25,7 @@ import com.overflow.cash.Constant.TranslationsKey.Companion.CATEGORY_CREATED_SUC
 import com.overflow.cash.Constant.TranslationsKey.Companion.INIT_PRICE_MUST_GREATER_THAN_ZERO
 import com.overflow.cash.Constant.TranslationsKey.Companion.REQUIRED_VALUE_CATEGORY_NAME
 import com.overflow.cash.Constant.TranslationsKey.Companion.REQUIRED_VALUE_PRODUCT_CODE
+import com.overflow.cash.Constant.TranslationsKey.Companion.REQUIRED_VALUE_PRODUCT_INIT_PRICE
 import com.overflow.cash.Constant.TranslationsKey.Companion.REQUIRED_VALUE_PRODUCT_NAME
 import com.overflow.cash.Constant.TranslationsKey.Companion.REQUIRED_VALUE_PRODUCT_QTY
 import com.overflow.cash.Constant.TranslationsKey.Companion.REQUIRED_VALUE_PRODUCT_UNIT
@@ -99,15 +101,16 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
             this.edProductName.setText(intent.getStringExtra("product_name"))
             this.edSellPrice.setText(intent.getDoubleExtra("sell_price", 0.0).toInt().toString())
             this.edInitPrice.setText(intent.getDoubleExtra("purchase_price", 0.0).toInt().toString())
-            this.edQuantity.setText(intent.getLongExtra("stock", 0L).toInt().toString())
+            this.edQuantity.setText(intent.getLongExtra("stock", 1L).toInt().toString())
             this.edUnit.setText(intent.getStringExtra("unit"))
             if (intent.hasExtra("image")) {
                 val image = intent.getByteArrayExtra("image")
                 val bitmap = BitmapFactory.decodeByteArray(image, 0, image.size)
-                productImage?.setImageBitmap(bitmap)
+                product_image?.setImageBitmap(bitmap)
             }
             this.cbUseStock.isChecked = intent.getBooleanExtra("use_stock", true)
-
+            quantityWrapper.isEnabled = this.cbUseStock.isChecked
+            unitWrapper.isEnabled = this.cbUseStock.isChecked
         } else {
             supportActionBar?.setTitle(R.string.add_product)
         }
@@ -128,6 +131,7 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
                 categoryId = getSelectedItem(categoryName)?.getLong("category_id")!!
             }
         }
+        this.btnSubmit.isEnabled = false
         this.btnSubmit.setOnClickListener {
             this.handleAddProductAction()
         }
@@ -143,41 +147,59 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
     }
 
     private fun handleAddProductAction() {
-        this.progress_bar.visibility = View.VISIBLE
-        this.btnSubmit.isEnabled = false
-        val data = Data()
-        data["name"] = edProductName.text.toString()
-        data["code"] = edProductCode.text.toString()
-        if (quantityWrapper.isEnabled) {
-            data["use_stock"] = true
-            data["qty"] = edQuantity.text.toString().toLong()
-            data["product_type"] = "PRODUCT"
-            data["unit"] = edUnit.text.toString()
-        } else {
-            data["use_stock"] = false
-            data["product_type"] = "SERVICE"
-        }
-
-
-
-        data["sell_price"] = edSellPrice.text.toString().toDouble()
-        data["purchase_price"] = edInitPrice.text.toString().toDouble()
-        categoryId?.let {
-            if (it != -1L) {
-                data["category_id"] = it
+        runOnUiThread {
+            val data = Data()
+            data["name"] = edProductName.text.toString()
+            data["code"] = edProductCode.text.toString()
+            if (cbUseStock.isChecked) {
+                //Validate use stock
+                if(TextUtils.isEmpty(edQuantity.text)){
+                    quantityWrapper.error = translations.get(Constant.TranslationsKey.REQUIRED_VALUE_PRODUCT_QTY)
+                    quantityWrapper.isErrorEnabled = true
+                    return@runOnUiThread
+                }
+                if(TextUtils.isEmpty(edUnit.text)){
+                    quantityWrapper.error = translations.get(Constant.TranslationsKey.REQUIRED_VALUE_PRODUCT_UNIT)
+                    quantityWrapper.isErrorEnabled = true
+                    return@runOnUiThread
+                }
+                data["use_stock"] = true
+                data["qty"] = edQuantity.text.toString().toLong()
+                if(data.getLong("qty") <= 0){
+                    quantityWrapper.error = translations.get(Constant.TranslationsKey.QTY_MUST_BE_GREATER_THAN_ZERO)
+                    quantityWrapper.isErrorEnabled = true
+                    return@runOnUiThread
+                }
+                data["product_type"] = "PRODUCT"
+                data["unit"] = edUnit.text.toString()
             } else {
-                data["category_id"] = null
+                data["use_stock"] = false
+                data["product_type"] = "SERVICE"
             }
-        }
 
-        imageBase64String?.let {
-            data["image"] = it
-        }
-        if (productId != null) {
-            data["id"] = productId
-            this.presenter.editProduct(data)
-        } else {
-            this.presenter.addProduct(data)
+
+
+            data["sell_price"] = edSellPrice.text.toString().toDouble()
+            data["purchase_price"] = edInitPrice.text.toString().toDouble()
+            categoryId?.let {
+                if (it != -1L) {
+                    data["category_id"] = it
+                } else {
+                    data["category_id"] = null
+                }
+            }
+
+            imageBase64String?.let {
+                data["image"] = it
+            }
+            this.progress_bar.visibility = View.VISIBLE
+
+            if (productId != null) {
+                data["id"] = productId
+                this.presenter.editProduct(data)
+            } else {
+                this.presenter.addProduct(data)
+            }
         }
     }
 
@@ -310,6 +332,15 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
         var unitLengthObserve = Observable.just(true)
         var unitObserve = Observable.just(true)
         var qtyObserve = Observable.just(true)
+
+        val sellPriceObserve = this.validateGreaterThan(edSellPrice, sellPriceWrapper, 0, translations.get(SELL_PRICE_MUST_GREATER_THAN_ZERO), resIdPrimary, 0)
+        val initPriceObserve = this.validateNotEmpty(edInitPrice, initPriceWrapper, translations.get(REQUIRED_VALUE_PRODUCT_INIT_PRICE), resIdPrimary, 0)
+
+        Observable.combineLatest(unitObserve, unitLengthObserve, productNameObserve, productCodeObserve, qtyObserve, sellPriceObserve, initPriceObserve,
+                Function7 { unit: Boolean, unitLength: Boolean, productName: Boolean, productCode: Boolean, qty: Boolean, sellPrice: Boolean, initPrice: Boolean ->
+                    unit && unitLength && productName && productCode && qty && sellPrice && initPrice
+                }).subscribe { valid: Boolean -> btnSubmit.isEnabled = valid }
+
         cbUseStock.setOnCheckedChangeListener { _, isChecked ->
             quantityWrapper.isEnabled = isChecked
             unitWrapper.isEnabled = isChecked
@@ -323,22 +354,24 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
             unitObserve = if (isChecked) {
                 this.validateNotEmpty(edUnit, unitWrapper, translations.get(REQUIRED_VALUE_PRODUCT_UNIT), resIdPrimary, 0)
             } else {
+                edUnit.setText(Constant.TEXT_EMPTY)
                 Observable.just(true)
             }
             qtyObserve = if (isChecked) {
                 this.validateGreaterThan(edQuantity, quantityWrapper, 0, translations.get(REQUIRED_VALUE_PRODUCT_QTY), resIdPrimary, 1)
             } else {
+                edQuantity.setText(Constant.TEXT_EMPTY)
                 Observable.just(true)
             }
+
+            //Combine again to take effect when checked change
+            Observable.combineLatest(unitObserve, unitLengthObserve, productNameObserve, productCodeObserve, qtyObserve, sellPriceObserve, initPriceObserve,
+                    Function7 { unit: Boolean, unitLength: Boolean, productName: Boolean, productCode: Boolean, qty: Boolean, sellPrice: Boolean, initPrice: Boolean ->
+                        unit && unitLength && productName && productCode && qty && sellPrice && initPrice
+                    }).subscribe { valid: Boolean -> btnSubmit.isEnabled = valid }
         }
 
-        val sellPriceObserve = this.validateGreaterThan(edSellPrice, sellPriceWrapper, 0, translations.get(SELL_PRICE_MUST_GREATER_THAN_ZERO), resIdPrimary, 0)
-        val initPriceObserve = this.validateGreaterThan(edInitPrice, initPriceWrapper, 0, translations.get(INIT_PRICE_MUST_GREATER_THAN_ZERO), resIdPrimary, 0)
 
-        Observable.combineLatest(unitObserve, unitLengthObserve, productNameObserve, productCodeObserve, qtyObserve, sellPriceObserve, initPriceObserve,
-                Function7 { unit: Boolean, unitLength: Boolean, productName: Boolean, productCode: Boolean, qty: Boolean, sellPrice: Boolean, initPrice: Boolean ->
-                    unit && unitLength && productName && productCode && qty && sellPrice && initPrice
-                }).subscribe { valid: Boolean -> btnSubmit.isEnabled = valid }
     }
 
 
@@ -373,8 +406,7 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
     private fun showImage(uri: Uri) {
         val file = uri.path
         val bitmap = BitmapFactory.decodeFile(file)
-        imgAlt?.visibility = View.GONE
-        productImage?.setImageBitmap(bitmap)
+        product_image?.setImageBitmap(bitmap)
         val bytes = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, bytes)
         this.imageBase64String = Base64.encodeToString(bytes.toByteArray(), Base64.NO_WRAP)

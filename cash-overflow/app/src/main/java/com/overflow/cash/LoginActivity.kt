@@ -41,8 +41,6 @@ class LoginActivity : AccountAuthenticatorActivity(), LoginContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
         AndroidInjection.inject(this)
         setContentView(R.layout.activity_login)
         this.presenter.attach(this)
@@ -112,9 +110,11 @@ class LoginActivity : AccountAuthenticatorActivity(), LoginContract.View {
 
     override fun showNoOk(res: String) {
         snack(res).show()
+        progress_bar?.visibility = View.GONE
     }
 
     override fun showEmpty() {
+        progress_bar?.visibility = View.GONE
     }
 
     override fun showNotConnected(res: String) {

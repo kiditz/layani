@@ -53,8 +53,8 @@ class ProductFragment : Fragment(), ProductListContract.View {
     }
 
     override fun onAttach(context: Context?) {
-        super.onAttach(context)
         AndroidSupportInjection.inject(this)
+        super.onAttach(context)
         presenter.attach(this)
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

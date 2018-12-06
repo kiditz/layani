@@ -44,7 +44,8 @@
     <string name="add_product">Tambah Produk</string>
     <string name="edit_product">Ubah Produk</string>
     <string name="edit_category">Ubah Kategori</string>
-    <string name="add_customer">Tambah pelanggan</string>
+    <string name="add_customer">Tambah/Ubah pelanggan</string>
+    <string name="for_trx">untuk transaksi</string>
     <string name="date">Tanggal</string>
     <string name="add_price">Tambah Harga</string>
     <string name="name">Nama</string>

@@ -2,13 +2,15 @@ package com.overflow.cash
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.ContextCompat.getDrawable
 import android.support.v7.app.AppCompatActivity
+import android.text.TextUtils
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.ArrayAdapter
@@ -27,6 +29,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
 import kotlinx.android.synthetic.main.activity_payment.*
+import kotlinx.android.synthetic.main.dialog_pay.view.*
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
@@ -58,7 +61,7 @@ class PaymentTransactionActivity : AppCompatActivity(), CashboxContract.View, Pa
         }
         //Set amount
         this.amount = intent.getDoubleExtra("amount", -1.0)
-        this.supportActionBar!!.title = "${getString(R.string.transaction)} ${this.rupiah(amount)}"
+        this.supportActionBar!!.title = "${getString(R.string.pay)} ${this.rupiah(amount)}"
 
         // Set Items for transaction
         val itemsStr = intent.getStringExtra("items")
@@ -72,9 +75,14 @@ class PaymentTransactionActivity : AppCompatActivity(), CashboxContract.View, Pa
         ed_customer.setOnClickListener {
             openCustomerActivity()
         }
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", currentLocale())
+        val calendar = Calendar.getInstance()
 
+        val minCalendar = Calendar.getInstance()
+        minCalendar.add(Calendar.DATE, 1)
+        ed_due_date.setText(dateFormat.format(calendar.time))
         ed_due_date.setOnClickListener {
-            showDueDateDatePicker()
+            showDueDateDatePicker(calendar, minCalendar, dateFormat).show()
         }
         // Change color customer make it work over lollipop
         ed_customer.tinting(R.color.colorAccent)
@@ -104,31 +112,38 @@ class PaymentTransactionActivity : AppCompatActivity(), CashboxContract.View, Pa
 
 
         btn_done.setOnClickListener {
-            btn_done.isEnabled = false
             var message = "${getString(R.string.total_payment)} : ${tv_result.text}\n"
             message += if(paymentMethod == Constant.PaymentMethod.CASH){
                 val cashBack = parseRupiah(tv_result.text) - amount
-                "${getString(R.string.cashback)}: ${rupiah(cashBack)}"
+                showDialogPayment(rupiah(cashBack))
             }else{
                 val paid = amount - parseRupiah(tv_result.text)
-                "${getString(R.string.paid)}: ${rupiah(paid)}"
+                showDialogPayment(rupiah(paid), true)
             }
 
-            val button = object:MessageButtonHandle(){
-                override fun ok(dialog: DialogInterface, which: Int) {
-                    super.ok(dialog, which)
-                    saveOrder()
-                    dialog.dismiss()
-                    progress.visibility = View.VISIBLE
-                }
-
-                override fun cancel(dialog: DialogInterface, which: Int) {
-                    super.cancel(dialog, which)
-                }
-            }
-            this.showMessage(getString(R.string.are_you_sure), message, button).show()
         }
 
+    }
+
+    /**
+     * Show dialog preview before paid transaction
+     * */
+    private fun showDialogPayment(value:String, isPaid:Boolean=false){
+        val view = LayoutInflater.from(this).inflate(R.layout.dialog_pay, null, false)
+        view.tv_total_payment.text = tv_result.text
+        view.tv_cashback.text = value
+        view.tv_pay_type.text = if(isPaid){
+            getString(R.string.paid)
+        }else{
+            getString(R.string.cashback)
+        }
+
+        val dialog = AlertDialog.Builder(this).setView(view).create()
+        view.btn_pay.setOnClickListener {
+            dialog.dismiss()
+            saveOrder()
+        }
+        dialog.show()
     }
 
     private fun validate(amount:Double){
@@ -260,24 +275,16 @@ class PaymentTransactionActivity : AppCompatActivity(), CashboxContract.View, Pa
         }
     }
 
-    private fun showDueDateDatePicker(){
+    private fun showDueDateDatePicker(calendar:Calendar, minCalendar:Calendar, dateFormat:SimpleDateFormat):DatePickerDialog{
         //Calendar
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", currentLocale())
-        val calendar = Calendar.getInstance()
-
-        val minCalendar = Calendar.getInstance()
-        minCalendar.add(Calendar.DATE, 1)
-        ed_due_date.setText(dateFormat.format(calendar.time))
-        ed_due_date.setOnClickListener {
-            val datePicker = DatePickerDialog(this, DatePickerDialog.OnDateSetListener { _, y, m, d ->
-                calendar.set(Calendar.YEAR, y)
-                calendar.set(Calendar.MONTH, m)
-                calendar.set(Calendar.DAY_OF_MONTH, d)
-                ed_due_date.setText(dateFormat.format(calendar.time))
-            }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
-            datePicker.datePicker.minDate = minCalendar.timeInMillis
-            datePicker.show()
-        }
+        val datePicker = DatePickerDialog(this, DatePickerDialog.OnDateSetListener { _, y, m, d ->
+            calendar.set(Calendar.YEAR, y)
+            calendar.set(Calendar.MONTH, m)
+            calendar.set(Calendar.DAY_OF_MONTH, d)
+            ed_due_date.setText(dateFormat.format(calendar.time))
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
+        datePicker.datePicker.minDate = minCalendar.timeInMillis
+        return datePicker
     }
 
     override fun onCashboxLoaded(item: List<Data>) {
@@ -304,6 +311,8 @@ class PaymentTransactionActivity : AppCompatActivity(), CashboxContract.View, Pa
     }
 
     private fun saveOrder(){
+        btn_done.isEnabled = false
+        progress.visibility = View.VISIBLE
         val data = Data()
         data["cash_box_id"] = this.cashboxId
         data["customer_id"] = this.customerId
@@ -312,6 +321,11 @@ class PaymentTransactionActivity : AppCompatActivity(), CashboxContract.View, Pa
         data["payment_method"] = this.paymentMethod
         if(this.paymentMethod == Constant.PaymentMethod.CREDIT){
             data["due_date"] = ed_due_date.text.toString()
+            if (TextUtils.isEmpty(ed_due_date.text)) {
+                ed_due_date.error = translations.get(Constant.TranslationsKey.REQUIRED_VALUE_DUE_DATE)
+                progress.visibility = View.GONE
+                return
+            }
         }
         data["items"] = orderItems
         changeBtnStyle(false)
@@ -340,6 +354,12 @@ class PaymentTransactionActivity : AppCompatActivity(), CashboxContract.View, Pa
         btn_done?.isEnabled = false
         presenter.detach()
         cashboxPresenter.detach()
+    }
+
+    override fun onBackPressed() {
+        if(progress.visibility == View.GONE){
+            super.onBackPressed()
+        }
     }
 
 }

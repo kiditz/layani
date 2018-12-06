@@ -3,10 +3,9 @@ package com.overflow.cash
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
-import android.view.View
+import android.support.v7.widget.RecyclerView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.overflow.cash.adapter.CustomerChooserAdapter
 import com.overflow.cash.mvp.customer.CustomerChooserContract
@@ -17,12 +16,10 @@ import com.overflow.cash.utils.moveTo
 import com.overflow.libs.core.Data
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_customer_chooser.*
-import kotlinx.android.synthetic.main.fragment_blank.*
-import kotlinx.android.synthetic.main.fragment_blank.view.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class CustomerChooserActivity : AppCompatActivity(), CustomerChooserContract.View {
+class CustomerChooserActivity : BaseActivity(), CustomerChooserContract.View {
     @Inject
     lateinit var presenter:CustomerChooserPresenter
     @Inject
@@ -66,24 +63,36 @@ class CustomerChooserActivity : AppCompatActivity(), CustomerChooserContract.Vie
         }
 
         this.btnSaveCustomer?.setOnClickListener {
+
             moveTo(CustomerListAddActivity::class.java)
         }
         // On customer choosed
         this.adapter.onItemClick = {data, _->
             onCustomerEdited(data)
         }
-        RxTextView.textChanges(edCustomer).debounce(300, TimeUnit.MILLISECONDS).subscribe {
+
+        RxTextView.textChanges(edCustomer).skipInitialValue().debounce(500, TimeUnit.MILLISECONDS).subscribe {
             currentPage = 1
             presenter.loadCustomer(currentPage, it.toString())
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        presenter.loadCustomer(currentPage, edCustomer.text.toString())
+    }
+
     override fun onCustomerLoaded(customerList: List<Data>) {
-        blank_layout?.visibility = View.GONE
+        hideMessage()
         if(currentPage == 1){
             this.adapter.clearValues()
         }
         this.adapter.addValues(customerList)
+        if(adapter.itemCount > 0){
+            this.btnSaveCustomer.setImageResource(R.drawable.ic_edit)
+        }else{
+            this.btnSaveCustomer.setImageResource(R.drawable.ic_plus)
+        }
     }
 
     override fun showError(error: Throwable) {
@@ -97,19 +106,33 @@ class CustomerChooserActivity : AppCompatActivity(), CustomerChooserContract.Vie
     override fun showEmpty() {
         showMessage(getString(R.string.no_customer_title), "")
     }
-    private fun showMessage(title:String, message:String){
-        blank_layout?.visibility = View.VISIBLE
-        blank_layout?.tv_description?.text = message
-        blank_layout?.tv_title?.text = title
-    }
 
     override fun showNotConnected(res: String) {
+        showMessage(res)
     }
 
-    override fun onCustomerEdited(customer: Data) {
+    override fun showMessage(title: String, message: String) {
+        super.showMessage(title, message)
+        refresh?.isRefreshing = false
+    }
+
+    /**
+     * Use this function only for redirect back into {@link PreviewSalesActivity}
+     * */
+    override fun onCustomerEdited(customer: Data, holder:RecyclerView.ViewHolder?) {
         val intent = Intent()
         intent.putExtras(customer.toBundle())
         setResult(Activity.RESULT_OK, intent)
         finish()
+
+    }
+
+    override fun hideMessage() {
+        super.hideMessage()
+        refresh?.isRefreshing = false
+    }
+
+    override fun onCustomerEditShowNoOk(res: String) {
+
     }
 }

@@ -2,6 +2,7 @@ package com.overflow.cash.mvp.customer
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.support.v7.widget.RecyclerView
 import com.overflow.cash.Constant
 import com.overflow.cash.net.*
 import com.overflow.libs.core.Data
@@ -67,14 +68,14 @@ class CustomerChooserPresenter(private val context:Context, private val preferen
     }
 
 
-    override fun editCustomer(customer: Data) {
+    override fun editCustomer(customer: Data, holder: RecyclerView.ViewHolder?) {
         customer["merchant_id"] = merchant.getLong("id")
         if(API.isConnected(context)){
             this.disposable.add(this.customerService.editCustomer(customer).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){
-                    this.view.onCustomerEdited(API.payload(response))
+                    this.view.onCustomerEdited(API.payload(response), holder)
                 }else{
-                    this.view.showNoOk(translations.get(API.getError(response)))
+                    this.view.onCustomerEditShowNoOk(translations.get(API.getError(response)))
                 }
             }, {error ->
                 this.view.showError(error)

@@ -111,4 +111,5 @@
     <string name="system_err">Upps, Terjadi kesalahan pada sistem..</string>
     <string name="add_outlet">Add New Outlet</string>
     <string name="create_store_success">Store successfully created</string>
+    <string name="for_trx">for transaction</string>
 </resources>

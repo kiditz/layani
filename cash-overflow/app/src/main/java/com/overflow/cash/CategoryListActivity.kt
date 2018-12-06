@@ -127,7 +127,7 @@ class CategoryListActivity : BaseActivity(), CategoryListContract.View, EditAndR
      * */
     override fun onCategoryEdited(data: Data, holder:CategoryListAdapter.ViewHolder) {
         presenter.loadCategory(currentPage, Constant.TEXT_EMPTY)
-        dismissProgressMessage(translations.get(Constant.TranslationsKey.CATEGORY_EDITED_SUCCESSFULLY), holder)
+        dismissProgressMessage(translations.get(Constant.TranslationsKey.CATEGORY_EDITED_SUCCESSFULLY).replace("{0}", data.getString("name")), holder)
     }
 
     override fun onCategoryAdded(data: Data, holder: CategoryListAdapter.ViewHolder) {

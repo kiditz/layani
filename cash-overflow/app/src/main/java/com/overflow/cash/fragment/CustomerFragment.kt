@@ -3,6 +3,7 @@ package com.overflow.cash.fragment
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.*
 import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.overflow.cash.Constant
@@ -122,7 +123,11 @@ class CustomerFragment : BaseFragment(), CustomerChooserContract.View {
         showMessage(translations.get(Constant.TranslationsKey.NO_INTERNET), Constant.TEXT_EMPTY)
     }
 
-    override fun onCustomerEdited(customer: Data) {
+    override fun onCustomerEdited(customer: Data, holder: RecyclerView.ViewHolder?) {
+
+    }
+
+    override fun onCustomerEditShowNoOk(res: String) {
 
     }
 }

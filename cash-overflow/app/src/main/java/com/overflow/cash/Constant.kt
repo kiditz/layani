@@ -82,12 +82,23 @@ class Constant {
             const val SYSTEM_ERROR = "system.error"
 
             const val CATEGORY_CREATED_SUCCESSFULLY = "category.created.successfully"
+            const val CATEGORY_EDITED_SUCCESSFULLY = "category.edited.successfully"
+            const val CATEGORY_REMOVED_SUCCESSFULLY = "category.removed.successfully"
+
+            const val CUSTOMER_EDITED_SUCCESSFULLY = "customer.edited.successfully"
+            const val CUSTOMER_REMOVED_SUCCESSFULLY = "customer.removed.successfully"
+
             const val PRODUCT_CREATED_SUCCESSFULLY = "product.created.successfully"
+            const val PRODUCT_REMOVED_SUCCESSFULLY = "product.removed.successfully"
             const val STOCK_CREATED_SUCCESSFULLY = "stock.created.successfully"
+
             const  val SALES_CREATED_SUCCESSFULY = "sales.created.successfully"
+
             const  val ACCOUNT_RECEIVEABLE_CREATED_SUCCESSFULY = "account_receiveable.created.successfully"
             const  val ACCOUNT_RECEIVEABLE_SAVED_SUCCESSFULY = "account_receiveable.saved.successfully"
+
             const val DISCOUNT_CREATED_SUCCESSFULLY = "discount.created.successfully"
+            const val REQUIRED_VALUE_DUE_DATE ="required.value.due_date"
             const val REQUIRED_VALUE_PRODUCT_CODE = "required.value.product_code"
             const val REQUIRED_VALUE_CUSTOMER_NAME = "required.value.customer_name"
             const val REQUIRED_VALUE_PRODUCT_NAME = "required.value.product_name"
@@ -97,6 +108,7 @@ class Constant {
             const val REQUIRED_VALUE_PRODUCT_INIT_PRICE = "required.value.product_init_price"
             const val REQUIRED_VALUE_PRODUCT_PURCH_PRICE = "required.value.product_purch_price"
             const val REQUIRED_VALUE_PRODUCT_QTY = "required.value.product_qty"
+            const val QTY_MUST_BE_GREATER_THAN_ZERO = "qty.must.gt.zero"
             const val REQUIRED_VALUE_CASHBOX = "required.value.cashbox"
             const val SELL_PRICE_MUST_GREATER_THAN_ZERO = "sell_price.must.be.greater_than_zero"
             const val INIT_PRICE_MUST_GREATER_THAN_ZERO = "init_price.must.be.greater_than_zero"
@@ -111,8 +123,8 @@ class Constant {
             const val USER_NOT_FOUND = "user.not.found"
             const val USER_WRONG_PASSWORD = "user.wrong.password"
             const val INVALID_EMAIL = "invalid.email.address"
-            const val CATEGORY_EDITED_SUCCESSFULLY = "category.edited.successfully"
-            const val CATEGORY_REMOVED_SUCCESSFULLY = "category.removed.successfully"
+
+
 
         }
     }
