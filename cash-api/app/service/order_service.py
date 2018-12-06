@@ -187,6 +187,7 @@ class OrderService(object):
 		page = int(domain['page'])
 		size = int(domain['size'])
 		order_q = Order.query.filter_by(merchant_id=merchant_id)\
+					.filter(cast(Order.order_at, DATE) == datetime.now().date())
 					.order_by(Order.order_at.desc())\
 					.paginate(page, size, error_out=False)
 		order_list = list(map(lambda x: x.to_dict(), order_q.items))
