@@ -8,7 +8,7 @@ from slerp.logger import logging
 from slerp.validator import Number, Blank, Key, ValidationException
 from sqlalchemy import between, and_, cast, func, Interval
 from sqlalchemy.dialects.mssql import DATE
-from utils.api_constant import StockRef, ErrorCode, PaymentMethod
+from utils.api_constant import StockRef, ErrorCode, PaymentMethod, OrderStatus
 from utils.date_utils import get_day_of_year, get_day_of_week
 
 log = logging.getLogger(__name__)
@@ -53,12 +53,12 @@ class OrderService(object):
 		cashbox = Cashbox.query.get(domain['cash_box_id'])
 		account_receiveable = None
 		if order.payment_method == PaymentMethod.CASH:
-			order.status = 'S'
+			order.status = OrderStatus.SUCCESS
 			cashbox.total_amount = cashbox.total_amount + Decimal(domain['total_amount'])
 			order.cashback = order.total_payment - order.total_amount			
 		else:			
 			cashbox.total_amount = cashbox.total_amount + Decimal(domain['total_payment'])
-			order.status = 'P'
+			order.status = OrderStatus.PENDING
 			order.cashback = 0.0
 			account_receiveable = AccountReceiveable()
 			account_receiveable.total_credit = order.total_amount - order.total_payment
@@ -99,7 +99,22 @@ class OrderService(object):
 		
 		order_dict['order_items'] = order_items
 		return {'payload': order_dict}
-	
+
+	@Number(['order_id'])
+	def refund_order(self, domain):
+		order_id = domain['order_id']
+		order = Order.query.get(order_id)
+		order.status = OrderStatus.VOID
+		order_cpy = Order(order.to_dict())
+		order_cpy.id = None
+		order_cpy.total_amount = order.total_amount * -1
+		order_cpy.status = OrderStatus.VOID
+		order.profit = 0
+		order_cpy.save()
+		order.save()
+		
+		pass
+
 	@Blank(['period', 'merchant_id'])
 	def get_order_chart_data(self, domain):
 		chart_label, lines_chart = get_order_chart_data_by_period(period=domain['period'], merchant_id=domain['merchant_id'])
@@ -240,6 +255,7 @@ def get_income_chart_data_by_period(period=None, status=None, merchant_id=-1):
 	chart_label = list(map(lambda x: handle_chart_label(x._asdict()['datetime'], period), order_q))
 	lines_data = list(map(lambda x: x._asdict()['total'], order_q))
 	return chart_label, lines_data
+
 
 def get_profit_chart_data_by_period(period=None, status=None, merchant_id=-1):
 	if period == 'week':

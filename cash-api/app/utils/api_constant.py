@@ -21,6 +21,13 @@ class PaymentMethod(object):
 	DEBIT = 'DEBIT'
 
 
+class OrderStatus(object):
+	IN_PROGRESS = 'I'
+	PENDING = 'P'
+	SUCCESS = 'S'
+	VOID = 'V'
+		
+
 class ErrorCode(object):
 	CASHBOX_NOT_FOUND = "cashbox.not.found"
 	UPLOAD_FAIL = 'upload.image.fail'

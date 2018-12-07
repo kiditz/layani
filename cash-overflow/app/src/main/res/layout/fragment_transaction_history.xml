@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:layout_height="match_parent"
+    tools:context=".fragment.TransactionHistoryFragment">
+
     <LinearLayout
         android:id="@+id/search_layout"
         android:layout_width="match_parent"
@@ -26,52 +29,39 @@
             android:cropToPadding="true"
             android:focusable="true"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_dots"
-            android:tint="@android:color/white" />
+            android:src="@drawable/ic_filter"
+            android:tint="#eee" />
 
         <EditText
             android:id="@+id/ed_search"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp"
             android:background="@drawable/bg_edit_text"
             android:drawableEnd="@drawable/ic_search"
             android:drawableRight="@drawable/ic_search"
             android:drawableTint="#eee"
             android:hint="@string/search_order_hint"
+            android:padding="5dp"
             android:lines="1"
             android:maxLines="1"
-            android:minLines="1"
-            android:padding="5dp"
             android:singleLine="true"
+            android:minLines="1"
             android:textSize="16sp" />
     </LinearLayout>
-
+    <include layout="@layout/fragment_blank"/>
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/white">
-
-        <LinearLayout
-            android:orientation="vertical"
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler"
+            android:fitsSystemWindows="true"
+            android:name="com.overflow.cash.fragment.ProductFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <include
-                layout="@layout/fragment_blank"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler"
-                android:name="com.overflow.cash.fragment.ProductFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-                tools:listitem="@layout/adapter_transaction_history" />
-        </LinearLayout>
+            android:layout_height="match_parent"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            tools:listitem="@layout/adapter_transaction_history" />
     </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

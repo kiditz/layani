@@ -147,8 +147,8 @@ class Constant {
     interface TransactionStatus{
         companion object {
             const val SUCCESS = "S"
-            const val IN_PROGRESS: String = "I"
-            const val CANCEL: String = "C"
+            const val IN_PROGRESS: String = "P"
+            const val VOID: String = "V"
         }
     }
 

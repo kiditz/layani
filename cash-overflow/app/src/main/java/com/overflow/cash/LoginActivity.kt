@@ -72,7 +72,7 @@ class LoginActivity : AccountAuthenticatorActivity(), LoginContract.View {
         //Validate username must not empty
         val usernameObserve = this.validateNotEmpty(ed_username, usernameWrapper, translations.get(Constant.TranslationsKey.REQUIRED_VALUE_USERNAME))
         //Validate password length must gt 8
-        val passwordObserve = this.validateLengthGreaterThan(ed_password, password_wrapper, 8 - 1,translations.get(Constant.TranslationsKey.PASSWORD_MINIMUM_LENGTH))
+        val passwordObserve = this.validateLengthGreaterThan(ed_password, password_wrapper, 8 - 1,translations.get(Constant.TranslationsKey.INVALID_PASSWORD_LENGTH))
         Observable.combineLatest(usernameObserve, passwordObserve, BiFunction{ username:Boolean, password:Boolean -> username && password}).subscribe { isValid ->
             btn_login.isEnabled = isValid
         }

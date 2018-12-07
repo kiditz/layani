@@ -3,21 +3,28 @@ package com.overflow.cash.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.overflow.cash.Constant
 import com.overflow.cash.R
 import com.overflow.cash.fragment.dummy.DummyContent.DummyItem
+import com.overflow.cash.utils.currentLocale
+import com.overflow.cash.utils.rupiah
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
-import kotlinx.android.synthetic.main.adapter_customer.view.*
+import kotlinx.android.synthetic.main.adapter_transaction_history.view.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
  */
-class TransactionHistoryAdapter(translations: Translations) : RecyclerView.Adapter<TransactionHistoryAdapter.ViewHolder>() {
+class TransactionHistoryAdapter(private val translations: Translations) : RecyclerView.Adapter<TransactionHistoryAdapter.ViewHolder>() {
     lateinit var context: Context
     private val values: MutableList<Data> = mutableListOf()
     var onItemClick: ((Data, ViewHolder) -> Unit)? = null
@@ -29,34 +36,32 @@ class TransactionHistoryAdapter(translations: Translations) : RecyclerView.Adapt
     fun clearValues(){
         values.clear()
     }
-
+    lateinit var dateFormat:SimpleDateFormat
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         this.context = parent.context
+        this.dateFormat = SimpleDateFormat("HH:mm", context.currentLocale())
         val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.adapter_transaction_history, parent, false)
+
         return ViewHolder(view)
     }
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = values[position]
-        holder.name.text = item.getString("name")
-        if(item.getString("phone_number").isNotEmpty() && !item.getString("phone_number").equals("-", true)){
-            holder.phoneNumber.text = item.getString("phone_number")
-            holder.phoneNumber.visibility = View.VISIBLE
-        }else{
-            holder.phoneNumber.visibility = View.GONE
-        }
-
-        if(item.getString("email").isNotEmpty() && !item.getString("email").equals("-", true)){
-            holder.email.text = item.getString("email")
-            holder.email.visibility = View.VISIBLE
-        }else{
-            holder.email.visibility = View.GONE
+        holder.paymentMethod.text = translations.get(item.getString("payment_method").toLowerCase())
+        holder.amount.text = context.rupiah(item.getDouble("total_amount"))
+        holder.status.text = translations.get(item.getString("status").toString())
+        holder.orderTime.text = dateFormat.format(Date(item.getLong("order_at")))
+        val statusColor:Int = when(item.getString("status")){
+            Constant.TransactionStatus.IN_PROGRESS -> ContextCompat.getColor(context, android.R.color.holo_orange_dark)
+            Constant.TransactionStatus.VOID -> ContextCompat.getColor(context, android.R.color.holo_red_dark)
+            else ->  ContextCompat.getColor(context, android.R.color.black)
         }
         holder.itemView.setOnClickListener {
-            onItemClick?.invoke(item, holder)
+
         }
+        holder.status.setTextColor(statusColor)
     }
 
 
@@ -66,8 +71,9 @@ class TransactionHistoryAdapter(translations: Translations) : RecyclerView.Adapt
     override fun getItemCount(): Int = values.size
 
     inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        val name: TextView = view.tvName
-        val phoneNumber: TextView = view.tvPhoneNumber
-        val email: TextView = view.tvEmail
+        val amount: TextView = view.tv_amount
+        val paymentMethod: TextView = view.tv_payment_method
+        val orderTime: TextView = view.tv_order_time
+        val status: TextView = view.tv_status
     }
 }

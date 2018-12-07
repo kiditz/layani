@@ -15,11 +15,11 @@
         <item
             android:id="@+id/nav_sales"
             android:icon="@drawable/ic_sales"
-            android:title="@string/sales" />
+            android:title="@string/transaction" />
         <item
             android:id="@+id/nav_transaction_history"
             android:icon="@drawable/ic_history"
-            android:title="@string/transaction" />
+            android:title="@string/transaction_history" />
         <item
             android:id="@+id/nav_accounts_receiveable"
             android:icon="@drawable/ic_money"
