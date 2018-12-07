@@ -38,10 +38,12 @@ def get_account_receiveable_detail():
     domain = request.args.to_dict()
     return account_receiveable_service.get_account_receiveable_detail(domain)
 
+
 @api.route('/in_age', methods=['GET'])
 def get_account_receiveable_age():
     domain = request.args.to_dict()
     return account_receiveable_service.get_account_receiveable_age(domain)
+
 
 @api.route('/out_of_age', methods=['GET'])
 def get_account_receiveable_out_of_age():

@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from slerp.logger import logging
-
+from slerp.app import cache
 from service.product_service import ProductService
 
 log = logging.getLogger(__name__)
@@ -28,6 +28,7 @@ def add_product():
 
 
 @api.route('/list', methods=['GET'])
+@cache.cached(timeout=50)
 def get_product_list():
     """
     {
@@ -70,6 +71,7 @@ def find_product_by_code():
     """
     domain = request.args.to_dict()
     return product_service.find_product_by_code(domain)
+
 
 @api.route('/edit_by_code', methods=['PUT'])
 def edit_product_by_code():

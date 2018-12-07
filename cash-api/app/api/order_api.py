@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from slerp.logger import logging
-
+from slerp.app import cache
 from service.order_service import OrderService
 
 log = logging.getLogger(__name__)
@@ -37,24 +37,28 @@ def get_order_data():
 
 
 @api.route('/profit_chart', methods=['GET'])
+@cache.cached(timeout=50)
 def get_profit_data():
     domain = request.args.to_dict()
     return order_service.get_profit_chart_data(domain)
 
 
 @api.route('/income_chart', methods=['GET'])
+@cache.cached(timeout=50)
 def get_income_data():
     domain = request.args.to_dict()
     return order_service.get_income_chart_data(domain)
 
 
 @api.route('/dashboard_header', methods=['GET'])
+@cache.cached(timeout=50)
 def get_dashboard():
     domain = request.args.to_dict()
     return order_service.get_dashboard_header(domain)
 
 
 @api.route('/top_product', methods=['GET'])
+@cache.cached(timeout=50)
 def get_top_product():
     domain = request.args.to_dict()
     return order_service.get_top_product(domain)
@@ -64,6 +68,7 @@ def get_top_product():
 def get_order_items():
     domain = request.args.to_dict()
     return order_service.get_order_items(domain)
+
 
 @api.route('/list', methods=['GET'])
 def get_order_list():
