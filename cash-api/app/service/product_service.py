@@ -78,7 +78,7 @@ class ProductService(object):
 			}
 			return document_service.add_document(document_dict)
 	
-	@Key(['query'])
+	@Key(['query', 'merchant_id'])
 	@Number(['page', 'size'])
 	def get_product_list(self, domain):
 		page = int(domain['page'])
@@ -112,6 +112,7 @@ class ProductService(object):
 		if 'category_id' in domain and int(domain['category_id']) > 0:
 			product_q = product_q.filter(Category.id == domain['category_id'])
 		product_q = product_q.filter(Product.active == True)
+		product_q = product_q.filter(Product.merchant_id == domain['merchant_id'])
 		product_q = product_q.filter(or_(Product.name.ilike('%' + domain['query'] + '%'), Product.code.ilike('%' + domain['query'] + '%')))\
 			.group_by(Product.id, ProductSellPrice.id, Category.id, ProductPurchasePrice.id, Stock.id) \
 			.order_by(order).paginate(page, size, error_out=False)

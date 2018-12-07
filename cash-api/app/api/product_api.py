@@ -28,7 +28,7 @@ def add_product():
 
 
 @api.route('/list', methods=['GET'])
-@cache.cached(timeout=50)
+@cache.cached(timeout=50, query_string=True)
 def get_product_list():
     """
     {
