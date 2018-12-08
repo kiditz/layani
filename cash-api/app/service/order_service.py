@@ -105,12 +105,6 @@ class OrderService(object):
 		order_id = domain['order_id']
 		order = Order.query.get(order_id)
 		order.status = OrderStatus.VOID
-		order_cpy = Order(order.to_dict())
-		order_cpy.id = None
-		order_cpy.total_amount = order.total_amount * -1
-		order_cpy.status = OrderStatus.VOID
-		order.profit = 0
-		order_cpy.save()
 		order.save()
 		cashbox = Cashbox.query.filter(Cashbox.id == order.cash_box_id).first()
 		cashbox.total_amount = cashbox.total_amount - order.total_amount
