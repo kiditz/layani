@@ -209,7 +209,6 @@ class OrderService(object):
 		merchant_id = domain['merchant_id']
 		entities = (
 			Order.id,
-			Order.code,
 			Order.total_amount,
 			Order.total_payment,
 			Order.order_code,
