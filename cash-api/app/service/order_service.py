@@ -207,14 +207,29 @@ class OrderService(object):
 	@Number(['merchant_id', 'page', 'size'])
 	def get_order_list(self, domain):
 		merchant_id = domain['merchant_id']
+		entities = (
+			Order.id,
+			Order.code,
+			Order.total_amount,
+			Order.total_payment,
+			Order.order_code,
+			Order.status,
+			Order.cash_box_id,
+			Order.merchant_id,
+			AccountReceiveable.receiveable_date,
+			AccountReceiveable.total_credit,
+			Customer.name.label("customer_name")
+		)
 		page = int(domain['page'])
 		size = int(domain['size'])
-		order_q = Order.query.filter_by(merchant_id=merchant_id).filter(cast(Order.order_at, DATE) == datetime.now().date())
+		order_q = Order.query.with_entities(*entities).filter_by(merchant_id=merchant_id).filter(cast(Order.order_at, DATE) == datetime.now().date())
+		order_q = order_q.outerjoin(Customer, Customer.id == Order.customer_id)
+		order_q = order_q.outerjoin(AccountReceiveable, AccountReceiveable.order_id == Order.id)
 		order_q = order_q.filter(Order.order_code.ilike('%' + domain['query'] + '%'))
 		if 'status' in domain:
 			order_q = order_q.filter(Order.status == domain['status'])
 		order_q = order_q.order_by(Order.order_at.desc()).paginate(page, size, error_out=False)
-		order_list = list(map(lambda x: x.to_dict(), order_q.items))
+		order_list = list(map(lambda x: x._asdict(), order_q.items))
 		return {'payload': order_list, 'total': order_q.total, 'total_pages': order_q.pages}
 
 
