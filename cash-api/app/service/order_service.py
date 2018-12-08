@@ -209,8 +209,7 @@ class OrderService(object):
 		merchant_id = domain['merchant_id']
 		page = int(domain['page'])
 		size = int(domain['size'])
-		order_q = Order.query.filter_by(merchant_id=merchant_id)\
-			.filter(cast(Order.order_at, DATE) == datetime.now().date())\
+		order_q = Order.query.filter_by(merchant_id=merchant_id).filter(cast(Order.order_at, DATE) == datetime.now().date())
 		order_q = order_q.filter(Order.order_code.ilike('%' + domain['query'] + '%'))
 		if 'status' in domain:
 			order_q = order_q.filter(Order.status == domain['status'])
