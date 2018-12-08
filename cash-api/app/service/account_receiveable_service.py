@@ -3,7 +3,7 @@ from entity.models import AccountReceiveable, Customer, Order, Cashbox, CashboxH
 from slerp.logger import logging
 from slerp.validator import Key, Number, ValidationException
 from sqlalchemy import and_, func, between
-from utils.api_constant import PaymentMethod, ErrorCode
+from utils.api_constant import PaymentMethod, ErrorCode, OrderStatus
 from datetime import datetime
 log = logging.getLogger(__name__)
 
@@ -63,51 +63,51 @@ class AccountReceiveableService(object):
 	@Number(['merchant_id'])
 	def get_account_receiveable_age(self, domain):
 		in_1_30 = AccountReceiveable.query.with_entities(func.coalesce(func.sum(AccountReceiveable.total_credit), 0).label('total_credit'))\
-		.join(Order, Order.id == AccountReceiveable.order_id)\
-		.filter(and_(Order.status == 'P', Order.payment_method == PaymentMethod.CREDIT))\
-		.filter(between(func.date_part('days', datetime.now() - AccountReceiveable.receiveable_date), -30, -0))\
-		.first()._asdict()
+			.join(Order, Order.id == AccountReceiveable.order_id)\
+			.filter(and_(Order.status == 'P', Order.payment_method == PaymentMethod.CREDIT))\
+			.filter(between(func.date_part('days', datetime.now() - AccountReceiveable.receiveable_date), -30, -0))\
+			.first()._asdict()
 		in_30_60 = AccountReceiveable.query.with_entities(func.coalesce(func.sum(AccountReceiveable.total_credit), 0).label('total_credit'))\
-		.join(Order, Order.id == AccountReceiveable.order_id)\
-		.filter(and_(Order.status == 'P', Order.payment_method == PaymentMethod.CREDIT))\
-		.filter(between(func.date_part('days', datetime.now() - AccountReceiveable.receiveable_date), -60, -30))\
-		.first()._asdict()
+			.join(Order, Order.id == AccountReceiveable.order_id)\
+			.filter(and_(Order.status == 'P', Order.payment_method == PaymentMethod.CREDIT))\
+			.filter(between(func.date_part('days', datetime.now() - AccountReceiveable.receiveable_date), -60, -30))\
+			.first()._asdict()
 		in_60_90 = AccountReceiveable.query.with_entities(func.coalesce(func.sum(AccountReceiveable.total_credit), 0).label('total_credit'))\
-		.join(Order, Order.id == AccountReceiveable.order_id)\
-		.filter(and_(Order.status == 'P', Order.payment_method == PaymentMethod.CREDIT))\
-		.filter(between(func.date_part('days', datetime.now() - AccountReceiveable.receiveable_date), -90, -60))\
-		.first()._asdict()
+			.join(Order, Order.id == AccountReceiveable.order_id)\
+			.filter(and_(Order.status == 'P', Order.payment_method == PaymentMethod.CREDIT))\
+			.filter(between(func.date_part('days', datetime.now() - AccountReceiveable.receiveable_date), -90, -60))\
+			.first()._asdict()
 
 		in_gt_90 = AccountReceiveable.query.with_entities(func.coalesce(func.sum(AccountReceiveable.total_credit), 0).label('total_credit'))\
-		.join(Order, Order.id == AccountReceiveable.order_id)\
-		.filter(and_(Order.status == 'P', Order.payment_method == PaymentMethod.CREDIT))\
-		.filter(func.date_part('days', datetime.now() - AccountReceiveable.receiveable_date) < -90)\
-		.first()._asdict()
+			.join(Order, Order.id == AccountReceiveable.order_id)\
+			.filter(and_(Order.status == 'P', Order.payment_method == PaymentMethod.CREDIT))\
+			.filter(func.date_part('days', datetime.now() - AccountReceiveable.receiveable_date) < -90)\
+			.first()._asdict()
 		return {'payload': {'1-30 Hari': in_1_30['total_credit'], '30-60 Hari': in_30_60['total_credit'], '60-90 Hari': in_60_90['total_credit'], 'Lebih Dari 90 Hari': in_gt_90['total_credit']}}
 
 	@Number(['merchant_id'])
 	def get_account_receiveable_out_of_age(self, domain):
 		in_0_30 = AccountReceiveable.query.with_entities(func.coalesce(func.sum(AccountReceiveable.total_credit), 0).label('total_credit'))\
-		.join(Order, Order.id == AccountReceiveable.order_id)\
-		.filter(and_(Order.status == 'P', Order.payment_method == PaymentMethod.CREDIT))\
-		.filter(between(func.date_part('days', datetime.now() - AccountReceiveable.receiveable_date), 1, 30))\
-		.first()._asdict()
+			.join(Order, Order.id == AccountReceiveable.order_id)\
+			.filter(and_(Order.status == 'P', Order.payment_method == PaymentMethod.CREDIT))\
+			.filter(between(func.date_part('days', datetime.now() - AccountReceiveable.receiveable_date), 1, 30))\
+			.first()._asdict()
 		in_30_60 = AccountReceiveable.query.with_entities(func.coalesce(func.sum(AccountReceiveable.total_credit), 0).label('total_credit'))\
-		.join(Order, Order.id == AccountReceiveable.order_id)\
-		.filter(and_(Order.status == 'P', Order.payment_method == PaymentMethod.CREDIT))\
-		.filter(between(func.date_part('days', datetime.now() - AccountReceiveable.receiveable_date), 30,  60))\
-		.first()._asdict()
+			.join(Order, Order.id == AccountReceiveable.order_id)\
+			.filter(and_(Order.status == 'P', Order.payment_method == PaymentMethod.CREDIT))\
+			.filter(between(func.date_part('days', datetime.now() - AccountReceiveable.receiveable_date), 30,  60))\
+			.first()._asdict()
 		in_60_90 = AccountReceiveable.query.with_entities(func.coalesce(func.sum(AccountReceiveable.total_credit), 0).label('total_credit'))\
-		.join(Order, Order.id == AccountReceiveable.order_id)\
-		.filter(and_(Order.status == 'P', Order.payment_method == PaymentMethod.CREDIT))\
-		.filter(between(func.date_part('days', datetime.now() - AccountReceiveable.receiveable_date), 60, 90))\
-		.first()._asdict()
+			.join(Order, Order.id == AccountReceiveable.order_id)\
+			.filter(and_(Order.status == 'P', Order.payment_method == PaymentMethod.CREDIT))\
+			.filter(between(func.date_part('days', datetime.now() - AccountReceiveable.receiveable_date), 60, 90))\
+			.first()._asdict()
 
 		in_gt_90 = AccountReceiveable.query.with_entities(func.coalesce(func.sum(AccountReceiveable.total_credit), 0).label('total_credit'))\
-		.join(Order, Order.id == AccountReceiveable.order_id)\
-		.filter(and_(Order.status == 'P', Order.payment_method == PaymentMethod.CREDIT))\
-		.filter(func.date_part('days', datetime.now() - AccountReceiveable.receiveable_date) > 90)\
-		.first()._asdict()
+			.join(Order, Order.id == AccountReceiveable.order_id)\
+			.filter(and_(Order.status == 'P', Order.payment_method == PaymentMethod.CREDIT))\
+			.filter(func.date_part('days', datetime.now() - AccountReceiveable.receiveable_date) > 90)\
+			.first()._asdict()
 		return {'payload': {'0-30 Hari': in_0_30['total_credit'], '30-60 Hari': in_30_60['total_credit'], '60-90 Hari': in_60_90['total_credit'], 'Lebih Dari 90 Hari': in_gt_90['total_credit']}}
 	
 	@Key(['order_id', 'cash_box_id', 'payment_amount'])
@@ -128,8 +128,7 @@ class AccountReceiveableService(object):
 			account_receiveable.total_credit = 0
 			order.total_payment = order.total_payment + payment_amount
 			order.cashback = order.total_payment - order.total_amount			
-			order.status = 'S'		
-
+			order.status = OrderStatus.SUCCESS		
 
 		order.save()
 		account_receiveable.save()

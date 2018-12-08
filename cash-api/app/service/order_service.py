@@ -95,8 +95,8 @@ class OrderService(object):
 				order_dict['customer_name'] = customer.name
 		
 		if account_receiveable is not None:
-			order_dict['account_receiveable'] = account_receiveable.to_dict()
-		
+			order_dict['total_credit'] = account_receiveable.total_credit
+			order_dict["receiveable_date"] = account_receiveable.receiveable_date
 		order_dict['order_items'] = order_items
 		return {'payload': order_dict}
 
