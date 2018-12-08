@@ -217,6 +217,7 @@ class OrderService(object):
 			Order.merchant_id,
 			Order.order_at,
 			Order.payment_method,
+			Order.cashback,
 			AccountReceiveable.receiveable_date,
 			AccountReceiveable.total_credit,
 			Customer.name.label("customer_name")
