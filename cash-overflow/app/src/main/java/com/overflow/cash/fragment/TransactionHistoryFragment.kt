@@ -108,7 +108,7 @@ class TransactionHistoryFragment : BaseFragment(), TransactionHistoryContract.Vi
 
     override fun showEmpty() {
         refresh?.isRefreshing = false
-        showMessage(getString(R.string.no_customer_title), "")
+        showMessage(getString(R.string.transaction_not_found), "")
     }
 
 

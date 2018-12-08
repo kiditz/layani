@@ -31,9 +31,9 @@ client_scope = db.Table(
 class User(db.Model, Entity):
 	__tablename__ = 'co_user'
 	id = db.Column(db.BigInteger, db.Sequence('co_user_id_seq'), primary_key=True)	
-	phone_number = db.Column(db.String(20), nullable=False)
-	username = db.Column(db.String(60), nullable=False)
-	fullname = db.Column(db.String(100), nullable=False)
+	phone_number = db.Column(db.String(20), nullable=False, index=True)
+	username = db.Column(db.String(60), nullable=False, index=True)
+	fullname = db.Column(db.String(100), nullable=False, index=True)
 	hash_password = db.Column(db.LargeBinary(60), nullable=False)	
 	enabled = db.Column(db.Boolean, nullable=False, default=False)
 	account_non_expired = db.Column(db.Boolean, nullable=False, default=False)
@@ -89,7 +89,7 @@ class Authority(db.Model, Entity):
 class Merchant(db.Model, Entity):
 	__tablename__ = 'co_merchant'
 	id = db.Column(db.BigInteger, db.Sequence('co_merchant_id_seq'),primary_key=True)
-	name = db.Column(db.Text, nullable=False, server_default='')
+	name = db.Column(db.Text, nullable=False, server_default='', index=True)
 	phone_number = db.Column(db.String(20), nullable=False, server_default='', unique=True)
 	address = db.Column(db.Text, nullable=False, server_default='')
 	email = db.Column(db.String(255), nullable=False, server_default='')
@@ -118,7 +118,7 @@ class Category(db.Model, Entity):
 	__tablename__ = 'co_category'
 	id = db.Column(db.BigInteger, primary_key=True)
 	merchant_id = db.Column(db.ForeignKey(u'co_merchant.id'), nullable=False)
-	name = db.Column(db.Text, nullable=False, server_default='')		
+	name = db.Column(db.Text, nullable=False, server_default='', index=True)		
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
 	
@@ -130,8 +130,8 @@ class Product(db.Model, Entity):
 	__tablename__ = 'co_product'
 	id = db.Column(db.BigInteger, primary_key=True)
 	category_id = db.Column(db.ForeignKey(u'co_category.id'))
-	name = db.Column(db.Text, nullable=False, server_default='-')		
-	code = db.Column(db.String(60), nullable=False, server_default='-')	
+	name = db.Column(db.Text, nullable=False, server_default='-', index=True)		
+	code = db.Column(db.String(60), nullable=False, server_default='-', index=True)	
 	product_type = db.Column(db.String(60), nullable=False, server_default='')
 	document_id = db.Column(db.ForeignKey(u'co_document.id'))
 	description = db.Column(db.Text, nullable=False, server_default='')	
@@ -217,12 +217,12 @@ class Order(db.Model, Entity):
 	customer_id = db.Column(db.ForeignKey(u'co_customer.id'))
 	cash_box_id = db.Column(db.ForeignKey(u'co_cash_box.id'), nullable=False)
 	merchant_id = db.Column(db.ForeignKey(u'co_merchant.id'), nullable=False)
-	order_code = db.Column(db.Text, unique=True)
+	order_code = db.Column(db.Text, unique=True, index=True)
 	total_amount = db.Column(db.Numeric, nullable=False, server_default='0', default=0)		
 	total_payment = db.Column(db.Numeric, nullable=False, server_default='0', default=0)		
 	payment_method = db.Column(db.String(20), nullable=False, server_default='-', default='-')
 	cashback = db.Column(db.Numeric, nullable=False, server_default='0', default=0)	
-	status=db.Column(db.String(1), nullable=False, server_default='I', default='I')
+	status=db.Column(db.String(1), nullable=False, server_default='I', default='I', index=True)
 	order_at = db.Column(db.DateTime(timezone=False), index=True, default=datetime.now)
 	profit = db.Column(db.Numeric, nullable=False, server_default='0', default=0)	
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
@@ -261,7 +261,7 @@ class OrderItem(db.Model, Entity):
 class Customer(db.Model, Entity):
 	__tablename__ = 'co_customer'
 	id = db.Column(db.BigInteger, primary_key=True)				
-	name = db.Column(db.Text, nullable=False, server_default='-', default='-')
+	name = db.Column(db.Text, nullable=False, server_default='-', default='-', index=True)
 	phone_number = db.Column(db.String(30), nullable=False, server_default='-')	
 	email = db.Column(db.String(255), nullable=False, server_default='-')
 	merchant_id = db.Column(db.ForeignKey(u'co_merchant.id'), nullable=False)
@@ -275,7 +275,7 @@ class Customer(db.Model, Entity):
 class Cashbox(db.Model, Entity):
 	__tablename__ = 'co_cash_box'
 	id = db.Column(db.BigInteger, primary_key=True)				
-	name = db.Column(db.Text, nullable=False, server_default='-', default='-')	
+	name = db.Column(db.Text, nullable=False, server_default='-', default='-', index=True)	
 	total_amount = db.Column(db.Numeric, nullable=False, server_default='0', default=0)
 	merchant_id = db.Column(db.ForeignKey(u'co_merchant.id'), nullable=False)
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)

@@ -90,15 +90,15 @@ open class MessageButtonHandle : MessageButton() {
 
 
 fun Context.rupiah(value:Double):String{
-    val format = DecimalFormat.getCurrencyInstance() as DecimalFormat
+    val format = DecimalFormat.getCurrencyInstance(Locale("in", "ID")) as DecimalFormat
+    format.isDecimalSeparatorAlwaysShown = false
     val symbols = DecimalFormatSymbols()
     symbols.currencySymbol = "Rp. "
-    symbols.monetaryDecimalSeparator = ','
-    symbols.groupingSeparator = '.'
     format.decimalFormatSymbols = symbols
     return format.format(value)
 }
 
 fun Context.parseRupiah(value:CharSequence):Double{
-    return value.replace(Regex("[^0-9]"), "").toDouble()
+    var input = value.toString()
+    return input.replace(Regex("[^\\d]"), "").toDouble()
 }

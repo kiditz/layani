@@ -1,5 +1,5 @@
 {
-  "name":"task-service",
+  "name":"cash-service",
   "interval":"20s",
   "httpcheck": "http://0.0.0.0:5005/health",
   "namespace": "config/task-service/dev",

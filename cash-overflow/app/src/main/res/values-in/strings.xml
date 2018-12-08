@@ -4,7 +4,7 @@
         <item>Mail</item>
         <item>Sms</item>
     </string-array>
-<string name="account_type">com.overflow.cash</string>
+    <string name="account_type">com.overflow.cash</string>
     <string name="accounts_payable">Hutang</string>
     <string name="accounts_receiveable">Piutang</string>
     <string name="action_settings">Pengaturan</string>
@@ -44,6 +44,7 @@
     <string name="focus">Fokus</string>
     <string name="for_trx">untuk transaksi</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hours">Jam</string>
     <string name="in_age">Belum Jatuh Tempo</string>
     <string name="income">Pendapatan</string>
     <string name="init_price">Harga Dasar</string>
@@ -81,6 +82,7 @@
     <string name="pay">Bayar</string>
     <string name="pay_paid">Bayar Hutang</string>
     <string name="payer">Pengutang</string>
+    <string name="pcs">pcs</string>
     <string name="phone_number">No Handphone</string>
     <string name="product">Produk</string>
     <string name="product_code">Kode Produk</string>
@@ -96,8 +98,9 @@
     <string name="register_store">Daftarkan Toko</string>
     <string name="remaining_stock">Sisa Stock</string>
     <string name="sales">Penjualan</string>
+    <string name="scan_barcode">Scan Barcode</string>
     <string name="search">Cari..</string>
-
+    <string name="search_order_hint">Cari No Transaksi</string>
     <string name="sell_price">Harga Jual</string>
     <string name="settings">Pengatuan</string>
     <string name="share_receiveable_receipt">Tagih</string>
@@ -115,6 +118,7 @@
 
     <string name="transaction_amount">Jumlah Transaksi</string>
     <string name="transaction_history">Riwayat Transaksi</string>
+    <string name="transaction_not_found">Transaksi tidak di temukan</string>
     <string name="unit">Satuan Berat</string>
     <string name="use_stock">Gunakan Stok</string>
     <string name="username">Username</string>
@@ -123,4 +127,5 @@
     <string name="weight">Berat</string>
     <string name="year">Tahun</string>
     <string name="yes">Ya</string>
-    </resources>
+
+</resources>

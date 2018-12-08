@@ -74,7 +74,7 @@
                 android:textAllCaps="true"
                 android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold"
-                android:text="Jam" />
+                android:text="@string/hours" />
 
             <TextView
                 
