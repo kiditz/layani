@@ -17,6 +17,6 @@ app.register_blueprint(order_api_blue_print)
 app.register_blueprint(customer_api_blue_print)
 app.register_blueprint(discount_api_blue_print)
 app.register_blueprint(account_receiveable_api_blue_print)
-#app.debug = True
+
 if __name__ == '__main__':
     run()

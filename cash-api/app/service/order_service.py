@@ -112,8 +112,16 @@ class OrderService(object):
 		order.profit = 0
 		order_cpy.save()
 		order.save()
-		
-		pass
+		cashbox = Cashbox.query.filter(Cashbox.id == order.cash_box_id).first()
+		cashbox.total_amount = cashbox.total_amount - order.total_amount
+		cashbox.save()
+		cashbox_history = CashboxHistory()
+		cashbox_history.cash_box_id = cashbox.id
+		cashbox_history.payment_amount = cashbox.total_amount
+		cashbox_history.payment_method = PaymentMethod.CREDIT
+		cashbox_history.remark = 'order.refund #' + order.order_code
+		cashbox_history.save()
+		return {'payload': order.to_dict()}
 
 	@Blank(['period', 'merchant_id'])
 	def get_order_chart_data(self, domain):
@@ -202,9 +210,9 @@ class OrderService(object):
 		page = int(domain['page'])
 		size = int(domain['size'])
 		order_q = Order.query.filter_by(merchant_id=merchant_id)\
-					.filter(cast(Order.order_at, DATE) == datetime.now().date())\
-					.order_by(Order.order_at.desc())\
-					.paginate(page, size, error_out=False)
+			.filter(cast(Order.order_at, DATE) == datetime.now().date())\
+			.order_by(Order.order_at.desc())\
+			.paginate(page, size, error_out=False)
 		order_list = list(map(lambda x: x.to_dict(), order_q.items))
 		return {'payload': order_list, 'total': order_q.total, 'total_pages': order_q.pages}
 
@@ -291,7 +299,7 @@ def get_order_chart_count_query(start_date, end_date, status, fmt, merchant_id):
 	if status:
 		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE) == stmt.c.day, Order.status == status, Order.merchant_id == merchant_id))
 	else:
-		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE) == stmt.c.day, Order.merchant_id == merchant_id))
+		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE) == stmt.c.day, Order.status != OrderStatus.VOID, Order.merchant_id == merchant_id))
 	return entities, join
 
 
@@ -305,7 +313,7 @@ def get_order_profit_query(start_date, end_date, status, fmt, merchant_id):
 	if status:
 		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE) == stmt.c.day, Order.status == status, Order.merchant_id == merchant_id))
 	else:
-		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE) == stmt.c.day, Order.merchant_id == merchant_id))
+		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE) == stmt.c.day, Order.status != OrderStatus.VOID, Order.merchant_id == merchant_id))
 	return entities, join
 
 
@@ -319,12 +327,12 @@ def get_order_income_query(start_date, end_date, status, fmt, merchant_id):
 	if status:
 		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE) == stmt.c.day, Order.status == status, Order.merchant_id == merchant_id))
 	else:
-		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE) == stmt.c.day, Order.merchant_id == merchant_id))
+		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE) == stmt.c.day, Order.status != OrderStatus.VOID, Order.merchant_id == merchant_id))
 	return entities, join
 
 
-
 weekly = ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"]
+
 
 def handle_chart_label(order_at, period):
 	if period == 'week':

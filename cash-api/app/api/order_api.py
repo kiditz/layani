@@ -30,6 +30,18 @@ def add_order():
     return order_service.add_order(domain)
 
 
+@api.route('/add', methods=['POST'])
+def refund_order():
+    """
+    {
+    "order_id": "Long"
+    }
+    """
+    log.debug("REQUEST : %s", request.data)
+    domain = request.get_json()
+    return order_service.refund_order(domain)
+
+
 @api.route('/chart', methods=['GET'])
 @cache.cached(timeout=50, query_string=True)
 def get_order_data():
