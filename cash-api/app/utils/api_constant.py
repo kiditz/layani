@@ -29,6 +29,7 @@ class OrderStatus(object):
 		
 
 class ErrorCode(object):
+	REFUND_FAILED = "refund.failed"
 	CASHBOX_NOT_FOUND = "cashbox.not.found"
 	UPLOAD_FAIL = 'upload.image.fail'
 	FILE_NOT_FOUND = 'file.not.found'

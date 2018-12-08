@@ -104,11 +104,17 @@ class OrderService(object):
 	def refund_order(self, domain):
 		order_id = domain['order_id']
 		order = Order.query.get(order_id)
+		if order.status != OrderStatus.SUCCESS:
+			raise ValidationException(ErrorCode.REFUND_FAILED)
 		order.status = OrderStatus.VOID
-		order.save()
+		
 		cashbox = Cashbox.query.filter(Cashbox.id == order.cash_box_id).first()
 		cashbox.total_amount = cashbox.total_amount - order.total_amount
 		cashbox.save()
+		order.total_amount = order.total_amount * -1
+		order.total_payment = 0.0
+		order.cashback = 0.0
+		order.save()
 		cashbox_history = CashboxHistory()
 		cashbox_history.cash_box_id = cashbox.id
 		cashbox_history.payment_amount = cashbox.total_amount
