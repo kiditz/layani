@@ -211,11 +211,10 @@ class OrderService(object):
 		size = int(domain['size'])
 		order_q = Order.query.filter_by(merchant_id=merchant_id)\
 			.filter(cast(Order.order_at, DATE) == datetime.now().date())\
-			.order_by(Order.order_at.desc())
 		order_q = order_q.filter(Order.order_code.ilike('%' + domain['query'] + '%'))
 		if 'status' in domain:
 			order_q = order_q.filter(Order.status == domain['status'])
-		order_q = order_q.paginate(page, size, error_out=False)
+		order_q = order_q.order_by(Order.order_at.desc()).paginate(page, size, error_out=False)
 		order_list = list(map(lambda x: x.to_dict(), order_q.items))
 		return {'payload': order_list, 'total': order_q.total, 'total_pages': order_q.pages}
 
