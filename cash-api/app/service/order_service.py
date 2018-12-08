@@ -75,11 +75,11 @@ class OrderService(object):
 		cashbox_history.cash_box_id = cashbox.id		
 		
 		if order.payment_method == PaymentMethod.CASH:
-			cashbox_history.payment_amount = Decimal(domain['total_amount'])
+			cashbox_history.amount = Decimal(domain['total_amount'])
 			cashbox_history.payment_method = PaymentMethod.DEBIT
 			cashbox_history.remark = 'order.cash #' + order.order_code
 		else:
-			cashbox_history.payment_amount = Decimal(domain['total_payment'])
+			cashbox_history.amount = Decimal(domain['total_payment'])
 			cashbox_history.payment_method = PaymentMethod.DEBIT			
 			cashbox_history.remark = 'order.credit #' + order.order_code		
 
@@ -118,7 +118,7 @@ class OrderService(object):
 		order.save()
 		cashbox_history = CashboxHistory()
 		cashbox_history.cash_box_id = cashbox.id
-		cashbox_history.payment_amount = cashbox.total_amount
+		cashbox_history.amount = cashbox.total_amount
 		cashbox_history.payment_method = PaymentMethod.CREDIT
 		cashbox_history.remark = 'order.refund #' + order.order_code
 		cashbox_history.save()

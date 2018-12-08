@@ -11,6 +11,7 @@ account_receiveable_service = AccountReceiveableService()
 
 
 @api.route('/list', methods=['GET'])
+
 def get_account_receiveable_by_order_id():
 
     """
