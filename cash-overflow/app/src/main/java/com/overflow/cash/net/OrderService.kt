@@ -10,6 +10,10 @@ interface OrderService {
     fun addOrder(@Body data:Data): Single<Data>
 
     @Headers("Content-Type:application/json")
+    @POST("/cash/order/refund")
+    fun refund(@Body data:Data): Single<Data>
+
+    @Headers("Content-Type:application/json")
     @GET("/cash/order/items")
     fun getOrderItems(@Query("order_id") orderId:Long):Single<Data>
 

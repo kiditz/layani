@@ -26,7 +26,7 @@ import java.util.*
  */
 class TransactionHistoryAdapter(private val translations: Translations) : RecyclerView.Adapter<TransactionHistoryAdapter.ViewHolder>() {
     lateinit var context: Context
-    private val values: MutableList<Data> = mutableListOf()
+    val values: MutableList<Data> = mutableListOf()
     var onItemClick: ((Data, ViewHolder) -> Unit)? = null
     fun addValues(payloads:List<Data>) {
         values.addAll(payloads)
@@ -36,6 +36,8 @@ class TransactionHistoryAdapter(private val translations: Translations) : Recycl
     fun clearValues(){
         values.clear()
     }
+
+
     lateinit var dateFormat:SimpleDateFormat
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         this.context = parent.context
@@ -49,17 +51,19 @@ class TransactionHistoryAdapter(private val translations: Translations) : Recycl
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = values[position]
+        holder.orderCode.text = "#${item.getString("order_code")}"
         holder.paymentMethod.text = translations.get(item.getString("payment_method").toLowerCase())
         holder.amount.text = context.rupiah(item.getDouble("total_amount"))
         holder.status.text = translations.get(item.getString("status").toString())
         holder.orderTime.text = dateFormat.format(Date(item.getLong("order_at")))
         val statusColor:Int = when(item.getString("status")){
-            Constant.TransactionStatus.IN_PROGRESS -> ContextCompat.getColor(context, android.R.color.holo_orange_dark)
-            Constant.TransactionStatus.VOID -> ContextCompat.getColor(context, android.R.color.holo_red_dark)
+            Constant.TransactionStatus.IN_PROGRESS -> ContextCompat.getColor(context, android.R.color.holo_orange_light)
+            Constant.TransactionStatus.VOID -> ContextCompat.getColor(context, android.R.color.holo_red_light)
+            Constant.TransactionStatus.SUCCESS -> ContextCompat.getColor(context, android.R.color.holo_green_light)
             else ->  ContextCompat.getColor(context, android.R.color.black)
         }
         holder.itemView.setOnClickListener {
-
+            onItemClick?.invoke(item, holder)
         }
         holder.status.setTextColor(statusColor)
     }
@@ -75,5 +79,6 @@ class TransactionHistoryAdapter(private val translations: Translations) : Recycl
         val paymentMethod: TextView = view.tv_payment_method
         val orderTime: TextView = view.tv_order_time
         val status: TextView = view.tv_status
+        val orderCode = view.tv_order_code
     }
 }

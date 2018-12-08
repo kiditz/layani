@@ -84,11 +84,11 @@ class AccountReceiveableDetailActivity : AppCompatActivity(), AccountReceiveable
     override fun onOrderItemsLoaded(items: List<Data>) {
         order?.let {
             it["customer_name"] = intent.getStringExtra("name")
-            it["account_receiveable"] = Data().put("total_credit", it.getDouble("total_credit"))
+            it["total_credit"] = it.getDouble("total_credit")
             it["order_items"] = items
             val bundle = intent.extras
             bundle.putString("sales", it.toString())
-            moveTo(ReceiptAccountReceiveableActivity::class.java, bundle)
+            moveTo(PaymentAccountReceiveableActivity::class.java, bundle)
         }
     }
 

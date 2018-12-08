@@ -1,6 +1,6 @@
-package com.overflow.cash
+package com.overflow.cash.fragment
 
-import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
@@ -11,20 +11,21 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.support.v4.content.FileProvider
-import android.support.v7.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.webkit.WebView
-import com.overflow.cash.utils.home
-import com.overflow.cash.utils.moveTo
+import com.overflow.cash.BuildConfig
+import com.overflow.cash.Constant
+import com.overflow.cash.R
+import com.overflow.cash.utils.currentLocale
 import com.overflow.cash.utils.rupiah
 import com.overflow.cash.utils.shouldRequestPermissions
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.StreamUtils
 import com.overflow.libs.core.Translations
-import dagger.android.AndroidInjection
-import kotlinx.android.synthetic.main.activity_receipt.*
+import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.fragment_receipt.*
 import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
@@ -32,69 +33,89 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
-class ReceiptAccountReceiveableActivity : AppCompatActivity() {
+class ReceiptFragment:BaseFragment(){
     @Inject
     lateinit var preferences: SharedPreferences
     @Inject
     lateinit var translations: Translations
-    lateinit var order:Data
+    lateinit var order: Data
     private var source:String = ""
     private var listDialog:Array<String> = arrayOf()
+    lateinit var merchant:Data
 
-    @SuppressLint("SimpleDateFormat")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_receipt, container, false)
+    }
 
-        shouldRequestPermissions(Constant.REQUEST_PERMISSION_CODE)
-        val format = SimpleDateFormat("dd/MM/yyyy HH:mm")
-
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_receipt)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    override fun onAttach(context: Context?) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        activity?.shouldRequestPermissions(Constant.REQUEST_PERMISSION_CODE)
+        val format = SimpleDateFormat("dd/MM/yyyy HH:mm", context!!.currentLocale())
+        this.merchant = Data(preferences.getString("merchant", "{}"))
         listDialog = resources.getStringArray(R.array.share_receipt_list)
         //Add Content scroll for draw web view to image
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             WebView.enableSlowWholeDocumentDraw()
         }
 
-        this.order = Data(intent.getStringExtra("sales"))
+        this.order = Data(arguments!!.getString(Constant.ARG_SALES))
 
-        val stream = assets.open("receipt/index.html")
+        val stream = activity?.assets?.open("receipt/index.html")
         this.source = StreamUtils.copyStreamToString(stream)
         val merchant = Data(preferences.getString("merchant", "{}"))
         if(order.containsKey("customer_name")){
             val customerName = addCustomInfo("Pelanggan", order.getString("customer_name"))
-            val receiveableDate = addCustomInfo("Jatuh Tempo", format.format(Date(order.getLong("receiveable_date"))))
             source = source.replace("{{customer}}", customerName)
-            source = source.replace("{{tgl_jatuh_tempo}}", receiveableDate)
         }else{
             source = source.replace("{{customer}}", Constant.TEXT_EMPTY)
+        }
+        if(order.containsNotNull("receiveable_date")){
+            val receiveableDate = addCustomInfo("Jatuh Tempo", format.format(Date(order.getLong("receiveable_date"))))
+            source = source.replace("{{tgl_jatuh_tempo}}", receiveableDate)
+        }else{
             source = source.replace("{{tgl_jatuh_tempo}}", Constant.TEXT_EMPTY)
         }
         source = source.replace("{{title}}",merchant.getString("name"))
-        source = source.replace("{{order.code}}",order.getString("order_code"))
+        source = source.replace("{{order.code}}","%23${order.getString("order_code")}")
         source = source.replace("{{items}}", loadItems(order.getList("order_items")))
-        source = source.replace("{{order.total_amount}}", rupiah(order.getDouble("total_amount")))
-        source = source.replace("{{order.total_payment}}", rupiah(order.getDouble("total_payment")))
+        source = source.replace("{{order.total_amount}}", activity!!.rupiah(order.getDouble("total_amount")))
+        source = source.replace("{{order.total_payment}}", activity!!.rupiah(order.getDouble("total_payment")))
 
         if(order.getString("payment_method") == Constant.PaymentMethod.CASH){
             if(order.getDouble("cashback") > 0){
                 source = source.replace("{{cashback_title}}", "Kembali")
-                source = source.replace("{{order.cashback}}", rupiah(order.getDouble("cashback")))
+                source = source.replace("{{order.cashback}}", activity!!.rupiah(order.getDouble("cashback")))
             }else{
                 source = source.replace("{{cashback_title}}", "")
                 source = source.replace("{{order.cashback}}", "")
             }
         }else{
-            source = source.replace("{{cashback_title}}", "Hutang")
-            source = source.replace("{{order.cashback}}", rupiah(order.getData("account_receiveable").getDouble("total_credit")))
+            if(order.containsNotNull("total_credit") && order.getDouble("total_credit") > 0){
+                source = source.replace("{{cashback_title}}", "Hutang")
+                source = source.replace("{{order.cashback}}", activity!!.rupiah(order.getDouble("total_credit")))
+            }else{
+                source = source.replace("{{cashback_title}}", "Kembali")
+                source = source.replace("{{order.cashback}}", activity!!.rupiah(order.getDouble("cashback")))
+            }
         }
 
         source = source.replace("{{order.create_at}}", format.format(Date(order.getLong("order_at"))))
         webView.loadData(source, "text/html;charset=utf-8", "utf-8")
     }
 
+    private fun addCustomInfo(title:String, value:String): String {
+        return """
+            <tr class="item last">
+        <td>${title}</td>
+        <td></td>
+        <td>${value}</td>
+        </tr>
+        """.trimIndent()
+    }
     private fun loadItems(items: List<Data>): String {
         val builder = StringBuilder()
         items.forEach {
@@ -106,7 +127,7 @@ class ReceiptAccountReceiveableActivity : AppCompatActivity() {
             builder.append(it.getString("qty"))
             builder.append("</td>")
             builder.append("<td>")
-            builder.append(rupiah(it.getDouble("sub_total")))
+            builder.append(activity?.rupiah(it.getDouble("sub_total")))
             builder.append("</td>")
             builder.append("</tr>")
         }
@@ -114,34 +135,7 @@ class ReceiptAccountReceiveableActivity : AppCompatActivity() {
     }
 
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        if(intent.getBooleanExtra("show_menu", true)){
-            menuInflater.inflate(R.menu.menu_receipt_account_receiveable, menu)
-        }
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when(item?.itemId){
-            R.id.action_download -> screenShoot()
-            R.id.action_share -> share()
-            R.id.action_paid -> moveTo(PaymentAccountReceiveableActivity::class.java, intent.extras)
-            else ->  home(item!!)
-        }
-
-    }
-
-    private fun share():Boolean{
-        val shareIntent = Intent(Intent.ACTION_SEND)
-        shareIntent.type = "image/*"
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Tagihan")
-        //shareIntent.putExtra(Intent.EXTRA_TEXT, "Tagihan transaksi dari $")
-        shareIntent.putExtra(Intent.EXTRA_STREAM, shareAsImage())
-        startActivity(Intent.createChooser(shareIntent, "Bagikan Tagihan"))
-        return false
-    }
-
-    private fun screenShoot():Boolean{
+    fun screenShoot():Boolean{
         val uri = shareAsImage()
         Timber.i("Uri %s", uri)
         val intent = Intent(Intent.ACTION_VIEW)
@@ -152,7 +146,15 @@ class ReceiptAccountReceiveableActivity : AppCompatActivity() {
         return true
     }
 
-    private fun shareAsImage(): Uri {
+    fun share():Boolean{
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.putExtra(Intent.EXTRA_STREAM, shareAsImage())
+        val message = "${getString(R.string.receipt)} ${merchant.getString("name")} #${order.getString("order_code")}"
+        intent.putExtra(Intent.EXTRA_TEXT, message)
+        return false
+    }
+
+    fun shareAsImage(): Uri {
         var dest = File("${Environment.getExternalStorageDirectory()}/${getString(R.string.app_name).replace(" ", "")}/order", "${order.getString("order_code")}.png")
         if(!dest.isDirectory){
             dest.parentFile.mkdirs()
@@ -174,30 +176,16 @@ class ReceiptAccountReceiveableActivity : AppCompatActivity() {
         fos.close()
         //Re initialize because the first one is unknown file
         dest = File("${Environment.getExternalStorageDirectory()}/${getString(R.string.app_name).replace(" ", "")}/order", "${order.getString("order_code")}.png")
-        return FileProvider.getUriForFile(this,BuildConfig.APPLICATION_ID + ".fileprovider", dest)
+        return FileProvider.getUriForFile(context!!, BuildConfig.APPLICATION_ID + ".fileprovider", dest)
     }
 
-    private fun addCustomInfo(title:String, value:String): String {
-        return """
-            <tr class="item last">
-        <td>${title}</td>
-        <td></td>
-        <td>${value}</td>
-        </tr>
-        """.trimIndent()
+    companion object {
+        @JvmStatic
+        fun newInstance(sales: String) =
+                ReceiptFragment().apply {
+                    arguments = Bundle().apply {
+                        putString(Constant.ARG_SALES, sales)
+                    }
+                }
     }
-
-
-
-    override fun onBackPressed() {
-        val bundle = Bundle()
-        if(intent.getBooleanExtra("show_message", false)){
-            bundle.putInt(Constant.GOTO, R.id.nav_accounts_receiveable)
-            bundle.putString(Constant.SUCCESS_MESSAGE, translations.get(Constant.TranslationsKey.ACCOUNT_RECEIVEABLE_SAVED_SUCCESSFULY).replace("{0}", order.getString("customer_name")).replace("{1}", rupiah(order.getDouble("total_payment"))))
-            moveTo(MenuActivity::class.java, bundle)
-        }else{
-            super.onBackPressed()
-        }
-    }
-
 }

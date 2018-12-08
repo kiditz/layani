@@ -48,6 +48,7 @@
             android:maxLines="1"
             android:singleLine="true"
             android:minLines="1"
+            android:inputType="number"
             android:textSize="16sp" />
     </LinearLayout>
     <include layout="@layout/fragment_blank"/>

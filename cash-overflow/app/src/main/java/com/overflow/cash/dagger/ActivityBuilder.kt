@@ -51,7 +51,7 @@ abstract class ActivityBuilder {
     internal abstract fun bindCategoryListActivity(): CategoryListActivity
 
     @ContributesAndroidInjector
-    internal abstract fun bindReceiptAccountReceiveableActivity(): ReceiptAccountReceiveableActivity
+    internal abstract fun bindReceiptAccountReceiveableActivity(): ReceiptTransactionWithRefundActivity
 
     @ContributesAndroidInjector
     internal abstract fun bindAccountReceiveableDetailActivity(): AccountReceiveableDetailActivity
@@ -104,6 +104,9 @@ abstract class ActivityBuilder {
 
     @ContributesAndroidInjector
     internal abstract fun bindTransactionHistoryFragment(): TransactionHistoryFragment
+
+    @ContributesAndroidInjector
+    internal abstract fun bindReceiptFragment(): ReceiptFragment
 
     //Service
     @ContributesAndroidInjector

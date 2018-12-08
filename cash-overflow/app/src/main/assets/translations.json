@@ -42,6 +42,7 @@
   "stock.created.successfully": "Stock saved",
   "discount.created.successfully": "Discount saved",
   "sales.created.successfully": "Transaction {0} saved",
+  "refund.saved.successfully": "Refund Transaction {0} saved",
   "category.edited.successfully": "Category {0} saved successfully",
   "category.removed.successfully": "Category removed successfully",
   "customer.edited.successfully": "Customer {0} saved successfully",

@@ -99,7 +99,7 @@
             android:name=".ReceiptActivity"
             android:label="" />
         <activity
-            android:name=".ReceiptAccountReceiveableActivity"
+            android:name=".ReceiptTransactionWithRefundActivity"
             android:label="" />
         <activity
             android:name=".CategoryListActivity"

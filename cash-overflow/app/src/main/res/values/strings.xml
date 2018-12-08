@@ -85,6 +85,8 @@
     <string name="payer">Debtor</string>
     <string name="pcs">pcs</string>
     <string name="phone_number">Phone Number</string>
+    <string name="press_again_to_close">Press again to close app</string>
+    <string name="print_receipt">Print Receipt</string>
     <string name="product">Product</string>
     <string name="product_code">Product Code</string>
     <string name="product_detail">Product detail</string>
@@ -105,7 +107,7 @@
 
     <string name="sell_price">Sell Price</string>
     <string name="settings">Setting</string>
-    <string name="share_receiveable_receipt">Bagikan Dengan</string>
+    <string name="share">Bagikan Dengan</string>
     <string name="smart_search">Smart Search</string>
     <string name="sort">Sort</string>
     <string name="stock">Stock</string>
@@ -116,6 +118,7 @@
     <string name="submit">Save</string>
     <string name="system_err">Upps, Something went wrong</string>
     <string name="total_payment">Total payment</string>
+    <string name="total_refund">Total refund</string>
     <string name="transaction">Transaction</string>
 
     <string name="transaction_amount">Transaction Amount</string>
@@ -129,5 +132,6 @@
     <string name="weight">Weight</string>
     <string name="year">Yearly</string>
     <string name="yes">Yes</string>
+
 
 </resources>

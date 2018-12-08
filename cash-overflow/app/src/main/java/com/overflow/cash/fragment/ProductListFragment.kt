@@ -89,7 +89,7 @@ class ProductListFragment : BaseFragment(), CategoryListContract.View, ViewPager
             handleChangeEvent(view_pager.currentItem)
             handlePopUpMenu(view_pager.currentItem)
         }catch (e:UninitializedPropertyAccessException){
-            Timber.e(e)
+            //Timber.e(e)
         }
     }
 
@@ -101,9 +101,11 @@ class ProductListFragment : BaseFragment(), CategoryListContract.View, ViewPager
     private fun handleChangeEvent(position: Int) {
         (adapter.getItem(position) as ProductFragment).searchProduct(Constant.TEXT_EMPTY)
         RxTextView.textChangeEvents(ed_search).skipInitialValue().debounce(300, TimeUnit.MILLISECONDS).distinctUntilChanged().subscribe({
-            (adapter.getItem(position) as ProductFragment).searchProduct(it.text().toString())
+            activity?.runOnUiThread {
+                (adapter.getItem(position) as ProductFragment).searchProduct(it.text().toString())
+            }
         }, {
-            Timber.e(it)
+            //Timber.e(it)
         })
     }
 
@@ -150,7 +152,19 @@ class ProductListFragment : BaseFragment(), CategoryListContract.View, ViewPager
     }
 
     override fun showEmpty() {
-        showMessage(getString(R.string.no_product_title), getString(R.string.no_product_description))
+        hideMessage()
+        adapter.clear()
+        val productFragment = ProductFragment.newInstance(-1)
+        adapter.addFragment(productFragment, getString(R.string.all_product))
+        adapter.notifyDataSetChanged()
+        this.categoryList.add(Data())
+        try {
+            handleAddProduct(view_pager.currentItem)
+            handleChangeEvent(view_pager.currentItem)
+            handlePopUpMenu(view_pager.currentItem)
+        }catch (e:UninitializedPropertyAccessException){
+            //Ignore
+        }
     }
 
     override fun showNotConnected(res: String) {
@@ -159,7 +173,6 @@ class ProductListFragment : BaseFragment(), CategoryListContract.View, ViewPager
 
     override fun showMessage(title: String, message: String) {
         recycler?.visibility = View.GONE
-        //adapter.addFragment(BlankFragment.newInstance(getString(R.string.no_product_title), getString(R.string.no_product_description)), "")
         adapter.notifyDataSetChanged()
         fab_add_product.setOnClickListener { activity!!.moveTo(SaveProductActivity::class.java) }
         super.showMessage(title, message)

@@ -8,10 +8,7 @@ import com.overflow.cash.mvp.customer.CustomerChooserPresenter
 import com.overflow.cash.mvp.dashboard.DashboardHeaderPresenter
 import com.overflow.cash.mvp.login.LoginPresenter
 import com.overflow.cash.mvp.menu.MenuPresenter
-import com.overflow.cash.mvp.order.CashboxPresenter
-import com.overflow.cash.mvp.order.TransactionHistoryPresenter
-import com.overflow.cash.mvp.order.OrderPresenter
-import com.overflow.cash.mvp.order.PreviewSalesPresenter
+import com.overflow.cash.mvp.order.*
 import com.overflow.cash.mvp.payment.PaymentTransactionPresenter
 import com.overflow.cash.mvp.product.*
 import com.overflow.cash.mvp.receiveable.AccountReceiveableDetailPresenter
@@ -143,5 +140,10 @@ class PresenterModule {
     @Provides
     internal fun provideAccountReceiveableOutOfAgeChartPresenter(context: Context, translations: Translations, disposable: CompositeDisposable,orderService: OrderService,  preferences: SharedPreferences): AccountReceiveableOutOfAgeChartPresenter {
         return AccountReceiveableOutOfAgeChartPresenter(context, preferences, translations, orderService, disposable)
+    }
+
+    @Provides
+    internal fun provideRefundPresenter(context: Context, translations: Translations, disposable: CompositeDisposable,orderService: OrderService,  preferences: SharedPreferences): RefundPresenter {
+        return RefundPresenter(context, preferences, translations, orderService, disposable)
     }
 }

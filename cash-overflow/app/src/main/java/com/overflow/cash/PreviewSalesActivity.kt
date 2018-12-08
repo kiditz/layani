@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
@@ -17,13 +16,14 @@ import com.overflow.cash.adapter.PreviewSalesAdapter
 import com.overflow.cash.mvp.order.PreviewSalesContract
 import com.overflow.cash.mvp.order.PreviewSalesPresenter
 import com.overflow.cash.net.ImageService
-import com.overflow.cash.utils.*
+import com.overflow.cash.utils.home
+import com.overflow.cash.utils.moveTo
+import com.overflow.cash.utils.rupiah
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
 import dagger.android.AndroidInjection
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_preview_sales.*
-import kotlinx.android.synthetic.main.dialog_order_payment.view.*
 import javax.inject.Inject
 
 class PreviewSalesActivity : AppCompatActivity(), PreviewSalesContract.View {
@@ -36,14 +36,9 @@ class PreviewSalesActivity : AppCompatActivity(), PreviewSalesContract.View {
     lateinit var translations:Translations
 
     lateinit var adapter:PreviewSalesAdapter
-    private var orderPaymentView: View? = null
-    private var orderPaymentDialog:AlertDialog? = null
     lateinit var cashBoxAdapter:ArrayAdapter<String>
-    private var cashBoxList = mutableListOf<Data>()
-    private var cashboxId = -1L
     private var discountId:Long? = null
     private var customerId:Long? = null
-    private var paymentMethod = Constant.PaymentMethod.CASH
     var disposable:CompositeDisposable = CompositeDisposable()
     lateinit var merchant:Data
     @Inject
@@ -141,9 +136,7 @@ class PreviewSalesActivity : AppCompatActivity(), PreviewSalesContract.View {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == Constant.REQUEST_CODE_VIEW_CUSTOMER && resultCode == Activity.RESULT_OK){
-            this.orderPaymentView?.edCustomer?.setText(data?.getStringExtra("name"))
             this.customerId = data?.getLongExtra("id", -1L)
-            this.orderPaymentView?.edCustomer?.error = null
         }
     }
 

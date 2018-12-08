@@ -17,6 +17,7 @@ class ProductListPresenter(private var context: Context, private var translation
     lateinit var view: ProductListContract.View
     var lastPage:Boolean = true
     var loading:Boolean = true
+
     override fun attach(view: ProductListContract.View) {
         this.view = view
     }
@@ -26,14 +27,15 @@ class ProductListPresenter(private var context: Context, private var translation
     }
 
     override fun loadProduct(page:Int, categoryId:Long, query:String, order:String) {
+        val merchant = Data(preferences.getString("merchant", "{}"))
         val input = Data()
         input["query"] = query
         input["page"] = page
         input["size"] = getSize()
         input["category_id"] = categoryId
         input["order"] = order
-        Timber.i("Page :%s", page)
-
+        input["merchant_id"] = merchant["id"]
+        Timber.d("Page :%s", page)
         if(API.isConnected(context)){
             lastPage = false
             loading = true

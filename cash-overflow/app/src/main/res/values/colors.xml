@@ -10,6 +10,8 @@
     <color name="transparent">#50000000</color>
     <color name="layoutEditImage">#9bc6c6c6</color>
     <color name="grey">#9bc6c6c6</color>
+    <color name="red_dark">#af0000</color>
+    <color name="red_light">#FF0000</color>
     <color name="background">#eee</color>
     <color name="loginBackground">#000331</color>
     <color name="startGreen">#018caf</color>

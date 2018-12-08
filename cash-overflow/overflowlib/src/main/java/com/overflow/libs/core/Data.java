@@ -72,6 +72,9 @@ public class Data implements Map<String, Object>, Serializable{
         return map.containsKey(key);
     }
 
+    public boolean containsNotNull(Object key){
+        return map.containsKey(key) && map.get(key) != null;
+    }
     public boolean containsValue(Object value) {
         return map.containsValue(value);
     }

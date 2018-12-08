@@ -21,6 +21,7 @@ import com.overflow.cash.mvp.menu.MenuContract
 import com.overflow.cash.mvp.menu.MenuPresenter
 import com.overflow.cash.net.RxUtils
 import com.overflow.cash.utils.replaceContent
+import com.overflow.cash.utils.snack
 import com.overflow.libs.core.Data
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
@@ -43,7 +44,7 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var preferences: SharedPreferences
 
     var search: MaterialSearchView? = null
-
+    private var countBackPressed = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
@@ -93,19 +94,26 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
         } else {
-            super.onBackPressed()
+            if(countBackPressed == 1){
+                super.onBackPressed()
+            }else{
+                snack(getString(R.string.press_again_to_close)).show()
+                countBackPressed++
+            }
+
         }
     }
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_settings -> {
-                //moveTo(AddPriceActivity::class.java)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
+//        return when (item.itemId) {
+//            R.id.action_settings -> {
+//                //moveTo(AddPriceActivity::class.java)
+//                true
+//            }
+//            else -> super.onOptionsItemSelected(item)
+//        }
+        return false
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

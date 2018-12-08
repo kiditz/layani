@@ -4,36 +4,42 @@ import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
-import com.miguelcatalan.materialsearchview.MaterialSearchView
+import com.jakewharton.rxbinding2.widget.RxTextView
 import com.overflow.cash.Constant
 import com.overflow.cash.MenuActivity
 import com.overflow.cash.R
+import com.overflow.cash.ReceiptTransactionWithRefundActivity
 import com.overflow.cash.adapter.TransactionHistoryAdapter
 import com.overflow.cash.mvp.order.TransactionHistoryContract
 import com.overflow.cash.mvp.order.TransactionHistoryPresenter
+import com.overflow.cash.mvp.receiveable.AccountReceiveableDetailContract
+import com.overflow.cash.mvp.receiveable.AccountReceiveableDetailPresenter
 import com.overflow.cash.net.API
 import com.overflow.cash.net.NetworkExHandler
 import com.overflow.cash.utils.AbstractRecyclerPagination
+import com.overflow.cash.utils.moveTo
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
 import kotlinx.android.synthetic.main.fragment_blank.*
-import kotlinx.android.synthetic.main.fragment_customer.*
+import kotlinx.android.synthetic.main.fragment_transaction_history.*
 import javax.inject.Inject
 
-class TransactionHistoryFragment : BaseFragment(), TransactionHistoryContract.View {
+class TransactionHistoryFragment : BaseFragment(), TransactionHistoryContract.View, AccountReceiveableDetailContract.View {
     @Inject
     lateinit var presenter: TransactionHistoryPresenter
+    @Inject
+    lateinit var itemsPresenter: AccountReceiveableDetailPresenter
     @Inject
     lateinit var translations: Translations
     @Inject
     lateinit var networkExHandler: NetworkExHandler
     lateinit var adapter: TransactionHistoryAdapter
-
     private var currentPage: Int = API.MIN_PAGE
     lateinit var menuActivity: MenuActivity
+    private var position = -1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
         this.menuActivity = activity as MenuActivity
     }
 
@@ -44,6 +50,7 @@ class TransactionHistoryFragment : BaseFragment(), TransactionHistoryContract.Vi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         this.presenter.attach(this)
+        this.itemsPresenter.attach(this)
         this.adapter = TransactionHistoryAdapter(translations)
         val manager = LinearLayoutManager(activity)
         recycler?.layoutManager = manager
@@ -69,21 +76,17 @@ class TransactionHistoryFragment : BaseFragment(), TransactionHistoryContract.Vi
             presenter.loadOrder(currentPage, Constant.TEXT_EMPTY)
         }
 
-//        this.adapter.onItemClick = { data, _ ->
-//            onCustomerEdited(data)
-//        }
 
-        menuActivity.search?.setOnQueryTextListener(object : MaterialSearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
+        RxTextView.textChanges(ed_search).skipInitialValue().subscribe {
+            activity!!.runOnUiThread {
                 currentPage = 1
-                presenter.loadOrder(currentPage, query!!)
-                return false
+                presenter.loadOrder(currentPage, it.toString())
             }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return false
-            }
-        })
+        }
+        this.adapter.onItemClick = {data, viewHolder ->
+            this.position = viewHolder.adapterPosition
+            itemsPresenter.loadOrderItems(data.getLong("id"))
+        }
     }
 
     override fun onOrderLoaded(customerList: List<Data>) {
@@ -113,11 +116,25 @@ class TransactionHistoryFragment : BaseFragment(), TransactionHistoryContract.Vi
 
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.menu_customer, menu)
-        menuActivity.search?.setMenuItem(menu!!.findItem(R.id.action_search))
     }
 
     override fun showNotConnected(res: String) {
         showMessage(translations.get(Constant.TranslationsKey.NO_INTERNET), Constant.TEXT_EMPTY)
+    }
+
+    override fun onDetailLoaded(receiveables: List<Data>) {
+        TODO("not implemented")
+    }
+
+    override fun onOrderItemsLoaded(items: List<Data>) {
+        //Check adapter position
+        if(position >= 0){
+            val order = adapter.values[position]
+            order["order_items"] = items
+            val bundle = Bundle()
+            bundle.putString(Constant.ARG_SALES, order.toString())
+            activity!!.moveTo(ReceiptTransactionWithRefundActivity::class.java, bundle)
+
+        }
     }
 }

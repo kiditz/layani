@@ -5,5 +5,8 @@
         android:title="@string/download"
         android:icon="@drawable/ic_cloud_download"
         app:showAsAction="always"/>
-
+    <item android:id="@+id/action_share"
+        android:title="@string/share"
+        android:icon="@drawable/ic_share"
+        app:showAsAction="always"/>
 </menu>

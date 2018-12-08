@@ -45,9 +45,9 @@ class PaymentAccountReceiveableActivity:AppCompatActivity(), AccountReceiveableP
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
         this.order = Data(intent.getStringExtra("sales"))
-        Timber.i("Order %s", order)
-        Timber.i("Extras %s", intent.extras)
-        this.tv_paid.text = rupiah(order.getData("account_receiveable").getDouble("total_credit"))
+        Timber.d("Order %s", order)
+        Timber.d("Extras %s", intent.extras)
+        this.tv_paid.text = rupiah(order.getDouble("total_credit"))
         getButtonIds().forEach {
             it.setOnClickListener {
                 when (it.id) {
@@ -117,7 +117,7 @@ class PaymentAccountReceiveableActivity:AppCompatActivity(), AccountReceiveableP
         cashboxView.tv_total_payment.text = tv_result.text
         val cashBack = parseRupiah(tv_result.text) - parseRupiah(tv_paid.text)
         cashboxView.tv_cashback.text = rupiah(Math.abs(cashBack))
-        cashboxView.tv_pay_type.text = if(cashBack > 0){
+        cashboxView.tv_pay_type.text = if(cashBack >= 0){
             getString(R.string.cashback)
         }else{
             getString(R.string.paid)
@@ -154,12 +154,17 @@ class PaymentAccountReceiveableActivity:AppCompatActivity(), AccountReceiveableP
             moveTo(MenuActivity::class.java, bundle)
         }else{
             val bundle = Bundle()
+            var message = translations.get(Constant.TranslationsKey.ACCOUNT_RECEIVEABLE_SAVED_SUCCESSFULY)
+            message = message.replace("{0}", order.getString("customer_name"))
+            message = message.replace("{1}", rupiah(data.getDouble("total_credit")))
+            bundle.putString(Constant.SUCCESS_MESSAGE, message)
             bundle.putInt(Constant.GOTO, R.id.nav_accounts_receiveable)
             order["total_payment"] = data.getDouble("total_payment")
-            order["account_receiveable"] = data
-            bundle.putBoolean("show_message", true)
+            order["total_credit"] = data.getDouble("total_credit")
+            order["receiveable_date"] = data.getLong("receiveable_date")
+            //bundle.putBoolean("show_message", true)
             bundle.putString("sales", order.toString())
-            moveTo(ReceiptAccountReceiveableActivity::class.java, bundle)
+            moveTo(ReceiptActivity::class.java, bundle)
         }
         finish()
     }

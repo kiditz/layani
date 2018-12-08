@@ -84,6 +84,8 @@
     <string name="payer">Pengutang</string>
     <string name="pcs">pcs</string>
     <string name="phone_number">No Handphone</string>
+    <string name="press_again_to_close">Tekan sekali lagi untuk keluar dari aplikasi</string>
+    <string name="print_receipt">Cetak struk</string>
     <string name="product">Produk</string>
     <string name="product_code">Kode Produk</string>
     <string name="product_detail">Detail Produk</string>
@@ -93,7 +95,7 @@
     <string name="purchase_price">Harga Beli</string>
     <string name="quantity">Jumlah Barang</string>
     <string name="receipt">Struk</string>
-    <string name="refund_paid">Batalkan Pembayaran</string>
+    <string name="refund_paid">Batalkan Transaksi</string>
     <string name="register">Daftar</string>
     <string name="register_store">Daftarkan Toko</string>
     <string name="remaining_stock">Sisa Stock</string>
@@ -103,7 +105,7 @@
     <string name="search_order_hint">Cari No Transaksi</string>
     <string name="sell_price">Harga Jual</string>
     <string name="settings">Pengatuan</string>
-    <string name="share_receiveable_receipt">Tagih</string>
+    <string name="share">Tagih</string>
     <string name="smart_search">Pencarian Pintar</string>
     <string name="sort">Urutkan</string>
     <string name="stock">Stok</string>
@@ -114,8 +116,8 @@
     <string name="submit">Simpan</string>
     <string name="system_err">Upps, Terjadi kesalahan pada sistem</string>
     <string name="total_payment">Jumlah bayar</string>
+    <string name="total_refund">Total Pengembalian</string>
     <string name="transaction">Transaksi</string>
-
     <string name="transaction_amount">Jumlah Transaksi</string>
     <string name="transaction_history">Riwayat Transaksi</string>
     <string name="transaction_not_found">Transaksi tidak di temukan</string>
@@ -127,5 +129,7 @@
     <string name="weight">Berat</string>
     <string name="year">Tahun</string>
     <string name="yes">Ya</string>
+
+
 
 </resources>

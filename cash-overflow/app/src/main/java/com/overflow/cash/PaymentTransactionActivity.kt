@@ -302,9 +302,8 @@ class PaymentTransactionActivity : AppCompatActivity(), CashboxContract.View, Pa
         progress.visibility = View.GONE
         presenter.deleteAllItems()
         val bundle = Bundle()
-        bundle.putString(Constant.SALES, data.toString())
+        bundle.putString(Constant.ARG_SALES, data.toString())
         val message = translations.get(Constant.TranslationsKey.SALES_CREATED_SUCCESSFULY).replace("{0}", data.getString("order_code"))
-
         bundle.putString(Constant.SUCCESS_MESSAGE, message)
         bundle.putInt(Constant.GOTO, R.id.nav_sales)
         moveTo(ReceiptActivity::class.java, bundle)

@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.design.widget.TabLayout
-import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.view.*
 import com.miguelcatalan.materialsearchview.MaterialSearchView
@@ -27,7 +26,7 @@ import io.realm.RealmResults
 import kotlinx.android.synthetic.main.fragment_sales_list.*
 import javax.inject.Inject
 
-class SalesListFragment : Fragment(), CategoryListContract.View, ViewPager.OnPageChangeListener {
+class SalesListFragment : BaseFragment(), CategoryListContract.View, ViewPager.OnPageChangeListener {
 
     private lateinit var merchant: Data
     private lateinit var adapter: ViewPagerAdapter
@@ -125,6 +124,7 @@ class SalesListFragment : Fragment(), CategoryListContract.View, ViewPager.OnPag
         var salesFragment = SalesFragment.newInstance(-1)
         //Sometimes now working after reload token
         try {
+            hideMessage()
             adapter.addFragment(salesFragment, getString(R.string.all_product))
             this.categoryList.clear()
             this.categoryList.add(Data())
@@ -153,12 +153,19 @@ class SalesListFragment : Fragment(), CategoryListContract.View, ViewPager.OnPag
     }
 
     override fun showEmpty() {
-        adapter.addFragment(BlankFragment.newInstance(getString(R.string.no_product_title), Constant.TEXT_EMPTY), Constant.TEXT_EMPTY)
+//        adapter.addFragment(BlankFragment.newInstance(getString(R.string.no_product_title), Constant.TEXT_EMPTY), Constant.TEXT_EMPTY)
+//        adapter.notifyDataSetChanged()
+        hideMessage()
+        adapter.clear()
+        val salesFragment = SalesFragment.newInstance(-1)
+        adapter.addFragment(salesFragment, getString(R.string.all_product))
         adapter.notifyDataSetChanged()
+        this.categoryList.add(Data())
+        handleSearchEvent(view_pager.currentItem)
     }
 
     override fun showNotConnected(res: String) {
-        activity?.snack(res)?.show()
+        showMessage(res)
     }
 
 

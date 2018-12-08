@@ -17,7 +17,7 @@ class Constant {
         const val SUCCESS_MESSAGE = "success_message"
         const val GOTO = "goto"
         const val POSITION = "index"
-        const val SALES = "sales"
+        const val ARG_SALES = "sales"
         const val MAX_PAGE = "MAX_PAGE"
         const val TEXT_EMPTY = ""
         const val SPACE = " "
@@ -123,7 +123,7 @@ class Constant {
             const val USER_NOT_FOUND = "user.not.found"
             const val USER_WRONG_PASSWORD = "user.wrong.password"
             const val INVALID_EMAIL = "invalid.email.address"
-
+            const val REFUND_SAVED_SUCCESSFULLY = "refund.saved.successfully"
 
 
         }
