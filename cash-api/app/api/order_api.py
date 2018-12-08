@@ -30,7 +30,7 @@ def add_order():
     return order_service.add_order(domain)
 
 
-@api.route('/add', methods=['POST'])
+@api.route('/refund', methods=['POST'])
 def refund_order():
     """
     {
