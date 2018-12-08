@@ -114,6 +114,7 @@ class OrderService(object):
 		order.total_amount = order.total_amount * -1
 		order.total_payment = 0.0
 		order.cashback = 0.0
+		order.profit = 0
 		order.save()
 		cashbox_history = CashboxHistory()
 		cashbox_history.cash_box_id = cashbox.id
@@ -138,9 +139,18 @@ class OrderService(object):
 	@Number(["merchant_id"])
 	def get_dashboard_header(self, domain):
 		merchant_id = domain['merchant_id']
-		cashbox = Cashbox.query.with_entities(func.coalesce(func.sum(Cashbox.total_amount), 0).label("total_amount")).filter(Cashbox.merchant_id == merchant_id).first()._asdict()
-		total_profit = Order.query.with_entities(func.coalesce(func.sum(Order.profit), 0).label("total_profit")).filter(Order.merchant_id == merchant_id).first()._asdict()
-		total_income = Order.query.with_entities(func.coalesce(func.sum(Order.total_amount), 0).label("total_income")).filter(Order.merchant_id == merchant_id).first()._asdict()
+		cashbox = Cashbox.query.with_entities(func.coalesce(func.sum(Cashbox.total_amount), 0).label("total_amount"))\
+			.filter(Cashbox.merchant_id == merchant_id) \
+			.filter(Order.status != OrderStatus.VOID) \
+			.first()._asdict()
+		total_profit = Order.query.with_entities(func.coalesce(func.sum(Order.profit), 0).label("total_profit"))\
+			.filter(Order.merchant_id == merchant_id) \
+			.filter(Order.status != OrderStatus.VOID) \
+			.first()._asdict()
+		total_income = Order.query.with_entities(func.coalesce(func.sum(Order.total_amount), 0).label("total_income"))\
+			.filter(Order.merchant_id == merchant_id) \
+			.filter(Order.status != OrderStatus.VOID) \
+			.first()._asdict()
 		total_receiveable = AccountReceiveable.query.with_entities(func.coalesce(func.sum(AccountReceiveable.total_credit), 0).label("total_credit")).filter(AccountReceiveable.merchant_id == merchant_id).first()._asdict()
 		result = {
 			'cashbox_amount': cashbox['total_amount'],
