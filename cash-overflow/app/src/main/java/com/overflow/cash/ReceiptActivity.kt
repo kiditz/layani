@@ -14,7 +14,6 @@ import com.overflow.cash.utils.shouldRequestPermissions
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasFragmentInjector
 import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
 
@@ -49,7 +48,7 @@ class ReceiptActivity : AppCompatActivity(), HasSupportFragmentInjector {
         return when(item!!.itemId){
             R.id.action_download -> receiptFragment.screenShoot()
             R.id.action_share -> receiptFragment.share()
-            else -> home(item!!)
+            else -> home(item)
         }
 
     }

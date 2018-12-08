@@ -151,6 +151,10 @@ class ReceiptFragment:BaseFragment(){
         intent.putExtra(Intent.EXTRA_STREAM, shareAsImage())
         val message = "${getString(R.string.receipt)} ${merchant.getString("name")} #${order.getString("order_code")}"
         intent.putExtra(Intent.EXTRA_TEXT, message)
+        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        intent.type = "image/*"
+        startActivity(Intent.createChooser(intent, "${getString(R.string.share)} ${getString(R.string.receipt)}"));
         return false
     }
 

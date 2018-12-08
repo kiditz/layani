@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.*
 import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.overflow.cash.Constant
+import com.overflow.cash.CustomerListAddActivity
 import com.overflow.cash.MenuActivity
 import com.overflow.cash.R
 import com.overflow.cash.adapter.CustomerChooserAdapter
@@ -14,6 +15,7 @@ import com.overflow.cash.mvp.customer.CustomerChooserContract
 import com.overflow.cash.mvp.customer.CustomerChooserPresenter
 import com.overflow.cash.net.NetworkExHandler
 import com.overflow.cash.utils.AbstractRecyclerPagination
+import com.overflow.cash.utils.moveTo
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
 import kotlinx.android.synthetic.main.fragment_blank.*
@@ -117,6 +119,16 @@ class CustomerFragment : BaseFragment(), CustomerChooserContract.View {
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.menu_customer, menu)
         menuActivity.search?.setMenuItem(menu!!.findItem(R.id.action_search))
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when(item!!.itemId){
+            R.id.action_edit_customer -> {
+                activity!!.moveTo(CustomerListAddActivity::class.java)
+                false
+            }
+            else -> false
+        }
     }
 
     override fun showNotConnected(res: String) {

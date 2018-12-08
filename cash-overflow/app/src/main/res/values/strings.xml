@@ -28,7 +28,7 @@
     <string name="create_store_success">Store successfully saved</string>
     <string name="credit_amount">Credit Amount</string>
     <string name="customer_name">Customer Name</string>
-    <string name="dashboard">Home</string>
+    <string name="dashboard">Dashboard</string>
     <string name="date">Date</string>
     <string name="date_in">Date in</string>
     <string name="delete_transaction">Remove Transaction</string>
@@ -39,6 +39,7 @@
     <string name="download">Download</string>
     <string name="due_date">Due date</string>
     <string name="edit_category">Edit Category</string>
+    <string name="edit_customer">Edit Customer</string>
     <string name="edit_product">Edit Product</string>
     <string name="empty_data">No Data</string>
     <string name="flash">Flash Light</string>
@@ -107,7 +108,7 @@
 
     <string name="sell_price">Sell Price</string>
     <string name="settings">Setting</string>
-    <string name="share">Bagikan Dengan</string>
+    <string name="share">Bagikan</string>
     <string name="smart_search">Smart Search</string>
     <string name="sort">Sort</string>
     <string name="stock">Stock</string>

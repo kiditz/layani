@@ -94,6 +94,8 @@ fun Context.rupiah(value:Double):String{
     format.isDecimalSeparatorAlwaysShown = false
     val symbols = DecimalFormatSymbols()
     symbols.currencySymbol = "Rp. "
+    format.negativePrefix = "Rp. -"
+    format.negativeSuffix = ""
     format.decimalFormatSymbols = symbols
     return format.format(value)
 }

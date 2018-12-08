@@ -40,8 +40,14 @@ class ImageService(private val context: Context, private val accountManager: Acc
             val split = text.split(" ")
             val builder = StringBuilder()
             split.mapIndexed { index, s ->
-                if(index <= 2){
-                    builder.append(s.substring(0, 1).toUpperCase())
+                if (!s.isEmpty()) {
+                    if (index <= 2) {
+                        try {
+                            builder.append(s.substring(0, 1).toUpperCase())
+                        } catch (e: IndexOutOfBoundsException) {
+                            builder.append(text.substring(0, 1).toUpperCase())
+                        }
+                    }
                 }
             }
             return builder.toString()

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -72,7 +73,11 @@ class CustomerListAddActivity : BaseActivity(), CustomerChooserContract.View {
         }
 
         this.adapter.onDeleteClick = { data, holder ->
-            this.editCustomer(data, holder, false)
+            if(!TextUtils.isEmpty(data.getString("name"))){
+                this.editCustomer(data, holder, false)
+            }else{
+                presenter.loadCustomer(currentPage, Constant.TEXT_EMPTY)
+            }
         }
     }
 

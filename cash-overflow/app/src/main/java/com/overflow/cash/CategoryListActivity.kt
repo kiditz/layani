@@ -98,7 +98,8 @@ class CategoryListActivity : BaseActivity(), CategoryListContract.View, EditAndR
 
     override fun showEmpty() {
         refresh?.isRefreshing = false
-        showMessage(getString(R.string.no_category_data), "")
+        //showMessage(getString(R.string.no_category_data), "")
+        hideMessage()
     }
 
 
@@ -155,7 +156,6 @@ class CategoryListActivity : BaseActivity(), CategoryListContract.View, EditAndR
      * When Not Ok error progress bar must be dismissed!!
      * */
     override fun onEditRemoveCategoryNotOk(res: String, holder: CategoryListAdapter.ViewHolder) {
-
         dismissProgressMessage(res, holder)
     }
 
@@ -193,9 +193,15 @@ class CategoryListActivity : BaseActivity(), CategoryListContract.View, EditAndR
             R.id.action_add ->{
                 val data = Data().put("name", Constant.TEXT_EMPTY)
                 adapter.addValue(data!!)
-                true
+                false
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.detach()
+        editPresenter.detach()
     }
 }

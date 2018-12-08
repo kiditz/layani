@@ -67,5 +67,6 @@
   "credit": "HUTANG",
   //Status
   "P": "BELUM LUNAS",
-  "S": "SUKSES"
+  "S": "SUKSES",
+  "V": "DIBATALKAN"
 }

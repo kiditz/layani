@@ -61,9 +61,13 @@ class ProductListAdapter(private val imageService: ImageService) : RecyclerView.
         }
         holder.productCode.text = item.getString("product_code")
         holder.productName.text = item.getString("product_name")
-        holder.sellPrice.text =  "$sellPrice - $purchasePrice"
+        holder.sellPrice.text =  if(item.getDouble("purchase_price") > 0.0){
+            "$sellPrice - $purchasePrice"
+        }else{
+            sellPrice
+        }
         val documentId = item.getLong("document_id")
-        imageService.loadDocument(holder.imgProduct,documentId , item.getString("product_name"))
+        imageService.loadDocument(holder.imgProduct, documentId , item.getString("product_name"))
         RxView.clicks(holder.itemView).debounce(200, TimeUnit.MILLISECONDS).subscribe({
             val bundle = item.toBundle()
             if(holder.imgProduct.drawable != null){

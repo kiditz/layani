@@ -38,6 +38,7 @@
     <string name="download">Download</string>
     <string name="due_date">Tgl Jatuh Tempo</string>
     <string name="edit_category">Ubah Kategori</string>
+    <string name="edit_customer">Ubah Pelanggan</string>
     <string name="edit_product">Ubah Produk</string>
     <string name="empty_data">No Data</string>
     <string name="flash">Lampu</string>

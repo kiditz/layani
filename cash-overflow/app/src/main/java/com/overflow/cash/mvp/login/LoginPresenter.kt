@@ -20,7 +20,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import timber.log.Timber
 
-class LoginPresenter(private var context: Context, private var translations: Translations, private var disposable: CompositeDisposable, private var accountService: AccountService, private var merchantService: MerchantService, private var preferences: SharedPreferences, private var accountManager: AccountManager): LoginContract.Presenter {
+class LoginPresenter(private var context: Context, private var translations: Translations, private var disposable: CompositeDisposable, private var accountService: AccountService, private var merchantService: MerchantService, private var preferences: SharedPreferences, private var accountManager: AccountManager) : LoginContract.Presenter {
 
 
     lateinit var view: LoginContract.View
@@ -29,48 +29,39 @@ class LoginPresenter(private var context: Context, private var translations: Tra
     }
 
 
-
     override fun detach() {
         this.disposable.clear()
     }
 
-    override fun login(input:Data) {
+    override fun login(input: Data) {
         val authHeader = OauthCredentialGenerator.generateCredentials(BuildConfig.auth_user, BuildConfig.auth_password)
         input["grant_type"] = "client_credentials"
-        this.accountService.login("Basic $authHeader", input).enqueue(object:Callback<Data>{
-            override fun onFailure(call: Call<Data>?, t: Throwable?) {
-                view.showError(t!!)
-            }
-            override fun onResponse(call: Call<Data>?, response: Response<Data>?) {
-                try {
-                    val resp = response!!.body()
-                    val accessToken = resp!!.getString("access_token")
-                    val bundle = Bundle()
-                    bundle.putString(AccountManager.KEY_ACCOUNT_NAME, input.getString("username"))
-                    bundle.putString(AccountManager.KEY_ACCOUNT_TYPE, context.getString(R.string.account_type))
-                    bundle.putString(AccountManager.KEY_AUTHTOKEN, accessToken)
-                    bundle.putString(AccountManager.KEY_PASSWORD, BuildConfig.auth_password)
-                    val intent = Intent()
-                    intent.putExtras(bundle)
-                    val username = input.getString("username")
-                    val password = input.getString("password")
-                    findMerchant(username, password, accessToken, intent)
-                }catch (e:Exception){
-                    view.showError(e)
-                }
-            }
+        this.accountService.loginAsync("Basic $authHeader", input).retry(3).compose(RxUtils.applySingleAsync()).subscribe({
+            val accessToken = it.getString("access_token")
+            val bundle = Bundle()
+            bundle.putString(AccountManager.KEY_ACCOUNT_NAME, input.getString("username"))
+            bundle.putString(AccountManager.KEY_ACCOUNT_TYPE, context.getString(R.string.account_type))
+            bundle.putString(AccountManager.KEY_AUTHTOKEN, accessToken)
+            bundle.putString(AccountManager.KEY_PASSWORD, BuildConfig.auth_password)
+            val intent = Intent()
+            intent.putExtras(bundle)
+            val username = input.getString("username")
+            val password = input.getString("password")
+            findMerchant(username, password, accessToken, intent)
+        }, {
+            view.showError(it)
         })
     }
 
-    fun findMerchant(username: String, password: String, accessToken:String,intent: Intent) {
+    fun findMerchant(username: String, password: String, accessToken: String, intent: Intent) {
         val data = Data()
         data["username"] = username
         data["password"] = password
         disposable.add(accountService.findMerchant("Bearer $accessToken", data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({
-            if(API.ok(it)){
+            if (API.ok(it)) {
                 preferences.edit().putString("merchant", API.payload(it).toString()).apply()
                 view.onLoginSuccess(intent)
-            }else{
+            } else {
                 view.showNoOk(translations.get(API.getError(it)))
             }
         }, {

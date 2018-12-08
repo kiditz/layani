@@ -32,7 +32,7 @@ class CustomerService(object):
 		if 'phone_number' in domain and is_not_empty(domain['phone_number']):
 			if not re.match(r'[\+]?[0-9.-]+', domain['phone_number']):
 				raise ValidationException(ErrorCode.INVALID_PHONE_NUMBER)
-		if 'email' in domain and is_not_empty(domain['phone_number']):
+		if 'email' in domain and is_not_empty(domain['email']):
 			if not re.match(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$", domain['email']):
 				raise ValidationException(ErrorCode.INVALID_EMAIL_ADDRESS)
 
