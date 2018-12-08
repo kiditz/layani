@@ -139,10 +139,8 @@ class OrderService(object):
 	@Number(["merchant_id"])
 	def get_dashboard_header(self, domain):
 		merchant_id = domain['merchant_id']
-		cashbox = Cashbox.query.with_entities(func.coalesce(func.sum(Cashbox.total_amount), 0).label("total_amount")) \
-			.join(Order, Order.cash_box_id == Cashbox.id) \
-			.filter(Cashbox.merchant_id == merchant_id) \
-			.filter(Order.status != OrderStatus.VOID) \
+		cashbox = Cashbox.query.with_entities(func.coalesce(func.sum(Cashbox.total_amount), 0).label("total_amount"))\
+			.filter(Cashbox.merchant_id == merchant_id)\
 			.first()._asdict()
 		total_profit = Order.query.with_entities(func.coalesce(func.sum(Order.profit), 0).label("total_profit"))\
 			.filter(Order.merchant_id == merchant_id) \
