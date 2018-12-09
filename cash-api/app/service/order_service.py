@@ -51,7 +51,7 @@ class OrderService(object):
 			if item["discount_type"] == 'FIXED_PRICE':
 				profit_list.append(Decimal(sell_price.sell_price - purchase_price.purchase_price - Decimal(item['discount_amount'])) * Decimal(item['qty']))
 			else:
-				discount_amount = Decimal(domain['discount_amount']) / 100.0 * sell_price.sell_price
+				discount_amount = Decimal(item['discount_amount']) / 100.0 * sell_price.sell_price
 				profit_list.append(Decimal(sell_price.sell_price - purchase_price.purchase_price - discount_amount) * Decimal(item['qty']))
 				pass
 			pass
