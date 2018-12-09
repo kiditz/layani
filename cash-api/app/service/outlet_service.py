@@ -24,11 +24,11 @@ class OutletService(object):
 		if user_count > 0:
 			raise ValidationException(ErrorCode.USER_HAS_EXISTS)
 		# Validate unique by phone_number
-		outlet_count = Outlet.query.filter_by(phone_number = phone_number).count()
+		outlet_count = Outlet.query.filter_by(phone_number=phone_number).count()
 		if outlet_count > 0:
 			raise ValidationException(ErrorCode.PHONE_NUMBER_HAS_EXISTS)
 
-		outlet_count = Outlet.query.filter_by(email = phone_number).count()
+		outlet_count = Outlet.query.filter_by(email=email).count()
 		if outlet_count > 0:
 			raise ValidationException(ErrorCode.EMAIL_HAS_EXISTS)
 
@@ -39,8 +39,7 @@ class OutletService(object):
 		user.fullname = domain['password']
 		
 		user.phone_number = phone_number
-		
-
+		user.outlet_name = domain['store']['name']
 		user.hash_password = bcrypt.generate_password_hash(password, 10).replace(b'$2b$', b'$2a$')
 		user.save()
 		# Save into authority admin
@@ -53,7 +52,7 @@ class OutletService(object):
 		outlet_dict['password'] = password
 		outlet_dict['username'] = domain["username"]
 		cashbox = Cashbox()
-		cashbox.name = 'Kas'
+		cashbox.name = 'Cash'
 		cashbox.total_amount = 0.0
 		cashbox.outlet_id = outlet.id
 		cashbox.save()
