@@ -62,7 +62,7 @@ class AccountReceiveableService(object):
 	
 	@Number(['outlet_id'])
 	def get_account_receiveable_age(self, domain):
-		in_1_30 = AccountReceiveable.query.with_entities(func.coalesce(func.sum(AccountReceiveable.total_credit), 1).label('total_credit'))\
+		in_1_30 = AccountReceiveable.query.with_entities(func.coalesce(func.sum(AccountReceiveable.total_credit), 0).label('total_credit'))\
 			.join(Order, Order.id == AccountReceiveable.order_id)\
 			.filter(and_(Order.status == 'P', Order.payment_method == PaymentMethod.CREDIT))\
 			.filter(between(func.date_part('days', datetime.now() - AccountReceiveable.receiveable_date), -30, -0))\
@@ -90,7 +90,7 @@ class AccountReceiveableService(object):
 		in_0_30 = AccountReceiveable.query.with_entities(func.coalesce(func.sum(AccountReceiveable.total_credit), 0).label('total_credit'))\
 			.join(Order, Order.id == AccountReceiveable.order_id)\
 			.filter(and_(Order.status == 'P', Order.payment_method == PaymentMethod.CREDIT))\
-			.filter(between(func.date_part('days', datetime.now() - AccountReceiveable.receiveable_date), 0, 30))\
+			.filter(between(func.date_part('days', datetime.now() - AccountReceiveable.receiveable_date), 1, 30))\
 			.first()._asdict()
 		in_30_60 = AccountReceiveable.query.with_entities(func.coalesce(func.sum(AccountReceiveable.total_credit), 0).label('total_credit'))\
 			.join(Order, Order.id == AccountReceiveable.order_id)\
