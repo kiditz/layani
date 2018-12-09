@@ -82,7 +82,7 @@ class OutletService(object):
 		outlet = Outlet.query.with_entities(*entities).join(User, User.id == Outlet.user_id) \
 			.filter(User.username == domain['username']) \
 			.first()
-		outlet_dict = outlet.to_dict()
+		outlet_dict = outlet._asdict()
 		outlet_dict['username'] = domain["username"]
 		return {'payload': outlet_dict}
 	
