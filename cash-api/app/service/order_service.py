@@ -121,7 +121,8 @@ class OrderService(object):
 		# order.cashback = 0.0
 		# order.profit = 0
 		order.save()
-		order_cpy = order
+		order_cpy = Order(order)
+		order_cpy.id = None
 		order_cpy.total_amount = order.total_amount * -1
 		order_cpy.save()
 		cashbox_history = CashboxHistory()
