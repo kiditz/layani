@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.overflow.cash.Constant
 import com.overflow.cash.R
 import com.overflow.cash.fragment.dummy.DummyContent.DummyItem
 import com.overflow.cash.mvp.order.PreviewSalesContract
@@ -57,9 +58,12 @@ class PreviewSalesAdapter(private val imageService: ImageService, private val pr
         if(countDiscount > 0){
             //this.presenter.loadDiscount(productId, qty, holder, position)
             val discountAmount = item.getDouble("discountAmount")
-            val calculateDiscount = discountAmount / 100.0 * item.getDouble("subTotal")
-            val priceAfterDiscount = item.getDouble("subTotal") - calculateDiscount
-            holder.subTotal.text = context.rupiah(priceAfterDiscount)
+            val discountType = item.getString("discountType")
+            if(discountType == Constant.DiscountType.PERCENTAGE){
+                holder.sellPrice.text = "$sellPrice x $qty $unit - ${discountAmount.toInt()}%"
+            }else{
+                holder.sellPrice.text = "$sellPrice x $qty $unit - ${context.rupiah(discountAmount)}"
+            }
         }
         imageService.loadDocument(holder.imgProduct, documentId , item.getString("productName"))
     }

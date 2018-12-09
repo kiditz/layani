@@ -89,12 +89,15 @@ open class MessageButtonHandle : MessageButton() {
 }
 
 
-fun Context.rupiah(value:Double):String{
+fun Context.rupiah(value:Double, showPrefix:Boolean=true):String{
     val format = DecimalFormat.getCurrencyInstance(Locale("in", "ID")) as DecimalFormat
     format.isDecimalSeparatorAlwaysShown = false
     val symbols = DecimalFormatSymbols()
-    symbols.currencySymbol = "Rp. "
-    format.negativePrefix = "Rp. -"
+    if(showPrefix){
+        symbols.currencySymbol = "Rp. "
+        format.negativePrefix = "Rp. -"
+    }
+
     format.negativeSuffix = ""
     format.decimalFormatSymbols = symbols
     return format.format(value)

@@ -94,6 +94,8 @@ class PreviewSalesActivity : AppCompatActivity(), PreviewSalesContract.View {
                     dataItem["unit"] = it["unit"]
                     dataItem["product_name"] = it["productName"]
                     dataItem["use_stock"] = it["useStock"]
+                    dataItem["discount_amount"] = it["discountAmount"]
+                    dataItem["discount_type"] = it["discountType"]
                     dataItem
                 }.toList()
                 val bundle = Bundle()
@@ -157,7 +159,7 @@ class PreviewSalesActivity : AppCompatActivity(), PreviewSalesContract.View {
 //
 //        this.adapter.values[position] = item
 //        val amount = this.adapter.values.map { it.getDouble("subTotal") }.sum()
-//        this.supportActionBar?.title = this.rupiah(amount)
+
 //    }
 }
 

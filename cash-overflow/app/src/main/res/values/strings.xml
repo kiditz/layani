@@ -96,7 +96,7 @@
     <string name="product_name">Product Name</string>
     <string name="profit">Profit</string>
     <string name="purchase">Purchase Order</string>
-    <string name="purchase_price">Sell Price</string>
+    <string name="purchase_price">Init Price</string>
     <string name="quantity">Quantity</string>
     <string name="receipt">Receipt</string>
     <string name="refund_paid">Refund</string>
@@ -130,6 +130,7 @@
     <string name="unit">Unit</string>
     <string name="use_stock">Use Stock</string>
     <string name="username">Username</string>
+    <string name="view_discount">View Discount</string>
     <string name="waiting_for_magic">Currently waiting for magic</string>
     <string name="week">Weekly</string>
     <string name="weight">Weight</string>

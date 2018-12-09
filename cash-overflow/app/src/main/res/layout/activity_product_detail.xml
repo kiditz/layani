@@ -96,7 +96,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight=".5"
-                        android:text="@string/purchase_price"
+                        android:text="@string/init_price"
                         android:textColor="@color/colorPrimary" />
 
                     <TextView
@@ -135,17 +135,14 @@
                     android:padding="10dp">
 
                     <TextView
+                        android:id="@+id/view_discount"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight=".5"
-                        android:text="@string/discount"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/view_discount"
                         android:textColor="@color/colorPrimary" />
 
-                    <TextView
-                        android:id="@+id/tvDiscount"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight=".5" />
                 </LinearLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>

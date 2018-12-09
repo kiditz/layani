@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.overflow.cash.Constant
 import com.overflow.cash.R
 import com.overflow.cash.fragment.dummy.DummyContent.DummyItem
 import com.overflow.cash.model.OrderItem
@@ -59,7 +60,7 @@ class SalesListAdapter(private val imageService: ImageService) : RecyclerView.Ad
         if(orderItem != null){
             holder.qty.text = orderItem.qty.toString() +" " + unit
             if(orderItem.discountAmount > 0){
-                if(orderItem.discountType == "PERCENTAGE"){
+                if(orderItem.discountType == Constant.DiscountType.PERCENTAGE){
                     holder.discount.text = orderItem.discountAmount.toString() + "%"
                 }else{
                     holder.discount.text = context.rupiah(orderItem.discountAmount)

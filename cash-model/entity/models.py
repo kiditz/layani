@@ -219,7 +219,7 @@ class Order(db.Model, Entity):
 	customer_id = db.Column(db.ForeignKey(u'co_customer.id'))
 	cash_box_id = db.Column(db.ForeignKey(u'co_cash_box.id'), nullable=False)
 	outlet_id = db.Column(db.ForeignKey(u'co_outlet.id'), nullable=False)
-	order_code = db.Column(db.Text, unique=True, index=True)
+	order_code = db.Column(db.Text, index=True)
 	total_amount = db.Column(db.Numeric, nullable=False, server_default='0', default=0)		
 	total_payment = db.Column(db.Numeric, nullable=False, server_default='0', default=0)		
 	payment_method = db.Column(db.String(20), nullable=False, server_default='-', default='-')

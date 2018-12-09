@@ -139,7 +139,8 @@ class SalesFragment : Fragment(), ProductListContract.View, OrderContract.View {
                 orderPresenter.deleteItem(data.getLong("product_id"))
             }else{
                 qty = qtyParse - 1
-                addItem(null, qty, true, holder)
+                addItem(null, qty, false, holder)
+                orderPresenter.loadDiscount(data.getLong("product_id"), qty + 1, holder)
             }
 
         }
@@ -240,7 +241,7 @@ class SalesFragment : Fragment(), ProductListContract.View, OrderContract.View {
     override fun onDiscountLoaded(data: Data, holder: SalesListAdapter.ViewHolder) {
         Timber.i("Loaded : %s", data)
         val qty = holder.qty.text.replace("[^0-9]".toRegex(), "").trim().toLong()
-        if(data.getString("discount_type") == "PERCENTAGE"){
+        if(data.getString("discount_type") == Constant.DiscountType.PERCENTAGE){
             holder.discount.text = "${data.getDouble("discount")}%"
         }else{
             holder.discount.text = activity!!.rupiah(data.getDouble("discount"))
@@ -268,10 +269,9 @@ class SalesFragment : Fragment(), ProductListContract.View, OrderContract.View {
                 }
             }
         }
-        val subTotal = data.getDouble("sell_price") * (qty + 1)
+        var subTotal = data.getDouble("sell_price") * (qty + 1)
         Timber.i("Qty: %s", qty)
         input["qty"] = qty
-        input["sub_total"] = subTotal
         input["count_discount"] = data["count_discount"]
         input["sell_price"] = data.getDouble("sell_price")
         input["unit"] = data["unit"]
@@ -279,12 +279,21 @@ class SalesFragment : Fragment(), ProductListContract.View, OrderContract.View {
         input["use_stock"] = data.getBoolean("use_stock")
         input["document_id"] = data.getLong("document_id")
         if(discount != null){
-            input["discount_amount"] = discount.getDouble("discount")
-            input["discount_type"] = discount.getString("discount_type")
+            val discountAmount = discount.getDouble("discount")
+            input["discount_amount"] = discountAmount
+            val discountType = discount.getString("discount_type")
+            input["discount_type"] = discountType
+            subTotal -= if(discountType == Constant.DiscountType.PERCENTAGE){
+                val calculateDiscount = discountAmount / 100.0 * subTotal
+                calculateDiscount
+            }else{
+                discountAmount
+            }
         }else{
             input["discount_amount"] = 0.0
             input["discount_type"] = Constant.DiscountType.PERCENTAGE
         }
+        input["sub_total"] = subTotal
         orderPresenter.addOrderItem(input, updateQty, holder)
     }
 }
