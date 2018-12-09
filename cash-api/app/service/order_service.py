@@ -19,9 +19,9 @@ class OrderService(object):
 		super(OrderService, self).__init__()
 	
 	@Key(['outlet_id', 'customer_id', 'cash_box_id', 'total_amount', 'total_payment', 'items.use_stock'])
+	@Number(['user_id'])
 	def add_order(self, domain):
 		order = Order(domain)
-		order.outlet_id = domain['outlet_id']
 		order.order_code = '-'
 		order.save()
 		order.order_code = str(order.id).zfill(10)
@@ -208,6 +208,7 @@ class OrderService(object):
 		item_q = OrderItem.query.with_entities(*entities)\
 			.join(Product, Product.id == OrderItem.product_id)\
 			.filter(Product.outlet_id == domain['outlet_id'])\
+			.filter(Order.status != OrderStatus.VOID)\
 			.group_by(Product.id).order_by("quantity desc")\
 			.paginate(page, size, error_out=False)
 		product_list = list(map(lambda x: x._asdict(), item_q.items))

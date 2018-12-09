@@ -11,16 +11,20 @@ import android.view.ViewGroup
 import com.jakewharton.rxbinding2.view.RxView
 import com.overflow.cash.MenuActivity
 import com.overflow.cash.R
+import com.overflow.cash.net.RxUtils
+import com.overflow.cash.realm.OrderRealm
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_setting.*
 import javax.inject.Inject
 
-class SettingFragment:Fragment() {
+class SettingFragment:BaseFragment() {
     lateinit var menuActivity:MenuActivity
     @Inject
     lateinit var accountManager: AccountManager
     @Inject
     lateinit var preferences: SharedPreferences
+    @Inject
+    lateinit var orderRealm: OrderRealm
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         this.menuActivity = activity as MenuActivity
@@ -37,13 +41,17 @@ class SettingFragment:Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         RxView.clicks(lv_sign_out).subscribe {
-            if (accountManager.getAccountsByType(getString(R.string.account_type)).isEmpty()) {
-                return@subscribe
+            activity!!.runOnUiThread{
+                if (accountManager.getAccountsByType(getString(R.string.account_type)).isEmpty()) {
+                    return@runOnUiThread
+                }
+                val account = accountManager.getAccountsByType(getString(R.string.account_type))[0]
+                orderRealm.removeAllItems()
+                accountManager.removeAccount(account, null, null)
+                preferences.edit().remove("outlet").apply()
+                menuActivity.onNotLogin()
             }
-            val account = accountManager.getAccountsByType(getString(R.string.account_type))[0]
-            accountManager.removeAccount(account, null, null)
-            preferences.edit().remove("outlet").apply()
-            menuActivity.onNotLogin()
+
         }
     }
 }

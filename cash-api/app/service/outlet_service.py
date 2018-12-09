@@ -77,6 +77,7 @@ class OutletService(object):
 			Outlet.address,
 			Outlet.email,
 			Outlet.id,
+			User.id.label('user_id'),
 			User.outlet_name,
 			User.username
 		)

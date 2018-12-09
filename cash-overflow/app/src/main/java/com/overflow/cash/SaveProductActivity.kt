@@ -22,7 +22,6 @@ import android.widget.ArrayAdapter
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.overflow.cash.Constant.Companion.REQUEST_PERMISSION_CODE
 import com.overflow.cash.Constant.TranslationsKey.Companion.CATEGORY_CREATED_SUCCESSFULLY
-import com.overflow.cash.Constant.TranslationsKey.Companion.INIT_PRICE_MUST_GREATER_THAN_ZERO
 import com.overflow.cash.Constant.TranslationsKey.Companion.REQUIRED_VALUE_CATEGORY_NAME
 import com.overflow.cash.Constant.TranslationsKey.Companion.REQUIRED_VALUE_PRODUCT_CODE
 import com.overflow.cash.Constant.TranslationsKey.Companion.REQUIRED_VALUE_PRODUCT_INIT_PRICE
@@ -34,6 +33,7 @@ import com.overflow.cash.Constant.TranslationsKey.Companion.UNIT_MUST_LESS_THAN_
 import com.overflow.cash.mvp.product.AddProductContract
 import com.overflow.cash.mvp.product.AddProductPresenter
 import com.overflow.cash.net.NetworkExHandler
+import com.overflow.cash.net.RxUtils
 import com.overflow.cash.utils.*
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
@@ -84,40 +84,40 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
 
         this.outlet = Data(preferences.getString("outlet", "{}"))
 
-        this.btnAddCategory.setOnClickListener {
+        this.btn_add_category.setOnClickListener {
             addCategoryDialog()
         }
 
         if (intent.hasExtra("category_id")) {
             this.categoryId = intent.getLongExtra("category_id", -1L)
-            this.edCategory?.setText(intent.getStringExtra("category_name"))
-            this.edProductName?.requestFocus()
+            this.ed_category?.setText(intent.getStringExtra("category_name"))
+            this.ed_product_name?.requestFocus()
         }
 
         if (intent.hasExtra("product_id")) {
             supportActionBar?.setTitle(R.string.edit_product)
             this.productId = intent.getLongExtra("product_id", -1L)
-            this.edProductCode.setText(intent.getStringExtra("product_code"))
-            this.edProductName.setText(intent.getStringExtra("product_name"))
-            this.edSellPrice.setText(intent.getDoubleExtra("sell_price", 0.0).toInt().toString())
-            this.edInitPrice.setText(intent.getDoubleExtra("purchase_price", 0.0).toInt().toString())
-            this.edQuantity.setText(intent.getLongExtra("stock", 1L).toInt().toString())
-            this.edUnit.setText(intent.getStringExtra("unit"))
+            this.ed_product_code.setText(intent.getStringExtra("product_code"))
+            this.ed_product_name.setText(intent.getStringExtra("product_name"))
+            this.ed_sell_price.setText(intent.getDoubleExtra("sell_price", 0.0).toInt().toString())
+            this.ed_init_price.setText(intent.getDoubleExtra("purchase_price", 0.0).toInt().toString())
+            this.ed_quantity.setText(intent.getLongExtra("stock", 1L).toInt().toString())
+            this.ed_unit.setText(intent.getStringExtra("unit"))
             if (intent.hasExtra("image")) {
                 val image = intent.getByteArrayExtra("image")
                 val bitmap = BitmapFactory.decodeByteArray(image, 0, image.size)
                 product_image?.setImageBitmap(bitmap)
             }
-            this.cbUseStock.isChecked = intent.getBooleanExtra("use_stock", true)
-            quantityWrapper.isEnabled = this.cbUseStock.isChecked
-            unitWrapper.isEnabled = this.cbUseStock.isChecked
+            this.cb_use_stock.isChecked = intent.getBooleanExtra("use_stock", true)
+            quantity_wrapper.isEnabled = this.cb_use_stock.isChecked
+            unit_wrapper.isEnabled = this.cb_use_stock.isChecked
         } else {
             supportActionBar?.setTitle(R.string.add_product)
         }
 
         this.categoryAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, mutableListOf<String>())
 
-        edCategory.setAdapter(this.categoryAdapter)
+        ed_category.setAdapter(this.categoryAdapter)
         searchCategory()
         action()
         validate()
@@ -125,18 +125,18 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
     }
 
     private fun action() {
-        edCategory.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+        ed_category.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             val categoryName = categoryAdapter.getItem(position)
             if (getSelectedItem(categoryName) != null) {
                 categoryId = getSelectedItem(categoryName)?.getLong("category_id")!!
             }
         }
-        this.btnSubmit.isEnabled = false
-        this.btnSubmit.setOnClickListener {
+        this.btn_submit.isEnabled = false
+        this.btn_submit.setOnClickListener {
             this.handleAddProductAction()
         }
 
-        this.btnScan.setOnClickListener {
+        this.btn_scan.setOnClickListener {
             this.handleScanAction()
         }
     }
@@ -149,29 +149,29 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
     private fun handleAddProductAction() {
         runOnUiThread {
             val data = Data()
-            data["name"] = edProductName.text.toString()
-            data["code"] = edProductCode.text.toString()
-            if (cbUseStock.isChecked) {
+            data["name"] = ed_product_name.text.toString()
+            data["code"] = ed_product_code.text.toString()
+            if (cb_use_stock.isChecked) {
                 //Validate use stock
-                if(TextUtils.isEmpty(edQuantity.text)){
-                    quantityWrapper.error = translations.get(Constant.TranslationsKey.REQUIRED_VALUE_PRODUCT_QTY)
-                    quantityWrapper.isErrorEnabled = true
+                if(TextUtils.isEmpty(ed_quantity.text)){
+                    quantity_wrapper.error = translations.get(Constant.TranslationsKey.REQUIRED_VALUE_PRODUCT_QTY)
+                    quantity_wrapper.isErrorEnabled = true
                     return@runOnUiThread
                 }
-                if(TextUtils.isEmpty(edUnit.text)){
-                    quantityWrapper.error = translations.get(Constant.TranslationsKey.REQUIRED_VALUE_PRODUCT_UNIT)
-                    quantityWrapper.isErrorEnabled = true
+                if(TextUtils.isEmpty(ed_unit.text)){
+                    quantity_wrapper.error = translations.get(Constant.TranslationsKey.REQUIRED_VALUE_PRODUCT_UNIT)
+                    quantity_wrapper.isErrorEnabled = true
                     return@runOnUiThread
                 }
                 data["use_stock"] = true
-                data["qty"] = edQuantity.text.toString().toLong()
+                data["qty"] = ed_quantity.text.toString().toLong()
                 if(data.getLong("qty") <= 0){
-                    quantityWrapper.error = translations.get(Constant.TranslationsKey.QTY_MUST_BE_GREATER_THAN_ZERO)
-                    quantityWrapper.isErrorEnabled = true
+                    quantity_wrapper.error = translations.get(Constant.TranslationsKey.QTY_MUST_BE_GREATER_THAN_ZERO)
+                    quantity_wrapper.isErrorEnabled = true
                     return@runOnUiThread
                 }
                 data["product_type"] = "PRODUCT"
-                data["unit"] = edUnit.text.toString()
+                data["unit"] = ed_unit.text.toString()
             } else {
                 data["use_stock"] = false
                 data["product_type"] = "SERVICE"
@@ -179,8 +179,8 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
 
 
 
-            data["sell_price"] = edSellPrice.text.toString().toDouble()
-            data["purchase_price"] = edInitPrice.text.toString().toDouble()
+            data["sell_price"] = ed_sell_price.text.toString().toDouble()
+            data["purchase_price"] = ed_init_price.text.toString().toDouble()
             categoryId?.let {
                 if (it != -1L) {
                     data["category_id"] = it
@@ -207,13 +207,13 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
         if (!shouldRequestPermissions(Constant.REQUEST_PERMISSION_CODE)) {
             return
         }
-        this.btnCamera.setOnClickListener {
+        this.btn_camera.setOnClickListener {
             EasyImage.openCamera(this, Constant.REQUEST_CODE_IMAGE)
         }
-        this.btnImage.setOnClickListener {
+        this.btn_image.setOnClickListener {
             EasyImage.openDocuments(this, Constant.REQUEST_CODE_IMAGE)
         }
-        this.btnClose.setOnClickListener {
+        this.btn_close.setOnClickListener {
 
         }
     }
@@ -226,7 +226,7 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
         builder.setView(this.categoryView)
         this.dialog = builder.create()
 
-        this.categoryView!!.btnSubmit.setOnClickListener {
+        this.categoryView!!.btn_submit.setOnClickListener {
             val category = Data()
             category["outlet_id"] = outlet.getLong("id")
             category["name"] = this.categoryView!!.edName.text.toString()
@@ -240,18 +240,20 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
     private fun validateAddCategory(view: View) {
         val resIdPrimary = R.style.AppTheme_TextInputLayout_ErrorPrimary
         this.validateNotEmpty(view.edName, view.nameWrapper, translations.get(REQUIRED_VALUE_CATEGORY_NAME), resIdPrimary).subscribe {
-            view.btnSubmit.isEnabled = it
+            view.btn_submit.isEnabled = it
         }
     }
 
     private fun searchCategory() {
-        RxTextView.textChanges(edCategory).map { text -> text }.subscribe { input ->
-            val categoryData = Data()
-            categoryData["name"] = input
-            categoryData["page"] = 1
-            categoryData["size"] = preferences.getInt("MAX_PAGE", 10)
-            categoryData["outlet_id"] = outlet["id"]
-            presenter.loadCategory(categoryData)
+        RxTextView.textChanges(ed_category).compose(RxUtils.applyObservableAsync()).map { text -> text }.subscribe { input ->
+           runOnUiThread {
+               val categoryData = Data()
+               categoryData["name"] = input
+               categoryData["page"] = 1
+               categoryData["size"] = preferences.getInt("MAX_PAGE", 10)
+               categoryData["outlet_id"] = outlet["id"]
+               presenter.loadCategory(categoryData)
+           }
         }
     }
 
@@ -293,7 +295,7 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
 
     override fun onProductCreated(product: Data) {
         this.progress_bar.visibility = View.GONE
-        this.btnSubmit.isEnabled = true
+        this.btn_submit.isEnabled = true
         val bundle = Bundle()
         bundle.putString(Constant.SUCCESS_MESSAGE, translations.get(Constant.TranslationsKey.PRODUCT_CREATED_SUCCESSFULLY).replace("{0}", product.getString("name")))
         bundle.putInt(Constant.GOTO, R.id.nav_product)
@@ -314,53 +316,53 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
     private fun dismissCategory() {
         if (dialog != null && dialog?.isShowing!!) {
             this.categoryView?.progress_bar?.visibility = View.GONE
-            this.categoryView?.btnSubmit?.isEnabled = true
+            this.categoryView?.btn_submit?.isEnabled = true
             this.dialog?.dismiss()
         }
     }
 
     private fun dismissProduct() {
         this.progress_bar?.visibility = View.GONE
-        this.btnSubmit?.isEnabled = true
+        this.btn_submit?.isEnabled = true
     }
 
 
     private fun validate() {
         val resIdPrimary = R.style.AppTheme_TextInputLayout_ErrorPrimary
-        val productNameObserve = this.validateNotEmpty(edProductName, productNameWrapper, translations.get(REQUIRED_VALUE_PRODUCT_NAME), resIdPrimary, 0)
-        val productCodeObserve = this.validateNotEmpty(edProductCode, productCodeWrapper, translations.get(REQUIRED_VALUE_PRODUCT_CODE), resIdPrimary, 0)
+        val productNameObserve = this.validateNotEmpty(ed_product_name, product_name_wrapper, translations.get(REQUIRED_VALUE_PRODUCT_NAME), resIdPrimary, 0)
+        val productCodeObserve = this.validateNotEmpty(ed_product_code, product_code_wrapper, translations.get(REQUIRED_VALUE_PRODUCT_CODE), resIdPrimary, 0)
         var unitLengthObserve = Observable.just(true)
         var unitObserve = Observable.just(true)
         var qtyObserve = Observable.just(true)
 
-        val sellPriceObserve = this.validateGreaterThan(edSellPrice, sellPriceWrapper, 0, translations.get(SELL_PRICE_MUST_GREATER_THAN_ZERO), resIdPrimary, 0)
-        val initPriceObserve = this.validateNotEmpty(edInitPrice, initPriceWrapper, translations.get(REQUIRED_VALUE_PRODUCT_INIT_PRICE), resIdPrimary, 0)
+        val sellPriceObserve = this.validateGreaterThan(ed_sell_price, sell_price_wrapper, 0, translations.get(SELL_PRICE_MUST_GREATER_THAN_ZERO), resIdPrimary, 0)
+        val initPriceObserve = this.validateNotEmpty(ed_init_price, init_price_wrapper, translations.get(REQUIRED_VALUE_PRODUCT_INIT_PRICE), resIdPrimary, 0)
 
         Observable.combineLatest(unitObserve, unitLengthObserve, productNameObserve, productCodeObserve, qtyObserve, sellPriceObserve, initPriceObserve,
                 Function7 { unit: Boolean, unitLength: Boolean, productName: Boolean, productCode: Boolean, qty: Boolean, sellPrice: Boolean, initPrice: Boolean ->
                     unit && unitLength && productName && productCode && qty && sellPrice && initPrice
-                }).subscribe { valid: Boolean -> btnSubmit.isEnabled = valid }
+                }).subscribe { valid: Boolean -> btn_submit.isEnabled = valid }
 
-        cbUseStock.setOnCheckedChangeListener { _, isChecked ->
-            quantityWrapper.isEnabled = isChecked
-            unitWrapper.isEnabled = isChecked
-            quantityWrapper.isErrorEnabled = false
-            unitWrapper.isErrorEnabled = false
+        cb_use_stock.setOnCheckedChangeListener { _, isChecked ->
+            quantity_wrapper.isEnabled = isChecked
+            unit_wrapper.isEnabled = isChecked
+            quantity_wrapper.isErrorEnabled = false
+            unit_wrapper.isErrorEnabled = false
             unitLengthObserve = if (isChecked) {
-                this.validateLengthLessThan(edUnit, unitWrapper, 4, translations.get(UNIT_MUST_LESS_THAN_THERR), resIdPrimary, 0)
+                this.validateLengthLessThan(ed_unit, unit_wrapper, 4, translations.get(UNIT_MUST_LESS_THAN_THERR), resIdPrimary, 0)
             } else {
                 Observable.just(true)
             }
             unitObserve = if (isChecked) {
-                this.validateNotEmpty(edUnit, unitWrapper, translations.get(REQUIRED_VALUE_PRODUCT_UNIT), resIdPrimary, 0)
+                this.validateNotEmpty(ed_unit, unit_wrapper, translations.get(REQUIRED_VALUE_PRODUCT_UNIT), resIdPrimary, 0)
             } else {
-                edUnit.setText(Constant.TEXT_EMPTY)
+                ed_unit.setText(Constant.TEXT_EMPTY)
                 Observable.just(true)
             }
             qtyObserve = if (isChecked) {
-                this.validateGreaterThan(edQuantity, quantityWrapper, 0, translations.get(REQUIRED_VALUE_PRODUCT_QTY), resIdPrimary, 1)
+                this.validateGreaterThan(ed_quantity, quantity_wrapper, 0, translations.get(REQUIRED_VALUE_PRODUCT_QTY), resIdPrimary, 1)
             } else {
-                edQuantity.setText(Constant.TEXT_EMPTY)
+                ed_quantity.setText(Constant.TEXT_EMPTY)
                 Observable.just(true)
             }
 
@@ -368,7 +370,7 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
             Observable.combineLatest(unitObserve, unitLengthObserve, productNameObserve, productCodeObserve, qtyObserve, sellPriceObserve, initPriceObserve,
                     Function7 { unit: Boolean, unitLength: Boolean, productName: Boolean, productCode: Boolean, qty: Boolean, sellPrice: Boolean, initPrice: Boolean ->
                         unit && unitLength && productName && productCode && qty && sellPrice && initPrice
-                    }).subscribe { valid: Boolean -> btnSubmit.isEnabled = valid }
+                    }).subscribe { valid: Boolean -> btn_submit.isEnabled = valid }
         }
 
 
@@ -398,7 +400,7 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
                     showImage(resultUri)
                 }
             } else if (requestCode == Constant.REQUEST_CODE_SCANNER) {
-                edProductCode.setText(data?.getStringExtra("barcode"))
+                ed_product_code.setText(data?.getStringExtra("barcode"))
             }
         }
     }
@@ -432,7 +434,7 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
 
     override fun onCategorySelected(category: Data) {
         this.categoryId = category.getLong("id")
-        this.edCategory.setText(category.getString("name"))
+        this.ed_category.setText(category.getString("name"))
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {

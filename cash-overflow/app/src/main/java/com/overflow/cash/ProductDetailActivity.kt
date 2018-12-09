@@ -118,7 +118,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         builder.setView(this.stockView)
         this.stockDialog = builder.create()
 
-        this.stockView?.btnSubmit?.setOnClickListener {
+        this.stockView?.btn_submit?.setOnClickListener {
             handleAddStock()
         }
         stockDialog?.show()
@@ -136,13 +136,13 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
                 R.id.stockOut -> {
                     val params = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT)
                     params.weight = 1f
-                    this.stockView?.quantityWrapper?.layoutParams = params
+                    this.stockView?.quantity_wrapper?.layoutParams = params
                     View.GONE
                 }
                 else -> {
                     val params = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT)
                     params.weight = .5f
-                    this.stockView?.quantityWrapper?.layoutParams = params
+                    this.stockView?.quantity_wrapper?.layoutParams = params
                     this.stockView?.purchasePriceWrapper?.layoutParams = params
                     View.VISIBLE
                 }
@@ -190,21 +190,21 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private fun validateStock() {
         val validatePurchasePrice = this.validateGreaterThan(this.stockView?.edPurchasePrice!!, this.stockView?.purchasePriceWrapper!!, 0, translations.get(Constant.TranslationsKey.INIT_PRICE_MUST_GREATER_THAN_ZERO), skipCount = 0L)
-        val validateQuantity = this.validateGreaterThan(this.stockView?.edQuantity!!, this.stockView?.quantityWrapper!!, 0, translations.get(Constant.TranslationsKey.STOCK_PRICE_MUST_GREATER_THAN_ZERO), skipCount = 0L)
+        val validateQuantity = this.validateGreaterThan(this.stockView?.ed_quantity!!, this.stockView?.quantity_wrapper!!, 0, translations.get(Constant.TranslationsKey.STOCK_PRICE_MUST_GREATER_THAN_ZERO), skipCount = 0L)
         Observable.combineLatest(validatePurchasePrice, validateQuantity, BiFunction { initPrice: Boolean, qty: Boolean -> initPrice && qty }).subscribe({
-            this.stockView?.btnSubmit?.isEnabled = it
+            this.stockView?.btn_submit?.isEnabled = it
         }, {})
     }
 
     private fun handleAddStock() {
         this.stockView?.progress_bar?.visibility = View.VISIBLE
-        this.stockView?.btnSubmit?.isEnabled = false
+        this.stockView?.btn_submit?.isEnabled = false
         val data = Data()
         data["product_id"] = intent.extras.getLong("product_id")
         if (stockMultiplier > 0) {
             data["purchase_price"] = this.stockView?.edPurchasePrice?.text.toString().toDouble()
         }
-        data["quantity"] = this.stockView?.edQuantity?.text.toString().toLong() * stockMultiplier
+        data["quantity"] = this.stockView?.ed_quantity?.text.toString().toLong() * stockMultiplier
         data["start_date"] = this.stockView?.edDateStockIn?.text.toString().trim()
         data["description"] = this.stockView?.edDescription?.text.toString()
         this.presenter.addStock(data)
@@ -227,7 +227,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private fun dismiss() {
         this.stockView?.progress_bar?.visibility = View.GONE
-        this.stockView?.btnSubmit?.isEnabled = true
+        this.stockView?.btn_submit?.isEnabled = true
         this.discountView?.progressBarDiscount?.visibility = View.GONE
         this.discountView?.btnSubmitDiscount?.isEnabled = true
         this.stockDialog?.dismiss()

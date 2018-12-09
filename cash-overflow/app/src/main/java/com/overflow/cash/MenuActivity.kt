@@ -66,8 +66,8 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val accountManager = AccountManager.get(this)
         val accountType = accountManager.getAccountsByType(getString(R.string.account_type))
         val outlet = Data(preferences.getString("outlet", "{}"))
-        this.navHeaderView.tvOutletName.text = outlet.getString("name")
-        this.navHeaderView.tvOutletEmail.text = outlet.getString("email")
+        this.navHeaderView.tv_outlet_name.text = outlet.getString("outlet_name")
+        this.navHeaderView.tv_outlet_email.text = outlet.getString("name")
         if (accountType == null || accountType.isEmpty() && outlet.isEmpty()) {
             onNotLogin()
             return

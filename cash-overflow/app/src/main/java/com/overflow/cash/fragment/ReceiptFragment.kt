@@ -67,7 +67,7 @@ class ReceiptFragment:BaseFragment(){
         val stream = activity?.assets?.open("receipt/index.html")
         this.source = StreamUtils.copyStreamToString(stream)
         val outlet = Data(preferences.getString("outlet", "{}"))
-        if(order.containsKey("customer_name")){
+        if(order.containsNotNull("customer_name")){
             val customerName = addCustomInfo("Pelanggan", order.getString("customer_name"))
             source = source.replace("{{customer}}", customerName)
         }else{

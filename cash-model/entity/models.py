@@ -228,7 +228,7 @@ class Order(db.Model, Entity):
 	profit = db.Column(db.Numeric, nullable=False, server_default='0', default=0)	
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
-	
+	user_id = db.Column(db.ForeignKey(u'co_user.id'), index=True)
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)		
 
