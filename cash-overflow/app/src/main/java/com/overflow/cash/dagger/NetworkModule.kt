@@ -74,7 +74,7 @@ class NetworkModule {
         client.addInterceptor(TokenInterceptor(context, accountManager, accountService))
         //client.authenticator(TokenAuthenticator(context, accountManager))
         val interceptor = HttpLoggingInterceptor()
-        interceptor.level = HttpLoggingInterceptor.Level.BODY
+        interceptor.level = HttpLoggingInterceptor.Level.BASIC
         client.addInterceptor(interceptor)
         client.connectTimeout(20, TimeUnit.SECONDS)
                 .readTimeout(60, TimeUnit.SECONDS)

@@ -49,9 +49,8 @@ class PreviewSalesAdapter(private val imageService: ImageService, private val pr
         val qty = item.getLong("qty")
         val unit = item.getString("unit")
         val subTotal = context.rupiah(item.getDouble("subTotal"))
-        val productId = item.getLong("productId")
         holder.productName.text = item.getString("productName")
-        holder.sellPrice.text = "$sellPrice x $qty $unit"
+
         holder.subTotal.text = subTotal
         val documentId = item.getLong("documentId")
         val countDiscount = item.getLong("countDiscount")
@@ -59,10 +58,14 @@ class PreviewSalesAdapter(private val imageService: ImageService, private val pr
             //this.presenter.loadDiscount(productId, qty, holder, position)
             val discountAmount = item.getDouble("discountAmount")
             val discountType = item.getString("discountType")
-            if(discountType == Constant.DiscountType.PERCENTAGE){
-                holder.sellPrice.text = "$sellPrice x $qty $unit - ${discountAmount.toInt()}%"
+            if(discountAmount > 0.0){
+                if(discountType == Constant.DiscountType.PERCENTAGE){
+                    holder.sellPrice.text = "$sellPrice x $qty $unit - ${discountAmount.toInt()}%"
+                }else{
+                    holder.sellPrice.text = "$sellPrice x $qty $unit - ${context.rupiah(discountAmount)}"
+                }
             }else{
-                holder.sellPrice.text = "$sellPrice x $qty $unit - ${context.rupiah(discountAmount)}"
+                holder.sellPrice.text = "$sellPrice x $qty $unit"
             }
         }
         imageService.loadDocument(holder.imgProduct, documentId , item.getString("productName"))

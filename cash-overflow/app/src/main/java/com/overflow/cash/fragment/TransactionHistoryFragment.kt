@@ -67,7 +67,7 @@ class TransactionHistoryFragment : BaseFragment(), TransactionHistoryContract.Vi
                 get() = presenter.getSize()
 
             override fun loadMoreItems() {
-                currentPage += 1
+                currentPage = currentPage + 1
                 presenter.loadOrder(currentPage, Constant.TEXT_EMPTY)
             }
         })

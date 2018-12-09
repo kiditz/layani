@@ -134,7 +134,7 @@ class PaymentAccountReceiveableActivity:AppCompatActivity(), AccountReceiveableP
                 val data = Data()
                 data["order_id"] = order.getLong("order_id")
                 data["cash_box_id"] = cashboxId
-                data["payment_amount"] = order.getDouble("total_credit")
+                data["payment_amount"] = parseRupiah(tv_result.text)
                 presenter.payAccount(data)
             }
         }

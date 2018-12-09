@@ -117,16 +117,16 @@ class AccountReceiveableService(object):
 
 		if order is None:
 			raise ValidationException(ErrorCode.ORDER_NOT_FOUND)
-		account_receiveable = AccountReceiveable.query.get(domain['order_id'])								
-		subtract_amount = payment_amount - account_receiveable.total_credit
-		if subtract_amount < 0:											
-			account_receiveable.total_credit = subtract_amount * Decimal(-1.0)
-			order.total_payment = order.total_payment + payment_amount
+		account_receiveable = AccountReceiveable.query.get(domain['order_id'])
+		# Jika total kreditnya lebih besar dari nilai pembayaran
+		if account_receiveable.total_credit > payment_amount:
+			account_receiveable.total_credit -= payment_amount
+			order.total_payment += payment_amount
 			account_receiveable.payment_amount = order.total_payment
 		else:	
 			account_receiveable.payment_amount = account_receiveable.total_credit			
 			account_receiveable.total_credit = 0
-			order.total_payment = order.total_payment + payment_amount
+			order.total_payment += account_receiveable.payment_amount
 			order.cashback = order.total_payment - order.total_amount			
 			order.status = OrderStatus.SUCCESS		
 

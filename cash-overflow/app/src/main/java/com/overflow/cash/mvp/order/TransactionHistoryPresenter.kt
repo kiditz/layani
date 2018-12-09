@@ -33,7 +33,7 @@ class TransactionHistoryPresenter(private val context:Context, private val prefe
 
     override fun loadOrder(page:Int, query:String) {
         val input = Data()
-        input["page"] = API.MIN_PAGE
+        input["page"] = page
         input["size"] = getSize()
         input["outlet_id"] = outlet.getLong("id")
         input["query"] = query
