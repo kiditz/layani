@@ -18,7 +18,7 @@ class OrderService(object):
 	def __init__(self):
 		super(OrderService, self).__init__()
 	
-	@Key(['outlet_id', 'customer_id', 'cash_box_id', 'total_amount', 'total_payment', 'items.use_stock'])
+	@Key(['outlet_id', 'customer_id', 'cash_box_id', 'total_amount', 'total_payment', 'items.use_stock', 'items.discount_amount', 'items.discount_type'])
 	@Number(['user_id'])
 	def add_order(self, domain):
 		order = Order(domain)
@@ -48,7 +48,12 @@ class OrderService(object):
 				and_(ProductPurchasePrice.product_id == item['product_id'], between(now, ProductPurchasePrice.start_at, ProductPurchasePrice.end_at))).first()
 			sell_price = ProductSellPrice.query.filter(
 				and_(ProductSellPrice.product_id == item['product_id'], ProductSellPrice.name == 'STANDARD')).first()
-			profit_list.append(Decimal(sell_price.sell_price - purchase_price.purchase_price) * Decimal(item['qty']))
+			if item["discount_type"] == 'FIXED_PRICE':
+				profit_list.append(Decimal(sell_price.sell_price - purchase_price.purchase_price - Decimal(item['discount_amount'])) * Decimal(item['qty']))
+			else:
+				discount_amount = Decimal(domain['discount_amount']) / 100.0 * sell_price.sell_price
+				profit_list.append(Decimal(sell_price.sell_price - purchase_price.purchase_price - discount_amount) * Decimal(item['qty']))
+				pass
 			pass
 		cashbox = Cashbox.query.get(domain['cash_box_id'])
 		account_receiveable = None
