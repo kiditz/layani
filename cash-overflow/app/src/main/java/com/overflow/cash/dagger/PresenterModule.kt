@@ -64,8 +64,8 @@ class PresenterModule {
         return ProductDetailPresenter(context, translations, disposable, productService, preferences)
     }
     @Provides
-    internal fun provideOrderPresenter(orderRealm:OrderRealm): OrderPresenter {
-        return OrderPresenter(orderRealm)
+    internal fun provideOrderPresenter(context: Context, orderRealm:OrderRealm, orderService: OrderService, translations: Translations): OrderPresenter {
+        return OrderPresenter(context, orderRealm, orderService, translations)
     }
 
     @Provides

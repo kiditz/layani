@@ -23,14 +23,14 @@ import com.overflow.cash.net.ImageService
 import com.overflow.cash.net.NetworkExHandler
 import com.overflow.cash.utils.AbstractRecyclerPagination
 import com.overflow.cash.utils.decoration.MarginItemDecoration
+import com.overflow.cash.utils.rupiah
 import com.overflow.cash.utils.snack
 import com.overflow.libs.core.Data
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.dialog_manage_order_item_qty.*
-import kotlinx.android.synthetic.main.dialog_manage_order_item_qty.view.*
 import kotlinx.android.synthetic.main.fragment_blank.*
 import kotlinx.android.synthetic.main.fragment_blank.view.*
 import kotlinx.android.synthetic.main.fragment_sales_recycler.*
+import kotlinx.android.synthetic.main.dialog_manage_order_item_qty.view.*
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -110,7 +110,6 @@ class SalesFragment : Fragment(), ProductListContract.View, OrderContract.View {
             }
         }
         adapter.onItemLongClick = {data, holder ->
-            Timber.i("On Long Item")
             handleEditOrder(data, holder)
         }
     }
@@ -120,10 +119,14 @@ class SalesFragment : Fragment(), ProductListContract.View, OrderContract.View {
         var qty = holder.qty.text.replace("[^0-9]".toRegex(), "").trim().toLong()
         this.addOrSubtractOrderItemView?.ed_qty?.setText(qty.toString())
         this.addOrSubtractOrderItemView?.btn_add_qty?.setOnClickListener {
-            this.ed_qty.setText("${qty++ }")
+            this.addOrSubtractOrderItemView?.ed_qty?.setText("${qty++ }")
+
         }
         this.addOrSubtractOrderItemView?.btn_sub_qty?.setOnClickListener {
-            this.ed_qty.setText("${qty-- }")
+            this.addOrSubtractOrderItemView?.ed_qty?.setText("${qty-- }")
+            if(this.addOrSubtractOrderItemView?.ed_qty?.text.toString().toLong() <= 0){
+                this.addOrSubtractOrderItemView?.ed_qty?.setText("0")
+            }
         }
         val builder = AlertDialog.Builder(context!!)
         builder.setView(this.addOrSubtractOrderItemView).setCancelable(false)
@@ -135,18 +138,8 @@ class SalesFragment : Fragment(), ProductListContract.View, OrderContract.View {
                 holder.qty.visibility = View.GONE
                 orderPresenter.deleteItem(data.getLong("product_id"))
             }else{
-                //Cause in addOrderItem qty always added += 1 so we need to make sure it same as input
                 qty = qtyParse - 1
-                val subTotal = data.getDouble("sell_price") * (qty + 1)
-                input["qty"] = qty
-                input["sub_total"] = subTotal
-                input["count_discount"] = data["count_discount"]
-                input["sell_price"] = data.getDouble("sell_price")
-                input["unit"] = data["unit"]
-                input["product_name"] = data.getString("product_name")
-                input["use_stock"] = data.getBoolean("use_stock")
-                input["document_id"] = data.getLong("document_id")
-                orderPresenter.addOrderItem(input, holder)
+                addItem(null, qty, true, holder)
             }
 
         }
@@ -159,31 +152,13 @@ class SalesFragment : Fragment(), ProductListContract.View, OrderContract.View {
             this.addOrSubtractOrderItemDialog?.show()
         }
 
-
     }
 
     private fun handleAddOrder(data: Data, viewHolder: SalesListAdapter.ViewHolder) {
-        val input = Data()
-        input["product_id"] = data["product_id"]
         val qty = viewHolder.qty.text.replace("[^0-9]".toRegex(), "").trim().toLong()
-        if(data.getBoolean("use_stock")){
-            if(data["stock"] != null){
-                if(data.getLong("stock") - (qty + 1)  < 0){
-                    activity?.snack(getString(R.string.not_enough_stock))?.show()
-                    return
-                }
-            }
-        }
-        val subTotal = data.getDouble("sell_price") * (qty + 1)
-        input["qty"] = qty
-        input["sub_total"] = subTotal
-        input["count_discount"] = data["count_discount"]
-        input["sell_price"] = data.getDouble("sell_price")
-        input["unit"] = data["unit"]
-        input["product_name"] = data.getString("product_name")
-        input["use_stock"] = data.getBoolean("use_stock")
-        input["document_id"] = data.getLong("document_id")
-        orderPresenter.addOrderItem(input, viewHolder)
+        addItem(null, qty, false, viewHolder)
+        orderPresenter.loadDiscount(data.getLong("product_id"), qty + 1, viewHolder)
+
     }
 
     private fun loadFirst(){
@@ -261,4 +236,55 @@ class SalesFragment : Fragment(), ProductListContract.View, OrderContract.View {
         holder.qty.visibility = View.VISIBLE
     }
 
+    @SuppressLint("SetTextI18n")
+    override fun onDiscountLoaded(data: Data, holder: SalesListAdapter.ViewHolder) {
+        Timber.i("Loaded : %s", data)
+        val qty = holder.qty.text.replace("[^0-9]".toRegex(), "").trim().toLong()
+        if(data.getString("discount_type") == "PERCENTAGE"){
+            holder.discount.text = "${data.getDouble("discount")}%"
+        }else{
+            holder.discount.text = activity!!.rupiah(data.getDouble("discount"))
+        }
+        addItem(data, qty, true, holder)
+    }
+
+    override fun onDiscountNotLoaded(res: String, holder: SalesListAdapter.ViewHolder) {
+        Timber.i("Not loaded : %s", res)
+        val qty = holder.qty.text.replace("[^0-9]".toRegex(), "").trim().toLong()
+        addItem(null, qty,true, holder)
+    }
+
+    private fun addItem(discount: Data?, qty:Long, updateQty:Boolean=false, holder: SalesListAdapter.ViewHolder){
+        val data = adapter.values[holder.adapterPosition]
+        val input = Data()
+        input["product_id"] = data["product_id"]
+        if(updateQty){
+            if(data.getBoolean("use_stock")){
+                if(data["stock"] != null){
+                    if(data.getLong("stock") - (qty + 1)  < 0){
+                        activity?.snack(getString(R.string.not_enough_stock))?.show()
+                        return
+                    }
+                }
+            }
+        }
+        val subTotal = data.getDouble("sell_price") * (qty + 1)
+        Timber.i("Qty: %s", qty)
+        input["qty"] = qty
+        input["sub_total"] = subTotal
+        input["count_discount"] = data["count_discount"]
+        input["sell_price"] = data.getDouble("sell_price")
+        input["unit"] = data["unit"]
+        input["product_name"] = data.getString("product_name")
+        input["use_stock"] = data.getBoolean("use_stock")
+        input["document_id"] = data.getLong("document_id")
+        if(discount != null){
+            input["discount_amount"] = discount.getDouble("discount")
+            input["discount_type"] = discount.getString("discount_type")
+        }else{
+            input["discount_amount"] = 0.0
+            input["discount_type"] = Constant.DiscountType.PERCENTAGE
+        }
+        orderPresenter.addOrderItem(input, updateQty, holder)
+    }
 }

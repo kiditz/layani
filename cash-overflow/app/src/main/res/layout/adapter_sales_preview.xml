@@ -18,7 +18,7 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/imgProduct"
+            android:id="@+id/img_product"
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_gravity="center"
@@ -41,7 +41,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tvProductName"
+                    android:id="@+id/tv_product_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".6"
@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/tvSellPrice"
+                    android:id="@+id/tv_sell_price"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".6"

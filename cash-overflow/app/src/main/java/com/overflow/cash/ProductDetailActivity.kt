@@ -40,6 +40,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private var stockView: View? = null
     private var discountView: View? = null
     private var stockMultiplier = 1L
+    private var discountType:String = Constant.DiscountType.PERCENTAGE
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
@@ -72,8 +73,8 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             product_image.setImageBitmap(bitmap)
         }
         tvProductCode.text = it.getString("product_code")
-        tvProductName.text = it.getString("product_name")
-        tvSellPrice.text = rupiah(it.getDouble("sell_price"))
+        tv_product_name.text = it.getString("product_name")
+        tv_sell_price.text = rupiah(it.getDouble("sell_price"))
         tvPurcPrice.text = rupiah(it.getDouble("purchase_price"))
         if (it.getBoolean("use_stock")) {
             tvRemainingStock?.text = "${it.getLong("stock").toInt()} ${getString(R.string.pcs)}"
@@ -112,7 +113,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private fun showAddStockDialog() {
         this.stockView = LayoutInflater.from(this).inflate(R.layout.dialog_add_sub_stock, null, false)
-
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.manage_stock)
         builder.setView(this.stockView)
@@ -169,22 +169,29 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private fun showAddDiscountDialog() {
         this.discountView = LayoutInflater.from(this).inflate(R.layout.dialog_add_discount, null, false)
+        this.discountView!!.rg_discount.setOnCheckedChangeListener { group, checkedId ->
+            if(checkedId == R.id.rd_percentage){
+                this.discountType = Constant.DiscountType.PERCENTAGE
+            }else{
+                this.discountType = Constant.DiscountType.FIXED_PRICE
+            }
+        }
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.discount)
         builder.setView(this.discountView)
 
         this.discountDialog = builder.create()
-        this.discountView?.btnSubmitDiscount?.setOnClickListener {
+        this.discountView?.btn_submit_discount?.setOnClickListener {
             handleAddDiscount()
         }
         this.discountDialog?.show()
     }
 
     private fun validateDiscount() {
-        val validateDiscountPercent = this.validateGreaterThan(this.discountView?.edDiscount!!, this.discountView?.discountWrapper!!, 0, translations.get(Constant.TranslationsKey.DISCOUNT_MUST_GREATER_THAN_ZERO), skipCount = 0)
-        val validateDiscountWhen = this.validateGreaterThan(this.discountView?.edDiscountWhen!!, this.discountView?.discountWhenWrapper!!, 0, translations.get(Constant.TranslationsKey.DISCOUNT_WHEN_MUST_GREATER_THAN_ZERO), skipCount = 0)
+        val validateDiscountPercent = this.validateGreaterThan(this.discountView?.ed_discount_amount!!, this.discountView?.discount_amount_wrapper!!, 0, translations.get(Constant.TranslationsKey.DISCOUNT_MUST_GREATER_THAN_ZERO), skipCount = 0)
+        val validateDiscountWhen = this.validateGreaterThan(this.discountView?.ed_discount_when!!, this.discountView?.discount_when_wrapper!!, 0, translations.get(Constant.TranslationsKey.DISCOUNT_WHEN_MUST_GREATER_THAN_ZERO), skipCount = 0)
         Observable.combineLatest(validateDiscountPercent, validateDiscountWhen, BiFunction { discountAmount: Boolean, discountWhen: Boolean -> discountAmount && discountWhen }).subscribe({
-            this.discountView?.btnSubmitDiscount?.isEnabled = it
+            this.discountView?.btn_submit_discount?.isEnabled = it
         }, {})
     }
 
@@ -213,23 +220,25 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private fun handleAddDiscount() {
         showDiscountProgress()
         val data = Data()
-        data["discount"] = discountView?.edDiscount?.text.toString().toLong()
-        data["discount_when"] = discountView?.edDiscountWhen?.text.toString().toLong()
+        data["discount_type"] = discountType
+        data["discount"] = discountView?.ed_discount_amount?.text.toString().toLong()
+        data["discount_when"] = discountView?.ed_discount_when?.text.toString().toLong()
         data["product_id"] = intent.extras.getLong("product_id")
+
         this.presenter.addDiscount(data)
 
     }
 
     private fun showDiscountProgress() {
-        this.discountView?.progressBarDiscount?.visibility = View.VISIBLE
-        this.discountView?.btnSubmitDiscount?.isEnabled = false
+        this.discountView?.progress_bar_discount?.visibility = View.VISIBLE
+        this.discountView?.btn_submit_discount?.isEnabled = false
     }
 
     private fun dismiss() {
         this.stockView?.progress_bar?.visibility = View.GONE
         this.stockView?.btn_submit?.isEnabled = true
-        this.discountView?.progressBarDiscount?.visibility = View.GONE
-        this.discountView?.btnSubmitDiscount?.isEnabled = true
+        this.discountView?.progress_bar_discount?.visibility = View.GONE
+        this.discountView?.btn_submit_discount?.isEnabled = true
         this.stockDialog?.dismiss()
         this.discountDialog?.dismiss()
     }

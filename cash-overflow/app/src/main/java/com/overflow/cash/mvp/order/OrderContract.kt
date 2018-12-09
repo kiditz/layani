@@ -9,10 +9,13 @@ import com.overflow.libs.core.Data
 class OrderContract {
     interface View : BaseView {
         fun onOrderIntemCreated(item:OrderItem?, holder: SalesListAdapter.ViewHolder)
+        fun onDiscountLoaded(data:Data, holder: SalesListAdapter.ViewHolder)
+        fun onDiscountNotLoaded(res:String, holder: SalesListAdapter.ViewHolder)
     }
 
     interface Presenter : BasePresenter<View> {
-        fun addOrderItem(data:Data, holder: SalesListAdapter.ViewHolder)
+        fun loadDiscount(productId:Long, quantity:Long, holder: SalesListAdapter.ViewHolder)
+        fun addOrderItem(data:Data, updateQty:Boolean=false, holder: SalesListAdapter.ViewHolder)
     }
 
 

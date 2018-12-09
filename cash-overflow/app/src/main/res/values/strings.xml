@@ -42,6 +42,7 @@
     <string name="edit_customer">Edit Customer</string>
     <string name="edit_product">Edit Product</string>
     <string name="empty_data">No Data</string>
+    <string name="fixed_price">Fixed Price</string>
     <string name="flash">Flash Light</string>
     <string name="focus">Focus</string>
     <string name="for_trx">for transaction</string>
@@ -85,6 +86,7 @@
     <string name="pay_paid">Paid</string>
     <string name="payer">Debtor</string>
     <string name="pcs">pcs</string>
+    <string name="percentage">Percentage</string>
     <string name="phone_number">Phone Number</string>
     <string name="press_again_to_close">Press again to close app</string>
     <string name="print_receipt">Print Receipt</string>
@@ -133,6 +135,4 @@
     <string name="weight">Weight</string>
     <string name="year">Yearly</string>
     <string name="yes">Yes</string>
-
-
 </resources>

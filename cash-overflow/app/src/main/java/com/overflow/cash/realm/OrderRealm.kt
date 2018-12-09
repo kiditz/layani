@@ -11,8 +11,12 @@ class OrderRealm(val realm: Realm){
         Timber.i("Data : %s", data.toString())
         realm.beginTransaction()
         val item = realm.createOrUpdateObjectFromJson(OrderItem::class.java, data.toString())!!
-        if(updateQty)
-            item.qty = item.qty + 1
+        if(updateQty){
+            Timber.i("ADD Quantity")
+            item.qty = item.qty+ 1
+        } else{
+            Timber.i("Not Quantity")
+        }
 
         Timber.i("Item : %s", item.productId.toString())
         realm.commitTransaction()
@@ -41,6 +45,7 @@ class OrderRealm(val realm: Realm){
 
 
     fun removeAllItems(){
+
         realm.beginTransaction()
         realm.where(OrderItem::class.java).findAll().deleteAllFromRealm()
         realm.commitTransaction()

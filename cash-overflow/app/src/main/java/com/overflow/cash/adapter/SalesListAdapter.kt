@@ -24,7 +24,7 @@ import timber.log.Timber
  */
 class SalesListAdapter(private val imageService: ImageService) : RecyclerView.Adapter<SalesListAdapter.ViewHolder>() {
     lateinit var context: Context
-    private val values: MutableList<Data> = mutableListOf()
+    val values: MutableList<Data> = mutableListOf()
     private val realm:Realm = Realm.getDefaultInstance()
     var onItemClick: ((Data, ViewHolder) -> Unit)? = null
     var onItemLongClick: ((Data, ViewHolder) -> Unit)? = null
@@ -46,20 +46,28 @@ class SalesListAdapter(private val imageService: ImageService) : RecyclerView.Ad
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
         val item = values[position]
         val sellPrice = context.rupiah(item.getDouble("sell_price"))
         val unit = item.getString("unit")
-
-
         val productName = item.getString("product_name")
         holder.productName.text = productName
         holder.sellPrice.text =  sellPrice
         val documentId = item.getLong("document_id")
         imageService.loadDocument(holder.imgProduct,documentId , productName)
         val orderItem = realm.where(OrderItem::class.java).equalTo("productId", item.getLong("product_id")).findFirst()
+
         if(orderItem != null){
             holder.qty.text = orderItem.qty.toString() +" " + unit
+            if(orderItem.discountAmount > 0){
+                if(orderItem.discountType == "PERCENTAGE"){
+                    holder.discount.text = orderItem.discountAmount.toString() + "%"
+                }else{
+                    holder.discount.text = context.rupiah(orderItem.discountAmount)
+                }
+                holder.discount.visibility = View.VISIBLE
+            }else{
+                holder.discount.visibility = View.GONE
+            }
             holder.qty.visibility= View.VISIBLE
         }else{
             holder.qty.visibility= View.GONE
@@ -93,10 +101,11 @@ class SalesListAdapter(private val imageService: ImageService) : RecyclerView.Ad
     override fun getItemCount(): Int = values.size
 
     inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        val productName: TextView = view.tvProductName
-        val sellPrice: TextView = view.tvSellPrice
-        val imgProduct: ImageView = view.imgProduct
-        val remainingStock = view.tvStock
-        val qty: TextView = view.tvOrderItemQty
+        val productName: TextView = view.tv_product_name
+        val sellPrice: TextView = view.tv_sell_price
+        val imgProduct: ImageView = view.img_product
+        val remainingStock = view.tv_stock
+        val qty: TextView = view.tv_order_item_qty
+        val discount: TextView = view.tv_discount_amount
     }
 }

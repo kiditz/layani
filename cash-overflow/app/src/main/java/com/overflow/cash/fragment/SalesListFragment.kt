@@ -109,7 +109,7 @@ class SalesListFragment : BaseFragment(), CategoryListContract.View, ViewPager.O
                 presenter.deleteAllOrderItems()
                 val salesFragment = (adapter.getItem(view_pager.currentItem) as SalesFragment)
                 salesFragment.searchProduct(Constant.TEXT_EMPTY)
-                true
+                false
             }
             R.id.action_scan ->{
                 handleScanAction()

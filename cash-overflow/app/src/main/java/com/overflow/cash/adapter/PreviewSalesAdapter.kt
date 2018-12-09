@@ -55,7 +55,11 @@ class PreviewSalesAdapter(private val imageService: ImageService, private val pr
         val documentId = item.getLong("documentId")
         val countDiscount = item.getLong("countDiscount")
         if(countDiscount > 0){
-            this.presenter.loadDiscount(productId, qty, holder, position)
+            //this.presenter.loadDiscount(productId, qty, holder, position)
+            val discountAmount = item.getDouble("discountAmount")
+            val calculateDiscount = discountAmount / 100.0 * item.getDouble("subTotal")
+            val priceAfterDiscount = item.getDouble("subTotal") - calculateDiscount
+            holder.subTotal.text = context.rupiah(priceAfterDiscount)
         }
         imageService.loadDocument(holder.imgProduct, documentId , item.getString("productName"))
     }
@@ -65,10 +69,10 @@ class PreviewSalesAdapter(private val imageService: ImageService, private val pr
     override fun getItemCount(): Int = values.size
 
     inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        val productName: TextView = view.tvProductName
+        val productName: TextView = view.tv_product_name
         val discount: TextView = view.tvDiscount
-        val sellPrice: TextView = view.tvSellPrice
-        val imgProduct: ImageView = view.imgProduct
+        val sellPrice: TextView = view.tv_sell_price
+        val imgProduct: ImageView = view.img_product
         val subTotal: TextView = view.tvSubTotal
     }
 }

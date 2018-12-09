@@ -88,7 +88,7 @@ class ProductListFragment : BaseFragment(), CategoryListContract.View, ViewPager
             handleAddProduct(view_pager.currentItem)
             handleChangeEvent(view_pager.currentItem)
             handlePopUpMenu(view_pager.currentItem)
-        }catch (e:UninitializedPropertyAccessException){
+        }catch (e:Exception){
             //Timber.e(e)
         }
     }
@@ -162,7 +162,7 @@ class ProductListFragment : BaseFragment(), CategoryListContract.View, ViewPager
             handleAddProduct(view_pager.currentItem)
             handleChangeEvent(view_pager.currentItem)
             handlePopUpMenu(view_pager.currentItem)
-        }catch (e:UninitializedPropertyAccessException){
+        }catch (e:Exception){
             //Ignore
         }
     }

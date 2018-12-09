@@ -1,6 +1,5 @@
 package com.overflow.cash
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
@@ -10,7 +9,6 @@ import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.ArrayAdapter
 import com.overflow.cash.adapter.PreviewSalesAdapter
 import com.overflow.cash.mvp.order.PreviewSalesContract
@@ -37,7 +35,6 @@ class PreviewSalesActivity : AppCompatActivity(), PreviewSalesContract.View {
 
     lateinit var adapter:PreviewSalesAdapter
     lateinit var cashBoxAdapter:ArrayAdapter<String>
-    private var discountId:Long? = null
     private var customerId:Long? = null
     var disposable:CompositeDisposable = CompositeDisposable()
     lateinit var outlet:Data
@@ -140,21 +137,28 @@ class PreviewSalesActivity : AppCompatActivity(), PreviewSalesContract.View {
         }
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onDiscountLoaded(discount: Data, holder: PreviewSalesAdapter.ViewHolder, position: Int) {
-        val item = this.adapter.values[position]
-        this.discountId = discount.getLong("id")
-        val discountAmount = discount.getLong("discount")
-        holder.discount.text = "$discountAmount%"
-        holder.discount.visibility = View.VISIBLE
-        val calculateDiscount = discountAmount.toDouble() / 100.0 * item.getDouble("subTotal")
-        val priceAfterDiscount = item.getDouble("subTotal") - calculateDiscount
-        holder.subTotal.text = rupiah(priceAfterDiscount)
-        item["subTotal"] = priceAfterDiscount
-        this.adapter.values[position] = item
-        val amount = this.adapter.values.map { it.getDouble("subTotal") }.sum()
-        this.supportActionBar?.title = this.rupiah(amount)
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
+//    @SuppressLint("SetTextI18n")
+//    override fun onDiscountLoaded(discount: Data, holder: PreviewSalesAdapter.ViewHolder, position: Int) {
+//        val item = this.adapter.values[position]
+//        this.discountId = discount.getLong("id")
+//        val discountAmount = discount.getDouble("discount")
+//        val discountType = discount.getDouble("discount_type")
+//        holder.discount.text = "$discountAmount%"
+//        holder.discount.visibility = View.VISIBLE
+//        val calculateDiscount = discountAmount / 100.0 * item.getDouble("subTotal")
+//        val priceAfterDiscount = item.getDouble("subTotal") - calculateDiscount
+//
+//        holder.subTotal.text = rupiah(priceAfterDiscount)
+//        item["subTotal"] = priceAfterDiscount
+//
+//        this.adapter.values[position] = item
+//        val amount = this.adapter.values.map { it.getDouble("subTotal") }.sum()
+//        this.supportActionBar?.title = this.rupiah(amount)
+//    }
 }
 
 

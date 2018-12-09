@@ -86,10 +86,10 @@ class ProductListAdapter(private val imageService: ImageService) : RecyclerView.
 
     inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val productCode: TextView = view.tvProductCode
-        val productName: TextView = view.tvProductName
+        val productName: TextView = view.tv_product_name
         val qty: TextView = view.tvQty
-        val sellPrice: TextView = view.tvSellPrice
-        val imgProduct: ImageView = view.imgProduct
+        val sellPrice: TextView = view.tv_sell_price
+        val imgProduct: ImageView = view.img_product
 
         override fun toString(): String {
             return super.toString() + " '" + productCode.text + "'"

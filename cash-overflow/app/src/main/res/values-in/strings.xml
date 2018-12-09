@@ -41,6 +41,7 @@
     <string name="edit_customer">Ubah Pelanggan</string>
     <string name="edit_product">Ubah Produk</string>
     <string name="empty_data">No Data</string>
+    <string name="fixed_price">Harga Tetap</string>
     <string name="flash">Lampu</string>
     <string name="focus">Fokus</string>
     <string name="for_trx">untuk transaksi</string>
@@ -84,6 +85,7 @@
     <string name="pay_paid">Bayar Hutang</string>
     <string name="payer">Pengutang</string>
     <string name="pcs">pcs</string>
+    <string name="percentage">Persentase</string>
     <string name="phone_number">No Handphone</string>
     <string name="press_again_to_close">Tekan sekali lagi untuk keluar dari aplikasi</string>
     <string name="print_receipt">Cetak struk</string>
@@ -130,7 +132,5 @@
     <string name="weight">Berat</string>
     <string name="year">Tahun</string>
     <string name="yes">Ya</string>
-
-
 
 </resources>
