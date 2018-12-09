@@ -34,6 +34,7 @@ class User(db.Model, Entity):
 	phone_number = db.Column(db.String(20), nullable=False, index=True)
 	username = db.Column(db.String(60), nullable=False, index=True)
 	fullname = db.Column(db.String(100), nullable=False, index=True)
+	outlet_name = db.Column(db.Text, nullable=False, index=True)
 	hash_password = db.Column(db.LargeBinary(60), nullable=False)	
 	enabled = db.Column(db.Boolean, nullable=False, default=False)
 	account_non_expired = db.Column(db.Boolean, nullable=False, default=False)
