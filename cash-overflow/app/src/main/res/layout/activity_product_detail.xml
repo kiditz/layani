@@ -129,13 +129,16 @@
                 </LinearLayout>
                 <include android:id="@+id/vertStock" layout="@layout/line_vert" />
                 <LinearLayout
+                    android:id="@+id/view_discount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:background="?selectableItemBackground"
+                    android:focusable="true"
+                    android:clickable="true"
                     android:padding="10dp">
-
                     <TextView
-                        android:id="@+id/view_discount"
+
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"

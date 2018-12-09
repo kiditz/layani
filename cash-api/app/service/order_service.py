@@ -120,6 +120,7 @@ class OrderService(object):
 		# order.total_payment = 0.0
 		# order.cashback = 0.0
 		# order.profit = 0
+		order.order_at = datetime.now()
 		order.save()
 		order_cpy = Order(order.to_dict())
 		order_cpy.id = None
