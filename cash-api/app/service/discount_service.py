@@ -22,7 +22,7 @@ class DiscountService(object):
 		discount_when = int(domain['discount_when'])
 		discount = Discount.query\
 			.filter(Discount.product_id == domain['product_id']) \
-			.filter(Discount.discount_when >= discount_when) \
+			.filter(Discount.discount_when <= discount_when) \
 			.order_by(Discount.discount.asc()).first()
 		if discount is None:
 			raise ValidationException(ErrorCode.DISCOUNT_NOT_FOUND)
