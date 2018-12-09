@@ -45,6 +45,7 @@ class OutletService(object):
 		# Save into authority admin
 		authority = Authority({'authority': 'ADMINISTRATOR', 'user_id': user.id})
 		authority.save()
+		domain['store']['name'] = 'Outlet 1'
 		outlet = Outlet(domain['store'])
 		outlet.user_id = user.id
 		outlet.save()
