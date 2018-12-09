@@ -289,7 +289,7 @@ class PaymentTransactionActivity : AppCompatActivity(), CashboxContract.View, Pa
 
     override fun onCashboxLoaded(item: List<Data>) {
         // Transform cashbox data to list string of name
-        val cashboxStrList = item.map { it.getString("name") }
+        val cashboxStrList = item.map { translations.get(it.getString("name").toLowerCase()).toUpperCase() }
         // Initialize cashbox
         val cashBoxAdapter: ArrayAdapter<String> = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, cashboxStrList)
         sp_cashbox.adapter = cashBoxAdapter
