@@ -192,17 +192,18 @@ class OrderService(object):
 		]
 		return {'payload': {'chart_label': chart_label, 'lines_data': lines_data}}
 
-	@Number(['order_id'])
+	@Number(['order_code'])
 	def get_order_items(self, domain):
-		order_id = int(domain['order_id'])		
+		order_code = int(domain['order_code'])
 		entities = (			
-			OrderItem.sub_total.label('sub_total'),
+			OrderItem.sub_total,
 			OrderItem.qty,
 			Product.name.label('product_name'),
 		)
 		order_items = OrderItem.query.with_entities(*entities)\
-			.join(Product, Product.id == OrderItem.product_id)\
-			.filter(OrderItem.order_id == order_id)\
+			.join(Product, Product.id == OrderItem.product_id) \
+			.join(Order, Order.id == OrderItem.order_id) \
+			.filter(Order.order_code == order_code)\
 			.order_by("product_name asc")
 		order_item_list = list(map(lambda x: x._asdict(), order_items.all()))
 		return {'payload': order_item_list}

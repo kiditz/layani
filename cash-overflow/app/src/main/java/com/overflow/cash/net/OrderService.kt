@@ -15,7 +15,7 @@ interface OrderService {
 
     @Headers("Content-Type:application/json")
     @GET("/cash/order/items")
-    fun getOrderItems(@Query("order_id") orderId:Long):Single<Data>
+    fun getOrderItems(@Query("order_code") orderId:String):Single<Data>
 
     @Headers("Content-Type:application/json")
     @GET("/cash/discount/find")
