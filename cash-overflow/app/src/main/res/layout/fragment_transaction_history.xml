@@ -15,7 +15,7 @@
         android:background="@color/colorPrimary"
         android:orientation="horizontal"
         android:padding="10dp"
-        android:visibility="gone">
+        >
 
         <ImageView
             android:id="@+id/btn_sort"

@@ -133,7 +133,7 @@ class AccountReceiveableService(object):
 		order.save()
 		account_receiveable.save()
 		cashbox = Cashbox.query.get(domain['cash_box_id'])
-		cashbox.total_amount = cashbox.total_amount + payment_amount
+		cashbox.total_amount += account_receiveable.payment_amount
 		cashbox_history = CashboxHistory()
 		cashbox_history.cash_box_id = cashbox.id
 		cashbox_history.amount = payment_amount
