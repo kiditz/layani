@@ -25,8 +25,8 @@ class PaymentTransactionPresenter(
         orderRealm.removeAllItems()
     }
     override fun saveOrder(data: Data) {
-        val merchant = Data(preferences.getString("merchant", "{}"))
-        data["merchant_id"] = merchant.getLong("id")
+        val outlet = Data(preferences.getString("outlet", "{}"))
+        data["outlet_id"] = outlet.getLong("id")
         if (API.isConnected(context)) {
             this.disposable.add(this.orderService.addOrder(data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({
                 if (API.ok(it)) {

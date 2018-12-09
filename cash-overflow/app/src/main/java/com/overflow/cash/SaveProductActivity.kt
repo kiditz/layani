@@ -61,7 +61,7 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
     lateinit var presenter: AddProductPresenter
     @Inject
     lateinit var preferences: SharedPreferences
-    private lateinit var merchant: Data
+    private lateinit var outlet: Data
     private var categoryView: View? = null
     private var dialog: AlertDialog? = null
     private var categoryList = mutableListOf<Data>()
@@ -82,7 +82,7 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
         presenter.attach(this)
 
 
-        this.merchant = Data(preferences.getString("merchant", "{}"))
+        this.outlet = Data(preferences.getString("outlet", "{}"))
 
         this.btnAddCategory.setOnClickListener {
             addCategoryDialog()
@@ -228,7 +228,7 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
 
         this.categoryView!!.btnSubmit.setOnClickListener {
             val category = Data()
-            category["merchant_id"] = merchant.getLong("id")
+            category["outlet_id"] = outlet.getLong("id")
             category["name"] = this.categoryView!!.edName.text.toString()
             presenter.addCategory(category)
             this.categoryView?.progress_bar!!.visibility = View.VISIBLE
@@ -250,7 +250,7 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View {
             categoryData["name"] = input
             categoryData["page"] = 1
             categoryData["size"] = preferences.getInt("MAX_PAGE", 10)
-            categoryData["merchant_id"] = merchant["id"]
+            categoryData["outlet_id"] = outlet["id"]
             presenter.loadCategory(categoryData)
         }
     }

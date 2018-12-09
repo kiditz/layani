@@ -40,14 +40,14 @@ class PreviewSalesActivity : AppCompatActivity(), PreviewSalesContract.View {
     private var discountId:Long? = null
     private var customerId:Long? = null
     var disposable:CompositeDisposable = CompositeDisposable()
-    lateinit var merchant:Data
+    lateinit var outlet:Data
     @Inject
     lateinit var preferences: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_preview_sales)
-        this.merchant = Data(preferences.getString("merchant", "{}"))
+        this.outlet = Data(preferences.getString("outlet", "{}"))
         this.adapter = PreviewSalesAdapter(imageService, presenter)
 
         presenter.attach(this)

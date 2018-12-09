@@ -14,7 +14,7 @@ category_service = CategoryService()
 def add_category():
     """
     {
-    "merchant_id": "Long",
+    "outlet_id": "Long",
     "name": "String"
     }
     """
@@ -29,7 +29,7 @@ def get_category_list():
     {
         "page": "Long",
         "size": "Long",
-        "merchant_id": "Long"
+        "outlet_id": "Long"
         "name": "String"
     }
     """
@@ -42,7 +42,7 @@ def find_category_by_id():
     """
     {
         "id": "Long",
-        "merchant_id": "Long",
+        "outlet_id": "Long",
     }
     """
     domain = request.args.to_dict()
@@ -55,7 +55,7 @@ def edit_category_by_id():
     """
     {
     "id": "Long",
-    "merchant_id": "Long",
+    "outlet_id": "Long",
     "name": "String"
     }
     """

@@ -22,9 +22,9 @@ class CategoryListPresenter(
     lateinit var view: CategoryListContract.View
     var lastPage:Boolean = true
     var loading:Boolean = true
-    var merchant:Data = Data()
+    var outlet:Data = Data()
     init {
-        merchant = Data(this.preferences.getString("merchant", "{}"))
+        outlet = Data(this.preferences.getString("outlet", "{}"))
     }
     override fun attach(view: CategoryListContract.View) {
         this.view = view
@@ -36,7 +36,7 @@ class CategoryListPresenter(
 
     override fun loadCategory(page:Int, name:String) {
         val data = Data()
-        data["merchant_id"] = this.merchant.getLong("id")
+        data["outlet_id"] = this.outlet.getLong("id")
         if(page > 0){
             data["size"] = getSize()
             data["page"] = page

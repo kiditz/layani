@@ -12,11 +12,11 @@ import io.reactivex.disposables.CompositeDisposable
 
 class OrderChartPresenter(private val context: Context,private val preferences: SharedPreferences, private val translations: Translations, private val orderService:OrderService, private val disposable: CompositeDisposable) : OrderChartContract.Presenter {
     lateinit var view : OrderChartContract.View
-    lateinit var merchant:Data
+    lateinit var outlet:Data
 
     override fun showChart(period: String) {
         val data=Data()
-        data["merchant_id"] = this.merchant.getLong("id")
+        data["outlet_id"] = this.outlet.getLong("id")
         data["period"] = period
         if(API.isConnected(context)){
             this.disposable.add(this.orderService.getOrderChart(data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
@@ -35,7 +35,7 @@ class OrderChartPresenter(private val context: Context,private val preferences: 
 
     override fun attach(view: OrderChartContract.View) {
         this.view = view
-        this.merchant = Data(preferences.getString("merchant", "{}"))
+        this.outlet = Data(preferences.getString("outlet", "{}"))
     }
 
     override fun detach() {

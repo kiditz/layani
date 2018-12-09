@@ -28,7 +28,7 @@ import javax.inject.Inject
 
 class SalesListFragment : BaseFragment(), CategoryListContract.View, ViewPager.OnPageChangeListener {
 
-    private lateinit var merchant: Data
+    private lateinit var outlet: Data
     private lateinit var adapter: ViewPagerAdapter
     @Inject
     lateinit var translations: Translations
@@ -52,7 +52,7 @@ class SalesListFragment : BaseFragment(), CategoryListContract.View, ViewPager.O
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
         setHasOptionsMenu(true)
-        this.merchant = Data(preferences.getString("merchant", "{}"))
+        this.outlet = Data(preferences.getString("outlet", "{}"))
         this.adapter = ViewPagerAdapter(activity!!.supportFragmentManager)
         realm = Realm.getDefaultInstance()
 

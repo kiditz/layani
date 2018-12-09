@@ -14,7 +14,7 @@ customer_service = CustomerService()
 def get_customer_list():
     """
     {
-        "merchant_id": "Long",
+        "outlet_id": "Long",
         "name": "String",
     }
     """
@@ -31,7 +31,7 @@ def edit_customer_by_id():
     "name": "String",
     "phone_number": "String",
     "email": "String",
-    "merchant_id": "Long"
+    "outlet_id": "Long"
     }
     """
     domain = request.get_json()

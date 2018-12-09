@@ -5,9 +5,9 @@ import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.*
 
-interface MerchantService {
+interface OutletService {
     @Headers("Content-Type:application/json")
-    @GET("/cash/merchant/find")
-    fun findMerchant(@QueryMap input: Data): Single<Data>
+    @GET("/cash/outlet/find")
+    fun findOutlet(@QueryMap input: Data): Single<Data>
     
 }

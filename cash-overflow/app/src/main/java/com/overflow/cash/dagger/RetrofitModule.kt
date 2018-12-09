@@ -24,8 +24,8 @@ class RetrofitModule {
     }
 
     @Provides
-    fun provideMerchantService(@Named(AUTHENTICATED) retrofit: Retrofit): MerchantService {
-        return retrofit.create(MerchantService::class.java)
+    fun provideOutletService(@Named(AUTHENTICATED) retrofit: Retrofit): OutletService {
+        return retrofit.create(OutletService::class.java)
     }
 
     @Provides

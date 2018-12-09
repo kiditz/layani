@@ -12,17 +12,17 @@ class CategoryService(object):
 	def __init__(self):
 		super(CategoryService, self).__init__()
 
-	@Key(['merchant_id', 'name'])
+	@Key(['outlet_id', 'name'])
 	def add_category(self, domain):
 		category = Category(domain)
 		category.save()
 		return {'payload': category.to_dict()}
 		
-	@Key(['merchant_id', 'name'])
+	@Key(['outlet_id', 'name'])
 	def get_category_list(self, domain):
 		category_q = Category.query\
 			.with_entities(Category.name.label('category_name'), Category.id.label('category_id'))\
-			.filter_by(merchant_id=domain['merchant_id'])\
+			.filter_by(outlet_id=domain['outlet_id'])\
 			.filter(Category.name.ilike('%' + domain['name'] + '%'))\
 			.order_by(Category.name.asc())
 		if 'page' in domain and 'size' in domain:

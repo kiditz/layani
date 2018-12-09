@@ -1,4 +1,4 @@
-from entity.models import Merchant, User, Authority, Cashbox
+from entity.models import Outlet, User, Authority, Cashbox
 from flask_bcrypt import Bcrypt
 from slerp.app import app
 from slerp.logger import logging
@@ -10,12 +10,12 @@ log = logging.getLogger(__name__)
 bcrypt = Bcrypt(app=app)
 
 
-class MerchantService(object):
+class OutletService(object):
 	def __init__(self):
-		super(MerchantService, self).__init__()
+		super(OutletService, self).__init__()
 	
 	@Key(['store.name', 'store.phone_number', 'store.address', 'store.email', 'username', 'fullname', 'password'])
-	def add_merchant(self, domain):
+	def add_outlet(self, domain):
 		password = domain['password']
 		phone_number = domain['store']['phone_number']
 		email = domain['store']['email']
@@ -24,12 +24,12 @@ class MerchantService(object):
 		if user_count > 0:
 			raise ValidationException(ErrorCode.USER_HAS_EXISTS)
 		# Validate unique by phone_number
-		merchant_count = Merchant.query.filter_by(phone_number = phone_number).count()		
-		if merchant_count > 0:
+		outlet_count = Outlet.query.filter_by(phone_number = phone_number).count()
+		if outlet_count > 0:
 			raise ValidationException(ErrorCode.PHONE_NUMBER_HAS_EXISTS)
 
-		merchant_count = Merchant.query.filter_by(email = phone_number).count()		
-		if merchant_count > 0:
+		outlet_count = Outlet.query.filter_by(email = phone_number).count()
+		if outlet_count > 0:
 			raise ValidationException(ErrorCode.EMAIL_HAS_EXISTS)
 
 		if phone_number.startswith('0'):
@@ -46,37 +46,37 @@ class MerchantService(object):
 		# Save into authority admin
 		authority = Authority({'authority': 'ADMINISTRATOR', 'user_id': user.id})
 		authority.save()
-		merchant = Merchant(domain['store'])
-		merchant.user_id = user.id
-		merchant.save()
-		merchant_dict = merchant.to_dict()
-		merchant_dict['password'] = password
-		merchant_dict['username'] = domain["username"]
+		outlet = Outlet(domain['store'])
+		outlet.user_id = user.id
+		outlet.save()
+		outlet_dict = outlet.to_dict()
+		outlet_dict['password'] = password
+		outlet_dict['username'] = domain["username"]
 		cashbox = Cashbox()
 		cashbox.name = 'Kas'
 		cashbox.total_amount = 0.0
-		cashbox.merchant_id = merchant.id
+		cashbox.outlet_id = outlet.id
 		cashbox.save()
 		cashbox = Cashbox()
 		cashbox.name = 'Bank'
 		cashbox.total_amount = 0.0
-		cashbox.merchant_id = merchant.id
+		cashbox.outlet_id = outlet.id
 		cashbox.save()
-		return {'payload': merchant_dict}
+		return {'payload': outlet_dict}
 	
 	@Blank(['username', 'password'])
-	def find_merchant(self, domain):
+	def find_outlet(self, domain):
 		"""
 		:param domain:input is the username or phone number registered
 		:return dict:
 		"""
 		self.check_password(domain['username'], domain['password'])
-		merchant = Merchant.query.join(User, User.id == Merchant.user_id) \
+		outlet = Outlet.query.join(User, User.id == Outlet.user_id) \
 			.filter(User.username == domain['username']) \
 			.first()
-		merchant_dict = merchant.to_dict()
-		merchant_dict['username'] = domain["username"]
-		return {'payload': merchant_dict}
+		outlet_dict = outlet.to_dict()
+		outlet_dict['username'] = domain["username"]
+		return {'payload': outlet_dict}
 	
 	@staticmethod
 	def check_password(username, password):

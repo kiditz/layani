@@ -63,8 +63,8 @@ class AddProductPresenter(private var context: Context, private var translations
     }
 
     override fun addProduct(data: Data) {
-        val merchant = Data(preferences.getString("merchant", "{}"))
-        data["merchant_id"] = merchant.getLong("id")
+        val outlet = Data(preferences.getString("outlet", "{}"))
+        data["outlet_id"] = outlet.getLong("id")
         if(API.isConnected(context)){
             this.disposable.add(this.productService.addProduct(data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){

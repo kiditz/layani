@@ -1,4 +1,4 @@
-from .merchant_api import merchant_api_blue_print
+from .outlet_api import outlet_api_blue_print
 from .category_api import category_api_blue_print
 from .product_api import product_api_blue_print
 from .document_api import document_api_blue_print

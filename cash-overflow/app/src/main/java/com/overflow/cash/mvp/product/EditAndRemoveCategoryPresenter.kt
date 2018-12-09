@@ -22,9 +22,9 @@ class EditAndRemoveCategoryPresenter(
     override fun attach(view: EditAndRemoveCategoryContract.View) {
         this.view = view
     }
-    var merchant:Data = Data()
+    var outlet:Data = Data()
     init {
-        merchant = Data(this.preferences.getString("merchant", "{}"))
+        outlet = Data(this.preferences.getString("outlet", "{}"))
     }
     override fun detach() {
         disposable.clear()
@@ -65,7 +65,7 @@ class EditAndRemoveCategoryPresenter(
     }
 
     override fun addCategory(data: Data, holder: CategoryListAdapter.ViewHolder) {
-        data["merchant_id"] = this.merchant.getLong("id")
+        data["outlet_id"] = this.outlet.getLong("id")
         if(API.isConnected(context)){
             this.disposable.add(this.productService.addCategory(data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){

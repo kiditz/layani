@@ -16,10 +16,10 @@ class RefundPresenter(private val context: Context, private val preferences: Sha
     lateinit var view: RefundContract.View
     var lastPage: Boolean = true
     var loading: Boolean = true
-    var merchant: Data = Data()
+    var outlet: Data = Data()
 
     init {
-        merchant = Data(preferences.getString("merchant", "{}"))
+        outlet = Data(preferences.getString("outlet", "{}"))
     }
 
     override fun attach(view: RefundContract.View) {

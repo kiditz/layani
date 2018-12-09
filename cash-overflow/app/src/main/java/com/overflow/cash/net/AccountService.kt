@@ -11,11 +11,11 @@ interface AccountService {
     @POST("/uua/oauth/token")
     fun loginAsync(@Header("Authorization") authentication: String, @QueryMap input: Data): Single<Data>
     @Headers("Content-Type:application/json")
-    @POST("/cash/merchant/add")
+    @POST("/cash/outlet/add")
     fun register(@Body input: Data): Single<Data>
 
     @Headers("Content-Type:application/json")
-    @GET("/cash/merchant/find")
-    fun findMerchant(@Header("Authorization") authentication: String, @QueryMap input: Data): Single<Data>
+    @GET("/cash/outlet/find")
+    fun findOutlet(@Header("Authorization") authentication: String, @QueryMap input: Data): Single<Data>
     
 }

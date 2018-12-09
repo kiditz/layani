@@ -12,11 +12,11 @@ import io.reactivex.disposables.CompositeDisposable
 
 class DashboardHeaderPresenter(private val context: Context, private val preferences: SharedPreferences, private val translations: Translations, private val orderService:OrderService, private val disposable: CompositeDisposable) : DashboardHeaderContract.Presenter {
     lateinit var view : DashboardHeaderContract.View
-    lateinit var merchant:Data
+    lateinit var outlet:Data
 
     override fun showHeader() {
         val data=Data()
-        data["merchant_id"] = this.merchant.getLong("id")
+        data["outlet_id"] = this.outlet.getLong("id")
         if(API.isConnected(context)){
             this.disposable.add(this.orderService.getDashboardHeader(data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){
@@ -34,7 +34,7 @@ class DashboardHeaderPresenter(private val context: Context, private val prefere
 
     override fun attach(view: DashboardHeaderContract.View) {
         this.view = view
-        this.merchant = Data(preferences.getString("merchant", "{}"))
+        this.outlet = Data(preferences.getString("outlet", "{}"))
         this.showHeader()
     }
 

@@ -15,9 +15,9 @@ class TransactionHistoryPresenter(private val context:Context, private val prefe
     lateinit var view:TransactionHistoryContract.View
     var lastPage:Boolean = true
     var loading:Boolean = true
-    var merchant:Data = Data()
+    var outlet:Data = Data()
     init {
-         merchant = Data(preferences.getString("merchant", "{}"))
+         outlet = Data(preferences.getString("outlet", "{}"))
     }
     override fun attach(view: TransactionHistoryContract.View) {
         this.view = view
@@ -35,7 +35,7 @@ class TransactionHistoryPresenter(private val context:Context, private val prefe
         val input = Data()
         input["page"] = API.MIN_PAGE
         input["size"] = getSize()
-        input["merchant_id"] = merchant.getLong("id")
+        input["outlet_id"] = outlet.getLong("id")
         input["query"] = query
         if(API.isConnected(context)){
             lastPage = false

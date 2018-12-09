@@ -11,14 +11,14 @@ cashbox_service = CashboxService()
 
 
 @api.route('/list', methods=['GET'])
-def get_cashbox_by_merchant_id():
+def get_cashbox_by_outlet_id():
 
     """
     {
         "page": "Long",
         "size": "Long",
-        "merchant_id": "Long"
+        "outlet_id": "Long"
     }
     """
     domain = request.args.to_dict()
-    return cashbox_service.get_cashbox_by_merchant_id(domain)
+    return cashbox_service.get_cashbox_by_outlet_id(domain)

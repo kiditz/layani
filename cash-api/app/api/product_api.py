@@ -54,7 +54,7 @@ def edit_product_by_id():
     "product_type": "String",
     "document_id": "Long",
     "use_stock": "Boolean",
-    "merchant_id": "Long"
+    "outlet_id": "Long"
     }
     """
     domain = request.get_json()
@@ -87,7 +87,7 @@ def edit_product_by_code():
     "description": "String",
     "unit": "String",
     "use_stock": "Boolean",
-    "merchant_id": "Long"
+    "outlet_id": "Long"
     }
     """
     domain = request.get_json()

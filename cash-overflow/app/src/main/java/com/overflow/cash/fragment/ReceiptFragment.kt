@@ -41,7 +41,7 @@ class ReceiptFragment:BaseFragment(){
     lateinit var order: Data
     private var source:String = ""
     private var listDialog:Array<String> = arrayOf()
-    lateinit var merchant:Data
+    lateinit var outlet:Data
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_receipt, container, false)
@@ -55,7 +55,7 @@ class ReceiptFragment:BaseFragment(){
         super.onViewCreated(view, savedInstanceState)
         activity?.shouldRequestPermissions(Constant.REQUEST_PERMISSION_CODE)
         val format = SimpleDateFormat("dd/MM/yyyy HH:mm", context!!.currentLocale())
-        this.merchant = Data(preferences.getString("merchant", "{}"))
+        this.outlet = Data(preferences.getString("outlet", "{}"))
         listDialog = resources.getStringArray(R.array.share_receipt_list)
         //Add Content scroll for draw web view to image
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -66,7 +66,7 @@ class ReceiptFragment:BaseFragment(){
 
         val stream = activity?.assets?.open("receipt/index.html")
         this.source = StreamUtils.copyStreamToString(stream)
-        val merchant = Data(preferences.getString("merchant", "{}"))
+        val outlet = Data(preferences.getString("outlet", "{}"))
         if(order.containsKey("customer_name")){
             val customerName = addCustomInfo("Pelanggan", order.getString("customer_name"))
             source = source.replace("{{customer}}", customerName)
@@ -79,7 +79,7 @@ class ReceiptFragment:BaseFragment(){
         }else{
             source = source.replace("{{tgl_jatuh_tempo}}", Constant.TEXT_EMPTY)
         }
-        source = source.replace("{{title}}",merchant.getString("name"))
+        source = source.replace("{{title}}",outlet.getString("name"))
         source = source.replace("{{order.code}}","%23${order.getString("order_code")}")
         source = source.replace("{{items}}", loadItems(order.getList("order_items")))
         source = source.replace("{{order.total_amount}}", activity!!.rupiah(order.getDouble("total_amount")))
@@ -149,7 +149,7 @@ class ReceiptFragment:BaseFragment(){
     fun share():Boolean{
         val intent = Intent(Intent.ACTION_SEND)
         intent.putExtra(Intent.EXTRA_STREAM, shareAsImage())
-        val message = "${getString(R.string.receipt)} ${merchant.getString("name")} #${order.getString("order_code")}"
+        val message = "${getString(R.string.receipt)} ${outlet.getString("name")} #${order.getString("order_code")}"
         intent.putExtra(Intent.EXTRA_TEXT, message)
         intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)

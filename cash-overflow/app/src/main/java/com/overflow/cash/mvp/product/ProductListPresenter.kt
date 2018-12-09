@@ -27,14 +27,14 @@ class ProductListPresenter(private var context: Context, private var translation
     }
 
     override fun loadProduct(page:Int, categoryId:Long, query:String, order:String) {
-        val merchant = Data(preferences.getString("merchant", "{}"))
+        val outlet = Data(preferences.getString("outlet", "{}"))
         val input = Data()
         input["query"] = query
         input["page"] = page
         input["size"] = getSize()
         input["category_id"] = categoryId
         input["order"] = order
-        input["merchant_id"] = merchant["id"]
+        input["outlet_id"] = outlet["id"]
         Timber.d("Page :%s", page)
         if(API.isConnected(context)){
             lastPage = false

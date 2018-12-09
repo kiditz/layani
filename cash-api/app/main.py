@@ -5,7 +5,7 @@ from utils import JsonEncoder
 
 app.json_encoder = JsonEncoder
 
-app.register_blueprint(merchant_api_blue_print)
+app.register_blueprint(outlet_api_blue_print)
 app.register_blueprint(health_api_blue_print)
 app.register_blueprint(category_api_blue_print)
 app.register_blueprint(product_api_blue_print)

@@ -12,11 +12,11 @@ import io.reactivex.disposables.CompositeDisposable
 
 class AccountReceiveableInAgeChartPresenter(private val context: Context, private val preferences: SharedPreferences, private val translations: Translations, private val orderService:OrderService, private val disposable: CompositeDisposable) : AccountReceiveableInAgeChartContract.Presenter {
     lateinit var view : AccountReceiveableInAgeChartContract.View
-    lateinit var merchant:Data
+    lateinit var outlet:Data
 
     override fun showChart() {
         val data=Data()
-        data["merchant_id"] = this.merchant.getLong("id")
+        data["outlet_id"] = this.outlet.getLong("id")
         if(API.isConnected(context)){
             this.disposable.add(this.orderService.getAccountReceiveableInAge(data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){
@@ -35,7 +35,7 @@ class AccountReceiveableInAgeChartPresenter(private val context: Context, privat
 
     override fun attach(view: AccountReceiveableInAgeChartContract.View) {
         this.view = view
-        this.merchant = Data(preferences.getString("merchant", "{}"))
+        this.outlet = Data(preferences.getString("outlet", "{}"))
         this.showChart()
     }
 

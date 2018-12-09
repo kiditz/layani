@@ -65,10 +65,10 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun bindHeader() {
         val accountManager = AccountManager.get(this)
         val accountType = accountManager.getAccountsByType(getString(R.string.account_type))
-        val merchant = Data(preferences.getString("merchant", "{}"))
-        this.navHeaderView.tvMerchantName.text = merchant.getString("name")
-        this.navHeaderView.tvMerchantEmail.text = merchant.getString("email")
-        if (accountType == null || accountType.isEmpty() && merchant.isEmpty()) {
+        val outlet = Data(preferences.getString("outlet", "{}"))
+        this.navHeaderView.tvOutletName.text = outlet.getString("name")
+        this.navHeaderView.tvOutletEmail.text = outlet.getString("email")
+        if (accountType == null || accountType.isEmpty() && outlet.isEmpty()) {
             onNotLogin()
             return
         }

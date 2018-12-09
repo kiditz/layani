@@ -86,9 +86,9 @@ class Authority(db.Model, Entity):
 		Entity.__init__(self, obj)
 
 
-class Merchant(db.Model, Entity):
-	__tablename__ = 'co_merchant'
-	id = db.Column(db.BigInteger, db.Sequence('co_merchant_id_seq'),primary_key=True)
+class Outlet(db.Model, Entity):
+	__tablename__ = 'co_outlet'
+	id = db.Column(db.BigInteger, db.Sequence('co_outlet_id_seq'),primary_key=True)
 	name = db.Column(db.Text, nullable=False, server_default='', index=True)
 	phone_number = db.Column(db.String(20), nullable=False, server_default='', unique=True)
 	address = db.Column(db.Text, nullable=False, server_default='')
@@ -101,9 +101,9 @@ class Merchant(db.Model, Entity):
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)		
 
-class MerchantSetting(db.Model, Entity):
-	__tablename__ = 'co_merchant_setting'
-	merchant_id = db.Column(db.BigInteger, primary_key=True)
+class OutletSetting(db.Model, Entity):
+	__tablename__ = 'co_outlet_setting'
+	outlet_id = db.Column(db.BigInteger, primary_key=True)
 	notify_when_stock_less_than = db.Column(db.BigInteger, nullable=False, server_default='5')
 	receipt_footer = db.Column(db.Text, nullable=False, server_default='')
 	generate_qr_code_per_order=db.Column(db.Text, nullable=False, server_default='')	
@@ -117,7 +117,7 @@ class MerchantSetting(db.Model, Entity):
 class Category(db.Model, Entity):
 	__tablename__ = 'co_category'
 	id = db.Column(db.BigInteger, primary_key=True)
-	merchant_id = db.Column(db.ForeignKey(u'co_merchant.id'), nullable=False)
+	outlet_id = db.Column(db.ForeignKey(u'co_outlet.id'), nullable=False)
 	name = db.Column(db.Text, nullable=False, server_default='', index=True)		
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
@@ -138,10 +138,10 @@ class Product(db.Model, Entity):
 	active = db.Column(db.Boolean, nullable=False, server_default='t', default=True)
 	unit = db.Column(db.String(10), nullable=False, server_default='pcs')
 	use_stock = db.Column(db.Boolean, nullable=False, server_default='t')
-	merchant_id = db.Column(db.ForeignKey(u'co_merchant.id'))	
+	outlet_id = db.Column(db.ForeignKey(u'co_outlet.id'))	
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)	
-	__table_args__ = (db.UniqueConstraint('code', 'merchant_id', name='co_product_code_merchant_id_key'),)
+	__table_args__ = (db.UniqueConstraint('code', 'outlet_id', name='co_product_code_outlet_id_key'),)
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)		
 
@@ -216,7 +216,7 @@ class Order(db.Model, Entity):
 	id = db.Column(db.BigInteger, primary_key=True)	
 	customer_id = db.Column(db.ForeignKey(u'co_customer.id'))
 	cash_box_id = db.Column(db.ForeignKey(u'co_cash_box.id'), nullable=False)
-	merchant_id = db.Column(db.ForeignKey(u'co_merchant.id'), nullable=False)
+	outlet_id = db.Column(db.ForeignKey(u'co_outlet.id'), nullable=False)
 	order_code = db.Column(db.Text, unique=True, index=True)
 	total_amount = db.Column(db.Numeric, nullable=False, server_default='0', default=0)		
 	total_payment = db.Column(db.Numeric, nullable=False, server_default='0', default=0)		
@@ -238,7 +238,7 @@ class AccountReceiveable(db.Model, Entity):
 	total_credit = db.Column(db.Numeric, nullable=False, server_default='0', default=0)	
 	payment_amount = db.Column(db.Numeric, nullable=False, server_default='0', default=0)	
 	receiveable_date = db.Column(db.DateTime(timezone=False), default=datetime.now)	
-	merchant_id = db.Column(db.ForeignKey(u'co_merchant.id'), nullable=False)	
+	outlet_id = db.Column(db.ForeignKey(u'co_outlet.id'), nullable=False)	
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
 
@@ -264,7 +264,7 @@ class Customer(db.Model, Entity):
 	name = db.Column(db.Text, nullable=False, server_default='-', default='-', index=True)
 	phone_number = db.Column(db.String(30), nullable=False, server_default='-')	
 	email = db.Column(db.String(255), nullable=False, server_default='-')
-	merchant_id = db.Column(db.ForeignKey(u'co_merchant.id'), nullable=False)
+	outlet_id = db.Column(db.ForeignKey(u'co_outlet.id'), nullable=False)
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
 	active = db.Column(db.Boolean, nullable=False, server_default='t', default=True)
@@ -277,7 +277,7 @@ class Cashbox(db.Model, Entity):
 	id = db.Column(db.BigInteger, primary_key=True)				
 	name = db.Column(db.Text, nullable=False, server_default='-', default='-', index=True)	
 	total_amount = db.Column(db.Numeric, nullable=False, server_default='0', default=0)
-	merchant_id = db.Column(db.ForeignKey(u'co_merchant.id'), nullable=False)
+	outlet_id = db.Column(db.ForeignKey(u'co_outlet.id'), nullable=False)
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
 	

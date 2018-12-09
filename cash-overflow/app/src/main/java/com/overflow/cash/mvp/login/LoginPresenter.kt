@@ -9,7 +9,7 @@ import com.overflow.cash.BuildConfig
 import com.overflow.cash.R
 import com.overflow.cash.net.API
 import com.overflow.cash.net.AccountService
-import com.overflow.cash.net.MerchantService
+import com.overflow.cash.net.OutletService
 import com.overflow.cash.net.RxUtils
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.OauthCredentialGenerator
@@ -20,7 +20,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import timber.log.Timber
 
-class LoginPresenter(private var context: Context, private var translations: Translations, private var disposable: CompositeDisposable, private var accountService: AccountService, private var merchantService: MerchantService, private var preferences: SharedPreferences, private var accountManager: AccountManager) : LoginContract.Presenter {
+class LoginPresenter(private var context: Context, private var translations: Translations, private var disposable: CompositeDisposable, private var accountService: AccountService, private var outletService: OutletService, private var preferences: SharedPreferences, private var accountManager: AccountManager) : LoginContract.Presenter {
 
 
     lateinit var view: LoginContract.View
@@ -47,19 +47,19 @@ class LoginPresenter(private var context: Context, private var translations: Tra
             intent.putExtras(bundle)
             val username = input.getString("username")
             val password = input.getString("password")
-            findMerchant(username, password, accessToken, intent)
+            findOutlet(username, password, accessToken, intent)
         }, {
             view.showError(it)
         })
     }
 
-    fun findMerchant(username: String, password: String, accessToken: String, intent: Intent) {
+    fun findOutlet(username: String, password: String, accessToken: String, intent: Intent) {
         val data = Data()
         data["username"] = username
         data["password"] = password
-        disposable.add(accountService.findMerchant("Bearer $accessToken", data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({
+        disposable.add(accountService.findOutlet("Bearer $accessToken", data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({
             if (API.ok(it)) {
-                preferences.edit().putString("merchant", API.payload(it).toString()).apply()
+                preferences.edit().putString("outlet", API.payload(it).toString()).apply()
                 view.onLoginSuccess(intent)
             } else {
                 view.showNoOk(translations.get(API.getError(it)))

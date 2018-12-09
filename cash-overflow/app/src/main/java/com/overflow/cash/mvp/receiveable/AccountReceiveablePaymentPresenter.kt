@@ -17,11 +17,11 @@ class AccountReceiveablePaymentPresenter(private val context:Context, private va
     lateinit var view:AccountReceiveablePaymentContract.View
 
     override fun loadCashBox() {
-        val merchant = Data(preferences.getString("merchant", "{}"))
+        val outlet = Data(preferences.getString("outlet", "{}"))
         val input = Data()
         input["page"] = API.MIN_PAGE
         input["size"] = getSize()
-        input["merchant_id"] = merchant.getLong("id")
+        input["outlet_id"] = outlet.getLong("id")
         if(API.isConnected(context)){
             this.disposable.add(this.service.getCashboxs(input).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){
@@ -44,8 +44,8 @@ class AccountReceiveablePaymentPresenter(private val context:Context, private va
     }
 
     override fun payAccount(data: Data) {
-        val merchant = Data(preferences.getString("merchant", "{}"))
-        data["merchant_id"] = merchant.getLong("id")
+        val outlet = Data(preferences.getString("outlet", "{}"))
+        data["outlet_id"] = outlet.getLong("id")
 
         if(API.isConnected(context)){
             this.disposable.add(this.orderService.payAccountReceiveable(data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->

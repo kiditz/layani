@@ -35,8 +35,8 @@ class PresenterModule {
         return RegisterPresenter(context, translations, disposable, accountService)
     }
     @Provides
-    internal fun provideLoginPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, accountService: AccountService, merchantService: MerchantService, preferences: SharedPreferences, accountManager: AccountManager): LoginPresenter {
-        return LoginPresenter(context, translations, disposable, accountService, merchantService, preferences, accountManager)
+    internal fun provideLoginPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, accountService: AccountService, outletService: OutletService, preferences: SharedPreferences, accountManager: AccountManager): LoginPresenter {
+        return LoginPresenter(context, translations, disposable, accountService, outletService, preferences, accountManager)
     }
 
     @Provides

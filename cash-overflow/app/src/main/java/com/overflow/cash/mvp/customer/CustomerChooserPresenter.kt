@@ -14,9 +14,9 @@ class CustomerChooserPresenter(private val context:Context, private val preferen
     lateinit var view:CustomerChooserContract.View
     var lastPage:Boolean = true
     var loading:Boolean = true
-    var merchant:Data = Data()
+    var outlet:Data = Data()
     init {
-         merchant = Data(preferences.getString("merchant", "{}"))
+         outlet = Data(preferences.getString("outlet", "{}"))
     }
     override fun attach(view: CustomerChooserContract.View) {
         this.view = view
@@ -34,7 +34,7 @@ class CustomerChooserPresenter(private val context:Context, private val preferen
         val input = Data()
         input["page"] = API.MIN_PAGE
         input["size"] = getSize()
-        input["merchant_id"] = merchant.getLong("id")
+        input["outlet_id"] = outlet.getLong("id")
         input["name"] = name
         if(API.isConnected(context)){
             lastPage = false
@@ -69,7 +69,7 @@ class CustomerChooserPresenter(private val context:Context, private val preferen
 
 
     override fun editCustomer(customer: Data, holder: RecyclerView.ViewHolder?) {
-        customer["merchant_id"] = merchant.getLong("id")
+        customer["outlet_id"] = outlet.getLong("id")
         if(API.isConnected(context)){
             this.disposable.add(this.customerService.editCustomer(customer).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){

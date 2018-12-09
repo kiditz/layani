@@ -42,7 +42,7 @@ class SettingFragment:Fragment() {
             }
             val account = accountManager.getAccountsByType(getString(R.string.account_type))[0]
             accountManager.removeAccount(account, null, null)
-            preferences.edit().remove("merchant").apply()
+            preferences.edit().remove("outlet").apply()
             menuActivity.onNotLogin()
         }
     }

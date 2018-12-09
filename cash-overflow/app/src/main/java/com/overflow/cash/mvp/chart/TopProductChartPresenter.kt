@@ -12,11 +12,11 @@ import io.reactivex.disposables.CompositeDisposable
 
 class TopProductChartPresenter(private val context: Context, private val preferences: SharedPreferences, private val translations: Translations, private val orderService:OrderService, private val disposable: CompositeDisposable) : TopProductChartContract.Presenter {
     lateinit var view : TopProductChartContract.View
-    lateinit var merchant:Data
+    lateinit var outlet:Data
 
     override fun showChart() {
         val data=Data()
-        data["merchant_id"] = this.merchant.getLong("id")
+        data["outlet_id"] = this.outlet.getLong("id")
         data["page"] = 1L
         data["size"] = 5L
         if(API.isConnected(context)){
@@ -37,7 +37,7 @@ class TopProductChartPresenter(private val context: Context, private val prefere
 
     override fun attach(view: TopProductChartContract.View) {
         this.view = view
-        this.merchant = Data(preferences.getString("merchant", "{}"))
+        this.outlet = Data(preferences.getString("outlet", "{}"))
         this.showChart()
     }
 

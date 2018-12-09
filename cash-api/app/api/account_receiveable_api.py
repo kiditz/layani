@@ -18,7 +18,7 @@ def get_account_receiveable_by_order_id():
     {
         "page": "Long",
         "size": "Long",
-        "merchant_id": "Long"
+        "outlet_id": "Long"
         "name":"String"
     }
     """

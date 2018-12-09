@@ -13,7 +13,7 @@ class AccountReceiveableService(object):
 		super(AccountReceiveableService, self).__init__()
 	
 	@Key(['name'])
-	@Number(['merchant_id', 'page', 'size'])
+	@Number(['outlet_id', 'page', 'size'])
 	def get_account_receiveable_list(self, domain):
 		page = int(domain['page'])
 		size = int(domain['size'])
@@ -27,7 +27,7 @@ class AccountReceiveableService(object):
 		account_receiveable_q = AccountReceiveable.query.with_entities(*entities)\
 			.join(Order, and_(Order.id == AccountReceiveable.order_id, Order.status == 'P')) \
 			.join(Customer, Customer.id == Order.customer_id) \
-			.filter(AccountReceiveable.merchant_id == domain['merchant_id'])\
+			.filter(AccountReceiveable.outlet_id == domain['outlet_id'])\
 			.filter(and_(Customer.name.ilike('%' + domain['name'] + '%'), Order.payment_method == PaymentMethod.CREDIT)) \
 			.order_by(Customer.name)\
 			.group_by(Customer.id)\
@@ -60,7 +60,7 @@ class AccountReceiveableService(object):
 		account_receiveable_list = list(map(lambda x: x._asdict(), account_receiveable_q.items))
 		return {'payload': account_receiveable_list, 'total': account_receiveable_q.total, 'total_pages': account_receiveable_q.pages}
 	
-	@Number(['merchant_id'])
+	@Number(['outlet_id'])
 	def get_account_receiveable_age(self, domain):
 		in_1_30 = AccountReceiveable.query.with_entities(func.coalesce(func.sum(AccountReceiveable.total_credit), 0).label('total_credit'))\
 			.join(Order, Order.id == AccountReceiveable.order_id)\
@@ -85,7 +85,7 @@ class AccountReceiveableService(object):
 			.first()._asdict()
 		return {'payload': {'1-30 Hari': in_1_30['total_credit'], '30-60 Hari': in_30_60['total_credit'], '60-90 Hari': in_60_90['total_credit'], 'Lebih Dari 90 Hari': in_gt_90['total_credit']}}
 
-	@Number(['merchant_id'])
+	@Number(['outlet_id'])
 	def get_account_receiveable_out_of_age(self, domain):
 		in_0_30 = AccountReceiveable.query.with_entities(func.coalesce(func.sum(AccountReceiveable.total_credit), 0).label('total_credit'))\
 			.join(Order, Order.id == AccountReceiveable.order_id)\

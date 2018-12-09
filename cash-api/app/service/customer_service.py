@@ -13,13 +13,13 @@ class CustomerService(object):
 	def __init__(self):
 		super(CustomerService, self).__init__()
 	
-	@Blank(['merchant_id'])
+	@Blank(['outlet_id'])
 	@Number(['page', 'size'])
 	def get_customer_list(self, domain):
 		page = int(domain['page'])
 		size = int(domain['size'])
 		customer_q = Customer.query\
-			.filter_by(merchant_id=domain['merchant_id'])\
+			.filter_by(outlet_id=domain['outlet_id'])\
 			.filter(Customer.name.ilike('%' + domain['name'] + '%'))\
 			.filter(Customer.active == True)\
 			.order_by(Customer.name.asc()).paginate(page, size, error_out=False)
