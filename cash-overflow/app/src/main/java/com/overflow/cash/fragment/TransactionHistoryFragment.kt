@@ -85,7 +85,7 @@ class TransactionHistoryFragment : BaseFragment(), TransactionHistoryContract.Vi
         }
         this.adapter.onItemClick = {data, viewHolder ->
             this.position = viewHolder.adapterPosition
-            itemsPresenter.loadOrderItems(data.getLong("id"))
+            itemsPresenter.loadOrderItems(data.getString("order_code"))
         }
     }
 

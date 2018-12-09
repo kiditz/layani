@@ -21,11 +21,11 @@ class AccountReceiveableDetailPresenter(private val context:Context, private val
         return preferences.getInt(Constant.MAX_PAGE, API.SIZE)
     }
 
-    override fun loadOrderItems(orderId: Long) {
+    override fun loadOrderItems(orderCode: String) {
         if(API.isConnected(context)){
             lastPage = false
             loading = true
-            this.disposable.add(this.orderService.getOrderItems(orderId).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
+            this.disposable.add(this.orderService.getOrderItems(orderCode).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){
                     val payloads = API.payloads(response)
                     if(payloads.isEmpty()){

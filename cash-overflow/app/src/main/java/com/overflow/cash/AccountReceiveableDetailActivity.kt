@@ -77,7 +77,7 @@ class AccountReceiveableDetailActivity : AppCompatActivity(), AccountReceiveable
 
         this.adapter.onItemClick = {data, _ ->
             this.order = data
-            this.presenter.loadOrderItems(data.getLong("order_id"))
+            this.presenter.loadOrderItems(data.getString("order_code"))
         }
     }
 

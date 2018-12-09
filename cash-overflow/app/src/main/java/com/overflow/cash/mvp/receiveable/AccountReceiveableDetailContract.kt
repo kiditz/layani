@@ -14,6 +14,6 @@ class AccountReceiveableDetailContract {
 
         fun loadDetail(page: Int, customerId:Long)
 
-        fun loadOrderItems(orderId:Long)
+        fun loadOrderItems(orderCode:String)
     }
 }

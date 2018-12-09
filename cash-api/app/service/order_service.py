@@ -194,7 +194,7 @@ class OrderService(object):
 
 	@Number(['order_code'])
 	def get_order_items(self, domain):
-		order_code = int(domain['order_code'])
+		order_code = domain['order_code']
 		entities = (			
 			OrderItem.sub_total,
 			OrderItem.qty,
