@@ -70,7 +70,16 @@ class OutletService(object):
 		:return dict:
 		"""
 		self.check_password(domain['username'], domain['password'])
-		outlet = Outlet.query.join(User, User.id == Outlet.user_id) \
+		entities = (
+			Outlet.name,
+			Outlet.phone_number,
+			Outlet.address,
+			Outlet.email,
+			Outlet.id,
+			User.outlet_name,
+			User.username
+		)
+		outlet = Outlet.query.with_entities(*entities).join(User, User.id == Outlet.user_id) \
 			.filter(User.username == domain['username']) \
 			.first()
 		outlet_dict = outlet.to_dict()
