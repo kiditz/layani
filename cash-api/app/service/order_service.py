@@ -120,9 +120,10 @@ class OrderService(object):
 		# order.total_payment = 0.0
 		# order.cashback = 0.0
 		# order.profit = 0
-		order.order_at = datetime.now()
+		
 		order.save()
 		order_cpy = Order(order.to_dict())
+		order_cpy.order_at = datetime.now()
 		order_cpy.id = None
 		order_cpy.total_amount = order.total_amount * -1
 		order_cpy.save()
@@ -252,7 +253,7 @@ class OrderService(object):
 		order_q = order_q.filter(Order.order_code.ilike('%' + domain['query'] + '%'))
 		if 'status' in domain:
 			order_q = order_q.filter(Order.status == domain['status'])
-		order_q = order_q.order_by(Order.order_at.desc()).paginate(page, size, error_out=False)
+		order_q = order_q.order_by(Order.order_code.desc(), Order.order_at.desc()).paginate(page, size, error_out=False)
 		order_list = list(map(lambda x: x._asdict(), order_q.items))
 		return {'payload': order_list, 'total': order_q.total, 'total_pages': order_q.pages}
 
