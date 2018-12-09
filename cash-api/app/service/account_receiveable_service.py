@@ -136,7 +136,7 @@ class AccountReceiveableService(object):
 		cashbox.total_amount += account_receiveable.payment_amount
 		cashbox_history = CashboxHistory()
 		cashbox_history.cash_box_id = cashbox.id
-		cashbox_history.amount = payment_amount
+		cashbox_history.amount = account_receiveable.payment_amount
 		cashbox_history.payment_method = PaymentMethod.DEBIT
 		cashbox_history.remark = 'payment.paid #' + order.order_code
 		cashbox_history.save()
