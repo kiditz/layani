@@ -206,7 +206,8 @@ class OrderService(object):
 			Product.name
 		)
 		item_q = OrderItem.query.with_entities(*entities)\
-			.join(Product, Product.id == OrderItem.product_id)\
+			.join(Product, Product.id == OrderItem.product_id) \
+			.join(Order, Order.id == OrderItem.order_id) \
 			.filter(Product.outlet_id == domain['outlet_id'])\
 			.filter(Order.status != OrderStatus.VOID)\
 			.group_by(Product.id).order_by("quantity desc")\

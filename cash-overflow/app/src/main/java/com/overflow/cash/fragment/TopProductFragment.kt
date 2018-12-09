@@ -19,11 +19,13 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.utils.ColorTemplate
+import com.overflow.cash.MenuActivity
 import com.overflow.cash.R
 import com.overflow.cash.mvp.chart.TopProductChartContract
 import com.overflow.cash.mvp.chart.TopProductChartPresenter
 import com.overflow.libs.core.Data
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.activity_menu.*
 import kotlinx.android.synthetic.main.fragment_pie_chart.*
 import javax.inject.Inject
 
@@ -32,9 +34,11 @@ class TopProductFragment: Fragment(), TopProductChartContract.View{
 
     @Inject
     lateinit var presenter:TopProductChartPresenter
+    lateinit var menuActivity: MenuActivity
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         AndroidSupportInjection.inject(this)
+        this.menuActivity = activity as MenuActivity
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -80,6 +84,7 @@ class TopProductFragment: Fragment(), TopProductChartContract.View{
         return inflater.inflate(R.layout.fragment_pie_chart, container, false)
     }
     override fun onChartLoaded(products:List<Data>) {
+
         setDataChart(products)
     }
 
@@ -129,6 +134,10 @@ class TopProductFragment: Fragment(), TopProductChartContract.View{
     }
 
     override fun showEmpty() {
+
+        val menu = menuActivity.nav_view.menu
+        menu.findItem(R.id.nav_dashboard).isVisible = false
+        menuActivity.onNavigationItemSelected(menu.findItem(R.id.nav_product))
     }
 
     override fun showNotConnected(res: String) {

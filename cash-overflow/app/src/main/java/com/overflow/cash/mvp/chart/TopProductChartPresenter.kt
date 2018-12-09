@@ -22,8 +22,12 @@ class TopProductChartPresenter(private val context: Context, private val prefere
         if(API.isConnected(context)){
             this.disposable.add(this.orderService.getTopProduct(data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){
-                    this.view.onChartLoaded(API.payloads(response))
-
+                    val payloads = API.payloads(response)
+                    if(payloads.isNotEmpty()){
+                        this.view.onChartLoaded(payloads)
+                    }else{
+                        this.view.showEmpty()
+                    }
                 }else{
                     this.view.showNoOk(translations.get(API.getError(response)))
                 }

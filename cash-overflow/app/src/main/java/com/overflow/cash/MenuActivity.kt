@@ -106,13 +106,6 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        return when (item.itemId) {
-//            R.id.action_settings -> {
-//                //moveTo(AddPriceActivity::class.java)
-//                true
-//            }
-//            else -> super.onOptionsItemSelected(item)
-//        }
         return false
     }
 
@@ -151,12 +144,13 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
+
+
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
         return fragmentDispatchingAndroidInjector
     }
 
     override fun onNotLogin() {
-
         val intent = Intent(this, LoginActivity::class.java)
         startActivityForResult(intent, Constant.REQUEST_LOGIN)
 
