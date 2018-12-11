@@ -8,9 +8,9 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PopupMenu
 import android.view.*
 import com.miguelcatalan.materialsearchview.MaterialSearchView
-import com.overflow.cash.AccountReceiveableDetailActivity
-import com.overflow.cash.Constant
-import com.overflow.cash.MenuActivity
+import com.overflow.cash.activity.AccountReceiveableDetailActivity
+import com.overflow.cash.activity.Constant
+import com.overflow.cash.activity.MenuActivity
 import com.overflow.cash.R
 import com.overflow.cash.adapter.AccountReceiveableAdapter
 import com.overflow.cash.mvp.receiveable.AccountReceiveableContract

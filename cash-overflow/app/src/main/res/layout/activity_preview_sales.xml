@@ -1,25 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.ProductFragment">
+    tools:context=".activity.PreviewSalesActivity">
+    <include layout="@layout/success_message"/>
+    <LinearLayout
+        android:id="@+id/header"
+        android:orientation="horizontal"
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+        <LinearLayout
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_margin"
+            android:background="?selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_customer"
+                android:tint="@color/colorAccent"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/customer"
+                android:textSize="@dimen/text_size_medium" />
+        </LinearLayout>
+        <LinearLayout
+            android:visibility="gone"
+            android:layout_width="0dp"
+            android:gravity="center_vertical"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_margin"
+            android:background="?selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_table"
+                android:tint="@color/colorAccent"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_medium"
+                android:textStyle="bold"
+                tools:text="@string/customer" />
+        </LinearLayout>
+    </LinearLayout>
+    <include layout="@layout/line_vert"/>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-        tools:listitem="@layout/adapter_sales_preview" />
+        tools:listitem="@layout/adapter_sales_preview"
+        />
 
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_gravity="bottom|end"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_customer"
-        app:fabSize="normal"
-        app:useCompatPadding="true" />
+        android:weightSum="2">
+        <Button
+            android:id="@+id/btn_save"
+            android:background="@drawable/btn_warning"
+            android:textColor="@color/textLight"
+            android:layout_width="0dp"
+            android:enabled="true"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/save"/>
+        <Button
+            android:id="@+id/btn_pay"
+            android:background="@drawable/btn_default"
+            android:textColor="@color/textLight"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/pay"/>
+    </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

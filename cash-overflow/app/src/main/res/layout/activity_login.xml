@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/loginBackground"
     android:orientation="vertical"
-    tools:context=".LoginActivity">
+    tools:context=".activity.LoginActivity">
     <TextView
         android:id="@+id/tv_success_message"
         android:layout_width="match_parent"

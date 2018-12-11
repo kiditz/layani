@@ -4,21 +4,19 @@ import android.accounts.AccountManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jakewharton.rxbinding2.view.RxView
-import com.overflow.cash.MenuActivity
+import com.overflow.cash.activity.MenuActivity
 import com.overflow.cash.R
-import com.overflow.cash.net.RxUtils
 import com.overflow.cash.realm.OrderRealm
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_setting.*
 import javax.inject.Inject
 
 class SettingFragment:BaseFragment() {
-    lateinit var menuActivity:MenuActivity
+    lateinit var menuActivity: MenuActivity
     @Inject
     lateinit var accountManager: AccountManager
     @Inject

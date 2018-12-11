@@ -18,19 +18,7 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <TextView
-                android:id="@+id/tv_success_message"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:text="Nilai pembelian Harus lebih kecil"
-                android:background="@color/colorAccent"
-                android:padding="5dp"
-                android:gravity="center_horizontal"
-                android:textSize="18sp"
-                android:visibility="gone"
-                android:textColor="@color/textLight"
-
-                />
+            <include layout="@layout/success_message"/>
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler"
                 android:layout_width="match_parent"

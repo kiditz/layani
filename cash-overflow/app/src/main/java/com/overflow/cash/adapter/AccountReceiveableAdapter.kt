@@ -3,13 +3,11 @@ package com.overflow.cash.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.overflow.cash.Constant
 import com.overflow.cash.R
 import com.overflow.cash.utils.rupiah
 import com.overflow.libs.core.Data

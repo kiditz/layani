@@ -3,14 +3,13 @@ package com.overflow.cash.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.overflow.cash.Constant
+import com.overflow.cash.activity.Constant
 import com.overflow.cash.R
 import com.overflow.cash.fragment.dummy.DummyContent.DummyItem
 import com.overflow.cash.utils.currentLocale
@@ -57,7 +56,7 @@ class TransactionHistoryAdapter(private val translations: Translations) : Recycl
         holder.status.text = translations.get(item.getString("status").toString())
         holder.orderTime.text = dateFormat.format(Date(item.getLong("order_at")))
         val statusColor:Int = when(item.getString("status")){
-            Constant.TransactionStatus.IN_PROGRESS -> ContextCompat.getColor(context, android.R.color.holo_orange_light)
+            Constant.TransactionStatus.PENDING -> ContextCompat.getColor(context, android.R.color.holo_orange_light)
             Constant.TransactionStatus.VOID -> ContextCompat.getColor(context, android.R.color.holo_red_light)
             Constant.TransactionStatus.SUCCESS -> ContextCompat.getColor(context, android.R.color.holo_green_light)
             else ->  ContextCompat.getColor(context, android.R.color.black)

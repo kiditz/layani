@@ -10,12 +10,17 @@ import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.view.*
 import com.miguelcatalan.materialsearchview.MaterialSearchView
-import com.overflow.cash.*
+import com.overflow.cash.R
+import com.overflow.cash.activity.Constant
+import com.overflow.cash.activity.MenuActivity
+import com.overflow.cash.activity.PreviewSalesActivity
+import com.overflow.cash.activity.ScannerActivity
 import com.overflow.cash.model.OrderItem
-import com.overflow.cash.mvp.product.CategoryListContract
-import com.overflow.cash.mvp.product.CategoryListPresenter
+import com.overflow.cash.mvp.product.LoadCategoryContract
+import com.overflow.cash.mvp.product.LoadCategoryPresenter
 import com.overflow.cash.net.NetworkExHandler
 import com.overflow.cash.pager.ViewPagerAdapter
+import com.overflow.cash.realm.OrderRealm
 import com.overflow.cash.utils.moveTo
 import com.overflow.cash.utils.snack
 import com.overflow.libs.core.Data
@@ -23,23 +28,27 @@ import com.overflow.libs.core.Translations
 import dagger.android.support.AndroidSupportInjection
 import io.realm.Realm
 import io.realm.RealmResults
+import kotlinx.android.synthetic.main.cart_layout.view.*
 import kotlinx.android.synthetic.main.fragment_sales_list.*
 import javax.inject.Inject
 
-class SalesListFragment : BaseFragment(), CategoryListContract.View, ViewPager.OnPageChangeListener {
+
+class SalesListFragment : BaseFragment(), LoadCategoryContract.View, ViewPager.OnPageChangeListener {
 
     private lateinit var outlet: Data
     private lateinit var adapter: ViewPagerAdapter
     @Inject
     lateinit var translations: Translations
     @Inject
-    lateinit var presenter: CategoryListPresenter
+    lateinit var presenter: LoadCategoryPresenter
     @Inject
     lateinit var preferences: SharedPreferences
     @Inject
+    lateinit var orderRealm:OrderRealm
+    @Inject
     lateinit var networkExHandler: NetworkExHandler
     private var categoryList = mutableListOf<Data>()
-    private lateinit var menuActivity:MenuActivity
+    private lateinit var menuActivity: MenuActivity
     private lateinit var realm: Realm
 
     private var allOrders:RealmResults<OrderItem>? = null
@@ -49,7 +58,6 @@ class SalesListFragment : BaseFragment(), CategoryListContract.View, ViewPager.O
     }
 
     override fun onAttach(context: Context?) {
-        AndroidSupportInjection.inject(this)
         super.onAttach(context)
         setHasOptionsMenu(true)
         this.outlet = Data(preferences.getString("outlet", "{}"))
@@ -66,53 +74,55 @@ class SalesListFragment : BaseFragment(), CategoryListContract.View, ViewPager.O
         this.view_pager?.adapter = adapter
         view_pager?.addOnPageChangeListener(this)
         tab_layout.setupWithViewPager(view_pager)
-        showSumQuantity()
         this.presenter.attach(this)
         this.presenter.loadCategory(-1)
     }
 
-    private fun showSumQuantity() {
+    private fun showSumQuantity(menuItem: MenuItem) {
         this.allOrders = realm.where(OrderItem::class.java).findAll()
-        sumQty(allOrders!!)
+        sumQty(menuItem, allOrders!!)
         allOrders!!.addChangeListener { t, _ ->
-            sumQty(t)
+            sumQty(menuItem, t)
         }
     }
 
 
 
-    private fun sumQty(results:RealmResults<OrderItem>){
+    private fun sumQty(menuItem: MenuItem, results:RealmResults<OrderItem>){
         val sumQty = results.sum("qty")
-        if(sumQty.toLong() > 0){
-            tvSumQty?.text = sumQty.toString()
-            tvSumQty?.visibility = View.VISIBLE
-            fabSales?.isEnabled = true
-        }else{
-            tvSumQty?.visibility = View.GONE
-            fabSales?.isEnabled = false
-        }
 
-        fabSales?.setOnClickListener {
-            activity!!.moveTo(PreviewSalesActivity::class.java)
+        if(sumQty.toLong() > 0){
+            menuItem.actionView.cart_badge?.text = sumQty.toString()
+            menuItem.actionView.cart_badge?.visibility = View.VISIBLE
+        }else{
+            menuItem.actionView.cart_badge?.visibility = View.GONE
         }
     }
 
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.menu_sales, menu)
-        menuActivity.search?.setMenuItem(menu!!.findItem(R.id.action_search))
+        val menuItem = menu!!.findItem(R.id.action_cart)
+        menuItem.actionView.btn_preview_sales.setOnClickListener {
+            //Pindah ke activity preview sales
+            menuActivity.moveTo(PreviewSalesActivity::class.java)
+        }
+        showSumQuantity(menuItem!!)
+        menuActivity.search?.setMenuItem(menu.findItem(R.id.action_search))
+        btn_scan.setOnClickListener {
+            handleScanAction()
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when(item!!.itemId){
             R.id.action_delete_transaction -> {
-                presenter.deleteAllOrderItems()
-                val salesFragment = (adapter.getItem(view_pager.currentItem) as SalesFragment)
-                salesFragment.searchProduct(Constant.TEXT_EMPTY)
-                false
+                orderRealm.removeAllItems()
+                menuActivity.goTo(R.id.nav_transaction)
+                true
             }
-            R.id.action_scan ->{
-                handleScanAction()
+            R.id.action_cart -> {
+                activity!!.moveTo(PreviewSalesActivity::class.java)
                 true
             }
             else -> false
@@ -121,9 +131,10 @@ class SalesListFragment : BaseFragment(), CategoryListContract.View, ViewPager.O
 
     override fun onCategoryLoaded(categoryList: List<Data>) {
         adapter.clear()
-        var salesFragment = SalesFragment.newInstance(-1)
-        //Sometimes now working after reload token
+
+        //Sometimes not cause sales fragment not attached into the context working after reload token
         try {
+            var salesFragment = SalesFragment.newInstance(-1)
             hideMessage()
             adapter.addFragment(salesFragment, getString(R.string.all_product))
             this.categoryList.clear()
@@ -153,8 +164,6 @@ class SalesListFragment : BaseFragment(), CategoryListContract.View, ViewPager.O
     }
 
     override fun showEmpty() {
-//        adapter.addFragment(BlankFragment.newInstance(getString(R.string.no_product_title), Constant.TEXT_EMPTY), Constant.TEXT_EMPTY)
-//        adapter.notifyDataSetChanged()
         hideMessage()
         adapter.clear()
         val salesFragment = SalesFragment.newInstance(-1)

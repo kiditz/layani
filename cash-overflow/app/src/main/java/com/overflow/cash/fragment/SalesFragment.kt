@@ -10,27 +10,25 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.overflow.cash.Constant
 import com.overflow.cash.R
+import com.overflow.cash.activity.Constant
 import com.overflow.cash.adapter.SalesListAdapter
 import com.overflow.cash.model.OrderItem
-import com.overflow.cash.mvp.order.OrderContract
-import com.overflow.cash.mvp.order.OrderPresenter
-import com.overflow.cash.mvp.product.ProductListContract
-import com.overflow.cash.mvp.product.ProductListPresenter
+import com.overflow.cash.mvp.product.LoadProductContract
+import com.overflow.cash.mvp.product.LoadProductPresenter
 import com.overflow.cash.net.API
 import com.overflow.cash.net.ImageService
 import com.overflow.cash.net.NetworkExHandler
+import com.overflow.cash.realm.OrderRealm
 import com.overflow.cash.utils.AbstractRecyclerPagination
 import com.overflow.cash.utils.decoration.MarginItemDecoration
-import com.overflow.cash.utils.rupiah
 import com.overflow.cash.utils.snack
 import com.overflow.libs.core.Data
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.dialog_manage_order_item_qty.view.*
 import kotlinx.android.synthetic.main.fragment_blank.*
 import kotlinx.android.synthetic.main.fragment_blank.view.*
 import kotlinx.android.synthetic.main.fragment_sales_recycler.*
-import kotlinx.android.synthetic.main.dialog_manage_order_item_qty.view.*
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -38,20 +36,18 @@ import javax.inject.Inject
  * @author Rifky Aditya Bastara
  * Load Product From Rest API Into View
  */
-class SalesFragment : Fragment(), ProductListContract.View, OrderContract.View {
-
-
+class SalesFragment : Fragment(), LoadProductContract.View{
     var currentPage: Int = API.MIN_PAGE
     var categoryId:Long = -1L
     private lateinit var adapter: SalesListAdapter
     @Inject
-    lateinit var productListPresenter: ProductListPresenter
+    lateinit var productListPresenter: LoadProductPresenter
     @Inject
     lateinit var networkExHandler: NetworkExHandler
     @Inject
     lateinit var imageService: ImageService
     @Inject
-    lateinit var orderPresenter: OrderPresenter
+    lateinit var orderRealm: OrderRealm
     private var addOrSubtractOrderItemView: View? = null
     private var addOrSubtractOrderItemDialog: AlertDialog? = null
     private var orderBy:String= Constant.Sort.BY_NAME
@@ -67,7 +63,6 @@ class SalesFragment : Fragment(), ProductListContract.View, OrderContract.View {
         super.onAttach(context)
         AndroidSupportInjection.inject(this)
         productListPresenter.attach(this)
-        orderPresenter.attach(this)
         currentPage = 1
 
     }
@@ -136,11 +131,10 @@ class SalesFragment : Fragment(), ProductListContract.View, OrderContract.View {
             val qtyParse = addOrSubtractOrderItemView?.ed_qty?.text.toString().toLong()
             if(this.addOrSubtractOrderItemView?.ed_qty?.text.toString().toLong() <= 0){
                 holder.qty.visibility = View.GONE
-                orderPresenter.deleteItem(data.getLong("product_id"))
+                orderRealm.deleteItem(data.getLong("product_id"))
             }else{
                 qty = qtyParse - 1
                 addItem(null, qty, false, holder)
-                orderPresenter.loadDiscount(data.getLong("product_id"), qty + 1, holder)
             }
 
         }
@@ -157,8 +151,8 @@ class SalesFragment : Fragment(), ProductListContract.View, OrderContract.View {
 
     private fun handleAddOrder(data: Data, viewHolder: SalesListAdapter.ViewHolder) {
         val qty = viewHolder.qty.text.replace("[^0-9]".toRegex(), "").trim().toLong()
-        addItem(null, qty, false, viewHolder)
-        orderPresenter.loadDiscount(data.getLong("product_id"), qty + 1, viewHolder)
+        addItem(null, qty, true, viewHolder)
+        //orderPresenter.loadDiscount(data.getLong("product_id"), qty + 1, viewHolder)
 
     }
 
@@ -232,28 +226,11 @@ class SalesFragment : Fragment(), ProductListContract.View, OrderContract.View {
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onOrderIntemCreated(item: OrderItem?, holder: SalesListAdapter.ViewHolder) {
+    fun onOrderIntemCreated(item: OrderItem?, holder: SalesListAdapter.ViewHolder) {
         holder.qty.text = item?.qty.toString() + " " + item?.unit
         holder.qty.visibility = View.VISIBLE
     }
 
-    @SuppressLint("SetTextI18n")
-    override fun onDiscountLoaded(data: Data, holder: SalesListAdapter.ViewHolder) {
-        Timber.i("Loaded : %s", data)
-        val qty = holder.qty.text.replace("[^0-9]".toRegex(), "").trim().toLong()
-        if(data.getString("discount_type") == Constant.DiscountType.PERCENTAGE){
-            holder.discount.text = "${data.getDouble("discount")}%"
-        }else{
-            holder.discount.text = activity!!.rupiah(data.getDouble("discount"))
-        }
-        addItem(data, qty, true, holder)
-    }
-
-    override fun onDiscountNotLoaded(res: String, holder: SalesListAdapter.ViewHolder) {
-        Timber.i("Not loaded : %s", res)
-        val qty = holder.qty.text.replace("[^0-9]".toRegex(), "").trim().toLong()
-        addItem(null, qty,true, holder)
-    }
 
     private fun addItem(discount: Data?, qty:Long, updateQty:Boolean=false, holder: SalesListAdapter.ViewHolder){
         val data = adapter.values[holder.adapterPosition]
@@ -294,6 +271,6 @@ class SalesFragment : Fragment(), ProductListContract.View, OrderContract.View {
             input["discount_type"] = Constant.DiscountType.PERCENTAGE
         }
         input["sub_total"] = subTotal
-        orderPresenter.addOrderItem(input, updateQty, holder)
+        orderRealm.addItem(input, updateQty)
     }
 }

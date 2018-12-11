@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
-import com.overflow.cash.ProductDetailActivity
+import com.overflow.cash.activity.ProductDetailActivity
 import com.overflow.cash.R
 import com.overflow.cash.fragment.dummy.DummyContent.DummyItem
 import com.overflow.cash.net.ImageService

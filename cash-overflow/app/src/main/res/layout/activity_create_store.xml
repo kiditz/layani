@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:orientation="vertical"
-    tools:context=".CreateStoreActivity">
+    tools:context=".activity.CreateStoreActivity">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

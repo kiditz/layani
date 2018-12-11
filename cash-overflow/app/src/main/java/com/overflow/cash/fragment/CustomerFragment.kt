@@ -6,13 +6,13 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
 import com.miguelcatalan.materialsearchview.MaterialSearchView
-import com.overflow.cash.Constant
-import com.overflow.cash.CustomerListAddActivity
-import com.overflow.cash.MenuActivity
+import com.overflow.cash.activity.Constant
+import com.overflow.cash.activity.CustomerListAddActivity
+import com.overflow.cash.activity.MenuActivity
 import com.overflow.cash.R
 import com.overflow.cash.adapter.CustomerChooserAdapter
-import com.overflow.cash.mvp.customer.CustomerChooserContract
-import com.overflow.cash.mvp.customer.CustomerChooserPresenter
+import com.overflow.cash.mvp.customer.LoadCustomerContract
+import com.overflow.cash.mvp.customer.LoadCustomerPresenter
 import com.overflow.cash.net.NetworkExHandler
 import com.overflow.cash.utils.AbstractRecyclerPagination
 import com.overflow.cash.utils.moveTo
@@ -22,11 +22,11 @@ import kotlinx.android.synthetic.main.fragment_blank.*
 import kotlinx.android.synthetic.main.fragment_customer.*
 import javax.inject.Inject
 
-class CustomerFragment : BaseFragment(), CustomerChooserContract.View {
+class CustomerFragment : BaseFragment(), LoadCustomerContract.View {
 
 
     @Inject
-    lateinit var presenter: CustomerChooserPresenter
+    lateinit var presenter: LoadCustomerPresenter
     @Inject
     lateinit var translations: Translations
     @Inject
@@ -74,7 +74,7 @@ class CustomerFragment : BaseFragment(), CustomerChooserContract.View {
         }
 
         this.adapter.onItemClick = { data, _ ->
-            onCustomerEdited(data)
+            //Not Implemented
         }
 
         menuActivity.search?.setOnQueryTextListener(object : MaterialSearchView.OnQueryTextListener {
@@ -135,11 +135,4 @@ class CustomerFragment : BaseFragment(), CustomerChooserContract.View {
         showMessage(translations.get(Constant.TranslationsKey.NO_INTERNET), Constant.TEXT_EMPTY)
     }
 
-    override fun onCustomerEdited(customer: Data, holder: RecyclerView.ViewHolder?) {
-
-    }
-
-    override fun onCustomerEditShowNoOk(res: String) {
-
-    }
 }

@@ -1,0 +1,46 @@
+package com.overflow.cash.mvp.product
+
+import android.content.Context
+import android.content.SharedPreferences
+import com.overflow.cash.activity.Constant
+import com.overflow.cash.net.API
+import com.overflow.cash.net.ProductService
+import com.overflow.cash.net.RxUtils
+import com.overflow.libs.core.Data
+import com.overflow.libs.core.Translations
+import io.reactivex.disposables.CompositeDisposable
+
+class EditProductPresenter(private var context: Context, private var translations: Translations, private var disposable: CompositeDisposable, private var productService: ProductService, val preferences: SharedPreferences): EditProductContract.Presenter {
+
+
+    lateinit var view: EditProductContract.View
+
+    override fun attach(view: EditProductContract.View) {
+        this.view = view
+    }
+
+
+
+    override fun detach() {
+        disposable.clear()
+    }
+
+    override fun editProduct(data: Data) {
+        val outlet = Data(preferences.getString("outlet", "{}"))
+        data["outlet_id"] = outlet.getLong("id")
+        if(API.isConnected(context)){
+            this.disposable.add(this.productService.editProduct(data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
+                if(API.ok(response)){
+                    this.view.onProductSaved(API.payload(response))
+                }else{
+                    this.view.showNoOk(translations.get(API.getError(response)))
+                }
+            }, {error ->
+                this.view.showError(error)
+            }))
+        }else{
+            this.view.showNotConnected(this.translations.get(Constant.TranslationsKey.NO_INTERNET))
+        }
+    }
+
+}

@@ -19,7 +19,7 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.utils.ColorTemplate
-import com.overflow.cash.MenuActivity
+import com.overflow.cash.activity.MenuActivity
 import com.overflow.cash.R
 import com.overflow.cash.mvp.chart.TopProductChartContract
 import com.overflow.cash.mvp.chart.TopProductChartPresenter

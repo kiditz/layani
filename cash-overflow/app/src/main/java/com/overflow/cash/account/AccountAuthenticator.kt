@@ -7,7 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import com.overflow.cash.BuildConfig
-import com.overflow.cash.LoginActivity
+import com.overflow.cash.activity.LoginActivity
 import com.overflow.cash.net.AccountService
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.OauthCredentialGenerator

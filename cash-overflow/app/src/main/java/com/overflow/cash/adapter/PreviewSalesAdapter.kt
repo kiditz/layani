@@ -9,10 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.overflow.cash.Constant
+import com.overflow.cash.activity.Constant
 import com.overflow.cash.R
 import com.overflow.cash.fragment.dummy.DummyContent.DummyItem
-import com.overflow.cash.mvp.order.PreviewSalesContract
 import com.overflow.cash.net.ImageService
 import com.overflow.cash.utils.rupiah
 import com.overflow.libs.core.Data
@@ -21,7 +20,7 @@ import kotlinx.android.synthetic.main.adapter_sales_preview.view.*
 /**
  * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
  */
-class PreviewSalesAdapter(private val imageService: ImageService, private val presenter: PreviewSalesContract.Presenter) : RecyclerView.Adapter<PreviewSalesAdapter.ViewHolder>() {
+class PreviewSalesAdapter(private val imageService: ImageService) : RecyclerView.Adapter<PreviewSalesAdapter.ViewHolder>() {
     lateinit var context: Context
     val values: MutableList<Data> = mutableListOf()
     fun addValues(payloads:List<Data>) {
@@ -54,18 +53,16 @@ class PreviewSalesAdapter(private val imageService: ImageService, private val pr
         holder.subTotal.text = subTotal
         val documentId = item.getLong("documentId")
         val countDiscount = item.getLong("countDiscount")
+        holder.sellPrice.text = "$sellPrice x $qty $unit"
         if(countDiscount > 0){
-            //this.presenter.loadDiscount(productId, qty, holder, position)
             val discountAmount = item.getDouble("discountAmount")
             val discountType = item.getString("discountType")
             if(discountAmount > 0.0){
                 if(discountType == Constant.DiscountType.PERCENTAGE){
-                    holder.sellPrice.text = "$sellPrice x $qty $unit - ${discountAmount.toInt()}%"
+                    holder.sellPrice.text = "${holder.sellPrice.text} - ${discountAmount.toInt()}%"
                 }else{
-                    holder.sellPrice.text = "$sellPrice x $qty $unit - ${context.rupiah(discountAmount)}"
+                    holder.sellPrice.text = "${holder.sellPrice.text} - ${context.rupiah(discountAmount)}"
                 }
-            }else{
-                holder.sellPrice.text = "$sellPrice x $qty $unit"
             }
         }
         imageService.loadDocument(holder.imgProduct, documentId , item.getString("productName"))

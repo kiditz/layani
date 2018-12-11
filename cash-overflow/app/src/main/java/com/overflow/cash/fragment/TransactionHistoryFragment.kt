@@ -5,13 +5,13 @@ import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import com.jakewharton.rxbinding2.widget.RxTextView
-import com.overflow.cash.Constant
-import com.overflow.cash.MenuActivity
+import com.overflow.cash.activity.Constant
+import com.overflow.cash.activity.MenuActivity
 import com.overflow.cash.R
-import com.overflow.cash.ReceiptTransactionWithRefundActivity
+import com.overflow.cash.activity.ReceiptTransactionWithRefundActivity
 import com.overflow.cash.adapter.TransactionHistoryAdapter
-import com.overflow.cash.mvp.order.TransactionHistoryContract
-import com.overflow.cash.mvp.order.TransactionHistoryPresenter
+import com.overflow.cash.mvp.order.LoadOrderContract
+import com.overflow.cash.mvp.order.LoadOrderPresenter
 import com.overflow.cash.mvp.receiveable.AccountReceiveableDetailContract
 import com.overflow.cash.mvp.receiveable.AccountReceiveableDetailPresenter
 import com.overflow.cash.net.API
@@ -24,9 +24,9 @@ import kotlinx.android.synthetic.main.fragment_blank.*
 import kotlinx.android.synthetic.main.fragment_transaction_history.*
 import javax.inject.Inject
 
-class TransactionHistoryFragment : BaseFragment(), TransactionHistoryContract.View, AccountReceiveableDetailContract.View {
+class TransactionHistoryFragment : BaseFragment(), LoadOrderContract.View, AccountReceiveableDetailContract.View {
     @Inject
-    lateinit var presenter: TransactionHistoryPresenter
+    lateinit var presenter: LoadOrderPresenter
     @Inject
     lateinit var itemsPresenter: AccountReceiveableDetailPresenter
     @Inject
@@ -89,14 +89,14 @@ class TransactionHistoryFragment : BaseFragment(), TransactionHistoryContract.Vi
         }
     }
 
-    override fun onOrderLoaded(customerList: List<Data>) {
+    override fun onOrderLoaded(orderList: List<Data>) {
         recycler?.visibility = View.VISIBLE
         blank_layout?.visibility = View.GONE
         refresh?.isRefreshing = false
         if (currentPage == 1) {
             this.adapter.clearValues()
         }
-        this.adapter.addValues(customerList)
+        this.adapter.addValues(orderList)
     }
 
     override fun showError(error: Throwable) {

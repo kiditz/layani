@@ -2,7 +2,7 @@ package com.overflow.cash.mvp.order
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.overflow.cash.Constant
+import com.overflow.cash.activity.Constant
 import com.overflow.cash.net.API
 import com.overflow.cash.net.CashBoxService
 import com.overflow.cash.net.RxUtils
@@ -27,7 +27,6 @@ class CashboxPresenter(private val context: Context, private val preferences: Sh
         input["page"] = API.MIN_PAGE
         input["size"] = getSize()
         input["outlet_id"] = outlet.getLong("id")
-
         if(API.isConnected(context)){
             this.disposable.add(this.service.getCashboxs(input).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){

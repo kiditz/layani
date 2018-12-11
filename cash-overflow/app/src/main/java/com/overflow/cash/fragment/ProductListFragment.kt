@@ -10,31 +10,29 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import com.jakewharton.rxbinding2.widget.RxTextView
-import com.overflow.cash.CategoryListActivity
-import com.overflow.cash.Constant
+import com.overflow.cash.activity.CategoryListActivity
+import com.overflow.cash.activity.Constant
 import com.overflow.cash.R
-import com.overflow.cash.SaveProductActivity
-import com.overflow.cash.mvp.product.CategoryListContract
-import com.overflow.cash.mvp.product.CategoryListPresenter
+import com.overflow.cash.activity.SaveProductActivity
+import com.overflow.cash.mvp.product.LoadCategoryContract
+import com.overflow.cash.mvp.product.LoadCategoryPresenter
 import com.overflow.cash.net.NetworkExHandler
 import com.overflow.cash.pager.ViewPagerAdapter
 import com.overflow.cash.utils.moveTo
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
-import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_customer.*
 import kotlinx.android.synthetic.main.fragment_product_list.*
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class ProductListFragment : BaseFragment(), CategoryListContract.View, ViewPager.OnPageChangeListener{
+class ProductListFragment : BaseFragment(), LoadCategoryContract.View, ViewPager.OnPageChangeListener{
 
     private lateinit var adapter: ViewPagerAdapter
     @Inject
     lateinit var translations: Translations
     @Inject
-    lateinit var presenter: CategoryListPresenter
+    lateinit var presenter: LoadCategoryPresenter
     @Inject
     lateinit var networkExHandler: NetworkExHandler
     private var categoryList = mutableListOf<Data>()
@@ -46,7 +44,6 @@ class ProductListFragment : BaseFragment(), CategoryListContract.View, ViewPager
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
         this.adapter = ViewPagerAdapter(activity!!.supportFragmentManager)
         this.presenter.attach(this)

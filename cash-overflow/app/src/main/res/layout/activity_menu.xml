@@ -9,28 +9,12 @@
     android:background="#eee"
     tools:openDrawer="start">
 
-    <!--<include-->
-        <!--layout="@layout/app_bar_menu"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent" />-->
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <include layout="@layout/toolbar"/>
-        <TextView
-            android:id="@+id/tv_success_message"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text="Nilai pembelian Harus lebih kecil"
-            android:background="@color/colorAccent"
-            android:padding="5dp"
-            android:gravity="center_horizontal"
-            android:textSize="18sp"
-            android:visibility="gone"
-            android:textColor="@color/textLight"
-
-            />
+        <include layout="@layout/success_message"/>
         <include layout="@layout/content_menu" />
     </LinearLayout>
     <android.support.design.widget.NavigationView

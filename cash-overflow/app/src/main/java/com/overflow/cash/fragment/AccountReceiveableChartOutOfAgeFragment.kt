@@ -12,7 +12,7 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.LargeValueFormatter
-import com.overflow.cash.Constant
+import com.overflow.cash.activity.Constant
 import com.overflow.cash.R
 import com.overflow.cash.mvp.chart.AccountReceiveableOutOfAgeChartContract
 import com.overflow.cash.mvp.chart.AccountReceiveableOutOfAgeChartPresenter

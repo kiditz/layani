@@ -1,7 +1,7 @@
 package com.overflow.cash.dagger
 
 import android.app.Application
-import com.overflow.cash.RootApplication
+import com.overflow.cash.activity.RootApplication
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.support.AndroidSupportInjectionModule

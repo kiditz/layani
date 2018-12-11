@@ -2,7 +2,7 @@ package com.overflow.cash.mvp.product
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.overflow.cash.Constant
+import com.overflow.cash.activity.Constant
 import com.overflow.cash.net.API
 import com.overflow.cash.net.ProductService
 import com.overflow.cash.net.RxUtils

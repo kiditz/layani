@@ -37,6 +37,7 @@
   "total_amount.must.be.greater_than": "Jumlah bayar harus lebih besar atau sama dengan {0}",
   "total_amount.must.be.less_than": "Jumlah bayar harus lebih kecil dari {0}",
   "category.created.successfully": "Kategori {0} tersimpan",
+
   "product.created.successfully": "Produk {0} tersimpan",
   "product.removed.successfully": "Produk {0} berhasil di hapus",
   "account_receiveable.created.successfully": "Hutang {0}, untuk transaksi {1} sudah lunas.",

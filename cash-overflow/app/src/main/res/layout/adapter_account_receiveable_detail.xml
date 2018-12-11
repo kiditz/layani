@@ -41,7 +41,7 @@
                     android:textColor="@android:color/black"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    tools:text="000021" />
+                    tools:text="Rp. 120000" />
 
                 <TextView
                     android:id="@+id/tvCreatedAt"

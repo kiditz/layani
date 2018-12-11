@@ -21,11 +21,14 @@
     <string name="cancel">Batal</string>
     <string name="cannot_read_barcode">Tidak dapat membaca barcode</string>
     <string name="cash">Tunai</string>
+    <string name="cash_drawer">Laci Uang</string>
+    <string name="cart">Troli</string>
     <string name="category">Kategori</string>
     <string name="content_authority">com.overflow.cash.provider</string>
     <string name="create_store">Buat Toko</string>
     <string name="create_store_success">Pembuatan toko berhasil dilakukan</string>
     <string name="credit_amount">Sebanyak</string>
+    <string name="customer">Customer</string>
     <string name="customer_name">Name Pelanggan</string>
     <string name="dashboard">Beranda</string>
     <string name="date">Tanggal</string>
@@ -69,9 +72,9 @@
     <string name="next_step">Langkah Selanjutnya</string>
     <string name="no">Tidak</string>
     <string name="no_account_receiveable_description">Tidak ada piutang yang harus di bayar</string>
-
     <string name="no_category_data">Belum ada kategori</string>
     <string name="no_customer_title">Pelanggan tidak di temukan</string>
+    <string name="no_internet">Tidak ada koneksi internet</string>
     <string name="no_product_description">Tekan tombol + untuk menambahkan produk</string>
     <string name="no_product_title">Belum ada produk</string>
     <string name="not_enough_stock">Stok habis</string>
@@ -103,6 +106,7 @@
     <string name="register_store">Daftarkan Toko</string>
     <string name="remaining_stock">Sisa Stock</string>
     <string name="sales">Penjualan</string>
+    <string name="save">Simpan</string>
     <string name="scan_barcode">Scan Barcode</string>
     <string name="search">Cari..</string>
     <string name="search_order_hint">Cari No Transaksi</string>
@@ -118,12 +122,14 @@
     <string name="store_owner_name">Nama Pemilik</string>
     <string name="submit">Simpan</string>
     <string name="system_err">Upps, Terjadi kesalahan pada sistem</string>
+    <string name="top_up">Pulsa &amp; PPOB</string>
     <string name="total_payment">Jumlah bayar</string>
     <string name="total_refund">Total Pengembalian</string>
     <string name="transaction">Transaksi</string>
     <string name="transaction_amount">Jumlah Transaksi</string>
     <string name="transaction_history">Riwayat Transaksi</string>
     <string name="transaction_not_found">Transaksi tidak di temukan</string>
+    <string name="try_again">Coba Lagi</string>
     <string name="unit">Satuan Berat</string>
     <string name="use_stock">Gunakan Stok</string>
     <string name="username">Username</string>
@@ -133,5 +139,4 @@
     <string name="weight">Berat</string>
     <string name="year">Tahun</string>
     <string name="yes">Ya</string>
-
 </resources>

@@ -3,17 +3,15 @@ package com.overflow.cash.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.PatternMatcher
 import android.support.design.widget.TextInputLayout
 import android.support.v7.widget.RecyclerView
-import android.telephony.PhoneNumberUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
-import com.overflow.cash.Constant
+import com.overflow.cash.activity.Constant
 import com.overflow.cash.R
 import com.overflow.cash.fragment.dummy.DummyContent.DummyItem
 import com.overflow.cash.utils.validateNotEmpty

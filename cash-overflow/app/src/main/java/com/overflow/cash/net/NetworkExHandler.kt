@@ -1,10 +1,9 @@
 package com.overflow.cash.net
 
 import android.app.Activity
-import com.overflow.cash.Constant
+import com.overflow.cash.activity.Constant
 import com.overflow.cash.R
 import com.overflow.cash.utils.snack
-import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
 import retrofit2.HttpException
 import timber.log.Timber

@@ -14,7 +14,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
-        android:name=".RootApplication"
+        android:name=".activity.RootApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -22,7 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MenuActivity"
+            android:name=".activity.MenuActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -32,24 +32,24 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".activity.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".CreateStoreActivity"
+            android:name=".activity.CreateStoreActivity"
             android:label="@string/create_store" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".activity.RegisterActivity"
             android:label="@string/register" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SaveProductActivity"
+            android:name=".activity.SaveProductActivity"
             android:label="@string/add_product"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".ScannerActivity"
+            android:name=".activity.ScannerActivity"
             android:label=""/>
         <activity
             android:name=".EditProductActivity"
@@ -89,28 +89,28 @@
         </service>
 
         <activity
-            android:name=".ProductDetailActivity"
+            android:name=".activity.ProductDetailActivity"
             android:label="@string/product_detail" />
-        <activity android:name=".PreviewSalesActivity" />
+        <activity android:name=".activity.PreviewSalesActivity" />
         <activity
-            android:name=".CustomerChooserActivity"
+            android:name=".activity.CustomerChooserActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ReceiptActivity"
+            android:name=".activity.ReceiptActivity"
             android:label="" />
         <activity
-            android:name=".ReceiptTransactionWithRefundActivity"
+            android:name=".activity.ReceiptTransactionWithRefundActivity"
             android:label="" />
         <activity
-            android:name=".CategoryListActivity"
+            android:name=".activity.CategoryListActivity"
             android:label="@string/edit_category" />
 
         <activity
-            android:name=".CustomerListAddActivity"
+            android:name=".activity.CustomerListAddActivity"
             android:label="@string/add_customer" />
-        <activity android:name=".AccountReceiveableDetailActivity" android:label="" android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".PaymentAccountReceiveableActivity" android:label="" android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".PaymentTransactionActivity" android:label="" />
+        <activity android:name=".activity.AccountReceiveableDetailActivity" android:label="" android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".activity.PaymentAccountReceiveableActivity" android:label="" android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".activity.PaymentTransactionActivity" android:label="" />
     </application>
 
 </manifest>

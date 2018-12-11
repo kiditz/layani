@@ -8,11 +8,11 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.overflow.cash.Constant
+import com.overflow.cash.activity.Constant
 import com.overflow.cash.R
 import com.overflow.cash.adapter.ProductListAdapter
-import com.overflow.cash.mvp.product.ProductListContract
-import com.overflow.cash.mvp.product.ProductListPresenter
+import com.overflow.cash.mvp.product.LoadProductContract
+import com.overflow.cash.mvp.product.LoadProductPresenter
 import com.overflow.cash.net.API
 import com.overflow.cash.net.ImageService
 import com.overflow.cash.net.NetworkExHandler
@@ -32,13 +32,13 @@ import javax.inject.Inject
  * @author Rifky Aditya Bastara
  * Load Product From Rest API Into View
  */
-class ProductFragment : Fragment(), ProductListContract.View {
+class ProductFragment : Fragment(), LoadProductContract.View {
 
     var currentPage: Int = API.MIN_PAGE
     var categoryId:Long = -1L
     lateinit var adapter: ProductListAdapter
     @Inject
-    lateinit var presenter: ProductListPresenter
+    lateinit var presenter: LoadProductPresenter
     @Inject
     lateinit var networkExHandler: NetworkExHandler
     @Inject

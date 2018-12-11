@@ -20,13 +20,16 @@
     <string name="are_you_sure">Are you sure?</string>
     <string name="cancel">Cancel</string>
     <string name="cannot_read_barcode">Cannot read barcode</string>
+    <string name="cart">Cart</string>
     <string name="cash">Cash</string>
+    <string name="cash_drawer">Cash Drawer</string>
     <string name="cashback">Cashback</string>
     <string name="category">Category</string>
     <string name="content_authority">com.overflow.cash.provider</string>
     <string name="create_store">Create Store</string>
     <string name="create_store_success">Store successfully saved</string>
     <string name="credit_amount">Credit Amount</string>
+    <string name="customer">Customer</string>
     <string name="customer_name">Customer Name</string>
     <string name="dashboard">Dashboard</string>
     <string name="date">Date</string>
@@ -104,6 +107,7 @@
     <string name="register_store">Register Stock</string>
     <string name="remaining_stock">Remaining Stock</string>
     <string name="sales">Sales</string>
+    <string name="save">Save</string>
     <string name="scan_barcode">Scan Barcode</string>
     <string name="search">Search..</string>
     <string name="search_order_hint">Search with transaction number</string>
@@ -123,10 +127,10 @@
     <string name="total_payment">Total payment</string>
     <string name="total_refund">Total refund</string>
     <string name="transaction">Transaction</string>
-
     <string name="transaction_amount">Transaction Amount</string>
     <string name="transaction_history">Transaction History</string>
     <string name="transaction_not_found">Transaction Not Found</string>
+    <string name="try_again">Try Again</string>
     <string name="unit">Unit</string>
     <string name="use_stock">Use Stock</string>
     <string name="username">Username</string>
@@ -136,4 +140,9 @@
     <string name="weight">Weight</string>
     <string name="year">Yearly</string>
     <string name="yes">Yes</string>
+    <string name="custom">Custom</string>
+    <string name="top_up">Top Up &amp; Postpaid</string>
+    <string name="no_internet">No Internet Connection</string>
+
+
 </resources>

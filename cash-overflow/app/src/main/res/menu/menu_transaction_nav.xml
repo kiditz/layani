@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_transaction"
+        android:icon="@drawable/ic_transaction"
+        android:title="@string/sales" />
+
+    <item
+        android:id="@+id/navigation_topup"
+        android:icon="@drawable/ic_smartphone"
+        android:title="@string/top_up" />
+    <item
+        android:id="@+id/navigation_purchase"
+        android:icon="@drawable/ic_purchase_order"
+        android:title="@string/purchase" />
+</menu>

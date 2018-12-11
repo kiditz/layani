@@ -1,8 +1,8 @@
 package com.overflow.cash.dagger
 
-import com.overflow.cash.*
 import com.overflow.cash.account.AccountAuthenticatorService
 import com.overflow.cash.account.AccountSyncAdapterService
+import com.overflow.cash.activity.*
 import com.overflow.cash.fragment.*
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -30,7 +30,7 @@ abstract class ActivityBuilder {
     internal abstract fun bindAccountReceiveablePaymentActivity(): PaymentAccountReceiveableActivity
 
     @ContributesAndroidInjector
-    internal abstract fun bindPaymentTransactionivityPaymentTransaction():PaymentTransactionActivity
+    internal abstract fun bindPaymentTransactionivityPaymentTransaction(): PaymentTransactionActivity
 
     @ContributesAndroidInjector
     internal abstract fun bindPreviewSalesActivity(): PreviewSalesActivity
@@ -70,6 +70,9 @@ abstract class ActivityBuilder {
     internal abstract fun bindSalesFragment(): SalesFragment
 
     @ContributesAndroidInjector
+    internal abstract fun bindSalesMainFragment(): SalesMainFragment
+
+    @ContributesAndroidInjector
     internal abstract fun bindCustomerFragment(): CustomerFragment
 
     @ContributesAndroidInjector
@@ -107,6 +110,8 @@ abstract class ActivityBuilder {
 
     @ContributesAndroidInjector
     internal abstract fun bindReceiptFragment(): ReceiptFragment
+
+
 
     //Service
     @ContributesAndroidInjector

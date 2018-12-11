@@ -47,7 +47,7 @@ class AccountReceiveableDetailAdapter(private val translations: Translations) : 
         holder.createdAt.text = DateUtil.getTimeAgo(item.getLong("order_at"))
         holder.totalCredit.text = context.rupiah(item.getDouble("total_credit"))
         holder.receiveableDate.text = format.format(Date(item.getLong("receiveable_date")))
-        holder.orderCode.text = item.getString("order_code")
+        holder.orderCode.text = context.rupiah(item.getDouble("total_amount"))
         holder.paymentAmount.text = context.rupiah(item.getDouble("payment_amount"))
         holder.itemView.setOnClickListener {
             onItemClick?.invoke(item, holder)

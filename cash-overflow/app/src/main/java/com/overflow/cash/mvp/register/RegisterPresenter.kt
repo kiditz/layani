@@ -4,7 +4,7 @@ import android.accounts.AccountManager
 import android.content.Context
 import android.content.Intent
 import com.overflow.cash.BuildConfig
-import com.overflow.cash.Constant
+import com.overflow.cash.activity.Constant
 import com.overflow.cash.R
 import com.overflow.cash.net.API
 import com.overflow.cash.net.AccountService

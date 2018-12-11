@@ -16,7 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import com.overflow.cash.BuildConfig
-import com.overflow.cash.Constant
+import com.overflow.cash.activity.Constant
 import com.overflow.cash.R
 import com.overflow.cash.utils.currentLocale
 import com.overflow.cash.utils.rupiah
