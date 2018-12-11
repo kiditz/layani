@@ -18,7 +18,7 @@ class OrderService(object):
 	def __init__(self):
 		super(OrderService, self).__init__()
 	
-	@Key(['outlet_id', 'customer_id', 'cash_box_id', 'total_amount', 'total_payment', 'items.use_stock', 'items.discount_amount', 'items.discount_type'])
+	@Key(['outlet_id', 'customer_id', 'total_amount', 'total_payment', 'items.use_stock', 'items.discount_amount', 'items.discount_type'])
 	@Number(['user_id'])
 	def add_order(self, domain):
 		order = Order(domain)
@@ -30,7 +30,6 @@ class OrderService(object):
 		order_items = domain['items']
 		for item in order_items:
 			item['order_id'] = order.id
-			
 			if item['use_stock']:
 				stock = Stock.query.filter_by(product_id=item['product_id']).first()
 				if stock.quantity - item['qty'] < 0:
@@ -40,7 +39,7 @@ class OrderService(object):
 				stock_history = StockHistory()
 				stock_history.quantity = -item['qty']
 				stock_history.ref_id = StockRef.TRANSACTION
-				stock_history.remark = 'Potong stok untuk penjualan #{}'.format(order.order_code)
+				stock_history.remark = 'cut.stock #{}'.format(order.order_code)
 				stock_history.stock_id = stock.id
 				stock_history.save()
 			
@@ -55,43 +54,44 @@ class OrderService(object):
 				profit_list.append(Decimal(sell_price.sell_price - purchase_price.purchase_price - discount_amount) * Decimal(item['qty']))
 				pass
 			pass
-		cashbox = Cashbox.query.get(domain['cash_box_id'])
+		# Handle cashbox for when payment
 		account_receiveable = None
-		if order.payment_method == PaymentMethod.CASH:
-			order.status = OrderStatus.SUCCESS
-			cashbox.total_amount = cashbox.total_amount + Decimal(domain['total_amount'])
-			order.cashback = order.total_payment - order.total_amount			
-		else:			
-			cashbox.total_amount = cashbox.total_amount + Decimal(domain['total_payment'])
-			order.status = OrderStatus.PENDING
-			order.cashback = 0.0
-			account_receiveable = AccountReceiveable()
-			account_receiveable.total_credit = order.total_amount - order.total_payment
-			account_receiveable.outlet_id = domain['outlet_id']
-			account_receiveable.order_id = order.id
-			account_receiveable.receiveable_date = datetime.now()
-			account_receiveable.save()
-			due_date = datetime.strptime(domain['due_date'], '%Y-%m-%d %H:%M:%S')
-			account_receiveable.receiveable_date = due_date
-		cashbox.outlet_id = domain['outlet_id']
-		cashbox.save()
-		# Cashbox History
-		cashbox_history = CashboxHistory()
-		cashbox_history.cash_box_id = cashbox.id		
-		
-		if order.payment_method == PaymentMethod.CASH:
-			cashbox_history.amount = Decimal(domain['total_amount'])
-			cashbox_history.payment_method = PaymentMethod.DEBIT
-			cashbox_history.remark = 'order.cash #' + order.order_code
-		else:
-			cashbox_history.amount = Decimal(domain['total_payment'])
-			cashbox_history.payment_method = PaymentMethod.DEBIT			
-			cashbox_history.remark = 'order.credit #' + order.order_code		
-
-		cashbox_history.save()
+		if 'total_amount' in domain and 'total_payment' in domain:
+			cashbox = Cashbox.query.get(domain['cash_box_id'])
+			account_receiveable = None
+			if order.payment_method == PaymentMethod.CASH:
+				order.status = OrderStatus.SUCCESS
+				cashbox.total_amount = cashbox.total_amount + Decimal(domain['total_amount'])
+				order.cashback = order.total_payment - order.total_amount
+			else:
+				cashbox.total_amount = cashbox.total_amount + Decimal(domain['total_payment'])
+				order.status = OrderStatus.PENDING
+				order.cashback = 0.0
+				account_receiveable = AccountReceiveable()
+				account_receiveable.total_credit = order.total_amount - order.total_payment
+				account_receiveable.outlet_id = domain['outlet_id']
+				account_receiveable.order_id = order.id
+				account_receiveable.receiveable_date = datetime.now()
+				account_receiveable.save()
+				due_date = datetime.strptime(domain['due_date'], '%Y-%m-%d %H:%M:%S')
+				account_receiveable.receiveable_date = due_date
+			cashbox.outlet_id = domain['outlet_id']
+			cashbox.save()
+			# Cashbox History
+			cashbox_history = CashboxHistory()
+			cashbox_history.cash_box_id = cashbox.id
+			if order.payment_method == PaymentMethod.CASH:
+				cashbox_history.amount = Decimal(domain['total_amount'])
+				cashbox_history.payment_method = PaymentMethod.DEBIT
+				cashbox_history.remark = 'order.cash #' + order.order_code
+			else:
+				cashbox_history.amount = Decimal(domain['total_payment'])
+				cashbox_history.payment_method = PaymentMethod.DEBIT
+				cashbox_history.remark = 'order.credit #' + order.order_code
+				cashbox_history.save()
+				
 		order.profit = sum(profit_list)
 		order.save()
-		
 		db.session.bulk_insert_mappings(OrderItem, order_items)
 		order_dict = order.to_dict()
 		if domain['customer_id'] is not None:
@@ -117,10 +117,6 @@ class OrderService(object):
 		cashbox.total_amount = cashbox.total_amount - order.total_amount
 		cashbox.save()
 		order.total_amount = order.total_amount * -1
-		# order.total_payment = 0.0
-		# order.cashback = 0.0
-		# order.profit = 0
-		
 		order.save()
 		order_cpy = Order(order.to_dict())
 		order_cpy.order_at = datetime.now()
