@@ -45,8 +45,7 @@ class OrderService(object):
 			
 			purchase_price = ProductPurchasePrice.query.filter(
 				and_(ProductPurchasePrice.product_id == item['product_id'], between(now, ProductPurchasePrice.start_at, ProductPurchasePrice.end_at))).first()
-			sell_price = ProductSellPrice.query.filter(
-				and_(ProductSellPrice.product_id == item['product_id'], ProductSellPrice.name == 'STANDARD')).first()
+			sell_price = ProductSellPrice.query.filter(and_(ProductSellPrice.product_id == item['product_id'], ProductSellPrice.name == 'STANDARD')).first()
 			if item["discount_type"] == 'FIXED_PRICE':
 				profit_list.append(Decimal(sell_price.sell_price - purchase_price.purchase_price - Decimal(item['discount_amount'])) * Decimal(item['qty']))
 			else:
@@ -54,27 +53,18 @@ class OrderService(object):
 				profit_list.append(Decimal(sell_price.sell_price - purchase_price.purchase_price - discount_amount) * Decimal(item['qty']))
 				pass
 			pass
-		# Handle cashbox for when payment
-		account_receiveable = None
+		# Handle cashbox for when payment		
 		if 'total_amount' in domain and 'total_payment' in domain:
-			cashbox = Cashbox.query.get(domain['cash_box_id'])
-			account_receiveable = None
-			if order.payment_method == PaymentMethod.CASH:
-				order.status = OrderStatus.SUCCESS
-				cashbox.total_amount = cashbox.total_amount + Decimal(domain['total_amount'])
-				order.cashback = order.total_payment - order.total_amount
-			else:
-				cashbox.total_amount = cashbox.total_amount + Decimal(domain['total_payment'])
-				order.status = OrderStatus.PENDING
-				order.cashback = 0.0
-				account_receiveable = AccountReceiveable()
-				account_receiveable.total_credit = order.total_amount - order.total_payment
-				account_receiveable.outlet_id = domain['outlet_id']
-				account_receiveable.order_id = order.id
-				account_receiveable.receiveable_date = datetime.now()
-				account_receiveable.save()
-				due_date = datetime.strptime(domain['due_date'], '%Y-%m-%d %H:%M:%S')
-				account_receiveable.receiveable_date = due_date
+			total_amount = domain['total_amount']
+			total_payment = domain['total_payment']
+
+			if total_payment < total_amount:
+				raise ValidationException(ErrorCode.INVALID_TOTAL_AMOUNT)
+			cashbox = Cashbox.query.first()
+			log.debug('Cashbox ', cashbox)
+			order.status = OrderStatus.SUCCESS
+			cashbox.total_amount = cashbox.total_amount + Decimal(domain['total_amount'])
+			order.cashback = order.total_payment - order.total_amount			
 			cashbox.outlet_id = domain['outlet_id']
 			cashbox.save()
 			# Cashbox History
@@ -97,11 +87,7 @@ class OrderService(object):
 		if domain['customer_id'] is not None:
 			customer = Customer.query.get(domain['customer_id'])
 			if customer is not None:
-				order_dict['customer_name'] = customer.name
-		
-		if account_receiveable is not None:
-			order_dict['total_credit'] = account_receiveable.total_credit
-			order_dict["receiveable_date"] = account_receiveable.receiveable_date
+				order_dict['customer_name'] = customer.name			
 		order_dict['order_items'] = order_items
 		return {'payload': order_dict}
 
