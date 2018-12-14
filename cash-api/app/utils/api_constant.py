@@ -26,6 +26,7 @@ class OrderStatus(object):
 	PENDING = 'P'
 	SUCCESS = 'S'
 	VOID = 'V'
+	CREATED = 'C'
 		
 
 class ErrorCode(object):

@@ -1,15 +1,13 @@
-from datetime import datetime, date
 from decimal import Decimal
 
-from entity.models import Order, OrderItem, ProductSellPrice, ProductPurchasePrice, StockHistory, Stock, Cashbox, \
-	AccountReceiveable, CashboxHistory, Customer, Outlet, Product
-from slerp.app import db
+from entity.models import OrderItem, ProductSellPrice, ProductPurchasePrice, StockHistory, Stock, Cashbox, \
+	AccountReceiveable, CashboxHistory, Customer, Product
 from slerp.logger import logging
 from slerp.validator import Number, Blank, Key, ValidationException
-from sqlalchemy import between, and_, cast, func, Interval
-from sqlalchemy.dialects.mssql import DATE
-from utils.api_constant import StockRef, ErrorCode, PaymentMethod, OrderStatus
-from utils.date_utils import get_day_of_year, get_day_of_week
+from sqlalchemy import between
+
+from utils.api_constant import StockRef, ErrorCode, PaymentMethod
+from .chart_query import *
 
 log = logging.getLogger(__name__)
 
@@ -119,11 +117,11 @@ class OrderService(object):
 
 	@Blank(['period', 'outlet_id'])
 	def get_order_chart_data(self, domain):
-		chart_label, lines_chart = get_order_chart_data_by_period(period=domain['period'], outlet_id=domain['outlet_id'])
-		_, lines_chart_debt = get_order_chart_data_by_period(period = domain['period'],  status='I', outlet_id=domain['outlet_id'])
-		_, lines_chart_success = get_order_chart_data_by_period(period=domain['period'], status='S', outlet_id=domain['outlet_id'])
+		chart_label, lines_chart_void = get_order_chart_data_by_period(period=domain['period'], status=OrderStatus.VOID, outlet_id=domain['outlet_id'])
+		_, lines_chart_debt = get_order_chart_data_by_period(period=domain['period'],  status=OrderStatus.PENDING, outlet_id=domain['outlet_id'])
+		_, lines_chart_success = get_order_chart_data_by_period(period=domain['period'], status=OrderStatus.SUCCESS, outlet_id=domain['outlet_id'])
 		lines_data = [
-			lines_chart,
+			lines_chart_void,
 			lines_chart_debt,
 			lines_chart_success
 		]
@@ -137,11 +135,11 @@ class OrderService(object):
 			.first()._asdict()
 		total_profit = Order.query.with_entities(func.coalesce(func.sum(Order.profit), 0).label("total_profit"))\
 			.filter(Order.outlet_id == outlet_id) \
-			.filter(Order.status != OrderStatus.VOID) \
+			.filter(and_(Order.status != OrderStatus.VOID, Order.status != OrderStatus.CREATED)) \
 			.first()._asdict()
 		total_income = Order.query.with_entities(func.coalesce(func.sum(Order.total_amount), 0).label("total_income"))\
 			.filter(Order.outlet_id == outlet_id) \
-			.filter(Order.status != OrderStatus.VOID) \
+			.filter(Order.status == OrderStatus.SUCCESS) \
 			.first()._asdict()
 		total_receiveable = AccountReceiveable.query.with_entities(func.coalesce(func.sum(AccountReceiveable.total_credit), 0).label("total_credit")).filter(AccountReceiveable.outlet_id == outlet_id).first()._asdict()
 		result = {
@@ -155,9 +153,9 @@ class OrderService(object):
 	@Blank(['period'])
 	@Number(['outlet_id'])
 	def get_profit_chart_data(self, domain):
-		chart_label, lines_chart = get_profit_chart_data_by_period(period=domain['period'], outlet_id=domain['outlet_id'])
-		_, lines_chart_debt = get_profit_chart_data_by_period(period=domain['period'], status='I', outlet_id=domain['outlet_id'])
-		_, lines_chart_success = get_profit_chart_data_by_period(period=domain['period'], status='S', outlet_id=domain['outlet_id'])
+		chart_label, lines_chart = get_profit_chart_data_by_period(period=domain['period'], status=OrderStatus.VOID, outlet_id=domain['outlet_id'])
+		_, lines_chart_debt = get_profit_chart_data_by_period(period=domain['period'], status=OrderStatus.PENDING, outlet_id=domain['outlet_id'])
+		_, lines_chart_success = get_profit_chart_data_by_period(period=domain['period'], status=OrderStatus.SUCCESS, outlet_id=domain['outlet_id'])
 		lines_data = [
 			lines_chart,
 			lines_chart_debt,
@@ -203,15 +201,19 @@ class OrderService(object):
 			.join(Product, Product.id == OrderItem.product_id) \
 			.join(Order, Order.id == OrderItem.order_id) \
 			.filter(Product.outlet_id == domain['outlet_id'])\
-			.filter(Order.status != OrderStatus.VOID)\
+			.filter(and_(Order.status != OrderStatus.VOID, Order.status != OrderStatus.CREATED))\
 			.group_by(Product.id).order_by("quantity desc")\
 			.paginate(page, size, error_out=False)
 		product_list = list(map(lambda x: x._asdict(), item_q.items))
 		return {'payload': product_list, 'total': item_q.total, 'total_pages': item_q.pages}
 
 	@Number(['outlet_id', 'page', 'size'])
+	@Key(['query'])
 	def get_order_list(self, domain):
 		outlet_id = domain['outlet_id']
+		status = domain['status'] if 'status' in domain else None
+		page = int(domain['page'])
+		size = int(domain['size'])
 		entities = (
 			Order.id,
 			Order.total_amount,
@@ -227,139 +229,12 @@ class OrderService(object):
 			AccountReceiveable.total_credit,
 			Customer.name.label("customer_name")
 		)
-		page = int(domain['page'])
-		size = int(domain['size'])
-		order_q = Order.query.with_entities(*entities).filter_by(outlet_id=outlet_id).filter(cast(Order.order_at, DATE) == datetime.now().date())
-		order_q = order_q.outerjoin(Customer, Customer.id == Order.customer_id)
-		order_q = order_q.outerjoin(AccountReceiveable, AccountReceiveable.order_id == Order.id)
-		order_q = order_q.filter(Order.order_code.ilike('%' + domain['query'] + '%'))
-		if 'status' in domain:
+		order_q = Order.query.with_entities(*entities).filter_by(outlet_id=outlet_id).filter(cast(Order.order_at, DATE) == datetime.now().date())\
+			.outerjoin(Customer, Customer.id == Order.customer_id)\
+			.outerjoin(AccountReceiveable, AccountReceiveable.order_id == Order.id)\
+			.filter(Order.order_code.ilike('%' + domain['query'] + '%'))
+		if status:
 			order_q = order_q.filter(Order.status == domain['status'])
 		order_q = order_q.order_by(Order.order_code.desc(), Order.order_at.desc()).paginate(page, size, error_out=False)
 		order_list = list(map(lambda x: x._asdict(), order_q.items))
 		return {'payload': order_list, 'total': order_q.total, 'total_pages': order_q.pages}
-
-
-def get_order_chart_data_by_period(period=None, status=None, outlet_id=-1):
-	if period == 'week':
-		# Weekly
-		start_date, end_date = get_day_of_week()
-		entities, join = get_order_chart_count_query(start_date, end_date, status, 'YYYY-MM-DD', outlet_id=outlet_id)
-	elif period == 'month':
-		# Monthly
-		start_date, end_date = get_day_of_year()
-		entities, join = get_order_chart_count_query(start_date, end_date, status, 'YYYY-MM', outlet_id=outlet_id)
-	else:
-		# YEAR from 2015
-		outlet = Outlet.query.get(outlet_id)
-		# Mengambil data dua year sebelum outlet di buat
-		start_date = date(outlet.created_at.year - 2, 1, 1)
-		end_date = datetime.today().replace(month=12, day=31)
-		entities, join = get_order_chart_count_query(start_date, end_date, status, 'YYYY', outlet_id=outlet_id)
-		
-	order_q = Order.query.with_entities(*entities).select_from(join).group_by('datetime').order_by('datetime')
-	
-	chart_label = list(map(lambda x: handle_chart_label(x._asdict()['datetime'], period), order_q))
-	lines_data = list(map(lambda x: x._asdict()['total'], order_q))
-	return chart_label, lines_data
-
-
-def get_income_chart_data_by_period(period=None, status=None, outlet_id=-1):
-	if period == 'week':
-		# Weekly
-		start_date, end_date = get_day_of_week()
-		entities, join = get_order_income_query(start_date, end_date, status, 'YYYY-MM-DD', outlet_id=outlet_id)
-	elif period == 'month':
-		# Monthly
-		start_date, end_date = get_day_of_year()
-		entities, join = get_order_income_query(start_date, end_date, status, 'YYYY-MM', outlet_id=outlet_id)
-	else:
-		# YEAR from 2015
-		outlet = Outlet.query.get(outlet_id)
-		# Mengambil data dua year sebelum outlet di buat
-		start_date = date(outlet.created_at.year - 2, 1, 1)
-		end_date = datetime.today().replace(month=12, day=31)
-		entities, join = get_order_income_query(start_date, end_date, status, 'YYYY', outlet_id=outlet_id)
-	
-	order_q = Order.query.with_entities(*entities).select_from(join).group_by('datetime').order_by('datetime')
-	
-	chart_label = list(map(lambda x: handle_chart_label(x._asdict()['datetime'], period), order_q))
-	lines_data = list(map(lambda x: x._asdict()['total'], order_q))
-	return chart_label, lines_data
-
-
-def get_profit_chart_data_by_period(period=None, status=None, outlet_id=-1):
-	if period == 'week':
-		# Weekly
-		start_date, end_date = get_day_of_week()
-		entities, join = get_order_profit_query(start_date, end_date, status, 'YYYY-MM-DD', outlet_id=outlet_id)
-	elif period == 'month':
-		# Monthly
-		start_date, end_date = get_day_of_year()
-		entities, join = get_order_profit_query(start_date, end_date, status, 'YYYY-MM', outlet_id=outlet_id)
-	else:
-		# YEAR from 2015
-		outlet = Outlet.query.get(outlet_id)
-		# Mengambil data dua year sebelum outlet di buat
-		start_date = date(outlet.created_at.year - 2, 1, 1)
-		end_date = datetime.today().replace(month=12, day=31)
-		entities, join = get_order_profit_query(start_date, end_date, status, 'YYYY', outlet_id=outlet_id)
-	
-	order_q = Order.query.with_entities(*entities).select_from(join).group_by('datetime').order_by('datetime')
-	
-	chart_label = list(map(lambda x: handle_chart_label(x._asdict()['datetime'], period), order_q))
-	lines_data = list(map(lambda x: x._asdict()['total'], order_q))
-	return chart_label, lines_data
-
-
-def get_order_chart_count_query(start_date, end_date, status, fmt, outlet_id):
-	stmt = db.session.query(
-		func.generate_series(start_date, end_date, cast('1 day', Interval())).label('day')).subquery()
-	entities = (
-		func.count(Order.id).label('total'),
-		func.to_char(stmt.c.day, fmt).label('datetime')
-	)
-	if status:
-		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE) == stmt.c.day, Order.status == status, Order.outlet_id == outlet_id))
-	else:
-		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE) == stmt.c.day, Order.status != OrderStatus.VOID, Order.outlet_id == outlet_id))
-	return entities, join
-
-
-def get_order_profit_query(start_date, end_date, status, fmt, outlet_id):
-	stmt = db.session.query(
-		func.generate_series(start_date, end_date, cast('1 day', Interval())).label('day')).subquery()
-	entities = (
-		func.coalesce(func.sum(Order.profit), 0).label('total'),
-		func.to_char(stmt.c.day, fmt).label('datetime')
-	)
-	if status:
-		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE) == stmt.c.day, Order.status == status, Order.outlet_id == outlet_id))
-	else:
-		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE) == stmt.c.day, Order.status != OrderStatus.VOID, Order.outlet_id == outlet_id))
-	return entities, join
-
-
-def get_order_income_query(start_date, end_date, status, fmt, outlet_id):
-	stmt = db.session.query(
-		func.generate_series(start_date, end_date, cast('1 day', Interval())).label('day')).subquery()
-	entities = (
-		func.coalesce(func.sum(Order.total_amount), 0).label('total'),
-		func.to_char(stmt.c.day, fmt).label('datetime')
-	)
-	if status:
-		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE) == stmt.c.day, Order.status == status, Order.outlet_id == outlet_id))
-	else:
-		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE) == stmt.c.day, Order.status != OrderStatus.VOID, Order.outlet_id == outlet_id))
-	return entities, join
-
-
-weekly = ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"]
-
-
-def handle_chart_label(order_at, period):
-	if period == 'week':
-		return weekly[datetime.strptime(order_at, '%Y-%m-%d').weekday()]
-	elif period == 'month':
-		return datetime.strptime(order_at, '%Y-%m').strftime('%b')
-	return datetime.strptime(order_at, '%Y').strftime('%Y')
