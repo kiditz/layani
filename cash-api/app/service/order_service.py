@@ -229,7 +229,7 @@ class OrderService(object):
 			AccountReceiveable.total_credit,
 			Customer.name.label("customer_name")
 		)
-		order_q = Order.query.with_entities(*entities).filter_by(outlet_id=outlet_id).filter(cast(Order.order_at, DATE) == datetime.now().date())\
+		order_q = Order.query.with_entities(*entities).filter_by(outlet_id=outlet_id)\
 			.outerjoin(Customer, Customer.id == Order.customer_id)\
 			.outerjoin(AccountReceiveable, AccountReceiveable.order_id == Order.id)\
 			.filter(Order.order_code.ilike('%' + domain['query'] + '%'))
