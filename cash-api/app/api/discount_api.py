@@ -23,13 +23,25 @@ def add_discount():
     return discount_service.add_discount(domain)
 
 
-@api.route('/find', methods=['GET'])
-def find_discount_by_product_id_and_discount():
+@api.route('/by_quantity', methods=['GET'])
+def find_by_quantity():
     """
     {
-        "product_id": "Long",
-        "discount_when": "Long",
+        "quantity": "Long",
+        "outlet_id": "Long"
     }
     """
     domain = request.args.to_dict()
-    return discount_service.find_discount_by_product_id_and_discount(domain)
+    return discount_service.find_discount_by_quantity(domain)
+
+
+@api.route('/by_bill_amount', methods=['GET'])
+def find_by_bill_amount():
+    """
+    {
+        "bill_amount": "Double",
+        "outlet_id": "Long"
+    }
+    """
+    domain = request.args.to_dict()
+    return discount_service.find_discount_by_bill_amount(domain)

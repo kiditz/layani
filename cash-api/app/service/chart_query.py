@@ -106,11 +106,9 @@ def get_order_profit_query(start_date, end_date, status, fmt, outlet_id):
 		func.to_char(stmt.c.day, fmt).label('datetime')
 	)
 	if status:
-		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE) == stmt.c.day, Order.status == status,
-		                                  Order.outlet_id == outlet_id))
+		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE) == stmt.c.day, Order.status == status,Order.outlet_id == outlet_id))
 	else:
-		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE) == stmt.c.day, Order.status != OrderStatus.VOID,
-		                                  Order.outlet_id == outlet_id))
+		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE) == stmt.c.day, Order.status != OrderStatus.VOID, Order.outlet_id == outlet_id))
 	return entities, join
 
 
@@ -122,11 +120,9 @@ def get_order_income_query(start_date, end_date, status, fmt, outlet_id):
 		func.to_char(stmt.c.day, fmt).label('datetime')
 	)
 	if status:
-		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE) == stmt.c.day, Order.status == status,
-		                                  Order.outlet_id == outlet_id))
+		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE) == stmt.c.day, Order.status == status,Order.outlet_id == outlet_id))
 	else:
-		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE) == stmt.c.day, Order.status != OrderStatus.VOID,
-		                                  Order.outlet_id == outlet_id))
+		join = stmt.outerjoin(Order, and_(cast(Order.order_at, DATE) == stmt.c.day, Order.status != OrderStatus.VOID, Order.outlet_id == outlet_id))
 	return entities, join
 
 

@@ -99,7 +99,7 @@ class ProductService(object):
 			func.coalesce(Category.id, -1).label('category_id'),
 			func.coalesce(Category.name, 'N/A').label('category_name'),
 			Product.unit.label("unit"),
-			func.count(Discount.id).label("count_discount")
+			Product.discount
 		)
 
 		now = datetime.now()

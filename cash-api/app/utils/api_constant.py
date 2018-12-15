@@ -34,6 +34,12 @@ class ProductType(object):
 	ITEM = 'ITEM'
 	SERVICE = 'SERVICE'
 
+
+class DiscountMethod(object):
+	PER_TRX = 0
+	PER_PRODUCT = 1
+	
+	
 class OrderStatus(object):
 	IN_PROGRESS = 'I'
 	PENDING = 'P'
