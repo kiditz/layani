@@ -100,9 +100,8 @@ class ProductService(object):
 			func.coalesce(Category.name, 'N/A').label('category_name'),
 			Product.unit.label("unit")
 		)
-
+		
 		now = datetime.now()
-
 		product_q = Product.query.with_entities(*entities) \
 			.outerjoin(Stock, Product.id == Stock.product_id) \
 			.join(ProductSellPrice, and_(Product.id == ProductSellPrice.product_id, ProductSellPrice.name == 'STANDARD')) \
