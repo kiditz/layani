@@ -204,6 +204,7 @@ class Discount(db.Model, Entity):
 	__tablename__ = 'co_discount'
 	id = db.Column(db.BigInteger, primary_key=True)
 	product_id = db.Column(db.ForeignKey(u'co_product.id'))	
+	discount_method = db.Column(db.BigInteger)
 	amount = db.Column(db.BigInteger, nullable=False, server_default='0', default=0)	
 	quantity = db.Column(db.BigInteger, nullable=False)	
 	discount_type = db.Column(db.String(30), nullable=False, server_default='PERCENTAGE', default='PERCENTAGE')	
@@ -221,6 +222,7 @@ class Order(db.Model, Entity):
 	id = db.Column(db.BigInteger, primary_key=True)	
 	customer_id = db.Column(db.ForeignKey(u'co_customer.id'))
 	cash_box_id = db.Column(db.ForeignKey(u'co_cash_box.id'))
+	discount_id = db.Column(db.ForeignKey(u'co_discount.id'))	
 	outlet_id = db.Column(db.ForeignKey(u'co_outlet.id'), nullable=False)
 	order_code = db.Column(db.Text, index=True)
 	total_amount = db.Column(db.Numeric, nullable=False, server_default='0', default=0)		
@@ -255,6 +257,7 @@ class OrderItem(db.Model, Entity):
 	id = db.Column(db.BigInteger, primary_key=True)	
 	order_id = db.Column(db.ForeignKey(u'co_order.id'), nullable=False)
 	product_id = db.Column(db.ForeignKey(u'co_product.id'), nullable=False)
+	discount_id = db.Column(db.ForeignKey(u'co_discount.id'))	
 	qty = db.Column(db.BigInteger, nullable=False, server_default='0', default=0)		
 	sub_total = db.Column(db.Numeric, nullable=False, server_default='0', default=0)	
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
