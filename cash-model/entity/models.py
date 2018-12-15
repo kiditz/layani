@@ -142,6 +142,7 @@ class Product(db.Model, Entity):
 	outlet_id = db.Column(db.ForeignKey(u'co_outlet.id'))	
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)	
+	parent_id = db.Column(db.BigInteger, default=-1)
 	__table_args__ = (db.UniqueConstraint('code', 'outlet_id', name='co_product_code_outlet_id_key'),)
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)		
@@ -202,10 +203,12 @@ class StockHistory(db.Model, Entity):
 class Discount(db.Model, Entity):
 	__tablename__ = 'co_discount'
 	id = db.Column(db.BigInteger, primary_key=True)
-	product_id = db.Column(db.ForeignKey(u'co_product.id'), nullable=False)
-	discount = db.Column(db.BigInteger, nullable=False, server_default='0', default=0)	
-	discount_when = db.Column(db.BigInteger, nullable=False)	
-	discount_type = db.Column(db.String(30), nullable=False, server_default='PERCENTAGE', default='PERCENTAGE')
+	product_id = db.Column(db.ForeignKey(u'co_product.id'))	
+	amount = db.Column(db.BigInteger, nullable=False, server_default='0', default=0)	
+	quantity = db.Column(db.BigInteger, nullable=False)	
+	discount_type = db.Column(db.String(30), nullable=False, server_default='PERCENTAGE', default='PERCENTAGE')	
+	start_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
+	end_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
 	
@@ -256,8 +259,9 @@ class OrderItem(db.Model, Entity):
 	sub_total = db.Column(db.Numeric, nullable=False, server_default='0', default=0)	
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
-	discount_amount = db.Column(db.Numeric, nullable=False, server_default='0', default=0)
-	discount_type = db.Column(db.String(30), nullable=False, server_default='PERCENTAGE', default='PERCENTAGE')
+	sell_price_id = db.Column(db.ForeignKey(u'co_product_sell_price.id'), nullable=False)
+	purchase_price_id = db.Column(db.ForeignKey(u'co_product_purchase_price.id'), nullable=False)
+
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)
 
@@ -291,7 +295,7 @@ class Cashbox(db.Model, Entity):
 
 
 class CashboxHistory(db.Model, Entity):
-	__tablename__ = 'co_cashbox_history'
+	__tablename__ = 'co_cash_box_history'
 	id = db.Column(db.BigInteger, primary_key=True)
 	cash_box_id = db.Column(db.ForeignKey(u'co_cash_box.id'), nullable=False)
 	amount = db.Column(db.Numeric, nullable=False, server_default='0')		
