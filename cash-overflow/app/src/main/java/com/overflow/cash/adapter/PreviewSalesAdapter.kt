@@ -52,19 +52,18 @@ class PreviewSalesAdapter(private val imageService: ImageService) : RecyclerView
 
         holder.subTotal.text = subTotal
         val documentId = item.getLong("documentId")
-        val countDiscount = item.getLong("countDiscount")
         holder.sellPrice.text = "$sellPrice x $qty $unit"
-        if(countDiscount > 0){
-            val discountAmount = item.getDouble("discountAmount")
-            val discountType = item.getString("discountType")
-            if(discountAmount > 0.0){
-                if(discountType == Constant.DiscountType.PERCENTAGE){
-                    holder.sellPrice.text = "${holder.sellPrice.text} - ${discountAmount.toInt()}%"
-                }else{
-                    holder.sellPrice.text = "${holder.sellPrice.text} - ${rupiah(discountAmount)}"
-                }
-            }
-        }
+//        if(countDiscount > 0){
+//            val discountAmount = item.getDouble("discountAmount")
+//            val discountType = item.getString("discountType")
+//            if(discountAmount > 0.0){
+//                if(discountType == Constant.DiscountType.PERCENTAGE){
+//                    holder.sellPrice.text = "${holder.sellPrice.text} - ${discountAmount.toInt()}%"
+//                }else{
+//                    holder.sellPrice.text = "${holder.sellPrice.text} - ${rupiah(discountAmount)}"
+//                }
+//            }
+//        }
         imageService.loadDocument(holder.imgProduct, documentId , item.getString("productName"))
     }
 

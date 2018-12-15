@@ -191,6 +191,7 @@ class StockHistory(db.Model, Entity):
 	id = db.Column(db.BigInteger, primary_key=True)
 	stock_id = db.Column(db.ForeignKey(u'co_product_stock.id'), nullable=False)
 	quantity = db.Column(db.BigInteger, nullable=False, server_default='0')	
+	purchase_price = db.Column(db.Numeric, nullable=False, server_default='0')		
 	ref_id = db.Column(db.BigInteger, nullable=False)
 	remark = db.Column(db.Text, nullable=False, default='')
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
@@ -204,15 +205,19 @@ class Discount(db.Model, Entity):
 	__tablename__ = 'co_discount'
 	id = db.Column(db.BigInteger, primary_key=True)
 	product_id = db.Column(db.ForeignKey(u'co_product.id'))	
-	discount_method = db.Column(db.BigInteger)
-	amount = db.Column(db.BigInteger, nullable=False, server_default='0', default=0)	
-	quantity = db.Column(db.BigInteger, nullable=False)	
+	name = db.Column(db.Text)
+	method = db.Column(db.BigInteger)	
+	amount = db.Column(db.Numeric, nullable=False, server_default='0', default=0)	
+	quantity = db.Column(db.BigInteger, nullable=False, server_default='0', default=0)	
+	bill_amount = db.Column(db.Numeric, nullable=False, server_default='0', default=0)
+	free_product_id = db.Column(db.ForeignKey(u'co_product.id'))
 	discount_type = db.Column(db.String(30), nullable=False, server_default='PERCENTAGE', default='PERCENTAGE')	
+	day_of_week = db.Column(db.String(60))	
 	start_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	end_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
-	
+	outlet_id = db.Column(db.ForeignKey(u'co_outlet.id'), nullable=False)	
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)
 

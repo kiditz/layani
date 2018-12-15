@@ -160,8 +160,8 @@ class Constant {
 
     interface DiscountType{
         companion object {
-            const val FIXED_PRICE = "FIXED_PRICE"
-            const val PERCENTAGE: String = "PERCENTAGE"
+            const val FIXED_PRICE = "Rp."
+            const val PERCENTAGE: String = "%"
         }
     }
 

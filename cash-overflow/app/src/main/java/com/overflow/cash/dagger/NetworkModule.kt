@@ -23,7 +23,10 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Named
 import javax.inject.Singleton
 
-
+/**
+ * @author Rifky Aditya Bastara
+ * @since 15 December 2018 22:49
+ * */
 @Module
 class NetworkModule {
 

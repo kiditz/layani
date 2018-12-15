@@ -10,13 +10,13 @@ import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
 import io.reactivex.disposables.CompositeDisposable
 
-class CashboxPresenter(private val context: Context, private val preferences: SharedPreferences, private val translations: Translations, private val service: CashBoxService,  private val disposable: CompositeDisposable) : CashboxContract.Presenter{
+class LoadCashboxPresenter(private val context: Context, private val preferences: SharedPreferences, private val translations: Translations, private val service: CashBoxService, private val disposable: CompositeDisposable) : LoadCashboxContract.Presenter{
     
 
-    lateinit var view:CashboxContract.View
+    lateinit var view:LoadCashboxContract.View
 
 
-    override fun attach(view: CashboxContract.View) {
+    override fun attach(view: LoadCashboxContract.View) {
         this.view = view
         this.loadCashBox()
     }

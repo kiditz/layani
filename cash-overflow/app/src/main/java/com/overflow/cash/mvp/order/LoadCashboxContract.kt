@@ -4,7 +4,7 @@ import com.overflow.libs.BasePresenter
 import com.overflow.libs.BaseView
 import com.overflow.libs.core.Data
 
-class CashboxContract {
+class LoadCashboxContract {
     interface View : BaseView {
         fun onCashboxLoaded(item: List<Data>)
     }

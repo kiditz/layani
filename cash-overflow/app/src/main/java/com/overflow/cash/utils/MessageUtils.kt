@@ -91,17 +91,18 @@ open class MessageButtonHandle : MessageButton() {
 
 fun rupiah(value:Double, showPrefix:Boolean=true):String{
     val format = DecimalFormat.getCurrencyInstance(Locale("in", "ID")) as DecimalFormat
-    format.isDecimalSeparatorAlwaysShown = false
-    val symbols = DecimalFormatSymbols()
-    if(showPrefix){
-        symbols.currencySymbol = "Rp. "
-        format.negativePrefix = "Rp. -"
-    }
-
-    format.negativeSuffix = ""
-    format.decimalFormatSymbols = symbols
+//    format.isDecimalSeparatorAlwaysShown = false
+//    val symbols = DecimalFormatSymbols()
+//    if(showPrefix){
+//        symbols.currencySymbol = "Rp. "
+//        format.negativePrefix = "Rp. -"
+//    }
+//
+//    format.negativeSuffix = ""
+//    format.decimalFormatSymbols = symbols
     return format.format(value)
 }
+
 
 
 fun parseRupiah(value:CharSequence):Double{

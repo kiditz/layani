@@ -98,8 +98,7 @@ class ProductService(object):
 			ProductPurchasePrice.id.label('purchase_price_id'),
 			func.coalesce(Category.id, -1).label('category_id'),
 			func.coalesce(Category.name, 'N/A').label('category_name'),
-			Product.unit.label("unit"),
-			Product.discount
+			Product.unit.label("unit")
 		)
 
 		now = datetime.now()

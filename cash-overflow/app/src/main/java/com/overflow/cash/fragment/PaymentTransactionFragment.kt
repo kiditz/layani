@@ -10,6 +10,8 @@ import com.overflow.cash.R
 import com.overflow.cash.activity.Constant
 import com.overflow.cash.activity.PaymentTransactionActivity
 import com.overflow.cash.activity.ReceiptActivity
+import com.overflow.cash.mvp.discount.LoadDiscountByBillAmountContract
+import com.overflow.cash.mvp.discount.LoadDiscountByBillAmountPresenter
 import com.overflow.cash.mvp.order.SaveOrderContract
 import com.overflow.cash.mvp.order.SaverOrderPresenter
 import com.overflow.cash.net.NetworkExHandler
@@ -20,10 +22,15 @@ import com.overflow.cash.utils.round
 import com.overflow.cash.utils.rupiah
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
+import kotlinx.android.synthetic.main.dialog_pay.*
 import kotlinx.android.synthetic.main.fragment_payment.*
 import javax.inject.Inject
+/**
+ * @author Riflu Aditya Bastara
+ * */
+class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View, LoadDiscountByBillAmountContract.View {
 
-class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View {
+
     @Inject
     lateinit var translations: Translations
     @Inject
@@ -31,7 +38,11 @@ class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View {
     @Inject
     lateinit var saveOrderPresenter: SaverOrderPresenter
     @Inject
+    lateinit var loadDiscountPresenter: LoadDiscountByBillAmountPresenter
+    @Inject
     lateinit var orderRealm: OrderRealm
+    var discountId:Long=0
+    var discountAmount:Double=0.0
     var paymentMethod = Constant.PaymentMethod.CASH
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_payment, container, false)
@@ -40,12 +51,15 @@ class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         saveOrderPresenter.attach(this)
+        loadDiscountPresenter.attach(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val totalAmount = arguments!!.getDouble("amount", 0.0)
-        tv_total_amount.text = rupiah(totalAmount)
+        this.loadDiscountPresenter.loadDiscountByBillAmount(totalAmount)
+        tv_bill_amount.text = rupiah(totalAmount)
+
         btn_suggestion_round_3.text = if(totalAmount > 100.0){
             rupiah(round(totalAmount, -3))
         }else{
@@ -82,25 +96,29 @@ class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View {
 
         btn_the_right_money.setOnClickListener {
             showProgress()
-            doOrder(totalAmount)
+            val cashBack = 0.0
+            showDialogPayment(totalAmount, cashBack)
         }
 
         btn_suggestion_round_3.setOnClickListener {
             showProgress()
             val totalPayment = parseRupiah(btn_suggestion_round_3.text)
-            doOrder(totalPayment)
+            val cashBack = totalPayment - totalAmount
+            showDialogPayment(totalPayment, cashBack)
         }
 
         btn_suggestion_round_4.setOnClickListener {
             showProgress()
             val totalPayment = parseRupiah(btn_suggestion_round_4.text)
-            doOrder(totalPayment)
+            val cashBack = totalPayment - totalAmount
+            showDialogPayment(totalPayment, cashBack)
         }
 
         btn_suggestion_round_5.setOnClickListener {
             showProgress()
             val totalPayment = parseRupiah(btn_suggestion_round_5.text)
-            doOrder(totalPayment)
+            val cashBack = totalPayment - totalAmount
+            showDialogPayment(totalPayment, cashBack)
         }
     }
     //Initialize button color
@@ -123,6 +141,20 @@ class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View {
         this.paymentMethod = paymentType
     }
 
+    /**
+     * Show dialog preview before paid transaction
+     * */
+    private fun showDialogPayment(totalPayment:Double, cashBack:Double){
+        if(discountAmount != 0.0){
+
+        }
+        val payFragment = DialogPaymentMakeSure.newInstance(totalPayment, cashBack, getString(R.string.are_you_sure_transaction))
+        payFragment.onDoneClick = {
+            doOrder(totalPayment)
+        }
+        payFragment.show(activity!!.supportFragmentManager, Constant.PaymentMethod.CASH)
+    }
+
     //Call api to save order
     private fun doOrder(totalPayment:Double){
         val totalAmount = parseRupiah(tv_total_amount.text)
@@ -142,6 +174,9 @@ class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View {
 
             order["total_amount"] = totalAmount
             order["total_payment"] = totalPayment
+            if(discountAmount > .0){
+                order["discount_id"] = discountId
+            }
             order["payment_method"] = paymentMethod
             val itemsStr = this.getString("items")
             val itemData = Data(itemsStr)
@@ -150,6 +185,20 @@ class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View {
             saveOrderPresenter.saveOrder(order)
         }
     }
+
+    // Called when discount loaded
+    override fun onDiscountLoaded(data: Data) {
+        this.discountId = data.getLong("discount_id")
+        this.discountAmount = data.getDouble("amount")
+        this.tv_discount.text = rupiah(discountAmount)
+        this.tv_total_payment.text = rupiah(parseRupiah(tv_bill_amount.text) - discountAmount)
+    }
+
+    override fun onDiscountNotLoaded(data: Data) {
+        this.tv_discount.text = rupiah(discountAmount)
+        this.tv_total_payment.text = rupiah(parseRupiah(tv_bill_amount.text) - discountAmount)
+    }
+
     // Called when order has been created
     override fun onOrderCreated(data: Data) {
         hideProgress()
@@ -172,6 +221,7 @@ class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View {
     override fun showNoOk(res: String) {
         hideProgress()
         showErrorMessage(res)
+
     }
 
     //Nothing todo here
@@ -203,4 +253,6 @@ class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View {
         super.onDetach()
         this.saveOrderPresenter.detach()
     }
+
+
 }

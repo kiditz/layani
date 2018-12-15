@@ -36,7 +36,10 @@ import kotlinx.android.synthetic.main.toolbar.*
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-
+/**
+ * @author Rifky Aditya Bastara
+ * @since 15 December 2018 22:49
+ * */
 class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, HasSupportFragmentInjector, MenuContract.View {
     lateinit var navHeaderView: View
     @Inject

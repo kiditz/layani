@@ -27,11 +27,8 @@ import kotlinx.android.synthetic.main.activity_preview_sales.*
 import javax.inject.Inject
 
 class PreviewSalesActivity : BaseActivity(), SaveOrderContract.View {
-
-
     @Inject
     lateinit var imageService: ImageService
-
     @Inject
     lateinit var translations:Translations
     @Inject

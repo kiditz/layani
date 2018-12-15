@@ -125,7 +125,7 @@ class PaymentTransactionActivity : BaseActivity(),  SaveOrderContract.View {
 
     @SuppressLint("SetTextI18n")
     private fun addDigit(value: Int) {
-        val currentVal = tv_result.text.toString().replace(".00", "").replace(Regex("[^0-9]"), "")
+        val currentVal = tv_result.text.toString().replace(Regex("[^0-9]"), "")
         this.tv_result.text = rupiah("$currentVal$value".toDouble())
     }
 

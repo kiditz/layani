@@ -7,6 +7,7 @@ import com.overflow.cash.mvp.chart.*
 import com.overflow.cash.mvp.customer.LoadCustomerPresenter
 import com.overflow.cash.mvp.chart.DashboardHeaderPresenter
 import com.overflow.cash.mvp.customer.EditCustomerPresenter
+import com.overflow.cash.mvp.discount.LoadDiscountByBillAmountPresenter
 import com.overflow.cash.mvp.login.LoginPresenter
 import com.overflow.cash.mvp.menu.MenuPresenter
 import com.overflow.cash.mvp.order.*
@@ -23,7 +24,10 @@ import dagger.Module
 import dagger.Provides
 import io.reactivex.disposables.CompositeDisposable
 
-@Suppress("unused")
+/**
+ * @author Rifky Aditya Bastara
+ * @since 15 December 2018 22:49
+ * */
 @Module
 class PresenterModule {
     @Provides
@@ -96,8 +100,8 @@ class PresenterModule {
     }
 
     @Provides
-    internal fun provideCashboxPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, cashboxService: CashBoxService, preferences: SharedPreferences): CashboxPresenter {
-        return CashboxPresenter(context,preferences, translations, cashboxService, disposable)
+    internal fun provideCashboxPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, cashboxService: CashBoxService, preferences: SharedPreferences): LoadCashboxPresenter {
+        return LoadCashboxPresenter(context,preferences, translations, cashboxService, disposable)
     }
 
     @Provides
@@ -147,6 +151,11 @@ class PresenterModule {
     @Provides
     internal fun provideDashboardHeaderPresenter(context: Context, translations: Translations, disposable: CompositeDisposable,orderService: OrderService,  preferences: SharedPreferences): DashboardHeaderPresenter {
         return DashboardHeaderPresenter(context, preferences, translations, orderService, disposable)
+    }
+
+    @Provides
+    internal fun provideLoadDiscountByBillAmount(context: Context, translations: Translations, disposable: CompositeDisposable,discountService: DiscountService,  preferences: SharedPreferences): LoadDiscountByBillAmountPresenter {
+        return LoadDiscountByBillAmountPresenter(context, preferences, translations, discountService, disposable)
     }
 
     @Provides

@@ -28,6 +28,7 @@ class RetrofitModule {
         return retrofit.create(OutletService::class.java)
     }
 
+    // I am lazy to create new module for this service, it is bad practice but works, sory!!
     @Provides
     fun provideImageService(context: Context, accountManager: AccountManager): ImageService {
         return ImageService(context, accountManager)
@@ -46,6 +47,11 @@ class RetrofitModule {
     @Provides
     fun provideCustomerService(@Named(AUTHENTICATED) retrofit: Retrofit): CustomerService {
         return retrofit.create(CustomerService::class.java)
+    }
+
+    @Provides
+    fun provideDiscountService(@Named(AUTHENTICATED) retrofit: Retrofit): DiscountService {
+        return retrofit.create(DiscountService::class.java)
     }
 
 }
