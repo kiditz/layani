@@ -19,7 +19,7 @@ class ProductService(object):
 	def __init__(self):
 		super(ProductService, self).__init__()
 	
-	@Key(['name', 'code', 'product_type', 'sell_price', 'purchase_price'])
+	@Key(['name', 'code', 'product_type'])
 	@Number(['outlet_id'])
 	def add_product(self, domain):
 		self.validate_product(domain)
@@ -30,19 +30,17 @@ class ProductService(object):
 		else:
 			product.document_id = None
 		product.save()
-		
 		sell_price = ProductSellPrice()
-		sell_price.sell_price = domain["sell_price"]
+		sell_price.sell_price = domain["sell_price"] if 'sell_price' in domain else 0.0
 		sell_price.name = "STANDARD"
 		sell_price.product_id = product.id
 		sell_price.save()
 		
 		purchase_price = ProductPurchasePrice()
 		purchase_price.product_id = product.id
-		purchase_price.purchase_price = domain['purchase_price']
+		purchase_price.purchase_price = domain['purchase_price'] if 'purchase_price' in domain else 0.0
 		purchase_price.save()
 		product_dict = product.to_dict()
-		
 		if 'qty' in domain:
 			stock = Stock()
 			stock.product_id = product.id
@@ -56,6 +54,8 @@ class ProductService(object):
 			stock_history.ref_id = StockRef.IN
 			stock_history.save()
 			product_dict["qty"] = stock.quantity
+		else:
+			product.use_stock = False
 		product_dict["sell_price"] = sell_price.sell_price
 		return {'payload': product_dict}
 	
@@ -92,10 +92,12 @@ class ProductService(object):
 			func.coalesce(Product.document_id, -1).label("document_id"),
 			Stock.quantity.label('stock'),
 			ProductSellPrice.sell_price,
+			ProductSellPrice.id.label('sell_price_id'),
 			Product.use_stock,
 			ProductPurchasePrice.purchase_price,
+			ProductPurchasePrice.id.label('purchase_price_id'),
 			func.coalesce(Category.id, -1).label('category_id'),
-			func.coalesce(Category.name, '').label('category_name'),
+			func.coalesce(Category.name, 'N/A').label('category_name'),
 			Product.unit.label("unit"),
 			func.count(Discount.id).label("count_discount")
 		)

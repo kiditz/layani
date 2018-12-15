@@ -16,10 +16,23 @@ class StockRef(object):
 
 
 class PaymentMethod(object):
-	CASH = 'CASH'
-	CREDIT = 'CREDIT'
-	DEBIT = 'DEBIT'
+	CASH = 'CASH'	
+	CARD = 'CARD'	
 
+
+class CashboxType(object):
+	DEBIT = 'DEBIT'
+	CREDIT = 'CREDIT'
+
+
+class CashDrawer(object):
+	CASH_DRAWER = 'CASH_DRAWER'
+	BANK = 'BANK'
+
+
+class ProductType(object):
+	ITEM = 'ITEM'
+	SERVICE = 'SERVICE'
 
 class OrderStatus(object):
 	IN_PROGRESS = 'I'
@@ -48,3 +61,4 @@ class ErrorCode(object):
 	ORDER_NOT_FOUND = 'order.not.found'
 	INVALID_PHONE_NUMBER = 'invalid.phone.number'
 	INVALID_EMAIL_ADDRESS = 'invalid.email.address'
+	INVALID_TOTAL_AMOUNT = 'invalid.total.amount'

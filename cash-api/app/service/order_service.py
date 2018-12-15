@@ -6,7 +6,7 @@ from slerp.logger import logging
 from slerp.validator import Number, Blank, Key, ValidationException
 from sqlalchemy import between
 
-from utils.api_constant import StockRef, ErrorCode, PaymentMethod
+from utils.api_constant import StockRef, ErrorCode, PaymentMethod, CashboxType, CashDrawer
 from .chart_query import *
 
 log = logging.getLogger(__name__)
@@ -19,74 +19,61 @@ class OrderService(object):
 	@Key(['outlet_id', 'customer_id', 'items.use_stock', 'items.discount_amount', 'items.discount_type'])
 	@Number(['user_id'])
 	def add_order(self, domain):
-		order = Order(domain)
-		order.order_code = '-'
-		order.save()
-		order.order_code = str(order.id).zfill(10)
-		now = datetime.now()
-		profit_list = []
-		order_items = domain['items']
-		for item in order_items:
-			item['order_id'] = order.id
-			if item['use_stock']:
-				stock = Stock.query.filter_by(product_id=item['product_id']).first()
-				if stock.quantity - item['qty'] < 0:
-					raise ValidationException(ErrorCode.NOT_ENOUGH_STOCK)
-				stock.quantity -= item['qty']
-				stock.save()
-				stock_history = StockHistory()
-				stock_history.quantity = -item['qty']
-				stock_history.ref_id = StockRef.TRANSACTION
-				stock_history.remark = 'cut.stock #{}'.format(order.order_code)
-				stock_history.stock_id = stock.id
-				stock_history.save()
-			
-			purchase_price = ProductPurchasePrice.query.filter(
-				and_(ProductPurchasePrice.product_id == item['product_id'], between(now, ProductPurchasePrice.start_at, ProductPurchasePrice.end_at))).first()
-			sell_price = ProductSellPrice.query.filter(and_(ProductSellPrice.product_id == item['product_id'], ProductSellPrice.name == 'STANDARD')).first()
-			if item["discount_type"] == 'FIXED_PRICE':
-				profit_list.append(Decimal(sell_price.sell_price - purchase_price.purchase_price - Decimal(item['discount_amount'])) * Decimal(item['qty']))
-			else:
-				discount_amount = Decimal(item['discount_amount']) / Decimal(100.0) * sell_price.sell_price
-				profit_list.append(Decimal(sell_price.sell_price - purchase_price.purchase_price - discount_amount) * Decimal(item['qty']))
-				pass
-			pass
-		# Handle cashbox for when payment		
+		outlet_id = domain['outlet_id']
+		order_id = domain['order_id'] if 'order_id' in domain else -1
+		order = Order.query.filter_by(id=order_id).first()
+		if order is None:
+			order = Order(domain)
+			order.save()
+			order.order_code = str(order.id).zfill(10)
+		
 		if 'total_amount' in domain and 'total_payment' in domain:
 			total_amount = domain['total_amount']
 			total_payment = domain['total_payment']
-
 			if total_payment < total_amount:
 				raise ValidationException(ErrorCode.INVALID_TOTAL_AMOUNT)
-			cashbox = Cashbox.query.first()
-			log.debug('Cashbox ', cashbox)
+			cashbox = Cashbox.query.filter(
+				and_(Cashbox.outlet_id == outlet_id, Cashbox.name == CashDrawer.CASH_DRAWER)).first()
 			order.status = OrderStatus.SUCCESS
 			cashbox.total_amount = cashbox.total_amount + Decimal(domain['total_amount'])
-			order.cashback = order.total_payment - order.total_amount			
+			order.cashback = order.total_payment - order.total_amount
 			cashbox.outlet_id = domain['outlet_id']
 			cashbox.save()
 			# Cashbox History
 			cashbox_history = CashboxHistory()
 			cashbox_history.cash_box_id = cashbox.id
-			if order.payment_method == PaymentMethod.CASH:
-				cashbox_history.amount = Decimal(domain['total_amount'])
-				cashbox_history.payment_method = PaymentMethod.DEBIT
-				cashbox_history.remark = 'order.cash #' + order.order_code
-			else:
-				cashbox_history.amount = Decimal(domain['total_payment'])
-				cashbox_history.payment_method = PaymentMethod.DEBIT
-				cashbox_history.remark = 'order.credit #' + order.order_code
-				cashbox_history.save()
-				
-		order.profit = sum(profit_list)
+			cashbox_history.amount = Decimal(domain['total_amount'])
+			cashbox_history.payment_method = CashboxType.DEBIT
+			cashbox_history.remark = 'order.cash #' + order.order_code
+			cashbox_history.save()
+		
+		if 'items' in domain:
+			order_items = domain['items']
+			for item in order_items:
+				item['order_id'] = order.id
+				if item['use_stock']:
+					stock = Stock.query.filter_by(product_id=item['product_id']).first()
+					if stock.quantity - item['qty'] < 0:
+						raise ValidationException(ErrorCode.NOT_ENOUGH_STOCK)
+					stock.quantity -= item['qty']
+					stock.save()
+					stock_history = StockHistory()
+					stock_history.quantity = -item['qty']
+					stock_history.ref_id = StockRef.TRANSACTION
+					stock_history.remark = 'cut.stock #{}'.format(order.order_code)
+					stock_history.stock_id = stock.id
+					stock_history.save()
+				pass
+			db.session.bulk_insert_mappings(OrderItem, order_items)
+			
 		order.save()
-		db.session.bulk_insert_mappings(OrderItem, order_items)
 		order_dict = order.to_dict()
 		if domain['customer_id'] is not None:
 			customer = Customer.query.get(domain['customer_id'])
 			if customer is not None:
 				order_dict['customer_name'] = customer.name			
-		order_dict['order_items'] = order_items
+		
+		order_dict['order_items'] = domain['items']
 		return {'payload': order_dict}
 
 	@Number(['order_id'])
@@ -96,7 +83,6 @@ class OrderService(object):
 		if order.status != OrderStatus.SUCCESS:
 			raise ValidationException(ErrorCode.REFUND_FAILED)
 		order.status = OrderStatus.VOID
-		
 		cashbox = Cashbox.query.filter(Cashbox.id == order.cash_box_id).first()
 		cashbox.total_amount = cashbox.total_amount - order.total_amount
 		cashbox.save()

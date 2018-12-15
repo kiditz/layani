@@ -14,13 +14,12 @@ product_service = ProductService()
 def add_product():
     """
     {
-    "category_id": "Long",
-    "name": "String",
-    "code": "String",
-    "product_type": "String",
-    "document_id": "Long",
-    "sell_price": "Double",
-    "qty": "Long"
+    "name": "Headset Samsung",
+    "code": "NA25",
+    "product_type": "ITEM",
+    "sell_price": 25000,
+    "purchase_price": 21000,
+    "qty": 300
     }
     """
     domain = request.get_json()
