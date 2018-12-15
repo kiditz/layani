@@ -16,61 +16,8 @@
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:background="@color/colorPrimary"
         android:visibility="gone"/>
-    <TextView
-        android:id="@+id/tv_error_message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:text="Nilai pembelian Harus lebih kecil"
-        android:background="@drawable/bg_red_bottom"
-        android:padding="5dp"
-        android:textSize="12sp"
-        android:visibility="gone"
-        android:textColor="@color/textLight"
+    <include layout="@layout/success_message"/>
 
-        />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="@dimen/payment_margin"
-        android:weightSum="2">
-        <RadioGroup
-            android:id="@+id/rg_payment_method"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/rdCash"
-                android:fontFamily="sans-serif"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:checked="true"
-                android:text="@string/cash" />
-
-            <RadioButton
-                android:id="@+id/rdPaid"
-                android:fontFamily="sans-serif"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/paid" />
-        </RadioGroup>
-
-        <Spinner
-            android:id="@+id/sp_cashbox"
-            android:fontFamily="sans-serif"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:hint="@string/init_price"
-            />
-
-    </LinearLayout>
 
     <TextView
         android:background="@android:color/white"
@@ -86,81 +33,6 @@
         android:paddingRight="@dimen/payment_margin"
         android:textSize="@dimen/display_text_size" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/ed_customer"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/bg_edit_text"
-            android:drawableLeft="@drawable/ic_customer"
-            android:drawableTint="@color/colorAccent"
-            android:fontFamily="sans-serif"
-            android:focusableInTouchMode="false"
-            android:textSize="12sp"
-            android:hint="@string/customer_name"
-            android:maxLines="1"
-             />
-        <EditText
-            android:id="@+id/ed_due_date"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:fontFamily="sans-serif"
-            android:background="@drawable/bg_edit_text"
-            android:drawableLeft="@drawable/ic_calendar"
-            android:drawableTint="@color/colorAccent"
-            android:focusableInTouchMode="false"
-            android:hint="@string/due_date"
-            android:maxLines="1"
-            android:textSize="12sp"
-            />
-        <!--<Button-->
-            <!--android:id="@+id/btn_percent"-->
-            <!--style="@style/MyButton"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_weight="1"-->
-            <!--android:text="%"/>-->
-
-        <!--<Button-->
-            <!--android:id="@+id/btn_power"-->
-            <!--style="@style/MyButton"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_weight="1"-->
-            <!--android:text="^"/>-->
-
-        <!--<Button-->
-            <!--android:id="@+id/btn_root"-->
-            <!--style="@style/MyButton"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_weight="1"-->
-            <!--android:text="√"/>-->
-
-        <!--<Button-->
-            <!--android:id="@+id/btn_clear"-->
-            <!--style="@style/MyButton"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_weight="1"-->
-            <!--android:text="C"/>-->
-
-        <!--<Button-->
-            <!--android:id="@+id/btn_reset"-->
-            <!--style="@style/MyButton"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_weight="1"-->
-            <!--android:text="AC"-->
-            <!--android:visibility="gone"/>-->
-    </LinearLayout>
     <include layout="@layout/line_vert" />
     <LinearLayout
         android:layout_width="match_parent"
@@ -282,7 +154,8 @@
 
         <Button
             android:id="@+id/btn_done"
-            style="@style/MyButton"
+            android:background="@drawable/btn_default"
+            android:textColor="@drawable/btn_accent_text"
             android:enabled="false"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

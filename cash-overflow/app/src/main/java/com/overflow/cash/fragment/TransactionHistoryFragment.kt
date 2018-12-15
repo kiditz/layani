@@ -5,9 +5,9 @@ import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import com.jakewharton.rxbinding2.widget.RxTextView
+import com.overflow.cash.R
 import com.overflow.cash.activity.Constant
 import com.overflow.cash.activity.MenuActivity
-import com.overflow.cash.R
 import com.overflow.cash.activity.ReceiptTransactionWithRefundActivity
 import com.overflow.cash.adapter.TransactionHistoryAdapter
 import com.overflow.cash.mvp.order.LoadOrderContract
@@ -17,11 +17,15 @@ import com.overflow.cash.mvp.receiveable.AccountReceiveableDetailPresenter
 import com.overflow.cash.net.API
 import com.overflow.cash.net.NetworkExHandler
 import com.overflow.cash.utils.AbstractRecyclerPagination
+import com.overflow.cash.utils.currentLocale
 import com.overflow.cash.utils.moveTo
 import com.overflow.libs.core.Data
+import com.overflow.libs.core.Group
 import com.overflow.libs.core.Translations
 import kotlinx.android.synthetic.main.fragment_blank.*
 import kotlinx.android.synthetic.main.fragment_transaction_history.*
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 class TransactionHistoryFragment : BaseFragment(), LoadOrderContract.View, AccountReceiveableDetailContract.View {
@@ -37,10 +41,11 @@ class TransactionHistoryFragment : BaseFragment(), LoadOrderContract.View, Accou
     private var currentPage: Int = API.MIN_PAGE
     lateinit var menuActivity: MenuActivity
     private var position = -1
-
+    lateinit var format: SimpleDateFormat
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.menuActivity = activity as MenuActivity
+        this.format = SimpleDateFormat("dd MMMM yyyy",this.context!!.currentLocale())
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -51,7 +56,7 @@ class TransactionHistoryFragment : BaseFragment(), LoadOrderContract.View, Accou
         super.onViewCreated(view, savedInstanceState)
         this.presenter.attach(this)
         this.itemsPresenter.attach(this)
-        this.adapter = TransactionHistoryAdapter(translations)
+        this.adapter = TransactionHistoryAdapter(translations, format)
         val manager = LinearLayoutManager(activity)
         recycler?.layoutManager = manager
         recycler?.isNestedScrollingEnabled = false
@@ -89,6 +94,7 @@ class TransactionHistoryFragment : BaseFragment(), LoadOrderContract.View, Accou
         }
     }
 
+
     override fun onOrderLoaded(orderList: List<Data>) {
         recycler?.visibility = View.VISIBLE
         blank_layout?.visibility = View.GONE
@@ -96,7 +102,34 @@ class TransactionHistoryFragment : BaseFragment(), LoadOrderContract.View, Accou
         if (currentPage == 1) {
             this.adapter.clearValues()
         }
-        this.adapter.addValues(orderList)
+        // Grouping the list by order_at
+        val groupBy = orderList.groupBy { format.format(Date(it.getLong("order_at"))) }
+
+        groupBy.keys.forEach {
+            // Check if header has been exists on adapter values
+            if(!hashKey(adapter.values, it)){
+                val itemHeader = Group()
+                itemHeader.type = Group.HEADER
+                itemHeader["order_at"] = it
+                adapter.values.add(itemHeader)
+            }
+
+            groupBy[it]?.forEach {
+                val itemData = Group()
+                itemData.putAll(it.map)
+                itemData.type = Group.GENERAL
+                adapter.values.add(itemData)
+            }
+        }
+        adapter.notifyDataSetChanged()
+    }
+
+    private fun hashKey(payloads:List<Group>, key:String):Boolean{
+        for (payload in payloads){
+            if(payload["order_at"] == key)
+                return true
+        }
+        return false
     }
 
     override fun showError(error: Throwable) {
@@ -116,6 +149,7 @@ class TransactionHistoryFragment : BaseFragment(), LoadOrderContract.View, Accou
 
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        menu?.clear()
     }
 
     override fun showNotConnected(res: String) {

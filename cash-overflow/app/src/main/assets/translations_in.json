@@ -24,6 +24,7 @@
   "required.value.customer_name": "Nama pelanggan harus di isi",
   "invalid.phone.number": "Nomor handphone tidak valid",
   "invalid.password.length": "Password minimum length is 8 character",
+  "invalid.payment.amount": "Nilai pembayaran harus lebih besar dari jumlah tagihan",
   "sell_price.must.be.greater_than_zero": "Harga jual harus lebih besar dari 0",
   "init_price.must.be.greater_than_zero": "Harga dasar harus lebih besar dari 0",
   "qty.must.gt.zero":"Jumlah Barang harus lebih besar dari 0",
@@ -69,5 +70,6 @@
   //Status
   "P": "BELUM LUNAS",
   "S": "SUKSES",
-  "V": "DIBATALKAN"
+  "V": "DIBATALKAN",
+  "C": "TERSIMPAN"
 }

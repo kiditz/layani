@@ -12,11 +12,12 @@ open class OrderItem: RealmObject() {
     var productName:String=""
     var documentId:Long=0
     var countDiscount:Long=0
-    var discountAmount:Double= 0.0
-    var discountType:String="PERCENTAGE"
     var qty:Long=0
     var subTotal:Double=0.0
     var sellPrice:Double=0.0
+    var sellPriceId:Long=0L
+    var purchasePrice:Double=0.0
+    var purchasePriceId:Long=0L
     var useStock:Boolean=false
     @Required
     var unit:String="pcs"

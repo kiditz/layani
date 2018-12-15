@@ -34,10 +34,10 @@ class DashboardHeaderFragment:Fragment(), DashboardHeaderContract.View {
     }
 
     override fun onHeaderLoaded(data: Data) {
-        tvAccountReceiveable?.text = activity?.rupiah(data.getDouble("total_receiveable"))
-        tvCash?.text = activity?.rupiah(data.getDouble("cashbox_amount"))
-        tvProfit?.text = activity?.rupiah(data.getDouble("total_profit"))
-        tvOmzet.text = activity?.rupiah(data.getDouble("total_income"))
+        tvAccountReceiveable?.text = rupiah(data.getDouble("total_receiveable"))
+        tvCash?.text = rupiah(data.getDouble("cashbox_amount"))
+        tvProfit?.text = rupiah(data.getDouble("total_profit"))
+        tvOmzet.text = rupiah(data.getDouble("total_income"))
     }
 
     override fun showError(error: Throwable) {

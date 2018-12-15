@@ -7,16 +7,19 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
+import android.text.TextUtils
+import android.view.View
 import android.widget.ArrayAdapter
 import com.overflow.cash.R
 import com.overflow.cash.adapter.PreviewSalesAdapter
 import com.overflow.cash.mvp.order.SaveOrderContract
 import com.overflow.cash.mvp.order.SaverOrderPresenter
-import com.overflow.cash.mvp.receiveable.AccountReceiveablePaymentContract
 import com.overflow.cash.net.ImageService
 import com.overflow.cash.net.NetworkExHandler
 import com.overflow.cash.realm.OrderRealm
-import com.overflow.cash.utils.*
+import com.overflow.cash.utils.moveTo
+import com.overflow.cash.utils.rupiah
+import com.overflow.cash.utils.snack
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
 import io.reactivex.disposables.CompositeDisposable
@@ -40,7 +43,7 @@ class PreviewSalesActivity : BaseActivity(), SaveOrderContract.View {
     lateinit var adapter:PreviewSalesAdapter
     lateinit var cashBoxAdapter:ArrayAdapter<String>
     private var customerId:Long? = null
-
+    private var customerName:String? = null
     var disposable:CompositeDisposable = CompositeDisposable()
     lateinit var outlet:Data
     @Inject
@@ -58,7 +61,7 @@ class PreviewSalesActivity : BaseActivity(), SaveOrderContract.View {
             it.setDisplayHomeAsUpEnabled(true)
             it.setDisplayShowHomeEnabled(true)
             val amount = this.adapter.values.map { it.getDouble("subTotal") }.sum()
-            this.supportActionBar?.title = this.rupiah(amount)
+            this.supportActionBar?.title = rupiah(amount)
         }
 
         val manager = LinearLayoutManager(this)
@@ -67,7 +70,6 @@ class PreviewSalesActivity : BaseActivity(), SaveOrderContract.View {
         recycler?.setHasFixedSize(true)
         recycler?.itemAnimator = DefaultItemAnimator()
         recycler?.adapter = adapter
-
         cashBoxAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, mutableListOf<String>())
         this.btn_pay.setOnClickListener {
             payOrder()
@@ -75,6 +77,10 @@ class PreviewSalesActivity : BaseActivity(), SaveOrderContract.View {
 
         this.btn_save.setOnClickListener {
             saveOrder()
+        }
+
+        l_customer.setOnClickListener {
+            addCustomer()
         }
     }
 
@@ -85,8 +91,9 @@ class PreviewSalesActivity : BaseActivity(), SaveOrderContract.View {
     }
 
     private fun saveOrder(){
+        progress.visibility = View.VISIBLE
+        btn_save.isEnabled = false
         val order = Data()
-        order["cash_box_id"] = null
         order["customer_id"] = this.customerId
         order["status"] = Constant.TransactionStatus.CREATED
         val itemData = Data(generateOrder()!!.getString("items"))
@@ -96,7 +103,11 @@ class PreviewSalesActivity : BaseActivity(), SaveOrderContract.View {
     }
 
     private fun payOrder(){
-        moveTo(PaymentTransactionActivity::class.java, generateOrder())
+        val order = generateOrder()
+        if(customerId != null){
+            order?.putLong("customer_id", customerId!!)
+        }
+        moveTo(PaymentTransactionDispatcherActivity::class.java, order)
     }
 
     private fun generateOrder():Bundle?{
@@ -132,32 +143,53 @@ class PreviewSalesActivity : BaseActivity(), SaveOrderContract.View {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == Constant.REQUEST_CODE_VIEW_CUSTOMER && resultCode == Activity.RESULT_OK){
             this.customerId = data?.getLongExtra("id", -1L)
+            if (data != null) {
+                this.customerName = data.getStringExtra("name")
+                tv_customer_name.text = customerName
+            }
+
         }
     }
 
+    private fun addCustomer(){
+        val intent = Intent(this, CustomerChooserActivity::class.java)
+        if(!TextUtils.isEmpty(tv_customer_name.text))
+            intent.putExtra("name", tv_customer_name.text.toString())
+        startActivityForResult(intent, Constant.REQUEST_CODE_VIEW_CUSTOMER)
+    }
+
     override fun onOrderCreated(data: Data) {
+        hideProgress()
         val bundle = Bundle()
         bundle.putInt(Constant.GOTO, R.id.nav_transaction)
         bundle.putString(Constant.SUCCESS_MESSAGE, translations.get(Constant.TranslationsKey.SALES_CREATED_SUCCESSFULY).replace("{0}", data.getString("order_code")))
+        orderRealm.deleteItems()
         moveTo(MenuActivity::class.java, bundle)
     }
 
     override fun showError(error: Throwable) {
+        hideProgress()
         networkExHandler.errorHandle(this, error)
     }
 
     override fun showNoOk(res: String) {
+        hideProgress()
         showErrorMessage(res)
     }
 
     override fun showEmpty() {
-
+        hideProgress()
     }
 
     override fun showNotConnected(res: String) {
         snack(res, Snackbar.LENGTH_INDEFINITE).setAction(R.string.try_again) {
             saveOrder()
         }.show()
+    }
+
+    private fun hideProgress(){
+        progress.visibility = View.GONE
+        btn_save.isEnabled = true
     }
 }
 

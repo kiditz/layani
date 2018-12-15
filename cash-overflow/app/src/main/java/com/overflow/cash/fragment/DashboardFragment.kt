@@ -2,15 +2,13 @@ package com.overflow.cash.fragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.PopupMenu
 import com.overflow.cash.R
 import com.overflow.cash.utils.replaceContent
 import kotlinx.android.synthetic.main.fragment_dashboard.*
 
-class DashboardFragment:Fragment() {
+class DashboardFragment:BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_dashboard, container, false)
@@ -120,5 +118,10 @@ class DashboardFragment:Fragment() {
 
     private fun showTopProductChart(){
         activity?.replaceContent(R.id.topProductContainer, TopProductFragment())
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menu?.clear()
     }
 }

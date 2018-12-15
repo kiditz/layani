@@ -1,9 +1,7 @@
 package com.overflow.cash.fragment
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
@@ -12,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.overflow.cash.R
 import com.overflow.cash.activity.Constant
+import com.overflow.cash.activity.MenuActivity
 import com.overflow.cash.adapter.SalesListAdapter
 import com.overflow.cash.model.OrderItem
 import com.overflow.cash.mvp.product.LoadProductContract
@@ -24,19 +23,16 @@ import com.overflow.cash.utils.AbstractRecyclerPagination
 import com.overflow.cash.utils.decoration.MarginItemDecoration
 import com.overflow.cash.utils.snack
 import com.overflow.libs.core.Data
-import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.dialog_manage_order_item_qty.view.*
 import kotlinx.android.synthetic.main.fragment_blank.*
-import kotlinx.android.synthetic.main.fragment_blank.view.*
 import kotlinx.android.synthetic.main.fragment_sales_recycler.*
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
  * @author Rifky Aditya Bastara
  * Load Product From Rest API Into View
  */
-class SalesFragment : Fragment(), LoadProductContract.View{
+class SalesFragment : BaseFragment(), LoadProductContract.View{
     var currentPage: Int = API.MIN_PAGE
     var categoryId:Long = -1L
     private lateinit var adapter: SalesListAdapter
@@ -52,16 +48,17 @@ class SalesFragment : Fragment(), LoadProductContract.View{
     private var addOrSubtractOrderItemDialog: AlertDialog? = null
     private var orderBy:String= Constant.Sort.BY_NAME
     private var search:String= Constant.TEXT_EMPTY
+    lateinit var menuActivity: MenuActivity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             categoryId = it.getLong(ARG_CATEGORY_ID)
         }
+        this.menuActivity = this.activity as MenuActivity
     }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        AndroidSupportInjection.inject(this)
         productListPresenter.attach(this)
         currentPage = 1
 
@@ -126,17 +123,15 @@ class SalesFragment : Fragment(), LoadProductContract.View{
         val builder = AlertDialog.Builder(context!!)
         builder.setView(this.addOrSubtractOrderItemView).setCancelable(false)
         builder.setPositiveButton(R.string.submit){ _, _ ->
-            val input = Data()
-            input["product_id"] = data["product_id"]
             val qtyParse = addOrSubtractOrderItemView?.ed_qty?.text.toString().toLong()
             if(this.addOrSubtractOrderItemView?.ed_qty?.text.toString().toLong() <= 0){
                 holder.qty.visibility = View.GONE
+                holder.qty.text = "${Constant.ZERO} ${data.getString("unit")}"
                 orderRealm.deleteItem(data.getLong("product_id"))
             }else{
                 qty = qtyParse - 1
-                addItem(null, qty, false, holder)
+                addItem(null, qty, true, holder)
             }
-
         }
 
         builder.setNegativeButton(R.string.cancel){dialog, _ ->
@@ -152,7 +147,6 @@ class SalesFragment : Fragment(), LoadProductContract.View{
     private fun handleAddOrder(data: Data, viewHolder: SalesListAdapter.ViewHolder) {
         val qty = viewHolder.qty.text.replace("[^0-9]".toRegex(), "").trim().toLong()
         addItem(null, qty, true, viewHolder)
-        //orderPresenter.loadDiscount(data.getLong("product_id"), qty + 1, viewHolder)
 
     }
 
@@ -173,6 +167,7 @@ class SalesFragment : Fragment(), LoadProductContract.View{
         currentPage = API.MIN_PAGE
         productListPresenter.loadProduct(currentPage, categoryId, search, orderBy)
     }
+
     override fun onProductLoaded(productList: List<Data>) {
         dismiss()
         if(currentPage == 1){
@@ -188,11 +183,6 @@ class SalesFragment : Fragment(), LoadProductContract.View{
         }
     }
 
-    private fun showMessage(title:String, message:String){
-        blank_layout?.visibility = View.VISIBLE
-        blank_layout?.tv_description?.text = message
-        blank_layout?.tv_title?.text = title
-    }
 
     override fun showNoOk(res: String) {
         dismiss()
@@ -225,8 +215,8 @@ class SalesFragment : Fragment(), LoadProductContract.View{
                 }
     }
 
-    @SuppressLint("SetTextI18n")
-    fun onOrderIntemCreated(item: OrderItem?, holder: SalesListAdapter.ViewHolder) {
+
+    private fun onOrderIntemCreated(item: OrderItem?, holder: SalesListAdapter.ViewHolder) {
         holder.qty.text = item?.qty.toString() + " " + item?.unit
         holder.qty.visibility = View.VISIBLE
     }
@@ -234,8 +224,6 @@ class SalesFragment : Fragment(), LoadProductContract.View{
 
     private fun addItem(discount: Data?, qty:Long, updateQty:Boolean=false, holder: SalesListAdapter.ViewHolder){
         val data = adapter.values[holder.adapterPosition]
-        val input = Data()
-        input["product_id"] = data["product_id"]
         if(updateQty){
             if(data.getBoolean("use_stock")){
                 if(data["stock"] != null){
@@ -246,31 +234,10 @@ class SalesFragment : Fragment(), LoadProductContract.View{
                 }
             }
         }
-        var subTotal = data.getDouble("sell_price") * (qty + 1)
-        Timber.i("Qty: %s", qty)
-        input["qty"] = qty
-        input["count_discount"] = data["count_discount"]
-        input["sell_price"] = data.getDouble("sell_price")
-        input["unit"] = data["unit"]
-        input["product_name"] = data.getString("product_name")
-        input["use_stock"] = data.getBoolean("use_stock")
-        input["document_id"] = data.getLong("document_id")
-        if(discount != null){
-            val discountAmount = discount.getDouble("discount")
-            input["discount_amount"] = discountAmount
-            val discountType = discount.getString("discount_type")
-            input["discount_type"] = discountType
-            subTotal -= if(discountType == Constant.DiscountType.PERCENTAGE){
-                val calculateDiscount = discountAmount / 100.0 * subTotal
-                calculateDiscount
-            }else{
-                discountAmount
-            }
-        }else{
-            input["discount_amount"] = 0.0
-            input["discount_type"] = Constant.DiscountType.PERCENTAGE
-        }
-        input["sub_total"] = subTotal
-        orderRealm.addItem(input, updateQty)
+        val subTotal = data.getDouble("sell_price") * (qty + 1)
+        data["sub_total"] = subTotal
+        val item = orderRealm.addItem(data, updateQty)
+        onOrderIntemCreated(item, holder)
+
     }
 }

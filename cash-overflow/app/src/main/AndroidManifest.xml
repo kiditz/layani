@@ -50,7 +50,7 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activity.ScannerActivity"
-            android:label=""/>
+            android:label="" />
         <activity
             android:name=".EditProductActivity"
             android:label="@string/edit_product" />
@@ -63,8 +63,7 @@
             android:name=".account.AccountContentProvider"
             android:authorities="com.overflow.cash.provider"
             android:enabled="true"
-            android:exported="false" >
-        </provider>
+            android:exported="false"></provider>
 
         <service android:name=".account.AccountAuthenticatorService">
             <intent-filter>
@@ -104,13 +103,22 @@
         <activity
             android:name=".activity.CategoryListActivity"
             android:label="@string/edit_category" />
-
         <activity
             android:name=".activity.CustomerListAddActivity"
             android:label="@string/add_customer" />
-        <activity android:name=".activity.AccountReceiveableDetailActivity" android:label="" android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".activity.PaymentAccountReceiveableActivity" android:label="" android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".activity.PaymentTransactionActivity" android:label="" />
+        <activity
+            android:name=".activity.AccountReceiveableDetailActivity"
+            android:label=""
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.PaymentAccountReceiveableActivity"
+            android:label=""
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.PaymentTransactionActivity"
+            android:label="" />
+        <activity android:name=".activity.PaymentTransactionDispatcherActivity"
+            android:label="@string/pay" />
     </application>
 
 </manifest>

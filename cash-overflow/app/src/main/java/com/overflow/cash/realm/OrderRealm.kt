@@ -44,7 +44,7 @@ class OrderRealm(val realm: Realm){
     }
 
 
-    fun removeAllItems(){
+    fun deleteItems(){
 
         realm.beginTransaction()
         realm.where(OrderItem::class.java).findAll().deleteAllFromRealm()

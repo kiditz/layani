@@ -45,10 +45,10 @@ class AccountReceiveableDetailAdapter(private val translations: Translations) : 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = values[position]
         holder.createdAt.text = DateUtil.getTimeAgo(item.getLong("order_at"))
-        holder.totalCredit.text = context.rupiah(item.getDouble("total_credit"))
+        holder.totalCredit.text = rupiah(item.getDouble("total_credit"))
         holder.receiveableDate.text = format.format(Date(item.getLong("receiveable_date")))
-        holder.orderCode.text = context.rupiah(item.getDouble("total_amount"))
-        holder.paymentAmount.text = context.rupiah(item.getDouble("payment_amount"))
+        holder.orderCode.text = rupiah(item.getDouble("total_amount"))
+        holder.paymentAmount.text = rupiah(item.getDouble("payment_amount"))
         holder.itemView.setOnClickListener {
             onItemClick?.invoke(item, holder)
         }

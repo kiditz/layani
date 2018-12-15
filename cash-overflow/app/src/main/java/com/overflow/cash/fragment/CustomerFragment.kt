@@ -37,7 +37,6 @@ class CustomerFragment : BaseFragment(), LoadCustomerContract.View {
     lateinit var menuActivity: MenuActivity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
         this.menuActivity = activity as MenuActivity
     }
 
@@ -117,15 +116,23 @@ class CustomerFragment : BaseFragment(), LoadCustomerContract.View {
 
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menu?.clear()
         inflater?.inflate(R.menu.menu_customer, menu)
         menuActivity.search?.setMenuItem(menu!!.findItem(R.id.action_search))
+        val itemEditCustomer = menu?.findItem(R.id.action_edit_customer)
+        itemEditCustomer?.setOnMenuItemClickListener {
+            onOptionsItemSelected(itemEditCustomer)
+        }
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        super.onOptionsItemSelected(item)
         return when(item!!.itemId){
             R.id.action_edit_customer -> {
                 activity!!.moveTo(CustomerListAddActivity::class.java)
-                false
+                true
             }
             else -> false
         }

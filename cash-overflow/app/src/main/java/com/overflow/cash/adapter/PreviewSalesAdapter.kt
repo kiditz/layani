@@ -44,10 +44,10 @@ class PreviewSalesAdapter(private val imageService: ImageService) : RecyclerView
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = values[position]
-        val sellPrice = context.rupiah(item.getDouble("sellPrice"))
+        val sellPrice = rupiah(item.getDouble("sellPrice"))
         val qty = item.getLong("qty")
         val unit = item.getString("unit")
-        val subTotal = context.rupiah(item.getDouble("subTotal"))
+        val subTotal = rupiah(item.getDouble("subTotal"))
         holder.productName.text = item.getString("productName")
 
         holder.subTotal.text = subTotal
@@ -61,7 +61,7 @@ class PreviewSalesAdapter(private val imageService: ImageService) : RecyclerView
                 if(discountType == Constant.DiscountType.PERCENTAGE){
                     holder.sellPrice.text = "${holder.sellPrice.text} - ${discountAmount.toInt()}%"
                 }else{
-                    holder.sellPrice.text = "${holder.sellPrice.text} - ${context.rupiah(discountAmount)}"
+                    holder.sellPrice.text = "${holder.sellPrice.text} - ${rupiah(discountAmount)}"
                 }
             }
         }

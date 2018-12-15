@@ -52,8 +52,9 @@ open class BaseActivity:AppCompatActivity() {
     }
 
     fun showErrorMessage(message:String){
-        showSuccessMessage(message)
         this.tv_success_message.setBackgroundColor(ContextCompat.getColor(this, R.color.red_light))
+        this.tv_success_message?.text = message
+        this.tv_success_message?.visibility = View.VISIBLE
         RxTextView.textChanges(tv_success_message).compose(RxUtils.applyObservableAsync()).debounce(5, TimeUnit.SECONDS).subscribe {
             runOnUiThread {
                 tv_success_message?.visibility = View.GONE

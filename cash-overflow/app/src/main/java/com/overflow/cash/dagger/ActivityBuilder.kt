@@ -15,6 +15,9 @@ abstract class ActivityBuilder {
     internal abstract fun bindMenuActivity(): MenuActivity
 
     @ContributesAndroidInjector
+    internal abstract fun bindPaymentTransactionDispatcherActivity(): PaymentTransactionDispatcherActivity
+
+    @ContributesAndroidInjector
     internal abstract fun bindCreateStoreActivity(): CreateStoreActivity
 
     @ContributesAndroidInjector
@@ -71,6 +74,9 @@ abstract class ActivityBuilder {
 
     @ContributesAndroidInjector
     internal abstract fun bindSalesMainFragment(): SalesMainFragment
+
+    @ContributesAndroidInjector
+    internal abstract fun bindPaymentTransactionFragment(): PaymentTransactionFragment
 
     @ContributesAndroidInjector
     internal abstract fun bindCustomerFragment(): CustomerFragment

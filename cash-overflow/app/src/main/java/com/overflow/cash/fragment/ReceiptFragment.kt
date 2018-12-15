@@ -82,13 +82,13 @@ class ReceiptFragment:BaseFragment(){
         source = source.replace("{{title}}",outlet.getString("name"))
         source = source.replace("{{order.code}}","%23${order.getString("order_code")}")
         source = source.replace("{{items}}", loadItems(order.getList("order_items")))
-        source = source.replace("{{order.total_amount}}", activity!!.rupiah(order.getDouble("total_amount")))
-        source = source.replace("{{order.total_payment}}", activity!!.rupiah(order.getDouble("total_payment")))
+        source = source.replace("{{order.total_amount}}", rupiah(order.getDouble("total_amount")))
+        source = source.replace("{{order.total_payment}}", rupiah(order.getDouble("total_payment")))
 
         if(order.getString("payment_method") == Constant.PaymentMethod.CASH){
             if(order.getDouble("cashback") > 0){
                 source = source.replace("{{cashback_title}}", "Kembali")
-                source = source.replace("{{order.cashback}}", activity!!.rupiah(order.getDouble("cashback")))
+                source = source.replace("{{order.cashback}}", rupiah(order.getDouble("cashback")))
             }else{
                 source = source.replace("{{cashback_title}}", "")
                 source = source.replace("{{order.cashback}}", "")
@@ -96,10 +96,10 @@ class ReceiptFragment:BaseFragment(){
         }else{
             if(order.containsNotNull("total_credit") && order.getDouble("total_credit") > 0){
                 source = source.replace("{{cashback_title}}", "Hutang")
-                source = source.replace("{{order.cashback}}", activity!!.rupiah(order.getDouble("total_credit")))
+                source = source.replace("{{order.cashback}}", rupiah(order.getDouble("total_credit")))
             }else{
                 source = source.replace("{{cashback_title}}", "Kembali")
-                source = source.replace("{{order.cashback}}", activity!!.rupiah(order.getDouble("cashback")))
+                source = source.replace("{{order.cashback}}", rupiah(order.getDouble("cashback")))
             }
         }
 
@@ -127,7 +127,7 @@ class ReceiptFragment:BaseFragment(){
             builder.append(it.getString("qty"))
             builder.append("</td>")
             builder.append("<td>")
-            builder.append(activity?.rupiah(it.getDouble("sub_total")))
+            builder.append(rupiah(it.getDouble("sub_total")))
             builder.append("</td>")
             builder.append("</tr>")
         }

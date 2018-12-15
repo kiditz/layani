@@ -25,11 +25,11 @@ import com.overflow.cash.utils.moveTo
 import com.overflow.cash.utils.snack
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
-import dagger.android.support.AndroidSupportInjection
 import io.realm.Realm
 import io.realm.RealmResults
 import kotlinx.android.synthetic.main.cart_layout.view.*
 import kotlinx.android.synthetic.main.fragment_sales_list.*
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -50,7 +50,7 @@ class SalesListFragment : BaseFragment(), LoadCategoryContract.View, ViewPager.O
     private var categoryList = mutableListOf<Data>()
     private lateinit var menuActivity: MenuActivity
     private lateinit var realm: Realm
-
+    var sumQty:Number = 0
     private var allOrders:RealmResults<OrderItem>? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -59,11 +59,9 @@ class SalesListFragment : BaseFragment(), LoadCategoryContract.View, ViewPager.O
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        setHasOptionsMenu(true)
         this.outlet = Data(preferences.getString("outlet", "{}"))
         this.adapter = ViewPagerAdapter(activity!!.supportFragmentManager)
         realm = Realm.getDefaultInstance()
-
     }
 
 
@@ -80,18 +78,17 @@ class SalesListFragment : BaseFragment(), LoadCategoryContract.View, ViewPager.O
 
     private fun showSumQuantity(menuItem: MenuItem) {
         this.allOrders = realm.where(OrderItem::class.java).findAll()
-        sumQty(menuItem, allOrders!!)
+        showQty(menuItem, allOrders!!)
         allOrders!!.addChangeListener { t, _ ->
-            sumQty(menuItem, t)
+            showQty(menuItem, t)
         }
     }
 
 
 
-    private fun sumQty(menuItem: MenuItem, results:RealmResults<OrderItem>){
-        val sumQty = results.sum("qty")
-
-        if(sumQty.toLong() > 0){
+    private fun showQty(menuItem: MenuItem, results:RealmResults<OrderItem>){
+        this.sumQty = results.sum("qty")
+        if(this.sumQty.toLong() > 0){
             menuItem.actionView.cart_badge?.text = sumQty.toString()
             menuItem.actionView.cart_badge?.visibility = View.VISIBLE
         }else{
@@ -101,34 +98,28 @@ class SalesListFragment : BaseFragment(), LoadCategoryContract.View, ViewPager.O
 
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menu?.clear()
         inflater?.inflate(R.menu.menu_sales, menu)
         val menuItem = menu!!.findItem(R.id.action_cart)
         menuItem.actionView.btn_preview_sales.setOnClickListener {
             //Pindah ke activity preview sales
-            menuActivity.moveTo(PreviewSalesActivity::class.java)
+            if(sumQty.toLong() > 0){
+                menuActivity.moveTo(PreviewSalesActivity::class.java)
+            }
         }
         showSumQuantity(menuItem!!)
         menuActivity.search?.setMenuItem(menu.findItem(R.id.action_search))
         btn_scan.setOnClickListener {
             handleScanAction()
         }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when(item!!.itemId){
-            R.id.action_delete_transaction -> {
-                orderRealm.removeAllItems()
-                menuActivity.goTo(R.id.nav_transaction)
-                true
-            }
-            R.id.action_cart -> {
-                activity!!.moveTo(PreviewSalesActivity::class.java)
-                true
-            }
-            else -> false
+        menu.findItem(R.id.action_delete_transaction).setOnMenuItemClickListener {
+            Timber.i("Remove All Items")
+            orderRealm.deleteItems()
+            menuActivity.goTo(R.id.nav_transaction)
+            false
         }
     }
-
     override fun onCategoryLoaded(categoryList: List<Data>) {
         adapter.clear()
 
@@ -216,5 +207,6 @@ class SalesListFragment : BaseFragment(), LoadCategoryContract.View, ViewPager.O
             salesFragment.searchProduct(data!!.getStringExtra("barcode"))
         }
     }
+
 
 }

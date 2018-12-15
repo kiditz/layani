@@ -44,7 +44,7 @@ class AccountReceiveableAdapter(private val translations: Translations) : Recycl
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = values[position]
         holder.customerName.text = item.getString("name")
-        holder.totalCredit.text = context.rupiah(item.getDouble("total_credit"))
+        holder.totalCredit.text = rupiah(item.getDouble("total_credit"))
         holder.itemView.setOnClickListener {
             onItemClick?.invoke(item, holder)
         }

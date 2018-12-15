@@ -41,6 +41,7 @@ class CustomerListAddActivity : BaseActivity(), LoadCustomerContract.View, EditC
         this.adapter = AddCustomerListAdapter(translations)
         customerLoader()
         this.loadCustomerPresenter.attach(this)
+        this.editCustomerPresenter.attach(this)
     }
 
     private fun customerLoader() {

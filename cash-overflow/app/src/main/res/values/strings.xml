@@ -18,8 +18,11 @@
     <string name="all_product">All Product</string>
     <string name="app_name">Layani</string>
     <string name="are_you_sure">Are you sure?</string>
+    <string name="are_you_sure_transaction">Are you sure want to pay this transaction?</string>
+    <string name="bill_amount">Bill Amount</string>
     <string name="cancel">Cancel</string>
     <string name="cannot_read_barcode">Cannot read barcode</string>
+    <string name="card">Card</string>
     <string name="cart">Cart</string>
     <string name="cash">Cash</string>
     <string name="cash_drawer">Cash Drawer</string>
@@ -29,13 +32,13 @@
     <string name="create_store">Create Store</string>
     <string name="create_store_success">Store successfully saved</string>
     <string name="credit_amount">Credit Amount</string>
+    <string name="custom">Custom</string>
     <string name="customer">Customer</string>
     <string name="customer_name">Customer Name</string>
     <string name="dashboard">Dashboard</string>
     <string name="date">Date</string>
     <string name="date_in">Date in</string>
     <string name="delete_transaction">Remove Transaction</string>
-
     <string name="description">Description</string>
     <string name="discount">Discount</string>
     <string name="done">Done</string>
@@ -63,7 +66,6 @@
     <string name="month">Monthly</string>
     <string name="most_stock">Most Stock</string>
     <string name="name">Name</string>
-
     <string name="nav_customer">Customer</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
@@ -73,19 +75,18 @@
     <string name="next_step">Next Step</string>
     <string name="no">No</string>
     <string name="no_account_receiveable_description">No account receiveable</string>
-
     <string name="no_category_data">No Category Data</string>
     <string name="no_customer_title">Customer Not found</string>
+    <string name="no_internet">No Internet Connection</string>
     <string name="no_product_description">Press button + to add product</string>
     <string name="no_product_title">No product data</string>
     <string name="not_enough_stock">Product Not Available</string>
     <string name="ok">OK</string>
     <string name="other">Other</string>
-
     <string name="out_of_age">Overdue</string>
     <string name="paid">Paid</string>
     <string name="password">Password</string>
-    <string name="pay">Create Payment</string>
+    <string name="pay">Pay</string>
     <string name="pay_paid">Paid</string>
     <string name="payer">Debtor</string>
     <string name="pcs">pcs</string>
@@ -111,7 +112,6 @@
     <string name="scan_barcode">Scan Barcode</string>
     <string name="search">Search..</string>
     <string name="search_order_hint">Search with transaction number</string>
-
     <string name="sell_price">Sell Price</string>
     <string name="settings">Setting</string>
     <string name="share">Bagikan</string>
@@ -124,8 +124,12 @@
     <string name="store_owner_name">Store owner</string>
     <string name="submit">Save</string>
     <string name="system_err">Upps, Something went wrong</string>
-    <string name="total_payment">Total payment</string>
-    <string name="total_refund">Total refund</string>
+    <string name="the_right_money">Right Money</string>
+    <string name="today">Today</string>
+    <string name="top_up">Top Up &amp; Postpaid</string>
+    <string name="total_amount">Total Amount</string>
+    <string name="total_payment">Total Payment</string>
+    <string name="total_refund">Total Refund</string>
     <string name="transaction">Transaction</string>
     <string name="transaction_amount">Transaction Amount</string>
     <string name="transaction_history">Transaction History</string>
@@ -140,9 +144,5 @@
     <string name="weight">Weight</string>
     <string name="year">Yearly</string>
     <string name="yes">Yes</string>
-    <string name="custom">Custom</string>
-    <string name="top_up">Top Up &amp; Postpaid</string>
-    <string name="no_internet">No Internet Connection</string>
-
-
+    <string name="yesterday">Yesterday</string>
 </resources>

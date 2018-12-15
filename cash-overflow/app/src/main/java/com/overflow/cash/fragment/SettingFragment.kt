@@ -44,7 +44,7 @@ class SettingFragment:BaseFragment() {
                     return@runOnUiThread
                 }
                 val account = accountManager.getAccountsByType(getString(R.string.account_type))[0]
-                orderRealm.removeAllItems()
+                orderRealm.deleteItems()
                 accountManager.removeAccount(account, null, null)
                 preferences.edit().remove("outlet").apply()
                 menuActivity.onNotLogin()

@@ -7,21 +7,22 @@
     android:background="?selectableItemBackground"
     android:clickable="true"
     android:focusable="true">
-    <TextView
-        android:id="@+id/tv_order_code"
-        android:layout_marginLeft="@dimen/default_margin"
-        android:layout_marginStart="@dimen/default_margin"
-        android:layout_marginTop="@dimen/default_margin"
-        android:layout_marginRight="@dimen/default_margin"
-        android:layout_marginEnd="@dimen/default_margin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAllCaps="true"
-        android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/text_size_medium"
-        android:textStyle="bold"
-        tools:text="#0000020" />
+    <!--<TextView-->
+        <!--android:id="@+id/tv_order_code"-->
+        <!--android:layout_marginLeft="@dimen/default_margin"-->
+        <!--android:layout_marginStart="@dimen/default_margin"-->
+        <!--android:layout_marginTop="@dimen/default_margin"-->
+        <!--android:layout_marginRight="@dimen/default_margin"-->
+        <!--android:layout_marginEnd="@dimen/default_margin"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textAllCaps="true"-->
+        <!--android:textColor="@color/colorPrimary"-->
+        <!--android:textSize="@dimen/text_size_medium"-->
+        <!--android:textStyle="bold"-->
+        <!--tools:text="#0000020" />-->
     <LinearLayout
+        android:layout_marginTop="@dimen/default_margin"
         android:layout_marginBottom="@dimen/default_margin"
         android:layout_marginLeft="@dimen/default_margin"
         android:layout_marginStart="@dimen/default_margin"

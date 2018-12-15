@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import com.jaeger.library.StatusBarUtil
@@ -108,7 +109,7 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return false
+        return true
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -196,5 +197,11 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun goTo(menuId:Int){
         onNavigationItemSelected(this.nav_view.menu.findItem(menuId))
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        //menuInflater.inflate(R.menu.menu, menu)
+        return false
+    }
+
 
 }

@@ -22,7 +22,7 @@ class SaverOrderPresenter(
 
     lateinit var view: SaveOrderContract.View
     fun deleteAllItems() {
-        orderRealm.removeAllItems()
+        orderRealm.deleteItems()
     }
     override fun saveOrder(data: Data) {
         val outlet = Data(preferences.getString("outlet", "{}"))

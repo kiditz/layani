@@ -50,8 +50,8 @@ class ProductListAdapter(private val imageService: ImageService) : RecyclerView.
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val item = values[position]
-        val sellPrice = context.rupiah(item.getDouble("sell_price"))
-        val purchasePrice = context.rupiah(item.getDouble("purchase_price"))
+        val sellPrice = rupiah(item.getDouble("sell_price"))
+        val purchasePrice = rupiah(item.getDouble("purchase_price"))
         if(item.getBoolean("use_stock")){
             if(item["stock"] != null){
                 val stock = item.getLong("stock").toInt().toString()

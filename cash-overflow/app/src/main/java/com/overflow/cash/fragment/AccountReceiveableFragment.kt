@@ -2,16 +2,15 @@ package com.overflow.cash.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PopupMenu
 import android.view.*
 import com.miguelcatalan.materialsearchview.MaterialSearchView
+import com.overflow.cash.R
 import com.overflow.cash.activity.AccountReceiveableDetailActivity
 import com.overflow.cash.activity.Constant
 import com.overflow.cash.activity.MenuActivity
-import com.overflow.cash.R
 import com.overflow.cash.adapter.AccountReceiveableAdapter
 import com.overflow.cash.mvp.receiveable.AccountReceiveableContract
 import com.overflow.cash.mvp.receiveable.AccountReceiveablePresenter
@@ -24,10 +23,9 @@ import com.overflow.libs.core.Translations
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_account_receiveable.*
 import kotlinx.android.synthetic.main.fragment_blank.*
-import kotlinx.android.synthetic.main.fragment_blank.view.*
 import javax.inject.Inject
 
-class AccountReceiveableFragment : Fragment(), AccountReceiveableContract.View {
+class AccountReceiveableFragment : BaseFragment(), AccountReceiveableContract.View {
 
 
     @Inject
@@ -42,7 +40,6 @@ class AccountReceiveableFragment : Fragment(), AccountReceiveableContract.View {
     lateinit var menuActivity: MenuActivity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
         this.menuActivity = activity as MenuActivity
     }
 
@@ -52,7 +49,6 @@ class AccountReceiveableFragment : Fragment(), AccountReceiveableContract.View {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        AndroidSupportInjection.inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -145,12 +141,6 @@ class AccountReceiveableFragment : Fragment(), AccountReceiveableContract.View {
     override fun showEmpty() {
         refresh?.isRefreshing = false
         showMessage(getString(R.string.accounts_receiveable), getString(R.string.no_account_receiveable_description))
-    }
-
-    private fun showMessage(title: String, message: String) {
-        blank_layout?.visibility = View.VISIBLE
-        blank_layout?.tv_description?.text = message
-        blank_layout?.tv_title?.text = title
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

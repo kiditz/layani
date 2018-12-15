@@ -17,18 +17,22 @@
     <string name="address">Alamat Lengkap</string>
     <string name="all_product">Semua Produk</string>
     <string name="app_name">Layani</string>
-    <string name="are_you_sure">Apakah anda yakin</string>
+    <string name="are_you_sure">Apakah anda yakin?</string>
+    <string name="are_you_sure_transaction">Apakah anda yakin ingin membayar transaksi inic?</string>
+    <string name="bill_amount">Tagihan</string>
     <string name="cancel">Batal</string>
     <string name="cannot_read_barcode">Tidak dapat membaca barcode</string>
     <string name="cash">Tunai</string>
+    <string name="cashback">Kembali</string>
     <string name="cash_drawer">Laci Uang</string>
+    <string name="card">Kartu</string>
     <string name="cart">Troli</string>
     <string name="category">Kategori</string>
     <string name="content_authority">com.overflow.cash.provider</string>
     <string name="create_store">Buat Toko</string>
     <string name="create_store_success">Pembuatan toko berhasil dilakukan</string>
     <string name="credit_amount">Sebanyak</string>
-    <string name="customer">Customer</string>
+    <string name="customer">Pelanggan</string>
     <string name="customer_name">Name Pelanggan</string>
     <string name="dashboard">Beranda</string>
     <string name="date">Tanggal</string>
@@ -122,8 +126,11 @@
     <string name="store_owner_name">Nama Pemilik</string>
     <string name="submit">Simpan</string>
     <string name="system_err">Upps, Terjadi kesalahan pada sistem</string>
+    <string name="the_right_money">Uang Pas</string>
+    <string name="today">Hari ini</string>
     <string name="top_up">Pulsa &amp; PPOB</string>
-    <string name="total_payment">Jumlah bayar</string>
+    <string name="total_amount">Total Tagihan</string>
+    <string name="total_payment">Jumlah Bayar</string>
     <string name="total_refund">Total Pengembalian</string>
     <string name="transaction">Transaksi</string>
     <string name="transaction_amount">Jumlah Transaksi</string>
@@ -139,4 +146,5 @@
     <string name="weight">Berat</string>
     <string name="year">Tahun</string>
     <string name="yes">Ya</string>
+    <string name="yesterday">Kemarin</string>
 </resources>

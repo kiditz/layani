@@ -17,7 +17,6 @@ import com.overflow.cash.mvp.chart.OrderChartContract
 import com.overflow.cash.mvp.chart.OrderChartPresenter
 import com.overflow.libs.core.Data
 import dagger.android.support.AndroidSupportInjection
-import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_line_chart.*
 import org.json.JSONObject
 import javax.inject.Inject

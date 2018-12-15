@@ -23,6 +23,7 @@
   "required.value.customer_name": "Customer name must be filled",
   "invalid.phone.number": "Invalid phone number",
   "invalid.password.length": "Password minimum length is 8 character",
+  "invalid.payment.amount": "Total payment must be greater than total amount",
   "sell_price.must.be.greater_than_zero": "Sell price must be greater than zero",
   "init_price.must.be.greater_than_zero": "Purchase price must be greater than zero",
   "qty.must.gt.zero":"Quantity must be greater than zero",
@@ -66,5 +67,6 @@
   //Status
   "P": "NOT YET PAID OFF",
   "S": "SUCCESS",
-  "V": "VOID"
+  "V": "VOID",
+  "C": "TERSIMPAN"
 }

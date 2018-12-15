@@ -30,7 +30,7 @@ class CustomerChooserActivity : BaseActivity(), LoadCustomerContract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_customer_chooser)
 
-        if(intent.hasExtra("name")){
+        if(intent.hasExtra("name") && intent.getStringExtra("name").equals("customer", true)){
             edCustomer.setText(intent.getStringExtra("name"))
         }
 

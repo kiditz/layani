@@ -21,7 +21,9 @@ class Constant {
         const val MAX_PAGE = "MAX_PAGE"
         const val TEXT_EMPTY = ""
         const val SPACE = " "
+        const val STRIP = "-"
         const val CREATE_ACCOUNT_SUCCESS = "create.account.success"
+        const val ZERO: Int = 0
     }
 
     interface Sort{
@@ -58,6 +60,7 @@ class Constant {
 
     interface TranslationsKey{
         companion object {
+            const val CREATED = "-"
             const val REQUIRED_VALUE_STORE_NAME = "required.value.store_name"
             const val REQUIRED_VALUE_STORE_ADDRESS = "required.value.store_address"
             const val REQUIRED_VALUE_STORE_PHONE_NUMBER = "required.value.store_phone_number"
@@ -124,6 +127,7 @@ class Constant {
             const val USER_WRONG_PASSWORD = "user.wrong.password"
             const val INVALID_EMAIL = "invalid.email.address"
             const val REFUND_SAVED_SUCCESSFULLY = "refund.saved.successfully"
+            const val INVALID_TOTAL_AMOUNT = "invalid.payment.amount"
 
 
         }
@@ -132,8 +136,8 @@ class Constant {
     interface PaymentMethod{
         companion object {
             const val CASH: String = "CASH"
+            const val CARD: String = "CARD"
             const val CREDIT: String = "CREDIT"
-            const val IN_PROGRESS: String = "PENDING"
         }
     }
 

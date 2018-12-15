@@ -89,7 +89,7 @@ open class MessageButtonHandle : MessageButton() {
 }
 
 
-fun Context.rupiah(value:Double, showPrefix:Boolean=true):String{
+fun rupiah(value:Double, showPrefix:Boolean=true):String{
     val format = DecimalFormat.getCurrencyInstance(Locale("in", "ID")) as DecimalFormat
     format.isDecimalSeparatorAlwaysShown = false
     val symbols = DecimalFormatSymbols()
@@ -103,7 +103,8 @@ fun Context.rupiah(value:Double, showPrefix:Boolean=true):String{
     return format.format(value)
 }
 
-fun Context.parseRupiah(value:CharSequence):Double{
+
+fun parseRupiah(value:CharSequence):Double{
     var input = value.toString()
     return input.replace(Regex("[^\\d]"), "").toDouble()
 }

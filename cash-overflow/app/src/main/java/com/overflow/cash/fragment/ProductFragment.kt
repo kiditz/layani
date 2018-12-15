@@ -2,14 +2,11 @@ package com.overflow.cash.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import com.overflow.cash.activity.Constant
+import android.view.*
 import com.overflow.cash.R
+import com.overflow.cash.activity.Constant
 import com.overflow.cash.adapter.ProductListAdapter
 import com.overflow.cash.mvp.product.LoadProductContract
 import com.overflow.cash.mvp.product.LoadProductPresenter
@@ -21,18 +18,15 @@ import com.overflow.cash.utils.decoration.MarginItemDecoration
 import com.overflow.cash.utils.snack
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
-import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_blank.*
-import kotlinx.android.synthetic.main.fragment_blank.view.*
 import kotlinx.android.synthetic.main.fragment_product_recycler.*
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
  * @author Rifky Aditya Bastara
  * Load Product From Rest API Into View
  */
-class ProductFragment : Fragment(), LoadProductContract.View {
+class ProductFragment : BaseFragment(), LoadProductContract.View {
 
     var currentPage: Int = API.MIN_PAGE
     var categoryId:Long = -1L
@@ -53,7 +47,6 @@ class ProductFragment : Fragment(), LoadProductContract.View {
     }
 
     override fun onAttach(context: Context?) {
-        AndroidSupportInjection.inject(this)
         super.onAttach(context)
         presenter.attach(this)
     }
@@ -126,15 +119,6 @@ class ProductFragment : Fragment(), LoadProductContract.View {
         showMessage(getString(R.string.no_product_title), getString(R.string.no_product_description))
     }
 
-    private fun showMessage(title:String, message:String){
-        try {
-            blank_layout?.visibility = View.VISIBLE
-            blank_layout?.tv_description?.text = message
-            blank_layout?.tv_title?.text = title
-        }catch (e:Exception){
-            Timber.e(e)
-        }
-    }
 
     override fun showNotConnected(res: String) {
         dismiss()

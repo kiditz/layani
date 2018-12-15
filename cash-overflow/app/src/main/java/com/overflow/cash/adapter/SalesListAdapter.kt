@@ -48,7 +48,7 @@ class SalesListAdapter(private val imageService: ImageService) : RecyclerView.Ad
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = values[position]
-        val sellPrice = context.rupiah(item.getDouble("sell_price"))
+        val sellPrice = rupiah(item.getDouble("sell_price"))
         val unit = item.getString("unit")
         val productName = item.getString("product_name")
         holder.productName.text = productName
@@ -59,16 +59,6 @@ class SalesListAdapter(private val imageService: ImageService) : RecyclerView.Ad
 
         if(orderItem != null){
             holder.qty.text = orderItem.qty.toString() +" " + unit
-            if(orderItem.discountAmount > 0){
-                if(orderItem.discountType == Constant.DiscountType.PERCENTAGE){
-                    holder.discount.text = orderItem.discountAmount.toString() + "%"
-                }else{
-                    holder.discount.text = context.rupiah(orderItem.discountAmount)
-                }
-                holder.discount.visibility = View.VISIBLE
-            }else{
-                holder.discount.visibility = View.GONE
-            }
             holder.qty.visibility= View.VISIBLE
         }else{
             holder.qty.visibility= View.GONE

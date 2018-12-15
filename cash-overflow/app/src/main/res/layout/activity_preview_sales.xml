@@ -6,6 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.PreviewSalesActivity">
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:background="@color/colorPrimary"
+        android:visibility="gone"/>
     <include layout="@layout/success_message"/>
     <LinearLayout
         android:id="@+id/header"
@@ -15,21 +23,24 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/l_customer"
             android:layout_width="0dp"
-            android:gravity="center"
-            android:layout_weight="0.5"
             android:layout_height="wrap_content"
-            android:padding="@dimen/default_margin"
+            android:layout_weight="0.5"
             android:background="?selectableItemBackground"
             android:clickable="true"
-            android:focusable="true">
+            android:focusable="true"
+            android:gravity="center"
+            android:padding="@dimen/default_margin">
+
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_customer"
-                android:tint="@color/colorAccent"/>
+                android:tint="@color/colorAccent" />
 
             <TextView
+                android:id="@+id/tv_customer_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/customer"

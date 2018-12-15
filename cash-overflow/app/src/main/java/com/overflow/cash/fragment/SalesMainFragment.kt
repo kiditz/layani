@@ -21,6 +21,7 @@ class SalesMainFragment:BaseFragment(), BottomNavigationView.OnNavigationItemSel
         navigation.setOnNavigationItemSelectedListener(this)
         onNavigationItemSelected(navigation.menu.findItem(R.id.navigation_transaction))
     }
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         return when(item.itemId){
             R.id.navigation_transaction ->{
@@ -30,11 +31,9 @@ class SalesMainFragment:BaseFragment(), BottomNavigationView.OnNavigationItemSel
             R.id.navigation_topup ->{
                 true
             }
-//            R.id.navigation_custom ->{
-//                true
-//            }
-
             else -> false
         }
     }
+
+
 }
