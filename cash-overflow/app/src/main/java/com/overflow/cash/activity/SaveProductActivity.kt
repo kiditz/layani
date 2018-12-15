@@ -85,6 +85,7 @@ class SaveProductActivity : AppCompatActivity(), AddProductContract.View, EditPr
         EasyImage.configuration(this).setImagesFolderName(getString(R.string.app_name))
 
         addProductPresenter.attach(this)
+        editProductPresenter.attach(this)
         loadCategoryPresenter.attach(this)
 
         this.outlet = Data(preferences.getString("outlet", "{}"))

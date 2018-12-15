@@ -126,6 +126,8 @@ class PreviewSalesActivity : BaseActivity(), SaveOrderContract.View {
             dataItem["use_stock"] = it["useStock"]
             dataItem["discount_amount"] = it["discountAmount"]
             dataItem["discount_type"] = it["discountType"]
+            dataItem["purchase_price_id"] = it["purchasePriceId"]
+            dataItem["sell_price_id"] = it["sellPriceId"]
             dataItem
         }.toList()
         val bundle = Bundle()

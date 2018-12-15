@@ -31,9 +31,9 @@ class OrderService(object):
 			total_payment = domain['total_payment']
 			if total_payment < total_amount:
 				raise ValidationException(ErrorCode.INVALID_TOTAL_AMOUNT)
-			cashbox = Cashbox.query.filter(
-				and_(Cashbox.outlet_id == outlet_id, Cashbox.name == CashDrawer.CASH_DRAWER)).first()
+			cashbox = Cashbox.query.filter(and_(Cashbox.outlet_id == outlet_id, Cashbox.name == CashDrawer.CASH_DRAWER)).first()
 			order.status = OrderStatus.SUCCESS
+			order.cash_box_id = cashbox.id
 			cashbox.total_amount = cashbox.total_amount + Decimal(domain['total_amount'])
 			order.cashback = order.total_payment - order.total_amount
 			cashbox.outlet_id = domain['outlet_id']
