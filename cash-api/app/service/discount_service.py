@@ -28,7 +28,8 @@ class DiscountService(object):
 		discount = Discount.query\
 			.filter(Discount.outlet_id == outlet_id) \
 			.filter(between(cast(Discount.start_at, DATE), cast(Discount.end_at, DATE), date)) \
-			.filter(Discount.quantity <= qty).first()
+			.filter(Discount.quantity <= qty) \
+			.order_by(Discount.quantity.desc()).first()
 		if discount is None:
 			raise ValidationException(ErrorCode.DISCOUNT_NOT_FOUND)
 		return {'payload': discount.to_dict()}
