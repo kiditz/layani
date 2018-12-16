@@ -176,12 +176,13 @@ class ProductService(object):
 				stock_history.ref_id = StockRef.IN
 				stock_history.save()
 
-		
 		return {'payload': product.to_dict()}
 	
 	@Key(['code'])
 	def find_product_by_code(self, domain):
 		product = Product.query.filter_by(code=domain['code']).first()
+		if product is None:
+			raise ValidationException(ErrorCode.PRODUCT_NOT_FOUND)
 		return {'payload': product.to_dict()}
 	
 	@Key(['code'])

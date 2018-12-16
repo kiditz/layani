@@ -51,10 +51,11 @@ class DiscountService(object):
 			raise ValidationException(ErrorCode.DISCOUNT_NOT_FOUND)
 		
 		# Validate discount for date
-		day_of_weeks = [int(x) for x in discount.day_of_week.split(',')]
-		today = datetime.strptime(date, '%Y-%m-%d').weekday()
-		if today not in day_of_weeks:
-			raise ValidationException(ErrorCode.DISCOUNT_NOT_FOR_TODAY)
+		if discount.day_of_week is not None:
+			day_of_weeks = [int(x) for x in discount.day_of_week.split(',')]
+			today = datetime.strptime(date, '%Y-%m-%d').weekday()
+			if today not in day_of_weeks:
+				raise ValidationException(ErrorCode.DISCOUNT_NOT_FOR_TODAY)
 		
 		return {'payload': discount._asdict()}
 	
@@ -76,8 +77,9 @@ class DiscountService(object):
 		if discount is None:
 			raise ValidationException(ErrorCode.DISCOUNT_NOT_FOUND)
 		# Validate discount for date
-		day_of_weeks = [int(x) for x in discount.day_of_week.split(',')]
-		today = datetime.strptime(date, '%Y-%m-%d').weekday()
-		if today not in day_of_weeks:
-			raise ValidationException(ErrorCode.DISCOUNT_NOT_FOR_TODAY)
+		if discount.discount.day_of_week is not None:
+			day_of_weeks = [int(x) for x in discount.day_of_week.split(',')]
+			today = datetime.strptime(date, '%Y-%m-%d').weekday()
+			if today not in day_of_weeks:
+				raise ValidationException(ErrorCode.DISCOUNT_NOT_FOR_TODAY)
 		return {'payload': discount.to_dict()}
