@@ -28,6 +28,7 @@ class DiscountService(object):
 		outlet_id = domain['outlet_id']
 		date = domain['date']
 		entities = (
+			Discount.id,
 			Discount.day_of_week,
 			Discount.method,
 			Discount.quantity,
