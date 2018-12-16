@@ -7,7 +7,7 @@ from slerp.app import app
 from slerp.string_utils import is_not_blank
 from slerp.logger import logging
 from slerp.validator import Key, Number, ValidationException
-from sqlalchemy import and_, func, between, or_
+from sqlalchemy import and_, func, between, or_, case
 
 from api.document_api import document_service
 from utils.api_constant import ErrorCode, StockRef
@@ -98,7 +98,8 @@ class ProductService(object):
 			ProductPurchasePrice.id.label('purchase_price_id'),
 			func.coalesce(Category.id, -1).label('category_id'),
 			func.coalesce(Category.name, 'N/A').label('category_name'),
-			Product.unit.label("unit")
+			Product.unit.label("unit"),
+			case([(func.count(Discount.amount) > 0, True)], else_=False).label('has_discount')
 		)
 		
 		now = datetime.now()

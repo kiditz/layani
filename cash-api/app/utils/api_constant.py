@@ -36,8 +36,9 @@ class ProductType(object):
 
 
 class DiscountMethod(object):
-	PER_TRX = 0
-	PER_PRODUCT = 1
+	DISCOUNT_AMOUNT_TRANSACTION = 0
+	BY_N_GET_ONE = 1
+	DISCOUNT_AMOUNT_PRODUCT = 2
 	
 	
 class OrderStatus(object):
@@ -64,6 +65,7 @@ class ErrorCode(object):
 	PRODUCT_CODE_EXIST = 'product.code.exists'
 	NOT_ENOUGH_STOCK = 'stock.is.not.enough'
 	DISCOUNT_NOT_FOUND = 'discount.not.found'
+	DISCOUNT_NOT_FOR_TODAY = 'discount.not.for.today'
 	ORDER_NOT_FOUND = 'order.not.found'
 	INVALID_PHONE_NUMBER = 'invalid.phone.number'
 	INVALID_EMAIL_ADDRESS = 'invalid.email.address'
