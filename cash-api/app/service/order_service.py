@@ -1,8 +1,9 @@
 from decimal import Decimal
 
 from entity.models import OrderItem, StockHistory, Stock, Cashbox, \
-	AccountReceiveable, CashboxHistory, Customer, Product
+	AccountReceiveable, CashboxHistory, Customer, Product, Discount, ProductSellPrice
 from slerp.logger import logging
+from sqlalchemy.orm import aliased
 from slerp.validator import Number, Blank, Key, ValidationException
 
 from utils.api_constant import StockRef, ErrorCode, PaymentMethod, CashboxType, CashDrawer
@@ -161,15 +162,31 @@ class OrderService(object):
 	@Number(['order_code'])
 	def get_order_items(self, domain):
 		order_code = domain['order_code']
+		product_discount = aliased(Product, name='product_discount')
+		product = aliased(Product, name='product')
 		entities = (			
 			OrderItem.sub_total,
 			OrderItem.qty,
-			Product.name.label('product_name'),
+			product.name.label('product_name'),
+			Discount.name.label('discount_name'),
+			Discount.free_product_id,
+			Discount.discount_type,
+			Discount.method,
+			Discount.amount,
+			product_discount.name.label('free_product'),
+			product.unit,
+			product.id.label('product_id'),
+			product.document_id,
+			ProductSellPrice.sell_price,
+			
 		)
 		order_items = OrderItem.query.with_entities(*entities)\
-			.join(Product, Product.id == OrderItem.product_id) \
+			.join(product, product.id == OrderItem.product_id) \
+			.outerjoin(Discount, Discount.id == OrderItem.discount_id) \
+			.outerjoin(product_discount, Discount.free_product_id == product_discount.id)\
+			.join(ProductSellPrice, and_(product.id == ProductSellPrice.product_id, ProductSellPrice.name == 'STANDARD')) \
 			.join(Order, Order.id == OrderItem.order_id) \
-			.filter(Order.order_code == order_code)\
+			.filter(Order.order_code == order_code) \
 			.order_by("product_name asc")
 		order_item_list = list(map(lambda x: x._asdict(), order_items.all()))
 		return {'payload': order_item_list}
