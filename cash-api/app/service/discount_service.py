@@ -27,6 +27,7 @@ class DiscountService(object):
 		qty = int(domain['quantity'])
 		outlet_id = domain['outlet_id']
 		date = domain['date']
+		product_id = domain['product_id']
 		entities = (
 			Discount.id,
 			Discount.day_of_week,
@@ -43,6 +44,7 @@ class DiscountService(object):
 		discount = Discount.query.with_entities(*entities)\
 			.outerjoin(Product, Discount.free_product_id == Product.id)\
 			.filter(Discount.outlet_id == outlet_id)\
+			.filter(Discount.product_id == product_id)\
 			.filter(Discount.quantity <= qty)\
 			.filter(or_(Discount.method == DiscountMethod.DISCOUNT_AMOUNT_PRODUCT, Discount.method == DiscountMethod.BY_N_GET_ONE))\
 			.filter(between(date, cast(Discount.start_at, DATE), cast(Discount.end_at, DATE)))\
