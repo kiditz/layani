@@ -34,8 +34,10 @@ class DiscountService(object):
 			Discount.quantity,
 			Discount.bill_amount,
 			Discount.start_at,
+			Discount.end_at,
 			Discount.name,
 			Discount.amount,
+			Discount.discount_type,
 			Product.name.label('free_product_name')
 		)
 		discount = Discount.query.with_entities(*entities)\
