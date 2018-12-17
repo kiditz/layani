@@ -26,10 +26,13 @@ class OrderService(object):
 			order = Order(domain)
 			order.save()
 			order.order_code = str(order.id).zfill(10)
-		
+		else:
+			order.update(domain)
 		if 'total_amount' in domain and 'total_payment' in domain:
 			total_amount = domain['total_amount']
 			total_payment = domain['total_payment']
+			order.total_payment = total_payment
+			order.total_amount = total_amount
 			if total_payment < total_amount:
 				raise ValidationException(ErrorCode.INVALID_TOTAL_AMOUNT)
 			cashbox = Cashbox.query.filter(and_(Cashbox.outlet_id == outlet_id, Cashbox.name == CashDrawer.CASH_DRAWER)).first()
@@ -47,7 +50,6 @@ class OrderService(object):
 			cashbox_history.remark = 'order.cash #' + order.order_code
 			cashbox_history.save()
 			
-		order.save()
 		order_dict = order.to_dict()
 		if 'items' in domain:
 			order_items = domain['items']
