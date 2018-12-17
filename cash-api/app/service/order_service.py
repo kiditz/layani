@@ -222,6 +222,7 @@ class OrderService(object):
 	def get_order_list(self, domain):
 		outlet_id = domain['outlet_id']
 		status = domain['status'] if 'status' in domain else None
+		exclude_status = domain['exclude'] if 'exclude' in domain else True
 		page = int(domain['page'])
 		size = int(domain['size'])
 		entities = (
@@ -245,7 +246,9 @@ class OrderService(object):
 			.outerjoin(AccountReceiveable, AccountReceiveable.order_id == Order.id)\
 			.filter(Order.order_code.ilike('%' + domain['query'] + '%'))
 		if status:
+			if exclude_status:
+				pass
 			order_q = order_q.filter(Order.status == domain['status'])
-		order_q = order_q.order_by(Order.order_code.desc(), Order.order_at.desc()).paginate(page, size, error_out=False)
+		order_q = order_q.order_by(Order.order_at.desc()).paginate(page, size, error_out=False)
 		order_list = list(map(lambda x: x._asdict(), order_q.items))
 		return {'payload': order_list, 'total': order_q.total, 'total_pages': order_q.pages}
