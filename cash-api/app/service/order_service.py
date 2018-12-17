@@ -99,7 +99,7 @@ class OrderService(object):
 		order_cpy.save()
 		cashbox_history = CashboxHistory()
 		cashbox_history.cash_box_id = cashbox.id
-		cashbox_history.amount = cashbox.total_amount
+		cashbox_history.amount = order.total_amount
 		cashbox_history.payment_method = CashboxType.CREDIT
 		cashbox_history.remark = 'order.refund #' + order.order_code
 		cashbox_history.save()
