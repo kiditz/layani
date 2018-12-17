@@ -1,12 +1,12 @@
 from decimal import Decimal
 
 from entity.models import OrderItem, StockHistory, Stock, Cashbox, \
-	AccountReceiveable, CashboxHistory, Customer, Product, Discount, ProductSellPrice
+	AccountReceiveable, CashboxHistory, Customer, Product, Discount, ProductSellPrice, ProductPurchasePrice
 from slerp.logger import logging
-from sqlalchemy.orm import aliased
 from slerp.validator import Number, Blank, Key, ValidationException
-
-from utils.api_constant import StockRef, ErrorCode, PaymentMethod, CashboxType, CashDrawer
+from sqlalchemy.orm import aliased
+from sqlalchemy import between
+from utils.api_constant import StockRef, ErrorCode, CashboxType, CashDrawer
 from .chart_query import *
 
 log = logging.getLogger(__name__)
@@ -172,19 +172,23 @@ class OrderService(object):
 			Discount.free_product_id,
 			Discount.discount_type,
 			Discount.method,
-			Discount.amount,
+			Discount.amount.label('discount_amount'),
 			product_discount.name.label('free_product'),
 			product.unit,
+			product.use_stock,
 			product.id.label('product_id'),
 			product.document_id,
 			ProductSellPrice.sell_price,
+			ProductSellPrice.id.label('sell_pricet_id'),
 			
 		)
+		now = datetime.now()
 		order_items = OrderItem.query.with_entities(*entities)\
 			.join(product, product.id == OrderItem.product_id) \
 			.outerjoin(Discount, Discount.id == OrderItem.discount_id) \
 			.outerjoin(product_discount, Discount.free_product_id == product_discount.id)\
 			.join(ProductSellPrice, and_(product.id == ProductSellPrice.product_id, ProductSellPrice.name == 'STANDARD')) \
+			.join(ProductPurchasePrice, and_(ProductPurchasePrice.product_id == product.id, between(now, ProductPurchasePrice.start_at, ProductPurchasePrice.end_at))) \
 			.join(Order, Order.id == OrderItem.order_id) \
 			.filter(Order.order_code == order_code) \
 			.order_by("product_name asc")
@@ -227,6 +231,7 @@ class OrderService(object):
 			Order.order_at,
 			Order.payment_method,
 			Order.cashback,
+			
 			AccountReceiveable.receiveable_date,
 			AccountReceiveable.total_credit,
 			Customer.name.label("customer_name")
