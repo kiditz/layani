@@ -46,7 +46,9 @@ class OrderService(object):
 			cashbox_history.payment_method = CashboxType.DEBIT
 			cashbox_history.remark = 'order.cash #' + order.order_code
 			cashbox_history.save()
-		
+			
+		order.save()
+		order_dict = order.to_dict()
 		if 'items' in domain:
 			order_items = domain['items']
 			for item in order_items:
@@ -65,15 +67,15 @@ class OrderService(object):
 					stock_history.save()
 				pass
 			db.session.bulk_insert_mappings(OrderItem, order_items)
-			
-		order.save()
-		order_dict = order.to_dict()
+			order_dict['order_items'] = domain['items']
+		else:
+			order_code = {'order_code': order.order_code}
+			order_dict["order_items"] = self.get_order_items(order_code)['payload']
 		if domain['customer_id'] is not None:
 			customer = Customer.query.get(domain['customer_id'])
 			if customer is not None:
-				order_dict['customer_name'] = customer.name			
-		
-		order_dict['order_items'] = domain['items']
+				order_dict['customer_name'] = customer.name
+				
 		return {'payload': order_dict}
 
 	@Number(['order_id'])
