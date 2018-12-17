@@ -245,9 +245,10 @@ class OrderService(object):
 			.outerjoin(Customer, Customer.id == Order.customer_id)\
 			.outerjoin(AccountReceiveable, AccountReceiveable.order_id == Order.id)\
 			.filter(Order.order_code.ilike('%' + domain['query'] + '%'))
+		if exclude_status:
+			order_q = order_q.filter(Order.status != OrderStatus.CREATED)
+			pass
 		if status:
-			if exclude_status:
-				pass
 			order_q = order_q.filter(Order.status == domain['status'])
 		order_q = order_q.order_by(Order.order_at.desc()).paginate(page, size, error_out=False)
 		order_list = list(map(lambda x: x._asdict(), order_q.items))
