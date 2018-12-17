@@ -16,7 +16,7 @@ class OrderService(object):
 	def __init__(self):
 		super(OrderService, self).__init__()
 	
-	@Key(['outlet_id', 'customer_id', 'items.use_stock', 'items.discount_amount', 'items.discount_type'])
+	@Key(['outlet_id', 'customer_id'])
 	@Number(['user_id'])
 	def add_order(self, domain):
 		outlet_id = domain['outlet_id']
