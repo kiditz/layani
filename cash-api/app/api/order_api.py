@@ -85,6 +85,7 @@ def get_order_items():
 
 
 @api.route('/list', methods=['GET'])
+@cache.cached(timeout=10, query_string=True)
 def get_order_list():
     domain = request.args.to_dict()
     return order_service.get_order_list(domain)
