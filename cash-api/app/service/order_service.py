@@ -26,7 +26,8 @@ class OrderService(object):
 		if order is None:
 			order = Order(domain)
 			order.save()
-			order.order_code = str(order.id).zfill(10)
+			order.order_at = datetime.now()
+			order.order_code = str(order.id).zfill(10)			
 		else:
 			order.update(domain)
 		if 'total_amount' in domain and 'total_payment' in domain:
