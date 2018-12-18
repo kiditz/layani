@@ -7,6 +7,7 @@ from slerp.validator import Number, Blank, Key, ValidationException
 from sqlalchemy.orm import aliased
 from sqlalchemy import between
 from utils.api_constant import StockRef, ErrorCode, CashboxType, CashDrawer
+from utils import str2bool
 from .chart_query import *
 
 log = logging.getLogger(__name__)
@@ -222,7 +223,8 @@ class OrderService(object):
 	def get_order_list(self, domain):
 		outlet_id = domain['outlet_id']
 		status = domain['status'] if 'status' in domain else None
-		exclude_status = domain['exclude'] if 'exclude' in domain else True		
+		exclude_status = str2bool(domain['exclude']) if 'exclude' in domain else True		
+		log.info('typeof %s', type(exclude_status))
 		page = int(domain['page'])
 		size = int(domain['size'])
 		entities = (
@@ -245,9 +247,11 @@ class OrderService(object):
 			.outerjoin(Customer, Customer.id == Order.customer_id)\
 			.outerjoin(AccountReceiveable, AccountReceiveable.order_id == Order.id)\
 			.filter(Order.order_code.ilike('%' + domain['query'] + '%'))
-		if exclude_status is True:
-			log.info('exclude_status : %s', exclude_status)
+		log.info('exclude_status : %s', exclude_status)
+		if exclude_status:			
+			log.info('exclude_status run: %s', exclude_status)
 			order_q = order_q.filter(Order.status != OrderStatus.CREATED)			
+			pass
 		if status:
 			order_q = order_q.filter(Order.status == domain['status'])
 		order_q = order_q.order_by(Order.order_at.desc()).paginate(page, size, error_out=False)
