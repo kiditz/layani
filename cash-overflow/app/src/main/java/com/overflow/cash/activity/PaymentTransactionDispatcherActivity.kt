@@ -9,6 +9,7 @@ import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
+import timber.log.Timber
 import javax.inject.Inject
 
 class PaymentTransactionDispatcherActivity : BaseActivity(), HasSupportFragmentInjector {
@@ -20,9 +21,13 @@ class PaymentTransactionDispatcherActivity : BaseActivity(), HasSupportFragmentI
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment_transaction)
-        val fragment = PaymentTransactionFragment()
-        fragment.arguments = intent.extras
-        replaceContent(R.id.container, fragment)
+        try {
+            val fragment = PaymentTransactionFragment()
+            fragment.arguments = intent.extras
+            replaceContent(R.id.container, fragment)
+        }catch (e:Exception){
+            Timber.e(e)
+        }
 
     }
 

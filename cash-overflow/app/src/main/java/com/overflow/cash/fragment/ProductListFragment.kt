@@ -1,7 +1,6 @@
 package com.overflow.cash.fragment
 
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
@@ -107,9 +106,9 @@ class ProductListFragment : BaseFragment(), LoadCategoryContract.View, ViewPager
 
     private fun handlePopUpMenu(position: Int) {
         val productFragment = (adapter.getItem(position) as ProductFragment)
-        btn_sort.setOnClickListener {
-            val menu = PopupMenu(context, btn_sort)
-            menu.inflate(R.menu.sort_menu)
+        btn_filter.setOnClickListener {
+            val menu = PopupMenu(context, btn_filter)
+            menu.inflate(R.menu.sort_product_list_menu)
             menu.setOnMenuItemClickListener{
                 when(it.itemId){
                     R.id.action_sort_by_name ->{
@@ -189,10 +188,9 @@ class ProductListFragment : BaseFragment(), LoadCategoryContract.View, ViewPager
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menu?.clear()
     }
-
-
 
 }

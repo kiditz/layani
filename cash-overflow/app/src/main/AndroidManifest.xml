@@ -90,7 +90,7 @@
         <activity
             android:name=".activity.ProductDetailActivity"
             android:label="@string/product_detail" />
-        <activity android:name=".activity.PreviewSalesActivity" />
+        <activity android:name=".activity.SalesOrderPreviewActivity" />
         <activity
             android:name=".activity.CustomerChooserActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -98,27 +98,23 @@
             android:name=".activity.ReceiptActivity"
             android:label="" />
         <activity
-            android:name=".activity.ReceiptTransactionWithRefundActivity"
-            android:label="" />
+            android:name=".activity.TransactionHistoryDetailActivity"
+            android:label="@string/transaction_detail" />
         <activity
             android:name=".activity.CategoryListActivity"
             android:label="@string/edit_category" />
         <activity
             android:name=".activity.CustomerListAddActivity"
             android:label="@string/add_customer" />
+
         <activity
-            android:name=".activity.AccountReceiveableDetailActivity"
-            android:label=""
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activity.PaymentAccountReceiveableActivity"
-            android:label=""
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activity.PaymentTransactionActivity"
+            android:name=".activity.PaymentOtherActivity"
             android:label="" />
         <activity android:name=".activity.PaymentTransactionDispatcherActivity"
             android:label="@string/pay" />
+
+        <activity android:name=".activity.ViewSavedOrderActivity"
+            android:label="@string/saved_transaction" />
     </application>
 
 </manifest>

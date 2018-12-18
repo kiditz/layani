@@ -1,5 +1,4 @@
 <resources>
-    <!-- TODO: Remove or change this placeholder text -->
     <string-array name="share_receipt_list">
         <item>Mail</item>
         <item>Sms</item>
@@ -18,9 +17,11 @@
     <string name="all_product">Semua Produk</string>
     <string name="app_name">Layani</string>
     <string name="are_you_sure">Apakah anda yakin?</string>
-    <string name="are_you_sure_transaction">Apakah anda yakin ingin membayar transaksi inic?</string>
+    <string name="are_you_sure_transaction">Apakah anda yakin ingin membayar transaksi ini?</string>
+    <string name="are_you_sure_refund">Apakah anda yakin ingin membatalkan transaksi ini?</string>
     <string name="bill_amount">Tagihan</string>
     <string name="cancel">Batal</string>
+
     <string name="cannot_read_barcode">Tidak dapat membaca barcode</string>
     <string name="cash">Tunai</string>
     <string name="cashback">Kembali</string>
@@ -34,9 +35,10 @@
     <string name="credit_amount">Sebanyak</string>
     <string name="customer">Pelanggan</string>
     <string name="customer_name">Name Pelanggan</string>
-    <string name="dashboard">Beranda</string>
+    <string name="report_outlet">Laporan</string>
     <string name="date">Tanggal</string>
     <string name="date_in">Tanggal</string>
+    <string name="delete">Remove</string>
     <string name="delete_transaction">Hapus Transaksi</string>
 
     <string name="description">Keterangan</string>
@@ -73,6 +75,7 @@
     <string name="nav_header_title">Android Studio</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="new_transaction">Transaksi Baru</string>
     <string name="next_step">Langkah Selanjutnya</string>
     <string name="no">Tidak</string>
     <string name="no_account_receiveable_description">Tidak ada piutang yang harus di bayar</string>
@@ -96,7 +99,7 @@
     <string name="phone_number">No Handphone</string>
     <string name="press_again_to_close">Tekan sekali lagi untuk keluar dari aplikasi</string>
     <string name="print_receipt">Cetak struk</string>
-    <string name="product">Produk</string>
+    <string name="manage_product">Kelola Produk</string>
     <string name="product_code">Kode Produk</string>
     <string name="product_detail">Detail Produk</string>
     <string name="product_name">Nama Produk</string>
@@ -132,9 +135,9 @@
     <string name="total_amount">Total Tagihan</string>
     <string name="total_payment">Jumlah Bayar</string>
     <string name="total_refund">Total Pengembalian</string>
-    <string name="transaction">Transaksi</string>
     <string name="transaction_amount">Jumlah Transaksi</string>
     <string name="transaction_history">Riwayat Transaksi</string>
+    <string name="transaction_detail">Detil Transaksi</string>
     <string name="transaction_not_found">Transaksi tidak di temukan</string>
     <string name="try_again">Coba Lagi</string>
     <string name="unit">Satuan Berat</string>
@@ -147,4 +150,10 @@
     <string name="year">Tahun</string>
     <string name="yes">Ya</string>
     <string name="yesterday">Kemarin</string>
+    <string name="plus">+</string>
+    <string name="subtract">-</string>
+    <string name="success">Sukses</string>
+    <string name="void_trx">Dibatalkan</string>
+    <string name="in_progress">Berlangsung</string>
+    <string name="saved_transaction">Transaksi Tersimpan</string>
 </resources>

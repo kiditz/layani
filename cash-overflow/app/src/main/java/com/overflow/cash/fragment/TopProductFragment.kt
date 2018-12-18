@@ -136,7 +136,7 @@ class TopProductFragment: Fragment(), TopProductChartContract.View{
     override fun showEmpty() {
 
         val menu = menuActivity.nav_view.menu
-        menu.findItem(R.id.nav_dashboard).isVisible = false
+        menu.findItem(R.id.nav_report).isVisible = false
         menuActivity.onNavigationItemSelected(menu.findItem(R.id.nav_product))
     }
 

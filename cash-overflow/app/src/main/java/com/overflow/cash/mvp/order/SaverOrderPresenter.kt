@@ -6,14 +6,14 @@ import com.overflow.cash.activity.Constant
 import com.overflow.cash.net.API
 import com.overflow.cash.net.OrderService
 import com.overflow.cash.net.RxUtils
-import com.overflow.cash.realm.OrderRealm
+import com.overflow.cash.realm.OrderItemRealm
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
 import io.reactivex.disposables.CompositeDisposable
 
 class SaverOrderPresenter(
         private val context: Context,
-        private val orderRealm: OrderRealm,
+        private val orderItemRealm: OrderItemRealm,
         private val preferences: SharedPreferences,
         private val translations: Translations,
         private val orderService: OrderService,
@@ -22,7 +22,7 @@ class SaverOrderPresenter(
 
     lateinit var view: SaveOrderContract.View
     fun deleteAllItems() {
-        orderRealm.deleteItems()
+        orderItemRealm.deleteItems()
     }
     override fun saveOrder(data: Data) {
         val outlet = Data(preferences.getString("outlet", "{}"))

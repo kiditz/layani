@@ -1,19 +1,18 @@
 package com.overflow.cash.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
+import android.widget.PopupMenu
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.overflow.cash.R
 import com.overflow.cash.activity.Constant
-import com.overflow.cash.activity.MenuActivity
-import com.overflow.cash.activity.ReceiptTransactionWithRefundActivity
-import com.overflow.cash.adapter.TransactionHistoryAdapter
+import com.overflow.cash.activity.TransactionHistoryDetailActivity
+import com.overflow.cash.adapter.OrderAdapter
 import com.overflow.cash.mvp.order.LoadOrderContract
 import com.overflow.cash.mvp.order.LoadOrderPresenter
-import com.overflow.cash.mvp.receiveable.AccountReceiveableDetailContract
-import com.overflow.cash.mvp.receiveable.AccountReceiveableDetailPresenter
 import com.overflow.cash.net.API
 import com.overflow.cash.net.NetworkExHandler
 import com.overflow.cash.utils.AbstractRecyclerPagination
@@ -28,24 +27,31 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
-class TransactionHistoryFragment : BaseFragment(), LoadOrderContract.View, AccountReceiveableDetailContract.View {
+class TransactionHistoryFragment : BaseFragment(), LoadOrderContract.View{
     @Inject
     lateinit var presenter: LoadOrderPresenter
-    @Inject
-    lateinit var itemsPresenter: AccountReceiveableDetailPresenter
     @Inject
     lateinit var translations: Translations
     @Inject
     lateinit var networkExHandler: NetworkExHandler
-    lateinit var adapter: TransactionHistoryAdapter
+    lateinit var adapter: OrderAdapter
     private var currentPage: Int = API.MIN_PAGE
-    lateinit var menuActivity: MenuActivity
-    private var position = -1
+    var excludeStatus: Boolean = true
+
+    var status: String = Constant.TEXT_EMPTY
     lateinit var format: SimpleDateFormat
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        arguments?.let {
+            this.excludeStatus = it.getBoolean(ARG_EXCLUDE_STATUS)
+            this.status = it.getString(ARG_STATUS, Constant.TEXT_EMPTY)
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.menuActivity = activity as MenuActivity
-        this.format = SimpleDateFormat("dd MMMM yyyy",this.context!!.currentLocale())
+        this.format = SimpleDateFormat("dd MMMM yyyy", this.context!!.currentLocale())
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -55,14 +61,18 @@ class TransactionHistoryFragment : BaseFragment(), LoadOrderContract.View, Accou
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         this.presenter.attach(this)
-        this.itemsPresenter.attach(this)
-        this.adapter = TransactionHistoryAdapter(translations, format)
+        this.adapter = OrderAdapter(translations, format)
+
+
         val manager = LinearLayoutManager(activity)
         recycler?.layoutManager = manager
         recycler?.isNestedScrollingEnabled = false
         recycler?.setHasFixedSize(true)
         recycler?.itemAnimator = DefaultItemAnimator()
         recycler?.adapter = adapter
+
+        presenter.loadOrder(currentPage, Constant.TEXT_EMPTY, status, excludeStatus)
+
         recycler?.addOnScrollListener(object : AbstractRecyclerPagination(manager) {
             override val isLoading: Boolean
                 get() = presenter.loading
@@ -72,25 +82,63 @@ class TransactionHistoryFragment : BaseFragment(), LoadOrderContract.View, Accou
                 get() = presenter.getSize()
 
             override fun loadMoreItems() {
-                currentPage = currentPage + 1
-                presenter.loadOrder(currentPage, Constant.TEXT_EMPTY)
+                currentPage += 1
+                presenter.loadOrder(currentPage, Constant.TEXT_EMPTY, status, excludeStatus)
             }
         })
         refresh?.setOnRefreshListener {
             currentPage = 1
-            presenter.loadOrder(currentPage, Constant.TEXT_EMPTY)
+            presenter.loadOrder(currentPage, Constant.TEXT_EMPTY, status, excludeStatus)
         }
 
 
         RxTextView.textChanges(ed_search).skipInitialValue().subscribe {
             activity!!.runOnUiThread {
                 currentPage = 1
-                presenter.loadOrder(currentPage, it.toString())
+                presenter.loadOrder(currentPage, it.toString(), status, excludeStatus)
             }
         }
-        this.adapter.onItemClick = {data, viewHolder ->
-            this.position = viewHolder.adapterPosition
-            itemsPresenter.loadOrderItems(data.getString("order_code"))
+
+        this.adapter.onItemClick = { order, _ ->
+            val bundle = Bundle()
+            bundle.putString(Constant.ARG_SALES, order.toString())
+            activity!!.moveTo(TransactionHistoryDetailActivity::class.java, bundle)
+        }
+
+        if(!excludeStatus){
+            btn_filter.visibility = View.GONE
+        }
+
+        handleFilter()
+    }
+
+    private fun handleFilter(){
+        btn_filter.setOnClickListener {
+            val menu = PopupMenu(context, btn_filter)
+            menu.inflate(R.menu.menu_filter_transaction_history)
+            menu.setOnMenuItemClickListener {
+                return@setOnMenuItemClickListener when (it.itemId) {
+                    R.id.action_success -> {
+                        val status = Constant.TransactionStatus.SUCCESS
+                        presenter.loadOrder(currentPage, Constant.TEXT_EMPTY, status, excludeStatus)
+                        true
+                    }
+
+                    R.id.action_void -> {
+                        val status = Constant.TransactionStatus.VOID
+                        presenter.loadOrder(currentPage, Constant.TEXT_EMPTY, status)
+                        true
+                    }
+
+                    R.id.action_in_progress -> {
+                        val status = Constant.TransactionStatus.PENDING
+                        presenter.loadOrder(currentPage, Constant.TEXT_EMPTY, status)
+                        true
+                    }
+                    else -> false
+                }
+            }
+            menu.show()
         }
     }
 
@@ -107,7 +155,7 @@ class TransactionHistoryFragment : BaseFragment(), LoadOrderContract.View, Accou
 
         groupBy.keys.forEach {
             // Check if header has been exists on adapter values
-            if(!hashKey(adapter.values, it)){
+            if (!hashKey(adapter.values, it)) {
                 val itemHeader = Group()
                 itemHeader.type = Group.HEADER
                 itemHeader["order_at"] = it
@@ -124,9 +172,9 @@ class TransactionHistoryFragment : BaseFragment(), LoadOrderContract.View, Accou
         adapter.notifyDataSetChanged()
     }
 
-    private fun hashKey(payloads:List<Group>, key:String):Boolean{
-        for (payload in payloads){
-            if(payload["order_at"] == key)
+    private fun hashKey(payloads: List<Group>, key: String): Boolean {
+        for (payload in payloads) {
+            if (payload["order_at"] == key)
                 return true
         }
         return false
@@ -156,19 +204,28 @@ class TransactionHistoryFragment : BaseFragment(), LoadOrderContract.View, Accou
         showMessage(translations.get(Constant.TranslationsKey.NO_INTERNET), Constant.TEXT_EMPTY)
     }
 
-    override fun onDetailLoaded(receiveables: List<Data>) {
-        TODO("not implemented")
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        this.presenter.detach()
     }
 
-    override fun onOrderItemsLoaded(items: List<Data>) {
-        //Check adapter position
-        if(position >= 0){
-            val order = adapter.values[position]
-            order["order_items"] = items
-            val bundle = Bundle()
-            bundle.putString(Constant.ARG_SALES, order.toString())
-            activity!!.moveTo(ReceiptTransactionWithRefundActivity::class.java, bundle)
 
-        }
+    companion object {
+        const val ARG_EXCLUDE_STATUS = "exclude_status"
+        const val ARG_STATUS = "status"
+        @JvmStatic
+        fun newInstance(excludeStatus: Boolean, status:String=Constant.TEXT_EMPTY) =
+                TransactionHistoryFragment().apply {
+                    arguments = Bundle().apply {
+                        putBoolean(ARG_EXCLUDE_STATUS, excludeStatus)
+                        putString(ARG_STATUS, status)
+                    }
+                }
+
+        @JvmStatic
+        fun newInstance() = TransactionHistoryFragment()
     }
+
 }

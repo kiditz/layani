@@ -6,6 +6,8 @@ import java.util.*;
 import static java.util.concurrent.TimeUnit.*;
 public class DateUtil {
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
+    public static final SimpleDateFormat DATE_FORMAT_DEFAULT = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+    public static final SimpleDateFormat DATE_TIME_FORMAT_DEFAULT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
     public static final SimpleDateFormat DATETIME_FORMAT = new SimpleDateFormat("dd MMMM yyyy HH:mm:ss", Locale.getDefault());
 
     public static final List<Long> times =
@@ -53,6 +55,10 @@ public class DateUtil {
 
     public static String printDate(Date date){
         return DATE_FORMAT.format(date);
+    }
+
+    public static String printDefaultDate(Date date){
+        return DATE_FORMAT_DEFAULT.format(date);
     }
 
     public static String printDateTime(long dateLong){

@@ -4,13 +4,11 @@ import android.accounts.AccountManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import com.jakewharton.rxbinding2.view.RxView
 import com.overflow.cash.activity.MenuActivity
 import com.overflow.cash.R
-import com.overflow.cash.realm.OrderRealm
+import com.overflow.cash.realm.OrderItemRealm
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_setting.*
 import javax.inject.Inject
@@ -22,7 +20,7 @@ class SettingFragment:BaseFragment() {
     @Inject
     lateinit var preferences: SharedPreferences
     @Inject
-    lateinit var orderRealm: OrderRealm
+    lateinit var orderItemRealm: OrderItemRealm
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         this.menuActivity = activity as MenuActivity
@@ -44,12 +42,17 @@ class SettingFragment:BaseFragment() {
                     return@runOnUiThread
                 }
                 val account = accountManager.getAccountsByType(getString(R.string.account_type))[0]
-                orderRealm.deleteItems()
+                orderItemRealm.deleteItems()
                 accountManager.removeAccount(account, null, null)
                 preferences.edit().remove("outlet").apply()
                 menuActivity.onNotLogin()
             }
 
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menu?.clear()
     }
 }

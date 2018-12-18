@@ -13,7 +13,7 @@ import com.overflow.cash.utils.MessageButtonHandle
 import com.overflow.cash.utils.home
 import com.overflow.cash.utils.shouldRequestPermissions
 import com.overflow.cash.utils.showMessage
-import kotlinx.android.synthetic.main.switch_layout.view.*
+import kotlinx.android.synthetic.main.menu_switch_layout.view.*
 import me.dm7.barcodescanner.zxing.ZXingScannerView
 
 class ScannerActivity:AppCompatActivity(), ZXingScannerView.ResultHandler {

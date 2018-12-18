@@ -5,29 +5,34 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_dashboard"
-            android:icon="@drawable/ic_dashboard"
-            android:title="@string/dashboard" />
-        <item
-            android:id="@+id/nav_product"
-            android:icon="@drawable/ic_product"
-            android:title="@string/product" />
-        <item
-            android:id="@+id/nav_transaction"
-            android:icon="@drawable/ic_sales"
-            android:title="@string/transaction" />
+            android:id="@+id/nav_new_transaction"
+            android:icon="@drawable/ic_cart"
+            android:title="@string/new_transaction" />
+
         <item
             android:id="@+id/nav_transaction_history"
             android:icon="@drawable/ic_history"
             android:title="@string/transaction_history" />
+
         <item
-            android:id="@+id/nav_accounts_receiveable"
-            android:icon="@drawable/ic_money"
-            android:title="@string/accounts_receiveable" />
+            android:id="@+id/nav_product"
+            android:icon="@drawable/ic_product"
+            android:title="@string/manage_product" />
+
         <item
             android:id="@+id/nav_customer"
-            android:icon="@drawable/ic_customer"
+            android:icon="@drawable/ic_user_o"
             android:title="@string/nav_customer" />
+
+        <item
+            android:id="@+id/nav_report"
+            android:icon="@drawable/ic_file"
+            android:title="@string/report_outlet" />
+        <!--<item-->
+            <!--android:id="@+id/nav_accounts_receiveable"-->
+            <!--android:icon="@drawable/ic_money"-->
+            <!--android:title="@string/accounts_receiveable" />-->
+
     </group>
 
     <item android:title="@string/other">
@@ -35,7 +40,7 @@
             <item
                 android:id="@+id/nav_settings"
                 android:checkable="true"
-                android:icon="@drawable/ic_gear"
+                android:icon="@drawable/ic_gears"
                 android:title="@string/settings" />
             <!--<item-->
                 <!--android:productCode="@+productCode/nav_send"-->

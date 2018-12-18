@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.PreviewSalesActivity">
+    tools:context=".activity.SalesOrderPreviewActivity">
     <ProgressBar
         android:id="@+id/progress"
         android:layout_width="match_parent"
@@ -36,7 +36,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_customer"
+                android:src="@drawable/ic_user_o"
                 android:tint="@color/colorAccent" />
 
             <TextView
@@ -77,7 +77,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-        tools:listitem="@layout/adapter_sales_preview"
+        tools:listitem="@layout/adapter_sales_items"
         />
 
     <LinearLayout

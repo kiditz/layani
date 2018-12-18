@@ -5,13 +5,13 @@
 
     <item android:id="@+id/action_flash"
         android:title=""
-        app:actionLayout="@layout/switch_layout"
+        app:actionLayout="@layout/menu_switch_layout"
         app:showAsAction="always"
         />
 
     <item android:id="@+id/action_focus"
         android:title=""
-        app:actionLayout="@layout/switch_layout"
+        app:actionLayout="@layout/menu_switch_layout"
         app:showAsAction="always"
         />
 </menu>

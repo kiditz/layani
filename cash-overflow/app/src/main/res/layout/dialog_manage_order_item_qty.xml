@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="20dp"
-    tools:context=".fragment.SalesFragment">
+    android:padding="20dp">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -21,7 +20,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight=".4"
             android:background="@drawable/bg_btn_qty"
-            android:text="+"
+            android:text="@string/plus"
             android:textSize="28sp" />
 
 
@@ -43,9 +42,16 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:background="@drawable/bg_btn_qty"
-            android:text="-"
+            android:text="@string/subtract"
             android:textSize="28sp" />
     </LinearLayout>
 
+    <Button
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_accent"
+        android:textColor="@drawable/btn_accent_text"
+        android:text="@string/delete"/>
 
 </LinearLayout>

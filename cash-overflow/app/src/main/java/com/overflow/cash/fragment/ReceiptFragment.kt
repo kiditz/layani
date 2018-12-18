@@ -67,13 +67,13 @@ class ReceiptFragment:BaseFragment(){
         val stream = activity?.assets?.open("receipt/index.html")
         this.source = StreamUtils.copyStreamToString(stream)
         val outlet = Data(preferences.getString("outlet", "{}"))
-        if(order.containsNotNull("customer_name")){
+        if(order.containsKeyAndNotNull("customer_name")){
             val customerName = addCustomInfo("Pelanggan", order.getString("customer_name"))
             source = source.replace("{{customer}}", customerName)
         }else{
             source = source.replace("{{customer}}", Constant.TEXT_EMPTY)
         }
-        if(order.containsNotNull("receiveable_date")){
+        if(order.containsKeyAndNotNull("receiveable_date")){
             val receiveableDate = addCustomInfo("Jatuh Tempo", format.format(Date(order.getLong("receiveable_date"))))
             source = source.replace("{{tgl_jatuh_tempo}}", receiveableDate)
         }else{
@@ -94,7 +94,7 @@ class ReceiptFragment:BaseFragment(){
                 source = source.replace("{{order.cashback}}", "")
             }
         }else{
-            if(order.containsNotNull("total_credit") && order.getDouble("total_credit") > 0){
+            if(order.containsKeyAndNotNull("total_credit") && order.getDouble("total_credit") > 0){
                 source = source.replace("{{cashback_title}}", "Hutang")
                 source = source.replace("{{order.cashback}}", rupiah(order.getDouble("total_credit")))
             }else{

@@ -1,209 +1,259 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
-    <ProgressBar
-        android:id="@+id/progress"
+    android:layout_margin="@dimen/small_margin"
+    android:layout_height="wrap_content">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:indeterminate="true"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:background="@color/colorPrimary"
-        android:visibility="gone"/>
-    <include layout="@layout/success_message"/>
-    <ImageView
-        android:layout_gravity="center"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:src="@drawable/cash_dialog" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="@dimen/default_margin"
         android:orientation="vertical">
-
-        <LinearLayout
-            android:orientation="horizontal"
+        <ProgressBar
+            android:id="@+id/progress"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif"
-                    android:text="@string/bill_amount"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/text_size_medium"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_bill_amount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif"
-                    android:textSize="@dimen/text_size_extra_medium"
-                    tools:text="Rp. 250.000" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif"
-                    android:text="@string/discount"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/text_size_medium"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_discount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif"
-                    android:textSize="@dimen/text_size_extra_medium"
-                    android:tag="0.0"
-                    tools:text="Rp. 10.000" />
-            </LinearLayout>
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:background="@color/colorPrimary"
+            android:visibility="gone"/>
+        <include layout="@layout/success_message"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif"
-                android:text="@string/total_amount"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="@dimen/text_size_extra_medium"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tv_total_amount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif"
-                android:textSize="@dimen/text_size_large"
-                tools:text="Rp. 240.000" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal"
-            android:layout_marginTop="@dimen/default_margin"
-            android:weightSum="2">
-            <Button
-                android:id="@+id/btn_cash"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/default_margin"
-                android:layout_marginEnd="@dimen/default_margin"
-                android:background="@drawable/btn_accent"
-                android:text="@string/cash"
-                android:textColor="@drawable/btn_accent_text" />
-            <Button
-                android:id="@+id/btn_card"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:background="@drawable/btn_accent"
-
-                android:text="@string/card"
-                android:textColor="@drawable/btn_accent_text" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:gravity="center"
-            android:layout_marginTop="@dimen/default_margin"
-            android:weightSum="5">
+            android:padding="@dimen/default_margin"
+            android:orientation="vertical">
 
-            <Button
-                android:padding="@dimen/default_margin"
-                android:id="@+id/btn_the_right_money"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="@dimen/default_margin"
-                android:layout_marginRight="@dimen/default_margin"
-                android:layout_weight="1"
-                android:background="@drawable/btn_default"
-                android:text="@string/the_right_money"
-                android:textSize="10sp"
-                android:textColor="@color/textLight"
-                android:textStyle="bold" />
-            <Button
-                android:padding="@dimen/default_margin"
-                android:id="@+id/btn_suggestion_round_3"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:layout_marginRight="@dimen/default_margin"
-                android:layout_marginEnd="@dimen/default_margin"
-                android:background="@drawable/btn_default"
-                tools:text="Rp. 10000"
-                android:textSize="12sp"
-                android:textColor="@color/textLight"/>
+            <LinearLayout
+                android:id="@+id/l_discount_calculation"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                >
+                <LinearLayout
 
-            <Button
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif"
+                        android:text="@string/bill_amount"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/text_size_medium"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_bill_amount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif"
+                        android:textSize="@dimen/text_size_extra_medium"
+                        android:textStyle="bold"
+                        tools:text="Rp. 250.000" />
+                </LinearLayout>
+                <include layout="@layout/line_horz"/>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif"
+                        android:text="@string/discount"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/text_size_medium"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_discount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif"
+                        android:tag="0.0"
+                        android:textSize="@dimen/text_size_extra_medium"
+                        android:textStyle="bold"
+                        tools:text="Rp. 10.000" />
+                </LinearLayout>
+            </LinearLayout>
+            <include layout="@layout/line_vert"/>
+            <LinearLayout
                 android:padding="@dimen/default_margin"
-                android:id="@+id/btn_suggestion_round_4"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/default_margin"
-                android:layout_marginEnd="@dimen/default_margin"
-                android:background="@drawable/btn_default"
-                tools:text="Rp. 5000"
-                android:textSize="12sp"
-                android:textColor="@color/textLight" />
-            <Button
-                android:padding="@dimen/default_margin"
-                android:id="@+id/btn_suggestion_round_5"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:layout_marginRight="@dimen/default_margin"
-                android:layout_marginEnd="@dimen/default_margin"
-                android:background="@drawable/btn_default"
-                tools:text="Rp. 150.000"
-                android:textSize="12sp"
-                android:textColor="@color/textLight" />
-            <Button
-                android:padding="@dimen/default_margin"
-                android:id="@+id/btn_other"
-                android:layout_width="0dp"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:text="@string/total_amount"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="@dimen/text_size_extra_medium"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_total_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:textSize="@dimen/text_size_extra_large"
+                    android:textStyle="bold"
+                    tools:text="Rp. 240.000" />
+            </LinearLayout>
+            <include layout="@layout/line_vert"/>
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/btn_default"
-                android:text="@string/other"
-                android:textColor="@color/textLight"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="@dimen/default_margin"
+                android:weightSum="2">
+                <Button
+                    android:id="@+id/btn_cash"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/default_margin"
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:background="@drawable/btn_accent"
+                    android:text="@string/cash"
+                    android:textColor="@drawable/btn_accent_text"
+                    style="?android:attr/buttonBarButtonStyle" />
+                <Button
+                    android:id="@+id/btn_card"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_accent"
+
+                    android:text="@string/card"
+                    android:textColor="@drawable/btn_accent_text"
+                    style="?android:attr/buttonBarButtonStyle" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/default_margin"
+                >
+
+                <!--<Button-->
+                    <!--android:id="@+id/btn_the_right_money"-->
+                    <!--style="?android:attr/buttonBarButtonStyle"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_marginEnd="@dimen/default_margin"-->
+                    <!--android:layout_marginRight="@dimen/default_margin"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:background="@drawable/btn_default"-->
+                    <!--android:padding="@dimen/default_margin"-->
+                    <!--android:text="@string/the_right_money"-->
+                    <!--android:textColor="@color/textLight"-->
+                    <!--android:textSize="12sp"-->
+                    <!--android:textStyle="bold" />-->
+                <Button
+                    android:padding="@dimen/default_margin"
+                    android:id="@+id/btn_suggestion_round_3"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/default_margin"
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:background="@drawable/btn_default"
+                    tools:text="Rp. 10000"
+                    android:textSize="12sp"
+                    android:textColor="@color/textLight"
+                    style="?android:attr/buttonBarButtonStyle" />
+
+                <Button
+                    android:padding="@dimen/default_margin"
+                    android:id="@+id/btn_suggestion_round_4"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/default_margin"
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:background="@drawable/btn_default"
+                    tools:text="Rp. 5000"
+                    android:textSize="12sp"
+                    android:textColor="@color/textLight"
+                    style="?android:attr/buttonBarButtonStyle" />
+                <Button
+                    android:padding="@dimen/default_margin"
+                    android:id="@+id/btn_suggestion_round_5"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+
+                    android:background="@drawable/btn_default"
+                    tools:text="Rp. 150.000"
+                    android:textSize="12sp"
+                    android:textColor="@color/textLight"
+                    style="?android:attr/buttonBarButtonStyle" />
+                <!--<Button-->
+                    <!--android:padding="@dimen/default_margin"-->
+                    <!--android:id="@+id/btn_other"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:background="@drawable/btn_default"-->
+                    <!--android:text="@string/other"-->
+                    <!--android:textColor="@color/textLight"-->
+                    <!--android:textSize="12sp"-->
+                    <!--android:textStyle="bold"-->
+                    <!--style="?android:attr/buttonBarButtonStyle" />-->
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/default_margin"
+                >
+
+                <Button
+                    android:id="@+id/btn_the_right_money"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:layout_marginRight="@dimen/default_margin"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_default"
+                    android:padding="@dimen/default_margin"
+                    android:text="@string/the_right_money"
+                    android:textColor="@color/textLight"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+                <Button
+                    android:padding="@dimen/default_margin"
+                    android:id="@+id/btn_other"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_default"
+                    android:text="@string/other"
+                    android:textColor="@color/textLight"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    style="?android:attr/buttonBarButtonStyle" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
-</LinearLayout>
+</android.support.v7.widget.CardView>

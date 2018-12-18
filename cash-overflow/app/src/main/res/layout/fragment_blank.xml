@@ -16,7 +16,7 @@
         android:layout_marginTop="21dp"
         android:cropToPadding="true"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_gear"
+        android:src="@drawable/ic_gears"
         android:tint="#999999" />
 
     <TextView

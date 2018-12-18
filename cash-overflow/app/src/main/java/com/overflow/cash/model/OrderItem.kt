@@ -11,7 +11,8 @@ open class OrderItem: RealmObject() {
     @Required
     var productName:String=""
     var documentId:Long=0
-    var countDiscount:Long=0
+    var discountId:Long?=null
+    var hasDiscount:Boolean=false
     var qty:Long=0
     var subTotal:Double=0.0
     var sellPrice:Double=0.0

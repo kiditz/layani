@@ -11,23 +11,20 @@ import android.support.v4.view.ViewPager
 import android.view.*
 import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.overflow.cash.R
-import com.overflow.cash.activity.Constant
-import com.overflow.cash.activity.MenuActivity
-import com.overflow.cash.activity.PreviewSalesActivity
-import com.overflow.cash.activity.ScannerActivity
+import com.overflow.cash.activity.*
 import com.overflow.cash.model.OrderItem
 import com.overflow.cash.mvp.product.LoadCategoryContract
 import com.overflow.cash.mvp.product.LoadCategoryPresenter
 import com.overflow.cash.net.NetworkExHandler
 import com.overflow.cash.pager.ViewPagerAdapter
-import com.overflow.cash.realm.OrderRealm
+import com.overflow.cash.realm.OrderItemRealm
 import com.overflow.cash.utils.moveTo
 import com.overflow.cash.utils.snack
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
 import io.realm.Realm
 import io.realm.RealmResults
-import kotlinx.android.synthetic.main.cart_layout.view.*
+import kotlinx.android.synthetic.main.menu_layout_cart.view.*
 import kotlinx.android.synthetic.main.fragment_sales_list.*
 import timber.log.Timber
 import javax.inject.Inject
@@ -44,7 +41,7 @@ class SalesListFragment : BaseFragment(), LoadCategoryContract.View, ViewPager.O
     @Inject
     lateinit var preferences: SharedPreferences
     @Inject
-    lateinit var orderRealm:OrderRealm
+    lateinit var orderItemRealm:OrderItemRealm
     @Inject
     lateinit var networkExHandler: NetworkExHandler
     private var categoryList = mutableListOf<Data>()
@@ -105,18 +102,25 @@ class SalesListFragment : BaseFragment(), LoadCategoryContract.View, ViewPager.O
         menuItem.actionView.btn_preview_sales.setOnClickListener {
             //Pindah ke activity preview sales
             if(sumQty.toLong() > 0){
-                menuActivity.moveTo(PreviewSalesActivity::class.java)
+                menuActivity.moveTo(SalesOrderPreviewActivity::class.java)
             }
         }
         showSumQuantity(menuItem!!)
         menuActivity.search?.setMenuItem(menu.findItem(R.id.action_search))
+
         btn_scan.setOnClickListener {
             handleScanAction()
         }
+
         menu.findItem(R.id.action_delete_transaction).setOnMenuItemClickListener {
             Timber.i("Remove All Items")
-            orderRealm.deleteItems()
-            menuActivity.goTo(R.id.nav_transaction)
+            orderItemRealm.deleteItems()
+            menuActivity.goTo(R.id.nav_new_transaction)
+            false
+        }
+
+        menu.findItem(R.id.action_saved_transaction).setOnMenuItemClickListener {
+            menuActivity.moveTo(ViewSavedOrderActivity::class.java)
             false
         }
     }

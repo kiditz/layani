@@ -7,7 +7,11 @@ import retrofit2.http.*
 
 interface DiscountService {
     @Headers("Content-Type:application/json")
-    @GET("/cash/discount/by_quantity")
+    @GET("/cash/discount/by_bill_amount")
     fun findDiscountByBillAmount(@QueryMap input: Data): Single<Data>
+
+    @Headers("Content-Type:application/json")
+    @GET("/cash/discount/by_quantity")
+    fun findDiscountByQuantity(@QueryMap input: Data): Single<Data>
     
 }

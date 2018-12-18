@@ -1,5 +1,4 @@
 <resources>
-    <!-- TODO: Remove or change this placeholder text -->
     <string-array name="share_receipt_list">
         <item>Mail</item>
         <item>Sms</item>
@@ -19,6 +18,7 @@
     <string name="app_name">Layani</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="are_you_sure_transaction">Are you sure want to pay this transaction?</string>
+    <string name="are_you_sure_refund">Are you sure want to refund this transaction?</string>
     <string name="bill_amount">Bill Amount</string>
     <string name="cancel">Cancel</string>
     <string name="cannot_read_barcode">Cannot read barcode</string>
@@ -35,10 +35,11 @@
     <string name="custom">Custom</string>
     <string name="customer">Customer</string>
     <string name="customer_name">Customer Name</string>
-    <string name="dashboard">Dashboard</string>
+    <string name="report_outlet">Report</string>
     <string name="date">Date</string>
     <string name="date_in">Date in</string>
     <string name="delete_transaction">Remove Transaction</string>
+    <string name="delete">Remove</string>
     <string name="description">Description</string>
     <string name="discount">Discount</string>
     <string name="done">Done</string>
@@ -62,6 +63,7 @@
     <string name="logout">Sign-Out</string>
     <string name="mail">E-Mail</string>
     <string name="manage_stock">Manage Stock</string>
+    <string name="manage_product">Manage Product</string>
     <string name="minumum_price">Minimum Price</string>
     <string name="month">Monthly</string>
     <string name="most_stock">Most Stock</string>
@@ -72,6 +74,7 @@
     <string name="nav_header_title">Android Studio</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="new_transaction">New Transaction</string>
     <string name="next_step">Next Step</string>
     <string name="no">No</string>
     <string name="no_account_receiveable_description">No account receiveable</string>
@@ -94,7 +97,7 @@
     <string name="phone_number">Phone Number</string>
     <string name="press_again_to_close">Press again to close app</string>
     <string name="print_receipt">Print Receipt</string>
-    <string name="product">Product</string>
+    <string name="plus">+</string>
     <string name="product_code">Product Code</string>
     <string name="product_detail">Product detail</string>
     <string name="product_name">Product Name</string>
@@ -109,6 +112,7 @@
     <string name="remaining_stock">Remaining Stock</string>
     <string name="sales">Sales</string>
     <string name="save">Save</string>
+    <string name="saved_transaction">Saved Transaction</string>
     <string name="scan_barcode">Scan Barcode</string>
     <string name="search">Search..</string>
     <string name="search_order_hint">Search with transaction number</string>
@@ -123,6 +127,8 @@
     <string name="store_name">Store name</string>
     <string name="store_owner_name">Store owner</string>
     <string name="submit">Save</string>
+    <string name="subtract">-</string>
+    <string name="success">Success</string>
     <string name="system_err">Upps, Something went wrong</string>
     <string name="the_right_money">Right Money</string>
     <string name="today">Today</string>
@@ -130,8 +136,9 @@
     <string name="total_amount">Total Amount</string>
     <string name="total_payment">Total Payment</string>
     <string name="total_refund">Total Refund</string>
-    <string name="transaction">Transaction</string>
+
     <string name="transaction_amount">Transaction Amount</string>
+    <string name="transaction_detail">Transaction Detail</string>
     <string name="transaction_history">Transaction History</string>
     <string name="transaction_not_found">Transaction Not Found</string>
     <string name="try_again">Try Again</string>
@@ -145,4 +152,8 @@
     <string name="year">Yearly</string>
     <string name="yes">Yes</string>
     <string name="yesterday">Yesterday</string>
+
+    <string name="void_trx">Void</string>
+    <string name="in_progress">In Progress</string>
+
 </resources>

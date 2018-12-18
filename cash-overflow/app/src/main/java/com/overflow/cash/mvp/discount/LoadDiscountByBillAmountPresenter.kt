@@ -7,8 +7,10 @@ import com.overflow.cash.net.API
 import com.overflow.cash.net.DiscountService
 import com.overflow.cash.net.RxUtils
 import com.overflow.libs.core.Data
+import com.overflow.libs.core.DateUtil
 import com.overflow.libs.core.Translations
 import io.reactivex.disposables.CompositeDisposable
+import java.util.*
 
 /**
  * @author Rifky Aditya Bastara
@@ -25,10 +27,12 @@ class LoadDiscountByBillAmountPresenter(
     lateinit var view: LoadDiscountByBillAmountContract.View
     val outlet = Data(preferences.getString("outlet", "{}"))
 
-    override fun loadDiscountByBillAmount(billAmount:Double) {
+    override fun loadDiscount(billAmount:Double) {
         val data = Data()
         data["bill_amount"] = billAmount
+        data["date"] = DateUtil.printDefaultDate(Date())
         data["outlet_id"] = outlet.getLong("id")
+        data[""]
         if (API.isConnected(context)) {
             this.disposable.add(this.discountService.findDiscountByBillAmount(data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({
                 if (API.ok(it)) {

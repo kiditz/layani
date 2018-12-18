@@ -8,6 +8,7 @@ import com.overflow.cash.mvp.customer.LoadCustomerPresenter
 import com.overflow.cash.mvp.chart.DashboardHeaderPresenter
 import com.overflow.cash.mvp.customer.EditCustomerPresenter
 import com.overflow.cash.mvp.discount.LoadDiscountByBillAmountPresenter
+import com.overflow.cash.mvp.discount.LoadDiscountByQuantityPresenter
 import com.overflow.cash.mvp.login.LoginPresenter
 import com.overflow.cash.mvp.menu.MenuPresenter
 import com.overflow.cash.mvp.order.*
@@ -18,7 +19,7 @@ import com.overflow.cash.mvp.receiveable.AccountReceiveablePaymentPresenter
 import com.overflow.cash.mvp.receiveable.AccountReceiveablePresenter
 import com.overflow.cash.mvp.register.RegisterPresenter
 import com.overflow.cash.net.*
-import com.overflow.cash.realm.OrderRealm
+import com.overflow.cash.realm.OrderItemRealm
 import com.overflow.libs.core.Translations
 import dagger.Module
 import dagger.Provides
@@ -64,12 +65,12 @@ class PresenterModule {
 
     //Category
     @Provides
-    internal fun provideLoadCategoryPresenter(context: Context,translations: Translations, disposable: CompositeDisposable, productService: ProductService, orderRealm: OrderRealm, preferences: SharedPreferences): LoadCategoryPresenter {
+    internal fun provideLoadCategoryPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, productService: ProductService, orderItemRealm: OrderItemRealm, preferences: SharedPreferences): LoadCategoryPresenter {
         return LoadCategoryPresenter(context, translations, disposable, productService, preferences)
     }
 
     @Provides
-    internal fun provideFindCategoryPresenter(context: Context,translations: Translations, disposable: CompositeDisposable, productService: ProductService, orderRealm: OrderRealm, preferences: SharedPreferences): FindCategoryPresenter {
+    internal fun provideFindCategoryPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, productService: ProductService, orderItemRealm: OrderItemRealm, preferences: SharedPreferences): FindCategoryPresenter {
         return FindCategoryPresenter(context, translations, disposable, productService, preferences)
     }
 
@@ -95,8 +96,8 @@ class PresenterModule {
 
 
     @Provides
-    internal fun providePaymentTransactionPresenter(context: Context,orderRealm: OrderRealm,  translations: Translations, disposable: CompositeDisposable, orderService: OrderService, preferences: SharedPreferences): SaverOrderPresenter {
-        return SaverOrderPresenter(context, orderRealm, preferences, translations, orderService, disposable)
+    internal fun providePaymentTransactionPresenter(context: Context, orderItemRealm: OrderItemRealm, translations: Translations, disposable: CompositeDisposable, orderService: OrderService, preferences: SharedPreferences): SaverOrderPresenter {
+        return SaverOrderPresenter(context, orderItemRealm, preferences, translations, orderService, disposable)
     }
 
     @Provides
@@ -120,8 +121,13 @@ class PresenterModule {
     }
 
     @Provides
-    internal fun provideTransactionHistoryPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, orderService:OrderService, preferences: SharedPreferences): LoadOrderPresenter {
+    internal fun provideLoadOrderPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, orderService:OrderService, preferences: SharedPreferences): LoadOrderPresenter {
         return LoadOrderPresenter(context, preferences, translations, orderService, disposable)
+    }
+
+    @Provides
+    internal fun provideLoadOrderItemPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, orderService:OrderService, preferences: SharedPreferences): LoadOrderItemPresenter {
+        return LoadOrderItemPresenter(context, preferences, translations, orderService, disposable)
     }
 
     @Provides
@@ -156,6 +162,11 @@ class PresenterModule {
     @Provides
     internal fun provideLoadDiscountByBillAmount(context: Context, translations: Translations, disposable: CompositeDisposable,discountService: DiscountService,  preferences: SharedPreferences): LoadDiscountByBillAmountPresenter {
         return LoadDiscountByBillAmountPresenter(context, preferences, translations, discountService, disposable)
+    }
+
+    @Provides
+    internal fun provideLoadDiscountByQuantityPresenter(context: Context, translations: Translations, disposable: CompositeDisposable,discountService: DiscountService,  preferences: SharedPreferences): LoadDiscountByQuantityPresenter {
+        return LoadDiscountByQuantityPresenter(context, preferences, translations, discountService, disposable)
     }
 
     @Provides

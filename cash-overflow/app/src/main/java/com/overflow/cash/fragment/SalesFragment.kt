@@ -1,5 +1,6 @@
 package com.overflow.cash.fragment
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
@@ -18,7 +19,7 @@ import com.overflow.cash.mvp.product.LoadProductPresenter
 import com.overflow.cash.net.API
 import com.overflow.cash.net.ImageService
 import com.overflow.cash.net.NetworkExHandler
-import com.overflow.cash.realm.OrderRealm
+import com.overflow.cash.realm.OrderItemRealm
 import com.overflow.cash.utils.AbstractRecyclerPagination
 import com.overflow.cash.utils.decoration.MarginItemDecoration
 import com.overflow.cash.utils.snack
@@ -43,7 +44,7 @@ class SalesFragment : BaseFragment(), LoadProductContract.View{
     @Inject
     lateinit var imageService: ImageService
     @Inject
-    lateinit var orderRealm: OrderRealm
+    lateinit var orderItemRealm: OrderItemRealm
     private var addOrSubtractOrderItemView: View? = null
     private var addOrSubtractOrderItemDialog: AlertDialog? = null
     private var orderBy:String= Constant.Sort.BY_NAME
@@ -111,8 +112,11 @@ class SalesFragment : BaseFragment(), LoadProductContract.View{
         var qty = holder.qty.text.replace("[^0-9]".toRegex(), "").trim().toLong()
         this.addOrSubtractOrderItemView?.ed_qty?.setText(qty.toString())
         this.addOrSubtractOrderItemView?.btn_add_qty?.setOnClickListener {
-            this.addOrSubtractOrderItemView?.ed_qty?.setText("${qty++ }")
 
+            this.addOrSubtractOrderItemView?.ed_qty?.setText("${qty++ }")
+            if(this.addOrSubtractOrderItemView?.ed_qty?.text.toString().toLong() <= 0){
+                this.addOrSubtractOrderItemView?.ed_qty?.setText("0")
+            }
         }
         this.addOrSubtractOrderItemView?.btn_sub_qty?.setOnClickListener {
             this.addOrSubtractOrderItemView?.ed_qty?.setText("${qty-- }")
@@ -127,7 +131,7 @@ class SalesFragment : BaseFragment(), LoadProductContract.View{
             if(this.addOrSubtractOrderItemView?.ed_qty?.text.toString().toLong() <= 0){
                 holder.qty.visibility = View.GONE
                 holder.qty.text = "${Constant.ZERO} ${data.getString("unit")}"
-                orderRealm.deleteItem(data.getLong("product_id"))
+                orderItemRealm.deleteItem(data.getLong("product_id"))
             }else{
                 qty = qtyParse - 1
                 addItem(null, qty, true, holder)
@@ -137,7 +141,9 @@ class SalesFragment : BaseFragment(), LoadProductContract.View{
         builder.setNegativeButton(R.string.cancel){dialog, _ ->
             dialog.dismiss()
         }
+
         this.addOrSubtractOrderItemDialog = builder.create()
+
         if(holder.qty.visibility == View.VISIBLE){
             this.addOrSubtractOrderItemDialog?.show()
         }
@@ -216,6 +222,7 @@ class SalesFragment : BaseFragment(), LoadProductContract.View{
     }
 
 
+    @SuppressLint("SetTextI18n")
     private fun onOrderIntemCreated(item: OrderItem?, holder: SalesListAdapter.ViewHolder) {
         holder.qty.text = item?.qty.toString() + " " + item?.unit
         holder.qty.visibility = View.VISIBLE
@@ -236,7 +243,7 @@ class SalesFragment : BaseFragment(), LoadProductContract.View{
         }
         val subTotal = data.getDouble("sell_price") * (qty + 1)
         data["sub_total"] = subTotal
-        val item = orderRealm.addItem(data, updateQty)
+        val item = orderItemRealm.addItem(data, updateQty)
         onOrderIntemCreated(item, holder)
 
     }

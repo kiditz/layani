@@ -165,4 +165,12 @@ class Constant {
         }
     }
 
+    interface DiscountMethod{
+        companion object {
+            const val DISCOUNT_AMOUNT_TRANSACTION = 0
+            const val BY_N_GET_ONE = 1
+            const val DISCOUNT_AMOUNT_PRODUCT = 2
+        }
+    }
+
 }

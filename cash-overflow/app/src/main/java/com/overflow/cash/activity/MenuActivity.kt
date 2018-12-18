@@ -59,7 +59,7 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         StatusBarUtil.setColorForDrawerLayout(this, drawer_layout, ContextCompat.getColor(this, android.R.color.transparent))
         this.search = search_view
         setSupportActionBar(toolbar)
-        supportActionBar?.title = getString(R.string.dashboard)
+        supportActionBar?.title = getString(R.string.report_outlet)
         val toggle = ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
@@ -80,7 +80,7 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         if (intent.hasExtra(Constant.SUCCESS_MESSAGE)) {
             if (intent.hasExtra(Constant.GOTO)) {
-                this.onNavigationItemSelected(nav_view.menu.findItem(intent.getIntExtra(Constant.GOTO, R.id.nav_dashboard)))
+                this.onNavigationItemSelected(nav_view.menu.findItem(intent.getIntExtra(Constant.GOTO, R.id.nav_report)))
             }
             tv_success_message?.visibility = View.VISIBLE
             tv_success_message?.text = intent.getStringExtra(Constant.SUCCESS_MESSAGE)
@@ -91,7 +91,7 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             this.intent.removeExtra(Constant.SUCCESS_MESSAGE)
         } else {
-            onNavigationItemSelected(nav_view.menu.findItem(R.id.nav_dashboard))
+            onNavigationItemSelected(nav_view.menu.findItem(R.id.nav_new_transaction))
         }
     }
 
@@ -119,14 +119,14 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         supportActionBar?.title = item.title
         nav_view.setCheckedItem(item.itemId)
         when (item.itemId) {
-            R.id.nav_dashboard -> {
+            R.id.nav_report -> {
                 replaceContent(DashboardFragment())
             }
             R.id.nav_product -> {
                 val productListFragment = ProductListFragment()
                 replaceContent(productListFragment)
             }
-            R.id.nav_transaction -> {
+            R.id.nav_new_transaction -> {
                 //val salesListFragment = SalesListFragment()
                 replaceContent(SalesMainFragment())
 
@@ -134,10 +134,7 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_customer -> {
                 replaceContent(CustomerFragment())
             }
-            R.id.nav_accounts_receiveable -> {
-                val accountReceiveableFragment = AccountReceiveableFragment()
-                replaceContent(accountReceiveableFragment)
-            }
+
             R.id.nav_settings -> {
                 replaceContent(SettingFragment())
             }

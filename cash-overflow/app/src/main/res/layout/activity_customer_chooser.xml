@@ -22,8 +22,8 @@
             android:layout_weight="1"
             android:background="@drawable/bg_edit_text"
 
-            android:drawableLeft="@drawable/ic_customer"
-            android:drawableStart="@drawable/ic_customer"
+            android:drawableLeft="@drawable/ic_user_o"
+            android:drawableStart="@drawable/ic_user_o"
 
             android:drawableTint="@color/colorAccent"
             android:hint="@string/customer_name"

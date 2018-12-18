@@ -29,14 +29,13 @@ abstract class ActivityBuilder {
     @ContributesAndroidInjector
     internal abstract fun bindAddProductActivity(): SaveProductActivity
 
-    @ContributesAndroidInjector
-    internal abstract fun bindAccountReceiveablePaymentActivity(): PaymentAccountReceiveableActivity
+
 
     @ContributesAndroidInjector
-    internal abstract fun bindPaymentTransactionivityPaymentTransaction(): PaymentTransactionActivity
+    internal abstract fun bindPaymentTransactionivityPaymentTransaction(): PaymentOtherActivity
 
     @ContributesAndroidInjector
-    internal abstract fun bindPreviewSalesActivity(): PreviewSalesActivity
+    internal abstract fun bindPreviewSalesActivity(): SalesOrderPreviewActivity
 
     @ContributesAndroidInjector
     internal abstract fun bindProductDetailActivity(): ProductDetailActivity
@@ -54,10 +53,10 @@ abstract class ActivityBuilder {
     internal abstract fun bindCategoryListActivity(): CategoryListActivity
 
     @ContributesAndroidInjector
-    internal abstract fun bindReceiptAccountReceiveableActivity(): ReceiptTransactionWithRefundActivity
+    internal abstract fun bindTransactionHistoryDetail(): TransactionHistoryDetailActivity
 
     @ContributesAndroidInjector
-    internal abstract fun bindAccountReceiveableDetailActivity(): AccountReceiveableDetailActivity
+    internal abstract fun bindViewSavedOrderActivity(): ViewSavedOrderActivity
 
     //Fragment
     @ContributesAndroidInjector
@@ -82,9 +81,6 @@ abstract class ActivityBuilder {
     internal abstract fun bindCustomerFragment(): CustomerFragment
 
     @ContributesAndroidInjector
-    internal abstract fun bindAccountReceiveableFragment(): AccountReceiveableFragment
-
-    @ContributesAndroidInjector
     internal abstract fun bindOrderChartFragment(): OrderChartFragment
 
     @ContributesAndroidInjector
@@ -106,16 +102,13 @@ abstract class ActivityBuilder {
     internal abstract fun bindFragmentSetting(): SettingFragment
 
     @ContributesAndroidInjector
-    internal abstract fun bindAccountReceiveableChartInAgeFragment(): AccountReceiveableChartInAgeFragment
-
-    @ContributesAndroidInjector
-    internal abstract fun bindAccountReceiveableChartOutOfAgeFragment(): AccountReceiveableChartOutOfAgeFragment
-
-    @ContributesAndroidInjector
     internal abstract fun bindTransactionHistoryFragment(): TransactionHistoryFragment
 
     @ContributesAndroidInjector
     internal abstract fun bindReceiptFragment(): ReceiptFragment
+
+    @ContributesAndroidInjector
+    internal abstract fun bindOrderItemFragment(): OrderItemsFragment
 
 
 

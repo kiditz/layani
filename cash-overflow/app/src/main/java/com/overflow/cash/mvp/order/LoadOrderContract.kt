@@ -10,6 +10,6 @@ class LoadOrderContract {
     }
 
     interface Presenter : BasePresenter<View> {
-        fun loadOrder(page: Int, query: String)
+        fun loadOrder(page: Int, query: String, status: String, exclude:Boolean=true)
     }
 }

@@ -9,6 +9,7 @@ import com.overflow.cash.net.RxUtils
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
 import io.reactivex.disposables.CompositeDisposable
+import timber.log.Timber
 
 class LoadOrderPresenter(private val context:Context, private val preferences: SharedPreferences, private val translations: Translations, private val orderService: OrderService, private val disposable: CompositeDisposable) :LoadOrderContract.Presenter{
 
@@ -21,7 +22,6 @@ class LoadOrderPresenter(private val context:Context, private val preferences: S
     }
     override fun attach(view: LoadOrderContract.View) {
         this.view = view
-        loadOrder(API.MIN_PAGE, Constant.TEXT_EMPTY)
     }
 
     override fun detach() {
@@ -31,12 +31,17 @@ class LoadOrderPresenter(private val context:Context, private val preferences: S
     fun getSize():Int= preferences.getInt(Constant.MAX_PAGE, API.SIZE)
 
 
-    override fun loadOrder(page:Int, query:String) {
+    override fun loadOrder(page:Int, query:String,  status: String, exclude:Boolean) {
         val input = Data()
+        if(status.isNotBlank() && status != Constant.TEXT_EMPTY){
+            input["status"] = status
+        }
+        input["exclude"]=exclude
         input["page"] = page
         input["size"] = getSize()
         input["outlet_id"] = outlet.getLong("id")
         input["query"] = query
+        Timber.i("Input Load Order : %s", input)
         if(API.isConnected(context)){
             lastPage = false
             loading = true

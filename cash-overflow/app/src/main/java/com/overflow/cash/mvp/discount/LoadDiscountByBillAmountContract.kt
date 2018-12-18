@@ -11,6 +11,6 @@ class LoadDiscountByBillAmountContract {
     }
 
     interface Presenter : BasePresenter<View> {
-        fun loadDiscountByBillAmount(billAmount:Double=0.0)
+        fun loadDiscount(billAmount:Double=0.0)
     }
 }

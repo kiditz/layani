@@ -8,28 +8,27 @@ import android.view.View
 import android.view.ViewGroup
 import com.overflow.cash.R
 import com.overflow.cash.activity.Constant
-import com.overflow.cash.activity.PaymentTransactionActivity
+import com.overflow.cash.activity.PaymentOtherActivity
 import com.overflow.cash.activity.ReceiptActivity
 import com.overflow.cash.mvp.discount.LoadDiscountByBillAmountContract
 import com.overflow.cash.mvp.discount.LoadDiscountByBillAmountPresenter
 import com.overflow.cash.mvp.order.SaveOrderContract
 import com.overflow.cash.mvp.order.SaverOrderPresenter
 import com.overflow.cash.net.NetworkExHandler
-import com.overflow.cash.realm.OrderRealm
+import com.overflow.cash.realm.OrderItemRealm
 import com.overflow.cash.utils.moveTo
 import com.overflow.cash.utils.parseRupiah
 import com.overflow.cash.utils.round
 import com.overflow.cash.utils.rupiah
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
-import kotlinx.android.synthetic.main.dialog_pay.*
 import kotlinx.android.synthetic.main.fragment_payment.*
 import javax.inject.Inject
+
 /**
  * @author Riflu Aditya Bastara
  * */
 class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View, LoadDiscountByBillAmountContract.View {
-
 
     @Inject
     lateinit var translations: Translations
@@ -40,10 +39,12 @@ class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View, LoadD
     @Inject
     lateinit var loadDiscountPresenter: LoadDiscountByBillAmountPresenter
     @Inject
-    lateinit var orderRealm: OrderRealm
-    var discountId:Long=0
-    var discountAmount:Double=0.0
-    var paymentMethod = Constant.PaymentMethod.CASH
+    lateinit var orderItemRealm: OrderItemRealm
+    private var discountId:Long=0
+    private var discountAmount:Double=0.0
+    private var discountType:String=Constant.TEXT_EMPTY
+    private var paymentMethod = Constant.PaymentMethod.CASH
+    var totalAmount = 0.0
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_payment, container, false)
     }
@@ -56,8 +57,9 @@ class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View, LoadD
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val totalAmount = arguments!!.getDouble("amount", 0.0)
-        this.loadDiscountPresenter.loadDiscountByBillAmount(totalAmount)
+        totalAmount = arguments!!.getDouble("amount", 0.0)
+
+        this.loadDiscountPresenter.loadDiscount(totalAmount)
         tv_bill_amount.text = rupiah(totalAmount)
 
         btn_suggestion_round_3.text = if(totalAmount > 100.0){
@@ -91,31 +93,32 @@ class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View, LoadD
 
         btn_other.setOnClickListener {
             arguments!!.putString("payment_method", paymentMethod)
-            context!!.moveTo(PaymentTransactionActivity::class.java, arguments!!)
+            if(discountAmount > 0){
+                arguments!!.putLong("discount_id", discountId)
+                arguments!!.putDouble("amount", parseRupiah(tv_total_amount.text))
+            }
+            context!!.moveTo(PaymentOtherActivity::class.java, arguments!!)
         }
 
         btn_the_right_money.setOnClickListener {
-            showProgress()
             val cashBack = 0.0
             showDialogPayment(totalAmount, cashBack)
         }
 
+
         btn_suggestion_round_3.setOnClickListener {
-            showProgress()
             val totalPayment = parseRupiah(btn_suggestion_round_3.text)
             val cashBack = totalPayment - totalAmount
             showDialogPayment(totalPayment, cashBack)
         }
 
         btn_suggestion_round_4.setOnClickListener {
-            showProgress()
             val totalPayment = parseRupiah(btn_suggestion_round_4.text)
             val cashBack = totalPayment - totalAmount
             showDialogPayment(totalPayment, cashBack)
         }
 
         btn_suggestion_round_5.setOnClickListener {
-            showProgress()
             val totalPayment = parseRupiah(btn_suggestion_round_5.text)
             val cashBack = totalPayment - totalAmount
             showDialogPayment(totalPayment, cashBack)
@@ -145,9 +148,6 @@ class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View, LoadD
      * Show dialog preview before paid transaction
      * */
     private fun showDialogPayment(totalPayment:Double, cashBack:Double){
-        if(discountAmount != 0.0){
-
-        }
         val payFragment = DialogPaymentMakeSure.newInstance(totalPayment, cashBack, getString(R.string.are_you_sure_transaction))
         payFragment.onDoneClick = {
             doOrder(totalPayment)
@@ -172,42 +172,61 @@ class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View, LoadD
                 order["customer_id"] = null
             }
 
+            if(this.containsKey("order_id")){
+                order["order_id"] = this.getLong("order_id")
+            }
+
             order["total_amount"] = totalAmount
             order["total_payment"] = totalPayment
             if(discountAmount > .0){
                 order["discount_id"] = discountId
             }
             order["payment_method"] = paymentMethod
-            val itemsStr = this.getString("items")
-            val itemData = Data(itemsStr)
-            val orderItems = itemData.getList("items")
-            order["items"] = orderItems
+            if(this.containsKey("items")){
+                val itemsStr = this.getString("items")
+                val itemData = Data(itemsStr)
+                val orderItems = itemData.getList("items")
+                order["items"] = orderItems
+            }
             saveOrderPresenter.saveOrder(order)
         }
     }
 
     // Called when discount loaded
     override fun onDiscountLoaded(data: Data) {
-        this.discountId = data.getLong("discount_id")
+
+        this.l_discount_calculation.visibility = View.VISIBLE
+        this.discountId = data.getLong("id")
         this.discountAmount = data.getDouble("amount")
-        this.tv_discount.text = rupiah(discountAmount)
-        this.tv_total_payment.text = rupiah(parseRupiah(tv_bill_amount.text) - discountAmount)
+        this.discountType = data.getString("discount_type")
+        if(discountType == Constant.DiscountType.FIXED_PRICE){
+            this.tv_discount.text = rupiah(discountAmount)
+            this.totalAmount = parseRupiah(tv_bill_amount.text) - discountAmount
+            this.tv_total_amount.text = rupiah(totalAmount)
+        }else{
+            val calculateDiscount = (discountAmount / 100) * parseRupiah(tv_bill_amount.text)
+            this.totalAmount = parseRupiah(tv_bill_amount.text) - calculateDiscount
+            this.tv_discount.text = "${discountAmount.toInt()}%"
+            this.tv_total_amount.text = rupiah(totalAmount)
+        }
     }
 
     override fun onDiscountNotLoaded(data: Data) {
-        this.tv_discount.text = rupiah(discountAmount)
-        this.tv_total_payment.text = rupiah(parseRupiah(tv_bill_amount.text) - discountAmount)
+        this.tv_discount.text = "N/A"
+        this.l_discount_calculation.visibility = View.GONE
+        this.tv_total_amount.text = rupiah(parseRupiah(tv_bill_amount.text) - discountAmount)
+
     }
 
     // Called when order has been created
     override fun onOrderCreated(data: Data) {
         hideProgress()
-        orderRealm.deleteItems()
+        orderItemRealm.deleteItems()
         val bundle = Bundle()
         bundle.putString(Constant.ARG_SALES, data.toString())
         val message = translations.get(Constant.TranslationsKey.SALES_CREATED_SUCCESSFULY).replace("{0}", data.getString("order_code"))
         bundle.putString(Constant.SUCCESS_MESSAGE, message)
-        bundle.putInt(Constant.GOTO, R.id.nav_transaction)
+        bundle.putInt(Constant.GOTO, R.id.nav_new_transaction)
         context?.moveTo(ReceiptActivity::class.java, bundle)
     }
 

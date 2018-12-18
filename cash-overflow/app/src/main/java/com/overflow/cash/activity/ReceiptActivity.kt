@@ -29,14 +29,18 @@ class ReceiptActivity : AppCompatActivity(), HasSupportFragmentInjector {
         shouldRequestPermissions(Constant.REQUEST_PERMISSION_CODE)
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_receipt)
+        setContentView(R.layout.container_activity)
         receiptFragment = ReceiptFragment.newInstance(intent.getStringExtra(Constant.ARG_SALES))
-        replaceContent(R.id.receipt, receiptFragment)
+        replaceContent(R.id.container, receiptFragment)
     }
 
 
 
     override fun onBackPressed() {
+        if(intent.getBooleanExtra("just_back", false)){
+            super.onBackPressed()
+            return
+        }
         moveTo(MenuActivity::class.java, intent.extras)
     }
 
