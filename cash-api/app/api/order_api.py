@@ -89,3 +89,10 @@ def get_order_items():
 def get_order_list():
     domain = request.args.to_dict()
     return order_service.get_order_list(domain)
+
+
+@api.route('/delete_order_by_id', methods=['GET'])
+def delete_order_by_id():
+
+    domain = request.get_json()
+    return order_service.delete_order_by_id(domain)

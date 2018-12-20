@@ -257,3 +257,19 @@ class OrderService(object):
 		order_q = order_q.order_by(Order.order_at.desc()).paginate(page, size, error_out=False)
 		order_list = list(map(lambda x: x._asdict(), order_q.items))
 		return {'payload': order_list, 'total': order_q.total, 'total_pages': order_q.pages}
+	
+	@Key(['id'])
+	def delete_order_by_id(self, domain):
+		order_item = OrderItem.query.filter_by(order_id=domain['id']).first()
+		order_item.delete()
+		order = Order.query.filter_by(id=domain['id']).first()
+		order.delete()
+		return {'payload': {'success': 'Y'}}
+	
+	@Key(['id'])
+	def count_saved_order_by_id(self, domain):
+		count_order = Order.query\
+			.with_entities(func.count(Order.id).label('count_saved_order'))\
+			.filter(and_(Order.id == domain['id'], Order.status == OrderStatus.CREATED))\
+			.scalar()
+		return {'payload': count_order._asdict()}
