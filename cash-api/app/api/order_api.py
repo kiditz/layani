@@ -91,8 +91,12 @@ def get_order_list():
     return order_service.get_order_list(domain)
 
 
-@api.route('/delete_order_by_id', methods=['GET'])
+@api.route('/delete_by_id', methods=['DELETE'])
 def delete_order_by_id():
-
-    domain = request.get_json()
+    domain = request.args.to_dict()
     return order_service.delete_order_by_id(domain)
+
+@api.route('/count_saved_by_id', methods=['GET'])
+def count_saved_order_by_id():
+    domain = request.args.to_dict()
+    return order_service.count_saved_order_by_id(domain)

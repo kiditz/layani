@@ -261,15 +261,20 @@ class OrderService(object):
 	@Key(['id'])
 	def delete_order_by_id(self, domain):
 		order_item = OrderItem.query.filter_by(order_id=domain['id']).first()
+		if order_item is None:
+			raise ValidationException(ErrorCode.ORDER_ITEM_NOT_FOUND)
 		order_item.delete()
 		order = Order.query.filter_by(id=domain['id']).first()
+		order_item = OrderItem.query.filter_by(order_id=domain['id']).first()
+		if order_item is None:
+			raise ValidationException(ErrorCode.ORDER_NOT_FOUND)
 		order.delete()
 		return {'payload': {'success': 'Y'}}
 	
-	@Key(['id'])
+	@Key(['outlet_id'])
 	def count_saved_order_by_id(self, domain):
-		count_order = Order.query\
+		count_order_saved = Order.query\
 			.with_entities(func.count(Order.id).label('count_saved_order'))\
-			.filter(and_(Order.id == domain['id'], Order.status == OrderStatus.CREATED))\
+			.filter(and_(Order.outlet_id == domain['outlet_id'], Order.status == OrderStatus.CREATED))\
 			.scalar()
-		return {'payload': count_order._asdict()}
+		return {'payload': {'count': count_order_saved}}

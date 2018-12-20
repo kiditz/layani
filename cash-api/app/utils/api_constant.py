@@ -68,6 +68,7 @@ class ErrorCode(object):
 	DISCOUNT_NOT_FOUND = 'discount.not.found'
 	DISCOUNT_NOT_FOR_TODAY = 'discount.not.for.today'
 	ORDER_NOT_FOUND = 'order.not.found'
+	ORDER_ITEM_NOT_FOUND = 'order.item.not.found'
 	INVALID_PHONE_NUMBER = 'invalid.phone.number'
 	INVALID_EMAIL_ADDRESS = 'invalid.email.address'
 	INVALID_TOTAL_AMOUNT = 'invalid.total.amount'
