@@ -259,15 +259,17 @@ class OrderService(object):
 		return {'payload': order_list, 'total': order_q.total, 'total_pages': order_q.pages}
 	
 	@Key(['id'])
-	def delete_order_by_id(self, domain):
+	def delete_order_by_id(self, domain):		
 		order_item = OrderItem.query.filter_by(order_id=domain['id']).first()
 		if order_item is None:
-			raise ValidationException(ErrorCode.ORDER_ITEM_NOT_FOUND)
+			raise ValidationException(ErrorCode.ORDER_ITEM_NOT_FOUND)				
+		order = Order.query.filter_by(id=domain['id']).first()				
+		if order is None:
+			raise ValidationException(ErrorCode.ORDER_NOT_FOUND)		
+		if order.status != OrderStatus.CREATED:
+			raise ValidationException(ErrorCode.ORDER_CANNOT_BE_DELETED)
+
 		order_item.delete()
-		order = Order.query.filter_by(id=domain['id']).first()
-		order_item = OrderItem.query.filter_by(order_id=domain['id']).first()
-		if order_item is None:
-			raise ValidationException(ErrorCode.ORDER_NOT_FOUND)
 		order.delete()
 		return {'payload': {'success': 'Y'}}
 	
