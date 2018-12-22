@@ -1,4 +1,5 @@
 from flask import Blueprint, request
+from slerp.app import cache
 from slerp.logger import logging
 
 from service.cashbox_service import CashboxService
@@ -10,8 +11,9 @@ api = cashbox_api_blue_print
 cashbox_service = CashboxService()
 
 
-@api.route('/list', methods=['GET'])
-def get_cashbox_by_outlet_id():
+@api.route('/summary/list', methods=['GET'])
+@cache.cached(timeout=30, query_string=True)
+def get_cashbox_summary():
 
     """
     {
@@ -21,7 +23,22 @@ def get_cashbox_by_outlet_id():
     }
     """
     domain = request.args.to_dict()
-    return cashbox_service.get_cashbox_by_outlet_id(domain)
+    return cashbox_service.get_cashbox_summary(domain)
+
+
+@api.route('/history/list', methods=['GET'])
+@cache.cached(timeout=30, query_string=True)
+def get_cashbox_history():
+
+    """
+    {
+        "page": "Long",
+        "size": "Long",
+        "cash_box_summary_id": "Long"
+    }
+    """
+    domain = request.args.to_dict()
+    return cashbox_service.get_cashbox_history(domain)
 
 
 @api.route('/edit', methods=['PUT'])

@@ -51,4 +51,17 @@ class CashboxService(object):
 			.paginate(page, size, error_out=False)
 		cashbox_history_list = list(map(lambda x: x._asdict(), cashbox_history_q.items))
 		return {'payload': cashbox_history_list, 'total': cashbox_history_q.total, 'total_pages': cashbox_history_q.pages}
+	
+	@Number(['outlet_id', 'page', 'size', 'date'])
+	def get_cashbox_summary(self, domain):
+		page = int(domain['page'])
+		size = int(domain['size'])
+		outlet_id = domain['outlet_id']
+		cashbox_summary_q = CashboxSummary.query\
+			.filter(CashboxSummary.outlet_id == outlet_id)\
+			.order_by(CashboxSummary.id.desc())\
+			.paginate(page, size, error_out=False)
+		cashbox_summary_list = list(map(lambda x: x._asdict(), cashbox_summary_q.items))
+		return {'payload': cashbox_summary_list, 'total': cashbox_summary_q.total, 'total_pages': cashbox_summary_q.pages}
+	
 

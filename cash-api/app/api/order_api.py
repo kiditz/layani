@@ -1,6 +1,7 @@
 from flask import Blueprint, request
-from slerp.logger import logging
 from slerp.app import cache
+from slerp.logger import logging
+
 from service.order_service import OrderService
 
 log = logging.getLogger(__name__)
