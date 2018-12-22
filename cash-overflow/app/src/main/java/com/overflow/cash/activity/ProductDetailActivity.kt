@@ -71,7 +71,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         tvProductCode.text = it.getString("product_code")
         tv_product_name.text = it.getString("product_name")
         tv_sell_price.text = rupiah(it.getDouble("sell_price"))
-        tvPurcPrice.text = rupiah(it.getDouble("purchase_price"))
+        tv_purchase_price.text = rupiah(it.getDouble("purchase_price"))
         if (it.getBoolean("use_stock")) {
             tvRemainingStock?.text = "${it.getLong("stock").toInt()} ${getString(R.string.pcs)}"
             layoutStock?.visibility = View.VISIBLE
@@ -128,7 +128,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
                 R.id.stockOut -> -1L
                 else -> 1L
             }
-            this.stockView?.purchasePriceWrapper?.visibility = when (id) {
+            this.stockView?.purchase_price_wrapper?.visibility = when (id) {
                 R.id.stockOut -> {
                     val params = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT)
                     params.weight = 1f
@@ -139,7 +139,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
                     val params = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT)
                     params.weight = .5f
                     this.stockView?.quantity_wrapper?.layoutParams = params
-                    this.stockView?.purchasePriceWrapper?.layoutParams = params
+                    this.stockView?.purchase_price_wrapper?.layoutParams = params
                     View.VISIBLE
                 }
             }
@@ -163,36 +163,8 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         }
     }
 
-    private fun showAddDiscountDialog() {
-        this.discountView = LayoutInflater.from(this).inflate(R.layout.dialog_add_discount, null, false)
-        this.discountView!!.rg_discount.setOnCheckedChangeListener { group, checkedId ->
-            if(checkedId == R.id.rd_percentage){
-                this.discountType = Constant.DiscountType.PERCENTAGE
-            }else{
-                this.discountType = Constant.DiscountType.FIXED_PRICE
-            }
-        }
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(R.string.discount)
-        builder.setView(this.discountView)
-
-        this.discountDialog = builder.create()
-        this.discountView?.btn_submit_discount?.setOnClickListener {
-            handleAddDiscount()
-        }
-        this.discountDialog?.show()
-    }
-
-    private fun validateDiscount() {
-        val validateDiscountPercent = this.validateGreaterThan(this.discountView?.ed_discount_amount!!, this.discountView?.discount_amount_wrapper!!, 0, translations.get(Constant.TranslationsKey.DISCOUNT_MUST_GREATER_THAN_ZERO), skipCount = 0)
-        val validateDiscountWhen = this.validateGreaterThan(this.discountView?.ed_discount_when!!, this.discountView?.discount_when_wrapper!!, 0, translations.get(Constant.TranslationsKey.DISCOUNT_WHEN_MUST_GREATER_THAN_ZERO), skipCount = 0)
-        Observable.combineLatest(validateDiscountPercent, validateDiscountWhen, BiFunction { discountAmount: Boolean, discountWhen: Boolean -> discountAmount && discountWhen }).subscribe({
-            this.discountView?.btn_submit_discount?.isEnabled = it
-        }, {})
-    }
-
     private fun validateStock() {
-        val validatePurchasePrice = this.validateGreaterThan(this.stockView?.edPurchasePrice!!, this.stockView?.purchasePriceWrapper!!, 0, translations.get(Constant.TranslationsKey.INIT_PRICE_MUST_GREATER_THAN_ZERO), skipCount = 0L)
+        val validatePurchasePrice = this.validateGreaterThan(this.stockView?.ed_purchase_price!!, this.stockView?.purchase_price_wrapper!!, 0, translations.get(Constant.TranslationsKey.INIT_PRICE_MUST_GREATER_THAN_ZERO), skipCount = 0L)
         val validateQuantity = this.validateGreaterThan(this.stockView?.ed_quantity!!, this.stockView?.quantity_wrapper!!, 0, translations.get(Constant.TranslationsKey.STOCK_PRICE_MUST_GREATER_THAN_ZERO), skipCount = 0L)
         Observable.combineLatest(validatePurchasePrice, validateQuantity, BiFunction { initPrice: Boolean, qty: Boolean -> initPrice && qty }).subscribe({
             this.stockView?.btn_submit?.isEnabled = it
@@ -205,7 +177,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         val data = Data()
         data["product_id"] = intent.extras.getLong("product_id")
         if (stockMultiplier > 0) {
-            data["purchase_price"] = this.stockView?.edPurchasePrice?.text.toString().toDouble()
+            data["purchase_price"] = this.stockView?.ed_purchase_price?.text.toString().toDouble()
         }
         data["quantity"] = this.stockView?.ed_quantity?.text.toString().toLong() * stockMultiplier
         data["start_date"] = this.stockView?.edDateStockIn?.text.toString().trim()
@@ -243,7 +215,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         dismiss()
         this.tvRemainingStock?.text = data.getLong("quantity").toString()
         if (data.containsKey("purchase_price")) {
-            this.tvPurcPrice?.text = rupiah(data.getDouble("purchase_price"))
+            this.tv_purchase_price?.text = rupiah(data.getDouble("purchase_price"))
         }
         stockDialog?.let {
             it.dismiss()

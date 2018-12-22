@@ -43,35 +43,35 @@ def refund_order():
 
 
 @api.route('/chart', methods=['GET'])
-@cache.cached(timeout=10, query_string=True)
+@cache.cached(timeout=30, query_string=True)
 def get_order_data():
     domain = request.args.to_dict()
     return order_service.get_order_chart_data(domain)
 
 
 @api.route('/profit_chart', methods=['GET'])
-@cache.cached(timeout=10, query_string=True)
+@cache.cached(timeout=30, query_string=True)
 def get_profit_data():
     domain = request.args.to_dict()
     return order_service.get_profit_chart_data(domain)
 
 
 @api.route('/income_chart', methods=['GET'])
-@cache.cached(timeout=10, query_string=True)
+@cache.cached(timeout=30, query_string=True)
 def get_income_data():
     domain = request.args.to_dict()
     return order_service.get_income_chart_data(domain)
 
 
 @api.route('/dashboard_header', methods=['GET'])
-@cache.cached(timeout=10, query_string=True)
+@cache.cached(timeout=30, query_string=True)
 def get_dashboard():
     domain = request.args.to_dict()
     return order_service.get_dashboard_header(domain)
 
 
 @api.route('/top_product', methods=['GET'])
-@cache.cached(timeout=10, query_string=True)
+@cache.cached(timeout=30, query_string=True)
 def get_top_product():
     domain = request.args.to_dict()
     return order_service.get_top_product(domain)
@@ -85,7 +85,7 @@ def get_order_items():
 
 
 @api.route('/list', methods=['GET'])
-@cache.cached(timeout=10, query_string=True)
+@cache.cached(timeout=30, query_string=True)
 def get_order_list():
     domain = request.args.to_dict()
     return order_service.get_order_list(domain)
@@ -100,3 +100,9 @@ def delete_order_by_id():
 def count_saved_order_by_id():
     domain = request.args.to_dict()
     return order_service.count_saved_order_by_id(domain)
+
+@api.route('/summary', methods=['GET'])
+@cache.cached(timeout=30, query_string=True)
+def get_order_amount_summary():
+    domain = request.args.to_dict()
+    return order_service.get_order_amount_summary(domain)

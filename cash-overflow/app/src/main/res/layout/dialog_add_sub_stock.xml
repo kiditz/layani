@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="20dp"
-    tools:context=".AddPriceActivity">
+    android:padding="20dp">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -40,7 +39,7 @@
             android:tint="@color/colorAccent" />
     </LinearLayout>
     <LinearLayout
-        android:id="@+id/qtyPriceLayout"
+        android:id="@+id/qty_price_layout"
         android:layout_marginTop="20dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -59,12 +58,12 @@
                 android:maxLines="1" />
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/purchasePriceWrapper"
+            android:id="@+id/purchase_price_wrapper"
             android:layout_width="0dp"
             android:layout_weight=".5"
             android:layout_height="wrap_content">
             <EditText
-                android:id="@+id/edPurchasePrice"
+                android:id="@+id/ed_purchase_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/init_price"

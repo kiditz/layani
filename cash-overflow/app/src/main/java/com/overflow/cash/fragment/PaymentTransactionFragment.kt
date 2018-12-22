@@ -162,7 +162,7 @@ class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View, LoadD
             if(this.containsKey("order_id")){
                 order["order_id"] = this.getLong("order_id")
             }
-            order["description"] = this.getString("description")
+            order["description"] = this.getString("description", " ")
             order["total_amount"] = totalAmount
             order["total_payment"] = totalPayment
             if(discountAmount > .0){

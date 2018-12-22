@@ -135,8 +135,6 @@ class SalesListFragment : BaseFragment(), LoadCategoryContract.View, LoadCountSa
     }
     override fun onCategoryLoaded(categoryList: List<Data>) {
         adapter.clear()
-
-        //Sometimes not cause sales fragment not attached into the context working after reload token
         try {
             var salesFragment = SalesFragment.newInstance(-1)
             hideMessage()

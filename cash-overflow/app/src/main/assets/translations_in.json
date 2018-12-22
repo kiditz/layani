@@ -68,6 +68,7 @@
   //Payment Method
   "cash": "TUNAI",
   "credit": "HUTANG",
+  "card": "KARTU",
   //Status
   "P": "BELUM LUNAS",
   "S": "SUKSES",

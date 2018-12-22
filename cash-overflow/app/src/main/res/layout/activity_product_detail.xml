@@ -100,7 +100,7 @@
                         android:textColor="@color/colorPrimary" />
 
                     <TextView
-                        android:id="@+id/tvPurcPrice"
+                        android:id="@+id/tv_purchase_price"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight=".5"

@@ -225,8 +225,7 @@ class Discount(db.Model, Entity):
 class Order(db.Model, Entity):
 	__tablename__ = 'co_order'
 	id = db.Column(db.BigInteger, primary_key=True)	
-	customer_id = db.Column(db.ForeignKey(u'co_customer.id'))
-	cash_box_id = db.Column(db.ForeignKey(u'co_cash_box.id'))
+	customer_id = db.Column(db.ForeignKey(u'co_customer.id'))	
 	discount_id = db.Column(db.ForeignKey(u'co_discount.id'))	
 	description = db.Column(db.Text, nullable=False, server_default=' ', default=' ')
 	outlet_id = db.Column(db.ForeignKey(u'co_outlet.id'), nullable=False)
@@ -290,52 +289,48 @@ class Customer(db.Model, Entity):
 		Entity.__init__(self, obj)
 
 
-class Cashbox(db.Model, Entity):
-	__tablename__ = 'co_cash_box'
-	id = db.Column(db.BigInteger, primary_key=True)				
-	name = db.Column(db.Text, nullable=False, server_default='-', default='-', index=True)	
-	total_amount = db.Column(db.Numeric, nullable=False, server_default='0', default=0)
+# class Cashbox(db.Model, Entity):
+# 	__tablename__ = 'co_cash_box'
+# 	id = db.Column(db.BigInteger, primary_key=True)				
+# 	name = db.Column(db.Text, nullable=False, server_default='-', default='-', index=True)	
+# 	total_amount = db.Column(db.Numeric, nullable=False, server_default='0', default=0)
+# 	outlet_id = db.Column(db.ForeignKey(u'co_outlet.id'), nullable=False)
+# 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
+# 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
+	
+# 	def __init__(self, obj=None):
+# 		Entity.__init__(self, obj)
+
+class CashboxSummary(db.Model, Entity):
+	__tablename__ = 'co_cash_box_summary'
+	id = db.Column(db.BigInteger, primary_key=True)	
+	start_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
+	end_at = db.Column(db.DateTime(timezone=False))
+	status = db.Column(db.String(1), nullable=False, server_default='O', default='O')
+	pending = db.Column(db.BigInteger, nullable=False, server_default='0', default=0)
+	cash = db.Column(db.Numeric, nullable=False, server_default='0', default=0)
+	card = db.Column(db.Numeric, nullable=False, server_default='0', default=0)
+	transaction = db.Column(db.Numeric, nullable=False, server_default='0', default=0)
+	cash_bank_in = db.Column(db.Numeric, nullable=False, server_default='0', default=0)
+	cash_bank_out = db.Column(db.Numeric, nullable=False, server_default='0', default=0)
+	difference = db.Column(db.Numeric, nullable=False, server_default='0', default=0)	
+	user_id = db.Column(db.ForeignKey(u'co_user.id'), index=True)	
 	outlet_id = db.Column(db.ForeignKey(u'co_outlet.id'), nullable=False)
-	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
-	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
 	
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)
-
-
 
 class CashboxHistory(db.Model, Entity):
 	__tablename__ = 'co_cash_box_history'
 	id = db.Column(db.BigInteger, primary_key=True)
-	cash_box_id = db.Column(db.ForeignKey(u'co_cash_box.id'), nullable=False)
+	cash_box_summary_id = db.Column(db.ForeignKey(u'co_cash_box_summary.id'), nullable=False)
 	amount = db.Column(db.Numeric, nullable=False, server_default='0')		
 	remark = db.Column(db.Text, nullable=False, default='')
-	refid = db.Column(db.BigInteger, index=True, nullable=False, server_default='0', default='0')
+	ref_id = db.Column(db.BigInteger, index=True, nullable=False, server_default='0', default='0')
 	payment_method = db.Column(db.String(10), nullable=False, server_default='-', default='-')
 	transaction_date = db.Column(db.DateTime(timezone=False), default=datetime.now)	
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
-	
-	def __init__(self, obj=None):
-		Entity.__init__(self, obj)
-
-
-class CashboxSummary(db.Model, Entity):
-	__tablename__ = 'co_cash_box_summary'
-	id = db.Column(db.BigInteger, primary_key=True)
-	cash_box_id = db.Column(db.ForeignKey(u'co_cash_box.id'), nullable=False)
-	start_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
-	end_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
-	status = db.Column(db.String(1), nullable=False, server_default='O', default='O')
-	pending = db.Column(db.BigInteger, nullable=False, server_default='0', default='O')
-	cash = db.Column(db.Numeric, nullable=False, server_default='0', default='O')
-	card = db.Column(db.Numeric, nullable=False, server_default='0', default='O')
-	transaction = db.Column(db.Numeric, nullable=False, server_default='0', default='O')
-	cash_bank_in = db.Column(db.Numeric, nullable=False, server_default='0', default='O')
-	cash_bank_out = db.Column(db.Numeric, nullable=False, server_default='0', default='O')
-	difference = db.Column(db.Numeric, nullable=False, server_default='0', default='O')	
-	user_id = db.Column(db.ForeignKey(u'co_user.id'), index=True)	
-	outlet_id = db.Column(db.ForeignKey(u'co_outlet.id'), nullable=False)
 	
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)

@@ -1,14 +1,13 @@
-from decimal import Decimal
-from entity.models import OrderItem, StockHistory, Stock, Cashbox, \
-	AccountReceiveable, CashboxHistory, Customer, Product, Discount, ProductSellPrice, ProductPurchasePrice, \
-	CashboxSummary	
+from entity.models import OrderItem, StockHistory, Stock, AccountReceiveable, Customer, Product, \
+	Discount, ProductSellPrice, ProductPurchasePrice, \
+	CashboxSummary
 from slerp.logger import logging
 from slerp.validator import Number, Key, ValidationException
 from sqlalchemy import between
 from sqlalchemy.orm import aliased
 
 from utils import str2bool
-from utils.api_constant import StockRef, ErrorCode, CashboxType, CashDrawer
+from utils.api_constant import StockRef, ErrorCode
 from .chart_query import *
 
 log = logging.getLogger(__name__)
@@ -38,26 +37,18 @@ class OrderService(object):
 			order.total_amount = total_amount
 			if total_payment < total_amount:
 				raise ValidationException(ErrorCode.INVALID_TOTAL_AMOUNT)
-			cashbox = Cashbox.query.filter(and_(Cashbox.outlet_id == outlet_id, Cashbox.name == CashDrawer.CASH_DRAWER)).first()
 			order.status = OrderStatus.SUCCESS
-			order.cash_box_id = cashbox.id
-			cashbox.total_amount = cashbox.total_amount + Decimal(domain['total_amount'])
 			order.cashback = order.total_payment - order.total_amount
-			cashbox.outlet_id = domain['outlet_id']
-			cashbox.save()
 			# Cashbox History
-			cashbox_history = CashboxHistory()
-			cashbox_history.cash_box_id = cashbox.id
-			cashbox_history.amount = Decimal(domain['total_amount'])
-			cashbox_history.payment_method = CashboxType.DEBIT
-			cashbox_history.remark = 'order.cash #' + order.order_code
-			cashbox_history.save()
+			
 			datetime_now = datetime.now()
 			date_now = datetime_now.date()
+			log.info('Now Date %s', date_now)
 			check_first_transaction = Order.query.with_entities(func.count(Order.id)).filter(cast(Order.order_at, DATE) == date_now).scalar()
-			if check_first_transaction == 0:
+			log.info('Is first %s', check_first_transaction)
+			if check_first_transaction == 1:
 				cashbox_summary = CashboxSummary()
-				cashbox_summary.transaction = total_amount
+				cashbox_summary.transaction = 0
 				cashbox_summary.start_at = datetime_now
 				cashbox_summary.user_id = domain['user_id']
 				cashbox_summary.outlet_id = outlet_id
@@ -102,9 +93,6 @@ class OrderService(object):
 		if order.status != OrderStatus.SUCCESS:
 			raise ValidationException(ErrorCode.REFUND_FAILED)
 		order.status = OrderStatus.VOID
-		cashbox = Cashbox.query.filter(Cashbox.id == order.cash_box_id).first()
-		cashbox.total_amount = cashbox.total_amount - order.total_amount
-		cashbox.save()
 		if 'description' in domain:
 			order.description = domain['description']
 		order.save()
@@ -113,12 +101,6 @@ class OrderService(object):
 		order_cpy.id = None
 		order_cpy.total_amount = order.total_amount * -1
 		order_cpy.save()
-		cashbox_history = CashboxHistory()
-		cashbox_history.cash_box_id = cashbox.id
-		cashbox_history.amount = order.total_amount
-		cashbox_history.payment_method = CashboxType.CREDIT
-		cashbox_history.remark = 'order.refund #' + order.order_code
-		cashbox_history.save()
 		return {'payload': order.to_dict()}
 
 	@Number(['order_code'])
@@ -172,7 +154,6 @@ class OrderService(object):
 			Order.total_payment,
 			Order.order_code,
 			Order.status,
-			Order.cash_box_id,
 			Order.outlet_id,
 			Order.order_at,
 			Order.payment_method,
@@ -214,3 +195,24 @@ class OrderService(object):
 			.filter(and_(Order.outlet_id == domain['outlet_id'], Order.status == OrderStatus.CREATED))\
 			.scalar()
 		return {'payload': {'count': count_order_saved}}
+	
+	@Key(['outlet_id', 'date'])
+	def get_order_amount_summary(self, domain):
+		date_now = domain['date']
+		outlet_id = domain['outlet_id']
+		order_success_q = Order.query.with_entities(func.sum(Order.total_amount).label('order_summary'))\
+			.filter(and_(cast(Order.order_at, DATE) == date_now, Order.outlet_id == outlet_id, Order.status == OrderStatus.SUCCESS))\
+			.first()
+		order_void_q = Order.query.with_entities(func.sum(Order.total_amount).label('order_summary'))\
+			.filter(and_(cast(Order.order_at, DATE) == date_now, Order.outlet_id == outlet_id, Order.status == OrderStatus.VOID, Order.total_amount > 0.0))\
+			.first()
+
+		order_created_q = Order.query.with_entities(func.count(Order.id).label('order_summary'))\
+			.filter(and_(cast(Order.order_at, DATE) == date_now, Order.outlet_id == outlet_id, Order.status == OrderStatus.CREATED, Order.total_amount > 0.0))\
+			.first()			
+		order_dict = {
+			'success': order_success_q.order_summary,
+			'void': order_void_q.order_summary,
+			'pending': order_created_q.order_summary
+		}
+		return {'payload': order_dict}
