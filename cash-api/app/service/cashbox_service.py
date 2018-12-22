@@ -1,12 +1,13 @@
-from entity.models import Cashbox, CashboxHistory
-from utils.api_constant import CashDrawer, CashboxType
+from decimal import Decimal
+
+from entity.models import CashboxHistory, CashboxSummary
 from slerp.logger import logging
 from slerp.validator import Number, Blank
-
-from sqlalchemy import and_, cast, func, Interval
+from sqlalchemy import cast
 from sqlalchemy.dialects.mssql import DATE
 
-from decimal import Decimal
+from utils.api_constant import CashboxType
+
 log = logging.getLogger(__name__)
 
 
@@ -20,7 +21,9 @@ class CashboxService(object):
 		total_amount = Decimal(domain['total_amount'])
 		remark = domain['remark']
 		outlet_id = domain['outlet_id']
-		cashbox = Cashbox.query.filter_by(outlet_id=outlet_id).filter_by(name=CashDrawer.CASH_DRAWER).first()
+		cashbox = CashboxSummary.query\
+			.filter(CashboxSummary.outlet_id == outlet_id)\
+			.filter(cast(CashboxSummary.start_at, DATE) == '').first()
 		cashbox.total_amount = total_amount		
 		cashbox_history = CashboxHistory()
 		cashbox_history.cash_box_id = cashbox.id
@@ -31,7 +34,7 @@ class CashboxService(object):
 		else:
 			cashbox_history.payment_method = CashboxType.CREDIT
 			cashbox_history.refid = 2
-		cashbox_history.remark = domain['remark']
+		cashbox_history.remark = remark
 		cashbox.save()
 		cashbox_history.save()
 

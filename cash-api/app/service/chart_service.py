@@ -1,7 +1,9 @@
-from .chart_query import *
-from slerp.validator import Blank, Number
+from entity.models import AccountReceiveable, OrderItem, Product
 from slerp.logger import logging
-from entity.models import Cashbox, AccountReceiveable, OrderItem, Product
+from slerp.validator import Blank, Number
+
+from .chart_query import *
+
 log = logging.getLogger(__name__)
 
 

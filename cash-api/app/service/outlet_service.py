@@ -1,4 +1,4 @@
-from entity.models import Outlet, User, Authority, Cashbox
+from entity.models import Outlet, User, Authority
 from flask_bcrypt import Bcrypt
 from slerp.app import app
 from slerp.logger import logging
@@ -52,16 +52,6 @@ class OutletService(object):
 		outlet_dict = outlet.to_dict()
 		outlet_dict['password'] = password
 		outlet_dict['username'] = domain["username"]
-		cashbox = Cashbox()
-		cashbox.name = 'Cash'
-		cashbox.total_amount = 0.0
-		cashbox.outlet_id = outlet.id
-		cashbox.save()
-		cashbox = Cashbox()
-		cashbox.name = 'Bank'
-		cashbox.total_amount = 0.0
-		cashbox.outlet_id = outlet.id
-		cashbox.save()
 		return {'payload': outlet_dict}
 	
 	@Blank(['username', 'password'])
