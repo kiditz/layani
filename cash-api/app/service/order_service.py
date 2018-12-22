@@ -1,5 +1,4 @@
 from decimal import Decimal
-from datatime import datatime
 from entity.models import OrderItem, StockHistory, Stock, Cashbox, \
 	AccountReceiveable, CashboxHistory, Customer, Product, Discount, ProductSellPrice, ProductPurchasePrice, \
 	CashboxSummary	
