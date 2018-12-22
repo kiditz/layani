@@ -6,4 +6,11 @@
         android:id="@+id/action_pay"
         android:title="@string/pay"
         app:showAsAction="always" />
+
+    <item
+
+        android:id="@+id/action_delete_transaction"
+        android:title="@string/delete"
+
+        app:showAsAction="always" />
 </menu>

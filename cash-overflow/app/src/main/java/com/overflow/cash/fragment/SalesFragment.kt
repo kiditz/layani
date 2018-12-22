@@ -2,6 +2,7 @@ package com.overflow.cash.fragment
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.DefaultItemAnimator
@@ -21,7 +22,9 @@ import com.overflow.cash.net.ImageService
 import com.overflow.cash.net.NetworkExHandler
 import com.overflow.cash.realm.OrderItemRealm
 import com.overflow.cash.utils.AbstractRecyclerPagination
+import com.overflow.cash.utils.MessageButtonHandle
 import com.overflow.cash.utils.decoration.MarginItemDecoration
+import com.overflow.cash.utils.showMessage
 import com.overflow.cash.utils.snack
 import com.overflow.libs.core.Data
 import kotlinx.android.synthetic.main.dialog_manage_order_item_qty.view.*
@@ -45,7 +48,7 @@ class SalesFragment : BaseFragment(), LoadProductContract.View{
     lateinit var imageService: ImageService
     @Inject
     lateinit var orderItemRealm: OrderItemRealm
-    private var addOrSubtractOrderItemView: View? = null
+    private var manageOrderView: View? = null
     private var addOrSubtractOrderItemDialog: AlertDialog? = null
     private var orderBy:String= Constant.Sort.BY_NAME
     private var search:String= Constant.TEXT_EMPTY
@@ -108,51 +111,67 @@ class SalesFragment : BaseFragment(), LoadProductContract.View{
     }
 
     private fun handleEditOrder(data: Data, holder: SalesListAdapter.ViewHolder) {
-        this.addOrSubtractOrderItemView = LayoutInflater.from(context).inflate(R.layout.dialog_manage_order_item_qty, null, false)
-        var qty = holder.qty.text.replace("[^0-9]".toRegex(), "").trim().toLong()
-        this.addOrSubtractOrderItemView?.ed_qty?.setText(qty.toString())
-        this.addOrSubtractOrderItemView?.btn_add_qty?.setOnClickListener {
-
-            this.addOrSubtractOrderItemView?.ed_qty?.setText("${qty++ }")
-            if(this.addOrSubtractOrderItemView?.ed_qty?.text.toString().toLong() <= 0){
-                this.addOrSubtractOrderItemView?.ed_qty?.setText("0")
-            }
-        }
-        this.addOrSubtractOrderItemView?.btn_sub_qty?.setOnClickListener {
-            this.addOrSubtractOrderItemView?.ed_qty?.setText("${qty-- }")
-            if(this.addOrSubtractOrderItemView?.ed_qty?.text.toString().toLong() <= 0){
-                this.addOrSubtractOrderItemView?.ed_qty?.setText("0")
-            }
-        }
+        this.manageOrderView = LayoutInflater.from(context).inflate(R.layout.dialog_manage_order_item_qty, null, false)
         val builder = AlertDialog.Builder(context!!)
-        builder.setView(this.addOrSubtractOrderItemView).setCancelable(false)
+        builder.setView(this.manageOrderView).setCancelable(false)
+
+        var qty = holder.qty.text.replace("[^0-9]".toRegex(), "").trim().toLong()
+        this.manageOrderView?.ed_qty?.setText(qty.toString())
+        this.manageOrderView?.btn_add_qty?.setOnClickListener {
+            qty++
+            if(qty <= 0){
+                qty = 0
+            }
+            this.manageOrderView?.ed_qty?.setText("$qty")
+        }
+        this.manageOrderView?.btn_sub_qty?.setOnClickListener {
+            qty--
+            if(qty <= 0){
+                qty = 0
+            }
+            this.manageOrderView?.ed_qty?.setText("$qty")
+        }
+
+
         builder.setPositiveButton(R.string.submit){ _, _ ->
-            val qtyParse = addOrSubtractOrderItemView?.ed_qty?.text.toString().toLong()
-            if(this.addOrSubtractOrderItemView?.ed_qty?.text.toString().toLong() <= 0){
+            qty = this.manageOrderView!!.ed_qty.text.replace("[^0-9]".toRegex(), "").trim().toLong()
+            holder.qty.text = "${qty} ${data.getString("unit")}"
+            addItem(qty, true, holder)
+            if(this.manageOrderView?.ed_qty?.text.toString().toLong() <= 0){
                 holder.qty.visibility = View.GONE
-                holder.qty.text = "${Constant.ZERO} ${data.getString("unit")}"
                 orderItemRealm.deleteItem(data.getLong("product_id"))
-            }else{
-                qty = qtyParse - 1
-                addItem(null, qty, true, holder)
             }
         }
+
 
         builder.setNegativeButton(R.string.cancel){dialog, _ ->
             dialog.dismiss()
         }
 
         this.addOrSubtractOrderItemDialog = builder.create()
-
+        this.manageOrderView?.delete_item?.setOnClickListener {
+            context!!.showMessage(getString(R.string.are_you_sure), getString(R.string.are_you_sure_remove).replace("{0}", data.getString("product_name")), object: MessageButtonHandle() {
+                override fun ok(dialog: DialogInterface, which: Int) {
+                    super.ok(dialog, which)
+                    val productId = data.getLong("product_id")
+                    orderItemRealm.deleteItem(productId)
+                    addOrSubtractOrderItemDialog?.dismiss()
+                    holder.qty.visibility = View.GONE
+                }
+            }).show()
+        }
         if(holder.qty.visibility == View.VISIBLE){
             this.addOrSubtractOrderItemDialog?.show()
         }
+
+
+
 
     }
 
     private fun handleAddOrder(data: Data, viewHolder: SalesListAdapter.ViewHolder) {
         val qty = viewHolder.qty.text.replace("[^0-9]".toRegex(), "").trim().toLong()
-        addItem(null, qty, true, viewHolder)
+        addItem(qty, false, viewHolder)
 
     }
 
@@ -192,11 +211,11 @@ class SalesFragment : BaseFragment(), LoadProductContract.View{
 
     override fun showNoOk(res: String) {
         dismiss()
-        showMessage(res, Constant.TEXT_EMPTY)
+        showMessageInBlankLayout(res, Constant.TEXT_EMPTY)
     }
 
     override fun showEmpty() {
-        showMessage(getString(R.string.no_product_title), Constant.TEXT_EMPTY)
+        showMessageInBlankLayout(getString(R.string.no_product_title), Constant.TEXT_EMPTY)
     }
 
     override fun showNotConnected(res: String) {
@@ -229,7 +248,7 @@ class SalesFragment : BaseFragment(), LoadProductContract.View{
     }
 
 
-    private fun addItem(discount: Data?, qty:Long, updateQty:Boolean=false, holder: SalesListAdapter.ViewHolder){
+    private fun addItem(qty:Long, updateQty:Boolean=false, holder: SalesListAdapter.ViewHolder){
         val data = adapter.values[holder.adapterPosition]
         if(updateQty){
             if(data.getBoolean("use_stock")){
@@ -243,6 +262,7 @@ class SalesFragment : BaseFragment(), LoadProductContract.View{
         }
         val subTotal = data.getDouble("sell_price") * (qty + 1)
         data["sub_total"] = subTotal
+        data["qty"] = qty
         val item = orderItemRealm.addItem(data, updateQty)
         onOrderIntemCreated(item, holder)
 

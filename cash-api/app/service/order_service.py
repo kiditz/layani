@@ -1,7 +1,8 @@
 from decimal import Decimal
-
+from datatime import datatime
 from entity.models import OrderItem, StockHistory, Stock, Cashbox, \
-	AccountReceiveable, CashboxHistory, Customer, Product, Discount, ProductSellPrice, ProductPurchasePrice
+	AccountReceiveable, CashboxHistory, Customer, Product, Discount, ProductSellPrice, ProductPurchasePrice, \
+	CashboxSummary	
 from slerp.logger import logging
 from slerp.validator import Number, Key, ValidationException
 from sqlalchemy import between
@@ -52,6 +53,18 @@ class OrderService(object):
 			cashbox_history.payment_method = CashboxType.DEBIT
 			cashbox_history.remark = 'order.cash #' + order.order_code
 			cashbox_history.save()
+			datetime_now = datetime.now()
+			date_now = datetime_now.date()
+			check_first_transaction = Order.query.with_entities(func.count(Order.id)).filter(cast(Order.order_at, DATE) == date_now).scalar()
+			if check_first_transaction == 0:
+				cashbox_summary = CashboxSummary()
+				cashbox_summary.transaction = total_amount
+				cashbox_summary.start_at = datetime_now
+				cashbox_summary.user_id = domain['user_id']
+				cashbox_summary.outlet_id = outlet_id
+				cashbox_summary.status = 'O'
+				cashbox_summary.save()
+				pass
 			
 		order_dict = order.to_dict()
 		if 'items' in domain:

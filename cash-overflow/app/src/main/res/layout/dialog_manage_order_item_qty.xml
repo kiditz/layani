@@ -47,11 +47,12 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/delete_item"
         android:layout_marginTop="@dimen/default_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/btn_accent"
         android:textColor="@drawable/btn_accent_text"
-        android:text="@string/delete"/>
+        android:text="@string/delete_item"/>
 
 </LinearLayout>

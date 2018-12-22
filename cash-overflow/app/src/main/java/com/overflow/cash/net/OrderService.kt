@@ -18,10 +18,6 @@ interface OrderService {
     fun getOrderItems(@Query("order_code") orderId:String):Single<Data>
 
     @Headers("Content-Type:application/json")
-    @GET("/cash/discount/find")
-    fun findDiscount(@Query("product_id") productId:Long, @Query("discount_when") quantity:Long):Single<Data>
-
-    @Headers("Content-Type:application/json")
     @GET("/cash/account_receiveable/list")
     fun getAccountReceiveable(@QueryMap data: Data):Single<Data>
 
@@ -34,15 +30,15 @@ interface OrderService {
     fun payAccountReceiveable(@Body data:Data): Single<Data>
 
     @Headers("Content-Type:application/json")
-    @GET("/cash/order/chart")
+    @GET("/cash/chart/num_of_order_chart")
     fun getOrderChart(@QueryMap data: Data):Single<Data>
 
     @Headers("Content-Type:application/json")
-    @GET("/cash/order/profit_chart")
+    @GET("/cash/chart/profit_chart")
     fun getProfitChart(@QueryMap data: Data):Single<Data>
 
     @Headers("Content-Type:application/json")
-    @GET("/cash/order/income_chart")
+    @GET("/cash/chart/income_chart")
     fun getIncomeChart(@QueryMap data: Data):Single<Data>
 
     @Headers("Content-Type:application/json")
@@ -53,7 +49,7 @@ interface OrderService {
     fun getOrderList(@QueryMap data: Data):Single<Data>
 
     @Headers("Content-Type:application/json")
-    @GET("/cash/order/top_product")
+    @GET("/cash/chart/top_product")
     fun getTopProduct(@QueryMap data: Data):Single<Data>
 
     @Headers("Content-Type:application/json")
@@ -64,6 +60,10 @@ interface OrderService {
     @GET("/cash/account_receiveable/out_of_age")
     fun getAccountReceiveableOutOfAge(@QueryMap data: Data):Single<Data>
 
+    @GET("/cash/order/count_saved_by_id")
+    fun countOrderSaved(@Query("outlet_id") outletId:Long):Single<Data>
 
+    @DELETE("/cash/order/delete_by_id")
+    fun delete(@Query("id") orderId:Long):Single<Data>
 
 }

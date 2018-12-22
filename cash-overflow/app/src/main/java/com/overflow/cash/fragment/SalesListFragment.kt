@@ -13,6 +13,8 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.overflow.cash.R
 import com.overflow.cash.activity.*
 import com.overflow.cash.model.OrderItem
+import com.overflow.cash.mvp.order.LoadCountSavedOrderContract
+import com.overflow.cash.mvp.order.LoadCountSavedOrderPresenter
 import com.overflow.cash.mvp.product.LoadCategoryContract
 import com.overflow.cash.mvp.product.LoadCategoryPresenter
 import com.overflow.cash.net.NetworkExHandler
@@ -24,13 +26,13 @@ import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
 import io.realm.Realm
 import io.realm.RealmResults
-import kotlinx.android.synthetic.main.menu_layout_cart.view.*
 import kotlinx.android.synthetic.main.fragment_sales_list.*
+import kotlinx.android.synthetic.main.menu_layout_cart.view.*
 import timber.log.Timber
 import javax.inject.Inject
 
 
-class SalesListFragment : BaseFragment(), LoadCategoryContract.View, ViewPager.OnPageChangeListener {
+class SalesListFragment : BaseFragment(), LoadCategoryContract.View, LoadCountSavedOrderContract.View, ViewPager.OnPageChangeListener {
 
     private lateinit var outlet: Data
     private lateinit var adapter: ViewPagerAdapter
@@ -39,14 +41,18 @@ class SalesListFragment : BaseFragment(), LoadCategoryContract.View, ViewPager.O
     @Inject
     lateinit var presenter: LoadCategoryPresenter
     @Inject
+    lateinit var countSavedOrderPresenter: LoadCountSavedOrderPresenter
+    @Inject
     lateinit var preferences: SharedPreferences
     @Inject
     lateinit var orderItemRealm:OrderItemRealm
     @Inject
     lateinit var networkExHandler: NetworkExHandler
+
     private var categoryList = mutableListOf<Data>()
     private lateinit var menuActivity: MenuActivity
     private lateinit var realm: Realm
+    private lateinit var menuItemSavedTransaction:MenuItem
     var sumQty:Number = 0
     private var allOrders:RealmResults<OrderItem>? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -72,6 +78,7 @@ class SalesListFragment : BaseFragment(), LoadCategoryContract.View, ViewPager.O
         this.presenter.attach(this)
         this.presenter.loadCategory(-1)
     }
+
 
     private fun showSumQuantity(menuItem: MenuItem) {
         this.allOrders = realm.where(OrderItem::class.java).findAll()
@@ -118,11 +125,13 @@ class SalesListFragment : BaseFragment(), LoadCategoryContract.View, ViewPager.O
             menuActivity.goTo(R.id.nav_new_transaction)
             false
         }
-
-        menu.findItem(R.id.action_saved_transaction).setOnMenuItemClickListener {
+        this.menuItemSavedTransaction = menu.findItem(R.id.action_saved_transaction)
+        this.menuItemSavedTransaction.setOnMenuItemClickListener {
             menuActivity.moveTo(ViewSavedOrderActivity::class.java)
             false
         }
+        // Only Update menu after it's created
+        this.countSavedOrderPresenter.attach(this)
     }
     override fun onCategoryLoaded(categoryList: List<Data>) {
         adapter.clear()
@@ -168,8 +177,19 @@ class SalesListFragment : BaseFragment(), LoadCategoryContract.View, ViewPager.O
         handleSearchEvent(view_pager.currentItem)
     }
 
+    override fun onSavedOrderLoaded(order: Data) {
+        try{
+            val countOrderSaved = order["count"]
+            val title = "${getString(R.string.saved_transaction)} ($countOrderSaved)"
+            Timber.i("Load Title : %s", title)
+            this.menuItemSavedTransaction.title = title
+        }catch (e:IllegalStateException){
+            //Ignore
+        }
+    }
+
     override fun showNotConnected(res: String) {
-        showMessage(res)
+        showMessageInBlankLayout(res)
     }
 
 
@@ -211,6 +231,4 @@ class SalesListFragment : BaseFragment(), LoadCategoryContract.View, ViewPager.O
             salesFragment.searchProduct(data!!.getStringExtra("barcode"))
         }
     }
-
-
 }

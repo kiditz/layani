@@ -228,6 +228,7 @@ class Order(db.Model, Entity):
 	customer_id = db.Column(db.ForeignKey(u'co_customer.id'))
 	cash_box_id = db.Column(db.ForeignKey(u'co_cash_box.id'))
 	discount_id = db.Column(db.ForeignKey(u'co_discount.id'))	
+	description = db.Column(db.Text, nullable=False, server_default=' ', default=' ')
 	outlet_id = db.Column(db.ForeignKey(u'co_outlet.id'), nullable=False)
 	order_code = db.Column(db.Text, index=True)
 	total_amount = db.Column(db.Numeric, nullable=False, server_default='0', default=0)		
@@ -264,11 +265,12 @@ class OrderItem(db.Model, Entity):
 	product_id = db.Column(db.ForeignKey(u'co_product.id'), nullable=False)
 	discount_id = db.Column(db.ForeignKey(u'co_discount.id'))	
 	qty = db.Column(db.BigInteger, nullable=False, server_default='0', default=0)		
-	sub_total = db.Column(db.Numeric, nullable=False, server_default='0', default=0)	
+	sub_total = db.Column(db.Numeric, nullable=False, server_default='0', default=0)		
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
-	sell_price_id = db.Column(db.ForeignKey(u'co_product_sell_price.id'), nullable=False)
-	purchase_price_id = db.Column(db.ForeignKey(u'co_product_purchase_price.id'), nullable=False)
+	sell_price_id = db.Column(db.ForeignKey(u'co_product_sell_price.id'))
+	sell_price = db.Column(db.Numeric, nullable=False, server_default='0', default=0)
+	purchase_price_id = db.Column(db.ForeignKey(u'co_product_purchase_price.id'), nullable=False)	
 
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)
@@ -308,13 +310,36 @@ class CashboxHistory(db.Model, Entity):
 	cash_box_id = db.Column(db.ForeignKey(u'co_cash_box.id'), nullable=False)
 	amount = db.Column(db.Numeric, nullable=False, server_default='0')		
 	remark = db.Column(db.Text, nullable=False, default='')
+	refid = db.Column(db.BigInteger, index=True, nullable=False, server_default='0', default='0')
 	payment_method = db.Column(db.String(10), nullable=False, server_default='-', default='-')
-	transaction_date = db.Column(db.DateTime(timezone=False), default=datetime.now)
+	transaction_date = db.Column(db.DateTime(timezone=False), default=datetime.now)	
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
 	
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)
+
+
+class CashboxSummary(db.Model, Entity):
+	__tablename__ = 'co_cash_box_summary'
+	id = db.Column(db.BigInteger, primary_key=True)
+	cash_box_id = db.Column(db.ForeignKey(u'co_cash_box.id'), nullable=False)
+	start_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
+	end_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
+	status = db.Column(db.String(1), nullable=False, server_default='O', default='O')
+	pending = db.Column(db.BigInteger, nullable=False, server_default='0', default='O')
+	cash = db.Column(db.Numeric, nullable=False, server_default='0', default='O')
+	card = db.Column(db.Numeric, nullable=False, server_default='0', default='O')
+	transaction = db.Column(db.Numeric, nullable=False, server_default='0', default='O')
+	cash_bank_in = db.Column(db.Numeric, nullable=False, server_default='0', default='O')
+	cash_bank_out = db.Column(db.Numeric, nullable=False, server_default='0', default='O')
+	difference = db.Column(db.Numeric, nullable=False, server_default='0', default='O')	
+	user_id = db.Column(db.ForeignKey(u'co_user.id'), index=True)	
+	outlet_id = db.Column(db.ForeignKey(u'co_outlet.id'), nullable=False)
+	
+	def __init__(self, obj=None):
+		Entity.__init__(self, obj)
+						
 
 if __name__ == '__main__':
 	app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('db.name', 'postgresql://kiditz:rioters7@layaniio.ci9ii2u2cpyu.ap-southeast-1.rds.amazonaws.com:5432/layani')

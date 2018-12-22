@@ -11,7 +11,7 @@ import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
 import io.reactivex.disposables.CompositeDisposable
 
-class SaverOrderPresenter(
+class SaveOrderPresenter(
         private val context: Context,
         private val orderItemRealm: OrderItemRealm,
         private val preferences: SharedPreferences,

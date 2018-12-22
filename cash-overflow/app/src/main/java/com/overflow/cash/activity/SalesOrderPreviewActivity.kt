@@ -13,7 +13,7 @@ import com.overflow.cash.R
 import com.overflow.cash.adapter.SalesOrderPreviewAdapter
 import com.overflow.cash.mvp.discount.LoadDiscountByQuantityPresenter
 import com.overflow.cash.mvp.order.SaveOrderContract
-import com.overflow.cash.mvp.order.SaverOrderPresenter
+import com.overflow.cash.mvp.order.SaveOrderPresenter
 import com.overflow.cash.net.ImageService
 import com.overflow.cash.net.NetworkExHandler
 import com.overflow.cash.realm.OrderItemRealm
@@ -37,7 +37,7 @@ class SalesOrderPreviewActivity : BaseActivity(), SaveOrderContract.View {
     @Inject
     lateinit var networkExHandler: NetworkExHandler
     @Inject
-    lateinit var saveOrderPresenter: SaverOrderPresenter
+    lateinit var saveOrderPresenter: SaveOrderPresenter
     lateinit var adapter:SalesOrderPreviewAdapter
     private var customerId:Long? = null
     private var customerName:String? = null
@@ -84,10 +84,10 @@ class SalesOrderPreviewActivity : BaseActivity(), SaveOrderContract.View {
 
         val items = this.orderItemRealm.loadAll()
         totalAmount = items.sum("subTotal")
-        this.supportActionBar?.title = rupiah(totalAmount.toDouble())
+        tv_total_amount.text = rupiah(totalAmount.toDouble())
         items.addChangeListener { t, _ ->
             totalAmount = t.sum("subTotal")
-            this.supportActionBar?.title = rupiah(totalAmount.toDouble())
+            tv_total_amount.text = rupiah(totalAmount.toDouble())
         }
 
     }

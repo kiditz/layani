@@ -89,13 +89,14 @@ class ProductFragment : BaseFragment(), LoadProductContract.View {
         currentPage = API.MIN_PAGE
         this.presenter.loadProduct(currentPage, categoryId, Constant.TEXT_EMPTY, orderBy)
     }
+
     fun searchProduct(search:String){
         currentPage = API.MIN_PAGE
         this.presenter.loadProduct(currentPage, categoryId, search)
     }
     override fun onProductLoaded(productList: List<Data>) {
         dismiss()
-        if(currentPage == 1){
+        if(currentPage == API.MIN_PAGE){
             this.adapter.clearValues()
         }
         this.adapter.addValues(productList)
@@ -116,7 +117,7 @@ class ProductFragment : BaseFragment(), LoadProductContract.View {
     override fun showEmpty() {
         recycler?.visibility = View.GONE
         refresh?.isRefreshing = false
-        showMessage(getString(R.string.no_product_title), getString(R.string.no_product_description))
+        showMessageInBlankLayout(getString(R.string.no_product_title), getString(R.string.no_product_description))
     }
 
 

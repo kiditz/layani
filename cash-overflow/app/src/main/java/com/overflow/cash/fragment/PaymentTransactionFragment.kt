@@ -13,7 +13,7 @@ import com.overflow.cash.activity.ReceiptActivity
 import com.overflow.cash.mvp.discount.LoadDiscountByBillAmountContract
 import com.overflow.cash.mvp.discount.LoadDiscountByBillAmountPresenter
 import com.overflow.cash.mvp.order.SaveOrderContract
-import com.overflow.cash.mvp.order.SaverOrderPresenter
+import com.overflow.cash.mvp.order.SaveOrderPresenter
 import com.overflow.cash.net.NetworkExHandler
 import com.overflow.cash.realm.OrderItemRealm
 import com.overflow.cash.utils.moveTo
@@ -26,7 +26,7 @@ import kotlinx.android.synthetic.main.fragment_payment.*
 import javax.inject.Inject
 
 /**
- * @author Riflu Aditya Bastara
+ * @author Rifky Aditya Bastara
  * */
 class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View, LoadDiscountByBillAmountContract.View {
 
@@ -35,7 +35,7 @@ class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View, LoadD
     @Inject
     lateinit var networkExHandler: NetworkExHandler
     @Inject
-    lateinit var saveOrderPresenter: SaverOrderPresenter
+    lateinit var saveOrderPresenter: SaveOrderPresenter
     @Inject
     lateinit var loadDiscountPresenter: LoadDiscountByBillAmountPresenter
     @Inject
@@ -62,21 +62,7 @@ class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View, LoadD
         this.loadDiscountPresenter.loadDiscount(totalAmount)
         tv_bill_amount.text = rupiah(totalAmount)
 
-        btn_suggestion_round_3.text = if(totalAmount > 100.0){
-            rupiah(round(totalAmount, -3))
-        }else{
-            rupiah(totalAmount)
-        }
-        btn_suggestion_round_4.text = if(totalAmount > 10000.0){
-            rupiah(round(totalAmount, -4))
-        }else{
-            rupiah(totalAmount)
-        }
-        btn_suggestion_round_5.text = if(totalAmount > 100000.0){
-            rupiah(round(totalAmount, -5))
-        }else{
-            rupiah(totalAmount)
-        }
+
         //By Default Payment Type is cash
         initButtonPaymentType(Constant.PaymentMethod.CASH)
 
@@ -100,6 +86,7 @@ class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View, LoadD
             context!!.moveTo(PaymentOtherActivity::class.java, arguments!!)
         }
 
+        initRound()
         btn_the_right_money.setOnClickListener {
             val cashBack = 0.0
             showDialogPayment(totalAmount, cashBack)
@@ -175,7 +162,7 @@ class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View, LoadD
             if(this.containsKey("order_id")){
                 order["order_id"] = this.getLong("order_id")
             }
-
+            order["description"] = this.getString("description")
             order["total_amount"] = totalAmount
             order["total_payment"] = totalPayment
             if(discountAmount > .0){
@@ -209,13 +196,13 @@ class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View, LoadD
             this.tv_discount.text = "${discountAmount.toInt()}%"
             this.tv_total_amount.text = rupiah(totalAmount)
         }
+        initRound()
     }
 
     override fun onDiscountNotLoaded(data: Data) {
         this.tv_discount.text = "N/A"
         this.l_discount_calculation.visibility = View.GONE
         this.tv_total_amount.text = rupiah(parseRupiah(tv_bill_amount.text) - discountAmount)
-
     }
 
     // Called when order has been created
@@ -245,6 +232,24 @@ class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View, LoadD
 
     //Nothing todo here
     override fun showEmpty() {
+    }
+
+    private fun initRound(){
+        btn_suggestion_round_3.text = if(totalAmount > 100.0){
+            rupiah(round(totalAmount, -3))
+        }else{
+            rupiah(totalAmount)
+        }
+        btn_suggestion_round_4.text = if(totalAmount > 10000.0){
+            rupiah(round(totalAmount, -4))
+        }else{
+            rupiah(totalAmount)
+        }
+        btn_suggestion_round_5.text = if(totalAmount > 100000.0){
+            rupiah(round(totalAmount, -5))
+        }else{
+            rupiah(totalAmount)
+        }
     }
 
     override fun showNotConnected(res: String) {

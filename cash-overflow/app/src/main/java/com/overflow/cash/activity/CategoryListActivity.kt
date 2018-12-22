@@ -107,7 +107,7 @@ class CategoryListActivity : BaseActivity(), LoadCategoryContract.View, EditCate
 
     override fun showEmpty() {
         refresh?.isRefreshing = false
-        //showMessage(getString(R.string.no_category_data), "")
+        //showMessageInBlankLayout(getString(R.string.no_category_data), "")
         hideMessage()
     }
 

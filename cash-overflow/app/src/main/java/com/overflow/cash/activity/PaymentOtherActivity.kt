@@ -10,7 +10,7 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import com.overflow.cash.R
 import com.overflow.cash.fragment.DialogPaymentMakeSure
 import com.overflow.cash.mvp.order.SaveOrderContract
-import com.overflow.cash.mvp.order.SaverOrderPresenter
+import com.overflow.cash.mvp.order.SaveOrderPresenter
 import com.overflow.cash.utils.home
 import com.overflow.cash.utils.moveTo
 import com.overflow.cash.utils.parseRupiah
@@ -30,10 +30,10 @@ class PaymentOtherActivity : BaseActivity(),  SaveOrderContract.View {
     lateinit var translations: Translations
 
     @Inject
-    lateinit var presenter: SaverOrderPresenter
+    lateinit var presenter: SaveOrderPresenter
     private var paymentMethod = Constant.PaymentMethod.CASH
     private var amount=0.0
-    var orderItems:List<Data>? = null
+    private var orderItems:List<Data>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
@@ -160,6 +160,7 @@ class PaymentOtherActivity : BaseActivity(),  SaveOrderContract.View {
         val order = Data()
         order["customer_id"] = this.customerId
         order["total_amount"] = amount
+        order["description"] = intent.getStringExtra("description")
         if(intent.hasExtra("discount_id")){
             order["discount_id"] = intent.getLongExtra("discount_id", -1)
         }

@@ -1,6 +1,7 @@
 package com.overflow.cash.activity
 
 import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -10,6 +11,8 @@ import android.view.MenuItem
 import android.view.View
 import com.overflow.cash.R
 import com.overflow.cash.fragment.OrderItemsFragment
+import com.overflow.cash.mvp.order.DeleteOrderContract
+import com.overflow.cash.mvp.order.DeleteOrderPresenter
 import com.overflow.cash.mvp.order.RefundContract
 import com.overflow.cash.mvp.order.RefundPresenter
 import com.overflow.cash.net.NetworkExHandler
@@ -24,7 +27,7 @@ import kotlinx.android.synthetic.main.dialog_refund.view.*
 import timber.log.Timber
 import javax.inject.Inject
 
-class TransactionHistoryDetailActivity : BaseActivity(), HasSupportFragmentInjector, RefundContract.View {
+class TransactionHistoryDetailActivity : BaseActivity(), HasSupportFragmentInjector, RefundContract.View, DeleteOrderContract.View {
     @Inject
     lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject
@@ -33,15 +36,19 @@ class TransactionHistoryDetailActivity : BaseActivity(), HasSupportFragmentInjec
     lateinit var translations: Translations
     @Inject
     lateinit var presenter: RefundPresenter
+
+    @Inject
+    lateinit var deleteOrderPresenter: DeleteOrderPresenter
+
     @Inject
     lateinit var preferences:SharedPreferences
     lateinit var order:Data
-
     private var canPay = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.presenter.attach(this)
+        this.deleteOrderPresenter.attach(this)
         shouldRequestPermissions(Constant.REQUEST_PERMISSION_CODE)
         setContentView(R.layout.activity_transaction_history_detail)
 
@@ -78,7 +85,7 @@ class TransactionHistoryDetailActivity : BaseActivity(), HasSupportFragmentInjec
 
     private fun initHeader(order:Data){
         val orderCode = order.getString("order_code")
-        val customerName = if (order.getString("customer_name") == Constant.TEXT_EMPTY){
+        val customerName = if(!order.containsKeyAndNotNull("customer_name")){
             "N/A"
         }else{
             order.getString("customer_name")
@@ -100,12 +107,14 @@ class TransactionHistoryDetailActivity : BaseActivity(), HasSupportFragmentInjec
     private fun showRefundDialog(){
         val view = LayoutInflater.from(this).inflate(R.layout.dialog_refund, null, false)
         view.tv_total_refund.text = rupiah(order.getDouble("total_amount"))
+
         val dialog = AlertDialog.Builder(this).setView(view).create()
         dialog.setTitle(R.string.are_you_sure_refund)
         view.btn_pay.setOnClickListener {
             dialog.dismiss()
             val data = Data()
             data["order_id"] = order.getLong("id")
+            data["description"] = view.ed_refund_reason.text.toString()
             presenter.refund(data)
             showProgress(true)
         }
@@ -114,9 +123,9 @@ class TransactionHistoryDetailActivity : BaseActivity(), HasSupportFragmentInjec
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_transaction_history_detail, menu)
-        menu?.findItem(R.id.action_pay)?.setVisible(canPay)
+        menu?.findItem(R.id.action_pay)?.isVisible = this.canPay
+        menu?.findItem(R.id.action_delete_transaction)?.isVisible = this.canPay
         return true
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -130,7 +139,17 @@ class TransactionHistoryDetailActivity : BaseActivity(), HasSupportFragmentInjec
                 bundle.putDouble("amount", order.getDouble("total_amount"))
                 bundle.putLong("order_id", order.getLong("id"))
                 moveTo(PaymentTransactionDispatcherActivity::class.java, bundle)
-                true
+                false
+            }
+
+            R.id.action_delete_transaction -> {
+                this.showMessage(getString(R.string.delete), getString(R.string.are_you_sure_remove).replace("{0}", order.getString("order_code")), object:MessageButtonHandle(){
+                    override fun ok(dialog: DialogInterface, which: Int) {
+                        super.ok(dialog, which)
+                        deleteOrderPresenter.delete(order.getLong("id"))
+                    }
+                }).show()
+                false
             }
             else -> home(item)
         }
@@ -152,8 +171,16 @@ class TransactionHistoryDetailActivity : BaseActivity(), HasSupportFragmentInjec
     override fun onRefundSuccess(data: Data) {
         showProgress(false)
         val bundle = Bundle()
-        bundle.putString(Constant.SUCCESS_MESSAGE, translations.get(Constant.TranslationsKey.REFUND_SAVED_SUCCESSFULLY).replace("{0}", "#${data.getString("order_code")}"))
+        bundle.putString(Constant.SUCCESS_MESSAGE, translations.get(Constant.TranslationsKey.REFUND_SAVED_SUCCESSFULLY).replace("{0}", "#${order.getString("order_code")}"))
         bundle.putInt(Constant.GOTO, R.id.nav_transaction_history)
+        moveTo(MenuActivity::class.java, bundle)
+    }
+
+    override fun onDeleteOrderSuccess(data: Data) {
+        showProgress(false)
+        val bundle = Bundle()
+        bundle.putString(Constant.SUCCESS_MESSAGE, translations.get(Constant.TranslationsKey.DELETE_ORDER_SUCCESSFULLY).replace("{0}", "#${order.getString("order_code")}"))
+        bundle.putInt(Constant.GOTO, R.id.nav_new_transaction)
         moveTo(MenuActivity::class.java, bundle)
     }
 
@@ -173,5 +200,11 @@ class TransactionHistoryDetailActivity : BaseActivity(), HasSupportFragmentInjec
     override fun showNotConnected(res: String) {
         showProgress(false)
         snack(res).show()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        this.presenter.detach()
+        this.deleteOrderPresenter.detach()
     }
 }

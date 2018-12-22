@@ -38,7 +38,7 @@ open class BaseFragment:Fragment() {
 
     }
 
-    open fun showMessage(title: String, message: String= Constant.TEXT_EMPTY) {
+    open fun showMessageInBlankLayout(title: String, message: String= Constant.TEXT_EMPTY) {
         blank_layout?.visibility = View.VISIBLE
         blank_layout?.tv_description?.text = message
         blank_layout?.tv_title?.text = title

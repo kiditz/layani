@@ -39,6 +39,15 @@
             tools:text="Rp. 25000" />
     </LinearLayout>
 
+    <EditText
+        android:id="@+id/ed_refund_reason"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/default_margin"
+        android:gravity="top|start"
+        android:hint="@string/refund_reason"
+        android:inputType="textMultiLine"
+        android:lines="2" />
     <Button
         android:id="@+id/btn_pay"
         android:layout_width="match_parent"

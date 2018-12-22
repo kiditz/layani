@@ -31,6 +31,10 @@ class SalesMainFragment:BaseFragment(), BottomNavigationView.OnNavigationItemSel
             R.id.navigation_topup ->{
                 true
             }
+            R.id.navigation_purchase ->{
+                activity?.replaceContent(R.id.bn_container, CashbankOutFragment())
+                true
+            }
             else -> false
         }
     }

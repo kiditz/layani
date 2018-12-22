@@ -142,7 +142,7 @@ class ProductListFragment : BaseFragment(), LoadCategoryContract.View, ViewPager
 
 
     override fun showNoOk(res: String) {
-        showMessage(res)
+        showMessageInBlankLayout(res)
     }
 
     override fun showEmpty() {
@@ -162,14 +162,14 @@ class ProductListFragment : BaseFragment(), LoadCategoryContract.View, ViewPager
     }
 
     override fun showNotConnected(res: String) {
-        showMessage(res)
+        showMessageInBlankLayout(res)
     }
 
-    override fun showMessage(title: String, message: String) {
+    override fun showMessageInBlankLayout(title: String, message: String) {
         recycler?.visibility = View.GONE
         adapter.notifyDataSetChanged()
         fab_add_product.setOnClickListener { activity!!.moveTo(SaveProductActivity::class.java) }
-        super.showMessage(title, message)
+        super.showMessageInBlankLayout(title, message)
     }
 
     override fun onPageScrollStateChanged(p0: Int) {

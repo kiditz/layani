@@ -12,7 +12,7 @@ import com.overflow.cash.mvp.discount.LoadDiscountByQuantityPresenter
 import com.overflow.cash.mvp.login.LoginPresenter
 import com.overflow.cash.mvp.menu.MenuPresenter
 import com.overflow.cash.mvp.order.*
-import com.overflow.cash.mvp.order.SaverOrderPresenter
+import com.overflow.cash.mvp.order.SaveOrderPresenter
 import com.overflow.cash.mvp.product.*
 import com.overflow.cash.mvp.receiveable.AccountReceiveableDetailPresenter
 import com.overflow.cash.mvp.receiveable.AccountReceiveablePaymentPresenter
@@ -96,8 +96,8 @@ class PresenterModule {
 
 
     @Provides
-    internal fun providePaymentTransactionPresenter(context: Context, orderItemRealm: OrderItemRealm, translations: Translations, disposable: CompositeDisposable, orderService: OrderService, preferences: SharedPreferences): SaverOrderPresenter {
-        return SaverOrderPresenter(context, orderItemRealm, preferences, translations, orderService, disposable)
+    internal fun providePaymentTransactionPresenter(context: Context, orderItemRealm: OrderItemRealm, translations: Translations, disposable: CompositeDisposable, orderService: OrderService, preferences: SharedPreferences): SaveOrderPresenter {
+        return SaveOrderPresenter(context, orderItemRealm, preferences, translations, orderService, disposable)
     }
 
     @Provides
@@ -185,7 +185,17 @@ class PresenterModule {
     }
 
     @Provides
-    internal fun provideRefundPresenter(context: Context, translations: Translations, disposable: CompositeDisposable,orderService: OrderService,  preferences: SharedPreferences): RefundPresenter {
+    internal fun provideRefundPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, orderService: OrderService,  preferences: SharedPreferences): RefundPresenter {
         return RefundPresenter(context, preferences, translations, orderService, disposable)
+    }
+
+    @Provides
+    internal fun provideLoadCountSavedOrderPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, orderService: OrderService, preferences: SharedPreferences): LoadCountSavedOrderPresenter {
+        return LoadCountSavedOrderPresenter(context,preferences, translations, orderService, disposable)
+    }
+
+    @Provides
+    internal fun provideDeleteOrderPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, orderService: OrderService, preferences: SharedPreferences): DeleteOrderPresenter {
+        return DeleteOrderPresenter(context,preferences, translations, orderService, disposable)
     }
 }

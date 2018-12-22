@@ -47,6 +47,7 @@
   "discount.created.successfully": "Diskon tersimpan",
   "sales.created.successfully": "Transaksi {0} tersimpan",
   "refund.saved.successfully": "Pembatalan transaksi {0} berhasil dilakukan",
+  "delete.order.successfully":"Hapus transaksi {0}, berhasil dilakukan",
   "category.edited.successfully": "Kategori {0} berhasil diubah",
   "category.removed.successfully": "Kategori berhasil di hapus",
   "customer.edited.successfully": "Pelanggan {0} berhasil disimpan",

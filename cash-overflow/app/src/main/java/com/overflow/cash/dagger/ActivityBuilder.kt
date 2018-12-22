@@ -110,6 +110,9 @@ abstract class ActivityBuilder {
     @ContributesAndroidInjector
     internal abstract fun bindOrderItemFragment(): OrderItemsFragment
 
+    @ContributesAndroidInjector
+    internal abstract fun bindCashbankOutFragment(): CashbankOutFragment
+
 
 
     //Service

@@ -39,7 +39,7 @@ class TransactionHistoryFragment : BaseFragment(), LoadOrderContract.View{
     var excludeStatus: Boolean = true
 
     var status: String = Constant.TEXT_EMPTY
-    lateinit var format: SimpleDateFormat
+    private lateinit var format: SimpleDateFormat
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -118,22 +118,31 @@ class TransactionHistoryFragment : BaseFragment(), LoadOrderContract.View{
             menu.inflate(R.menu.menu_filter_transaction_history)
             menu.setOnMenuItemClickListener {
                 return@setOnMenuItemClickListener when (it.itemId) {
-                    R.id.action_success -> {
-                        val status = Constant.TransactionStatus.SUCCESS
+                    R.id.action_all -> {
+                        currentPage = 1
+                        this.status = Constant.TEXT_EMPTY
                         presenter.loadOrder(currentPage, Constant.TEXT_EMPTY, status, excludeStatus)
-                        true
+                        false
+                    }
+                    R.id.action_success -> {
+                        currentPage = 1
+                        this.status = Constant.TransactionStatus.SUCCESS
+                        presenter.loadOrder(currentPage, Constant.TEXT_EMPTY, status, excludeStatus)
+                        false
                     }
 
                     R.id.action_void -> {
-                        val status = Constant.TransactionStatus.VOID
-                        presenter.loadOrder(currentPage, Constant.TEXT_EMPTY, status)
-                        true
+                        currentPage = 1
+                        this.status = Constant.TransactionStatus.VOID
+                        presenter.loadOrder(currentPage, Constant.TEXT_EMPTY, status, excludeStatus)
+                        false
                     }
 
                     R.id.action_in_progress -> {
-                        val status = Constant.TransactionStatus.PENDING
-                        presenter.loadOrder(currentPage, Constant.TEXT_EMPTY, status)
-                        true
+                        currentPage = 1
+                        this.status = Constant.TransactionStatus.PENDING
+                        presenter.loadOrder(currentPage, Constant.TEXT_EMPTY, status, excludeStatus)
+                        false
                     }
                     else -> false
                 }
@@ -186,13 +195,13 @@ class TransactionHistoryFragment : BaseFragment(), LoadOrderContract.View{
     }
 
     override fun showNoOk(res: String) {
-        showMessage(res, "")
+        showMessageInBlankLayout(res, "")
         refresh?.isRefreshing = false
     }
 
     override fun showEmpty() {
         refresh?.isRefreshing = false
-        showMessage(getString(R.string.transaction_not_found), "")
+        showMessageInBlankLayout(getString(R.string.transaction_not_found), "")
     }
 
 
@@ -201,7 +210,7 @@ class TransactionHistoryFragment : BaseFragment(), LoadOrderContract.View{
     }
 
     override fun showNotConnected(res: String) {
-        showMessage(translations.get(Constant.TranslationsKey.NO_INTERNET), Constant.TEXT_EMPTY)
+        showMessageInBlankLayout(translations.get(Constant.TranslationsKey.NO_INTERNET), Constant.TEXT_EMPTY)
     }
 
 

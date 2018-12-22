@@ -90,7 +90,7 @@
         <activity
             android:name=".activity.ProductDetailActivity"
             android:label="@string/product_detail" />
-        <activity android:name=".activity.SalesOrderPreviewActivity" />
+        <activity android:name=".activity.SalesOrderPreviewActivity" android:label="@string/transaction_detail" />
         <activity
             android:name=".activity.CustomerChooserActivity"
             android:theme="@style/AppTheme.NoActionBar" />

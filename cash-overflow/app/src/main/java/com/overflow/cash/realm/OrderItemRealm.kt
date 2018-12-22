@@ -12,8 +12,9 @@ class OrderItemRealm(val realm: Realm){
         realm.beginTransaction()
         val item = realm.createOrUpdateObjectFromJson(OrderItem::class.java, data.toString())!!
         if(updateQty){
-            item.qty = item.qty+ 1
+            item.qty = input.getLong("qty")
         } else{
+            item.qty = item.qty + 1
         }
 
         Timber.d("Items: %s", item.productId.toString())

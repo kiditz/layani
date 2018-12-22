@@ -70,18 +70,17 @@ class OrderItemsFragment : BaseFragment(), LoadOrderItemContract.View{
     }
 
     override fun showNoOk(res: String) {
-        showMessage(res)
+        showMessageInBlankLayout(res)
     }
 
     override fun showNotConnected(res: String) {
-        showMessage(res)
+        showMessageInBlankLayout(res)
     }
 
     override fun onDetach() {
         super.onDetach()
         this.presenter.detach()
     }
-    fun getValues() =  this.adapter.values
 
     companion object {
         const val ARG_ORDER_CODE = "order_code"

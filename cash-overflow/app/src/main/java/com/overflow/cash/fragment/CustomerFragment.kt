@@ -3,7 +3,6 @@ package com.overflow.cash.fragment
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.*
 import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.overflow.cash.activity.Constant
@@ -105,13 +104,13 @@ class CustomerFragment : BaseFragment(), LoadCustomerContract.View {
     }
 
     override fun showNoOk(res: String) {
-        showMessage(res, "")
+        showMessageInBlankLayout(res, "")
         refresh?.isRefreshing = false
     }
 
     override fun showEmpty() {
         refresh?.isRefreshing = false
-        showMessage(getString(R.string.no_customer_title), "")
+        showMessageInBlankLayout(getString(R.string.no_customer_title), "")
     }
 
 
@@ -139,7 +138,7 @@ class CustomerFragment : BaseFragment(), LoadCustomerContract.View {
     }
 
     override fun showNotConnected(res: String) {
-        showMessage(translations.get(Constant.TranslationsKey.NO_INTERNET), Constant.TEXT_EMPTY)
+        showMessageInBlankLayout(translations.get(Constant.TranslationsKey.NO_INTERNET), Constant.TEXT_EMPTY)
     }
 
 }

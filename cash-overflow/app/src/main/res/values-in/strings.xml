@@ -17,6 +17,7 @@
     <string name="all_product">Semua Produk</string>
     <string name="app_name">Layani</string>
     <string name="are_you_sure">Apakah anda yakin?</string>
+    <string name="are_you_sure_remove">Apakah anda yakin untuk menghapus pesanan {0}?</string>
     <string name="are_you_sure_transaction">Apakah anda yakin ingin membayar transaksi ini?</string>
     <string name="are_you_sure_refund">Apakah anda yakin ingin membatalkan transaksi ini?</string>
     <string name="bill_amount">Tagihan</string>
@@ -38,8 +39,9 @@
     <string name="report_outlet">Laporan</string>
     <string name="date">Tanggal</string>
     <string name="date_in">Tanggal</string>
-    <string name="delete">Remove</string>
-    <string name="delete_transaction">Hapus Transaksi</string>
+    <string name="delete">Hapus</string>
+    <string name="delete_item">Hapus Item</string>
+    <string name="clear_transaction">Kosongkan Transaksi</string>
 
     <string name="description">Keterangan</string>
     <string name="discount">Diskon</string>
@@ -63,7 +65,7 @@
     <string name="login">Masuk</string>
     <string name="logout">Keluar</string>
     <string name="mail">E-Mail</string>
-    <string name="manage_stock">Atur Stok</string>
+    <string name="manage_stock">Kelola Stok</string>
     <string name="minumum_price">Harga Termurah</string>
     <string name="month">Bulan</string>
     <string name="most_stock">Stok Paling Banyak</string>
@@ -85,6 +87,7 @@
     <string name="no_product_description">Tekan tombol + untuk menambahkan produk</string>
     <string name="no_product_title">Belum ada produk</string>
     <string name="not_enough_stock">Stok habis</string>
+    <string name="num_of_purchase">Nilai Pembelian</string>
     <string name="ok">OK</string>
     <string name="other">Lainnya</string>
 
@@ -131,7 +134,7 @@
     <string name="system_err">Upps, Terjadi kesalahan pada sistem</string>
     <string name="the_right_money">Uang Pas</string>
     <string name="today">Hari ini</string>
-    <string name="top_up">Pulsa &amp; PPOB</string>
+    <string name="top_up">Pulsa &amp; Tagihan</string>
     <string name="total_amount">Total Tagihan</string>
     <string name="total_payment">Jumlah Bayar</string>
     <string name="total_refund">Total Pengembalian</string>
@@ -156,4 +159,6 @@
     <string name="void_trx">Dibatalkan</string>
     <string name="in_progress">Berlangsung</string>
     <string name="saved_transaction">Transaksi Tersimpan</string>
+    <string name="all">Semua</string>
+    <string name="refund_reason">Alasan Pembatalan</string>
 </resources>

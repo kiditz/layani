@@ -52,15 +52,10 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             it.setDisplayShowHomeEnabled(true)
         }
 
-        btnManageStock?.setOnClickListener {
+        btn_manage_stock?.setOnClickListener {
             stockMultiplier = 1
             showAddStockDialog()
             validateStock()
-        }
-
-        btnDiscount?.setOnClickListener {
-            showAddDiscountDialog()
-            validateDiscount()
         }
         intent?.extras?.let {
             initData(it)
@@ -80,11 +75,11 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         if (it.getBoolean("use_stock")) {
             tvRemainingStock?.text = "${it.getLong("stock").toInt()} ${getString(R.string.pcs)}"
             layoutStock?.visibility = View.VISIBLE
-            btnManageStock?.visibility = View.VISIBLE
+            btn_manage_stock?.visibility = View.VISIBLE
             vertStock?.visibility = View.VISIBLE
         } else {
             layoutStock?.visibility = View.GONE
-            btnManageStock?.visibility = View.GONE
+            btn_manage_stock?.visibility = View.GONE
             vertStock.visibility = View.GONE
         }
     }

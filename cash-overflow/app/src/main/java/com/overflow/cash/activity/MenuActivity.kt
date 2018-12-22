@@ -139,7 +139,7 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 replaceContent(SettingFragment())
             }
             R.id.nav_transaction_history -> {
-                replaceContent(TransactionHistoryFragment())
+                replaceContent(TransactionHistoryFragment.newInstance(true))
             }
         }
 

@@ -79,7 +79,32 @@
         app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         tools:listitem="@layout/adapter_sales_items"
         />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="@dimen/default_margin">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:text="@string/total_amount"
+            android:textSize="24sp"
+            android:maxLines="1"/>
+
+        <TextView
+            android:id="@+id/tv_total_amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:maxLines="1"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            tools:text="Rp. 25000" />
+    </LinearLayout>
     <LinearLayout
         android:layout_gravity="bottom|end"
         android:layout_width="match_parent"

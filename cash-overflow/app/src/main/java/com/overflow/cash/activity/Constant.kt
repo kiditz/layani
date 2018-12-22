@@ -127,6 +127,7 @@ class Constant {
             const val USER_WRONG_PASSWORD = "user.wrong.password"
             const val INVALID_EMAIL = "invalid.email.address"
             const val REFUND_SAVED_SUCCESSFULLY = "refund.saved.successfully"
+            const val DELETE_ORDER_SUCCESSFULLY = "delete.order.successfully"
             const val INVALID_TOTAL_AMOUNT = "invalid.payment.amount"
 
 

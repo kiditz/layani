@@ -18,8 +18,10 @@
     <string name="app_name">Layani</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="are_you_sure_transaction">Are you sure want to pay this transaction?</string>
+    <string name="are_you_sure_remove">Are you sure want to remove {0}?</string>
     <string name="are_you_sure_refund">Are you sure want to refund this transaction?</string>
     <string name="bill_amount">Bill Amount</string>
+    <string name="backspace">⌫</string>
     <string name="cancel">Cancel</string>
     <string name="cannot_read_barcode">Cannot read barcode</string>
     <string name="card">Card</string>
@@ -38,8 +40,9 @@
     <string name="report_outlet">Report</string>
     <string name="date">Date</string>
     <string name="date_in">Date in</string>
-    <string name="delete_transaction">Remove Transaction</string>
+    <string name="clear_transaction">Clear Transaction</string>
     <string name="delete">Remove</string>
+    <string name="delete_item">Remove Item</string>
     <string name="description">Description</string>
     <string name="discount">Discount</string>
     <string name="done">Done</string>
@@ -84,6 +87,7 @@
     <string name="no_product_description">Press button + to add product</string>
     <string name="no_product_title">No product data</string>
     <string name="not_enough_stock">Product Not Available</string>
+    <string name="num_of_purchase">Purchase Amount</string>
     <string name="ok">OK</string>
     <string name="other">Other</string>
     <string name="out_of_age">Overdue</string>
@@ -155,5 +159,7 @@
 
     <string name="void_trx">Void</string>
     <string name="in_progress">In Progress</string>
+    <string name="all">All</string>
+    <string name="refund_reason">Reasonable Refund</string>
 
 </resources>
