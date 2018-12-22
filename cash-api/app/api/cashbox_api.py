@@ -22,3 +22,17 @@ def get_cashbox_by_outlet_id():
     """
     domain = request.args.to_dict()
     return cashbox_service.get_cashbox_by_outlet_id(domain)
+
+
+@api.route('/edit', methods=['PUT'])
+def edit_cashbox():
+
+    """
+    {
+        "outlet_id": "Long"
+        "total_amount": "Double"
+        "remark": "String"
+    }
+    """
+    domain = request.get_json()
+    return cashbox_service.edit_cashbox(domain)

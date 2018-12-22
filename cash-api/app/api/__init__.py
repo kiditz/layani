@@ -10,3 +10,4 @@ from .order_api import order_api_blue_print
 from .customer_api import customer_api_blue_print
 from .discount_api import discount_api_blue_print
 from .account_receiveable_api import account_receiveable_api_blue_print
+from .chart_api import chart_api_blue_print
