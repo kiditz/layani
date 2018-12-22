@@ -44,9 +44,8 @@ class OrderService(object):
 			datetime_now = datetime.now()
 			date_now = datetime_now.date()
 			log.info('Now Date %s', date_now)
-			check_first_transaction = Order.query.with_entities(func.count(Order.id)).filter(cast(Order.order_at, DATE) == date_now).scalar()
-			log.info('Is first %s', check_first_transaction)
-			if check_first_transaction == 1:
+			cashbox_summary = CashboxSummary.query.filter(cast(CashboxSummary.start_at, DATE) == date_now).first()
+			if cashbox_summary is None:
 				cashbox_summary = CashboxSummary()
 				cashbox_summary.transaction = 0
 				cashbox_summary.start_at = datetime_now
@@ -54,7 +53,7 @@ class OrderService(object):
 				cashbox_summary.outlet_id = outlet_id
 				cashbox_summary.status = 'O'
 				cashbox_summary.save()
-				pass
+			pass
 			
 		order_dict = order.to_dict()
 		if 'items' in domain:
