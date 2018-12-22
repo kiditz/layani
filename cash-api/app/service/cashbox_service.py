@@ -1,5 +1,5 @@
 from decimal import Decimal
-
+from datetime import datetime
 from entity.models import CashboxHistory, CashboxSummary
 from slerp.logger import logging
 from slerp.validator import Number, Blank
@@ -21,12 +21,15 @@ class CashboxService(object):
 		total_amount = Decimal(domain['total_amount'])
 		remark = domain['remark']
 		outlet_id = domain['outlet_id']
-		cashbox = CashboxSummary.query\
+		cashbox_summary = CashboxSummary.query\
 			.filter(CashboxSummary.outlet_id == outlet_id)\
-			.filter(cast(CashboxSummary.start_at, DATE) == '').first()
-		cashbox.total_amount = total_amount		
+			.filter(cast(CashboxSummary.start_at, DATE) == datetime.now().date()).first()
+		if cashbox_summary is None:
+			cashbox_summary = CashboxSummary()
+			cashbox_summary.start_at = datetime.now()
+			
 		cashbox_history = CashboxHistory()
-		cashbox_history.cash_box_id = cashbox.id
+		cashbox_history.cash_box_id = cashbox_summary.id
 		cashbox_history.amount = total_amount
 		if total_amount > 0:
 			cashbox_history.payment_method = CashboxType.DEBIT
@@ -35,7 +38,7 @@ class CashboxService(object):
 			cashbox_history.payment_method = CashboxType.CREDIT
 			cashbox_history.refid = 2
 		cashbox_history.remark = remark
-		cashbox.save()
+		cashbox_summary.save()
 		cashbox_history.save()
 
 	@Number(['cash_box_summary_id', 'page', 'size', 'date'])

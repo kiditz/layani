@@ -43,7 +43,6 @@ class OrderService(object):
 			
 			datetime_now = datetime.now()
 			date_now = datetime_now.date()
-			log.info('Now Date %s', date_now)
 			cashbox_summary = CashboxSummary.query.filter(cast(CashboxSummary.start_at, DATE) == date_now).first()
 			if cashbox_summary is None:
 				cashbox_summary = CashboxSummary()
