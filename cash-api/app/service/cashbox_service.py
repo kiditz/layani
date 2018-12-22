@@ -1,6 +1,6 @@
 from decimal import Decimal
 from datetime import datetime
-from entity.models import CashboxHistory, CashboxSummary
+from entity.models import CashboxHistory, CashboxSummary, User
 from slerp.logger import logging
 from slerp.validator import Number, Blank
 from sqlalchemy import cast
@@ -49,15 +49,30 @@ class CashboxService(object):
 			.filter(CashboxHistory.cash_box_summary_id == domain['cash_box_summary_id'])\
 			.order_by(CashboxHistory.id.desc())\
 			.paginate(page, size, error_out=False)
-		cashbox_history_list = list(map(lambda x: x._asdict(), cashbox_history_q.items))
+		cashbox_history_list = list(map(lambda x: x.to_dict(), cashbox_history_q.items))
 		return {'payload': cashbox_history_list, 'total': cashbox_history_q.total, 'total_pages': cashbox_history_q.pages}
 	
-	@Number(['outlet_id', 'page', 'size', 'date'])
+	@Number(['outlet_id', 'page', 'size'])
 	def get_cashbox_summary(self, domain):
 		page = int(domain['page'])
 		size = int(domain['size'])
 		outlet_id = domain['outlet_id']
-		cashbox_summary_q = CashboxSummary.query\
+		entities = (
+			CashboxSummary.id,
+			CashboxSummary.start_at,
+			CashboxSummary.end_at,
+			CashboxSummary.status,
+			CashboxSummary.pending,
+			CashboxSummary.cash,
+			CashboxSummary.card,
+			CashboxSummary.transaction,
+			CashboxSummary.difference,
+			CashboxSummary.outlet_id,
+			User.fullname
+		)
+		
+		cashbox_summary_q = CashboxSummary.query.with_entities(*entities)\
+			.join(User, CashboxSummary.user_id == User.id)\
 			.filter(CashboxSummary.outlet_id == outlet_id)\
 			.order_by(CashboxSummary.id.desc())\
 			.paginate(page, size, error_out=False)

@@ -52,7 +52,7 @@ class RegisterActivity : AppCompatActivity(), RegisterContract.View {
             val data = Data()
             data["password"] = ed_password.text.toString()
             data["username"] = ed_username.text.toString()
-            data["fullname"] = edStoreOwnerName.text.toString()
+            data["fullname"] = ed_store_owner_name.text.toString()
             data["store"] = store
             this.registerPresenter.addStore(data)
         }
@@ -61,7 +61,7 @@ class RegisterActivity : AppCompatActivity(), RegisterContract.View {
     private fun validate(){
         val usernameObserve = this.validateNotEmpty(ed_username, usernameWrapper, translations.get(Constant.TranslationsKey.REQUIRED_VALUE_USERNAME))
         val passwordObserve = this.validateLengthGreaterThan(ed_password, password_wrapper,8 - 1,  translations.get(Constant.TranslationsKey.INVALID_PASSWORD_LENGTH))
-        val ownerNameObserve = this.validateNotEmpty(edStoreOwnerName, storeOwnerNameWrapper, translations.get(Constant.TranslationsKey.REQUIRED_VALUE_STORE_OWNER_NAME))
+        val ownerNameObserve = this.validateNotEmpty(ed_store_owner_name, store_owner_name_wrapper, translations.get(Constant.TranslationsKey.REQUIRED_VALUE_STORE_OWNER_NAME))
         Observable.combineLatest(usernameObserve, passwordObserve, ownerNameObserve, Function3{username:Boolean, password:Boolean, ownerName:Boolean -> ownerName && username && password}).subscribe { isValid ->
             btnRegister.isEnabled = isValid
         }

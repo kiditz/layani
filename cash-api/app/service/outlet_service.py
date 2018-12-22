@@ -36,8 +36,7 @@ class OutletService(object):
 			phone_number = phone_number.replace('0', '+62', 1)		
 		user = User(domain)
 		user.username = domain['username']
-		user.fullname = domain['password']
-		
+		user.fullname = domain['fullname']
 		user.phone_number = phone_number
 		user.outlet_name = domain['store']['name']
 		user.hash_password = bcrypt.generate_password_hash(password, 10).replace(b'$2b$', b'$2a$')
