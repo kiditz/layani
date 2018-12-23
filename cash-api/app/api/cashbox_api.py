@@ -41,8 +41,8 @@ def get_cashbox_history():
     return cashbox_service.get_cashbox_history(domain)
 
 
-@api.route('/edit', methods=['PUT'])
-def edit_cashbox():
+@api.route('/history/edit', methods=['PUT'])
+def edit_cash_history():
 
     """
     {
@@ -52,4 +52,4 @@ def edit_cashbox():
     }
     """
     domain = request.get_json()
-    return cashbox_service.edit_cashbox(domain)
+    return cashbox_service.edit_cashbox_history(domain)

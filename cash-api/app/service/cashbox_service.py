@@ -15,9 +15,9 @@ class CashboxService(object):
 	def __init__(self):
 		super(CashboxService, self).__init__()
 	
-	@Number(['outlet_id'])
+	@Number(['outlet_id', 'user_id'])
 	@Blank(['total_amount', 'remark'])
-	def edit_cashbox(self, domain):
+	def edit_cashbox_history(self, domain):
 		total_amount = Decimal(domain['total_amount'])
 		remark = domain['remark']
 		outlet_id = domain['outlet_id']
@@ -27,6 +27,8 @@ class CashboxService(object):
 		if cashbox_summary is None:
 			cashbox_summary = CashboxSummary()
 			cashbox_summary.start_at = datetime.now()
+			cashbox_summary.outlet_id = domain['outlet_id']
+			cashbox_summary.user_id = domain['user_id']
 			
 		cashbox_history = CashboxHistory()
 		cashbox_history.cash_box_summary_id = cashbox_summary.id
