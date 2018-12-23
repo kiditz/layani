@@ -7,7 +7,7 @@ from sqlalchemy import between
 from sqlalchemy.orm import aliased
 
 from utils import str2bool
-from utils.api_constant import StockRef, ErrorCode
+from utils.api_constant import StockRef, ErrorCode, CashboxStatus, PaymentMethod
 from .chart_query import *
 
 log = logging.getLogger(__name__)
@@ -45,7 +45,8 @@ class OrderService(object):
 			date_now = datetime_now.date()
 			cashbox_summary = CashboxSummary.query \
 				.filter(CashboxSummary.outlet_id == outlet_id) \
-				.filter(cast(CashboxSummary.start_at, DATE) == date_now).first()
+				.filter(cast(CashboxSummary.start_at, DATE) == date_now) \
+				.filter(CashboxSummary.status == CashboxStatus.OPEN).first()
 			if cashbox_summary is None:
 				cashbox_summary = CashboxSummary()
 				cashbox_summary.transaction = 0
@@ -203,16 +204,30 @@ class OrderService(object):
 		order_success_q = Order.query.with_entities(func.sum(Order.total_amount).label('order_summary'))\
 			.filter(and_(cast(Order.order_at, DATE) == date_now, Order.outlet_id == outlet_id, Order.status == OrderStatus.SUCCESS))\
 			.first()
+		order_all_q = Order.query.with_entities(func.sum(Order.total_amount).label('order_summary')) \
+			.filter(and_(cast(Order.order_at, DATE) == date_now, Order.outlet_id == outlet_id)) \
+			.first()
 		order_void_q = Order.query.with_entities(func.sum(Order.total_amount).label('order_summary'))\
 			.filter(and_(cast(Order.order_at, DATE) == date_now, Order.outlet_id == outlet_id, Order.status == OrderStatus.VOID, Order.total_amount > 0.0))\
 			.first()
 
 		order_created_q = Order.query.with_entities(func.count(Order.id).label('order_summary'))\
 			.filter(and_(cast(Order.order_at, DATE) == date_now, Order.outlet_id == outlet_id, Order.status == OrderStatus.CREATED, Order.total_amount > 0.0))\
-			.first()			
+			.first()
+		
+		order_card_q = Order.query.with_entities(func.count(Order.id).label('order_summary')) \
+			.filter(and_(cast(Order.order_at, DATE) == date_now, Order.outlet_id == outlet_id, Order.payment_method == PaymentMethod.CARD, Order.total_amount > 0.0)) \
+			.first()
+		
+		order_cash_q = Order.query.with_entities(func.count(Order.id).label('order_summary')) \
+			.filter(and_(cast(Order.order_at, DATE) == date_now, Order.outlet_id == outlet_id, Order.payment_method == PaymentMethod.CASH, Order.total_amount > 0.0)) \
+			.first()
 		order_dict = {
 			'success': order_success_q.order_summary,
 			'void': order_void_q.order_summary,
-			'pending': order_created_q.order_summary
+			'pending': order_created_q.order_summary,
+			'card': order_card_q.order_summary,
+			'cash': order_cash_q.order_summary,
+			'all': order_all_q.order_summary,
 		}
 		return {'payload': order_dict}

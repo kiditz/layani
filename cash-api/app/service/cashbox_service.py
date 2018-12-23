@@ -6,7 +6,7 @@ from slerp.validator import Number, Blank
 from sqlalchemy import cast
 from sqlalchemy.dialects.mssql import DATE
 
-from utils.api_constant import CashboxType
+from utils.api_constant import CashboxType, CashboxStatus
 
 log = logging.getLogger(__name__)
 
@@ -23,7 +23,8 @@ class CashboxService(object):
 		outlet_id = domain['outlet_id']
 		cashbox_summary = CashboxSummary.query\
 			.filter(CashboxSummary.outlet_id == outlet_id)\
-			.filter(cast(CashboxSummary.start_at, DATE) == datetime.now().date()).first()
+			.filter(cast(CashboxSummary.start_at, DATE) == datetime.now().date())\
+			.filter(CashboxSummary.status == CashboxStatus.OPEN).first()
 		if cashbox_summary is None:
 			cashbox_summary = CashboxSummary()
 			cashbox_summary.start_at = datetime.now()
@@ -82,4 +83,8 @@ class CashboxService(object):
 		cashbox_summary_list = list(map(lambda x: x._asdict(), cashbox_summary_q.items))
 		return {'payload': cashbox_summary_list, 'total': cashbox_summary_q.total, 'total_pages': cashbox_summary_q.pages}
 	
-
+	@Number(['id'])
+	def edit_cashbox_summary_by_id(self, domain):
+		cashbox_summary = CashboxSummary.query.filter_by(id=domain['id']).first()
+		cashbox_summary.update(domain)
+		return {'payload': cashbox_summary.to_dict()}

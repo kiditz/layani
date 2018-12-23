@@ -24,6 +24,9 @@ class CashboxType(object):
 	DEBIT = 'DEBIT'
 	CREDIT = 'CREDIT'
 
+class CashboxStatus(object):
+	OPEN = 'O'
+	END = 'E'
 
 class CashDrawer(object):
 	CASH_DRAWER = 'CASH_DRAWER'

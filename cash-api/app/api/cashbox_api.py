@@ -53,3 +53,25 @@ def edit_cash_history():
     """
     domain = request.get_json()
     return cashbox_service.edit_cashbox_history(domain)
+
+
+@api.route('/summary/edit', methods=['PUT'])
+def edit_cashbox_summary_by_id():
+
+    """
+    {
+    "id": "Long",
+    "start_at": "Date",
+    "end_at": "Date",
+    "status": "String",
+    "pending": "Long",
+    "cash": "Double",
+    "card": "Double",
+    "transaction": "Double",
+    "difference": "Double",
+    "user_id": "Long",
+    "outlet_id": "Long"
+    }
+    """
+    domain = request.get_json()
+    return cashbox_service.edit_cashbox_summary_by_id(domain)
