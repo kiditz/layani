@@ -43,7 +43,9 @@ class OrderService(object):
 			
 			datetime_now = datetime.now()
 			date_now = datetime_now.date()
-			cashbox_summary = CashboxSummary.query.filter(cast(CashboxSummary.start_at, DATE) == date_now).first()
+			cashbox_summary = CashboxSummary.query \
+				.filter(CashboxSummary.outlet_id == outlet_id) \
+				.filter(cast(CashboxSummary.start_at, DATE) == date_now).first()
 			if cashbox_summary is None:
 				cashbox_summary = CashboxSummary()
 				cashbox_summary.transaction = 0
