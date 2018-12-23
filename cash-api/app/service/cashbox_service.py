@@ -103,12 +103,12 @@ class CashboxService(object):
 			.filter(CashboxHistory.cash_box_summary_id == cashbox_summary.id) \
 			.first()
 		cashbox_summary.pending = domain["pending"]
-		cashbox_summary.transaction = sales - void + cash_in - cash_out
+		cashbox_summary.transaction = sales - void + Decimal(cash_in) - Decimal(cash_out)
 		cashbox_summary.cash = cash
 		cashbox_summary.card = card
 		cashbox_summary.refund = void
 		cashbox_summary.status = CashboxStatus.END
-		cashbox_summary.difference = (cash + card) - cashbox_summary.transaction
+		cashbox_summary.difference = (cash + card) - Decimal(cashbox_summary.transaction)
 		cashbox_summary.end_at = domain['end_at']
 		cashbox_summary.save()
 		return {'payload': cashbox_summary.to_dict()}
