@@ -2,11 +2,11 @@ from decimal import Decimal
 from datetime import datetime
 from entity.models import CashboxHistory, CashboxSummary, User
 from slerp.logger import logging
-from slerp.validator import Number, Blank
-from sqlalchemy import cast
+from slerp.validator import Number, Blank, ValidationException
+from sqlalchemy import cast, func
 from sqlalchemy.dialects.mssql import DATE
 
-from utils.api_constant import CashboxType, CashboxStatus
+from utils.api_constant import CashboxType, CashboxStatus, ErrorCode
 
 log = logging.getLogger(__name__)
 
@@ -83,8 +83,31 @@ class CashboxService(object):
 		cashbox_summary_list = list(map(lambda x: x._asdict(), cashbox_summary_q.items))
 		return {'payload': cashbox_summary_list, 'total': cashbox_summary_q.total, 'total_pages': cashbox_summary_q.pages}
 	
-	@Number(['id'])
+	@Number(['id', 'card', 'cash', 'void', 'sales', 'end_at', 'pending'])
 	def edit_cashbox_summary_by_id(self, domain):
-		cashbox_summary = CashboxSummary.query.filter_by(id=domain['id']).first()
-		cashbox_summary.update(domain)
+		sales = Decimal(domain['sales'])
+		void = Decimal(domain['void'])
+		cash = Decimal(domain['cash'])
+		card = Decimal(domain['card'])
+		cashbox_summary = CashboxSummary.query.filter(CashboxSummary.id == domain['id']).first()
+		if cashbox_summary is None:
+			raise ValidationException(ErrorCode.CASHBOX_NOT_FOUND)
+		
+		cash_in = CashboxHistory.query.with_entities(func.coalesce(func.sum(CashboxHistory.amount), 0.0).label('amount'))\
+			.filter(CashboxHistory.ref_id == 1) \
+			.filter(CashboxHistory.cash_box_summary_id == cashbox_summary.id) \
+			.first()
+		cash_out = CashboxHistory.query.with_entities(func.coalesce(func.sum(CashboxHistory.amount), 0.0).label('amount'))\
+			.filter(CashboxHistory.ref_id == 1) \
+			.filter(CashboxHistory.cash_box_summary_id == cashbox_summary.id) \
+			.first()
+		cashbox_summary.pending = domain["pending"]
+		cashbox_summary.transaction = sales - void + cash_in - cash_out
+		cashbox_summary.cash = cash
+		cashbox_summary.card = card
+		cashbox_summary.refund = void
+		cashbox_summary.status = CashboxStatus.END
+		cashbox_summary.difference = (cash + card) - cashbox_summary.transaction
+		cashbox_summary.end_at = domain['end_at']
+		cashbox_summary.save()
 		return {'payload': cashbox_summary.to_dict()}
