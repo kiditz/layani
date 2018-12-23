@@ -201,15 +201,15 @@ class OrderService(object):
 	def get_order_amount_summary(self, domain):
 		date_now = domain['date']
 		outlet_id = domain['outlet_id']
-		order_success_q = Order.query.with_entities(func.sum(Order.total_amount).label('order_summary'))\
+		order_success_q = Order.query.with_entities(func.coalesce(func.sum(Order.total_amount), 0.0).label('order_summary'))\
 			.filter(and_(cast(Order.order_at, DATE) == date_now, Order.outlet_id == outlet_id, Order.status == OrderStatus.SUCCESS))\
 			.first()
 		
-		order_in_progress_q = Order.query.with_entities(func.sum(Order.total_amount).label('order_summary')) \
+		order_in_progress_q = Order.query.with_entities(func.coalesce(func.sum(Order.total_amount), 0.0).label('order_summary'))\
 			.filter(and_(cast(Order.order_at, DATE) == date_now, Order.outlet_id == outlet_id, Order.status == OrderStatus.PENDING)) \
 			.first()
 		
-		order_void_q = Order.query.with_entities(func.sum(Order.total_amount).label('order_summary'))\
+		order_void_q = Order.query.with_entities(func.coalesce(func.sum(Order.total_amount), 0.0).label('order_summary'))\
 			.filter(and_(cast(Order.order_at, DATE) == date_now, Order.outlet_id == outlet_id, Order.status == OrderStatus.VOID, Order.total_amount > 0.0))\
 			.first()
 
@@ -217,11 +217,11 @@ class OrderService(object):
 			.filter(and_(cast(Order.order_at, DATE) == date_now, Order.outlet_id == outlet_id, Order.status == OrderStatus.CREATED, Order.total_amount > 0.0))\
 			.first()
 		
-		order_card_q = Order.query.with_entities(func.count(Order.id).label('order_summary')) \
+		order_card_q = Order.query.with_entities(func.coalesce(func.sum(Order.total_amount), 0.0).label('order_summary'))\
 			.filter(and_(cast(Order.order_at, DATE) == date_now, Order.outlet_id == outlet_id, Order.payment_method == PaymentMethod.CARD, Order.total_amount > 0.0)) \
 			.first()
 		
-		order_cash_q = Order.query.with_entities(func.count(Order.id).label('order_summary')) \
+		order_cash_q = Order.query.with_entities(func.coalesce(func.sum(Order.total_amount), 0.0).label('order_summary'))\
 			.filter(and_(cast(Order.order_at, DATE) == date_now, Order.outlet_id == outlet_id, Order.payment_method == PaymentMethod.CASH, Order.total_amount > 0.0)) \
 			.first()
 		
