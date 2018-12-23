@@ -94,14 +94,14 @@ class CashboxService(object):
 		if cashbox_summary is None:
 			raise ValidationException(ErrorCode.CASHBOX_NOT_FOUND)
 		
-		cash_in = CashboxHistory.query.with_entities(func.coalesce(func.sum(CashboxHistory.amount), 0.0).label('amount'))\
+		cash_in = CashboxHistory.query.with_entities(func.coalesce(func.sum(CashboxHistory.amount), 0).label('amount'))\
 			.filter(CashboxHistory.ref_id == 1) \
 			.filter(CashboxHistory.cash_box_summary_id == cashbox_summary.id) \
-			.first()
-		cash_out = CashboxHistory.query.with_entities(func.coalesce(func.sum(CashboxHistory.amount), 0.0).label('amount'))\
+			.first().amount
+		cash_out = CashboxHistory.query.with_entities(func.coalesce(func.sum(CashboxHistory.amount), 0).label('amount'))\
 			.filter(CashboxHistory.ref_id == 1) \
 			.filter(CashboxHistory.cash_box_summary_id == cashbox_summary.id) \
-			.first()
+			.first().amount
 		cashbox_summary.pending = domain["pending"]
 		cashbox_summary.transaction = sales - void + Decimal(cash_in) - Decimal(cash_out)
 		cashbox_summary.cash = cash
