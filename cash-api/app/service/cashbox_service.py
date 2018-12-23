@@ -42,6 +42,7 @@ class CashboxService(object):
 		cashbox_history.remark = remark
 		cashbox_summary.save()
 		cashbox_history.save()
+		return {'payload': cashbox_history.to_dict()}
 
 	@Number(['cash_box_summary_id', 'page', 'size'])
 	def get_cashbox_history(self, domain):
