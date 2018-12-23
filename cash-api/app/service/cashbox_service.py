@@ -2,7 +2,7 @@ from decimal import Decimal
 from datetime import datetime
 from entity.models import CashboxHistory, CashboxSummary, User
 from slerp.logger import logging
-from slerp.validator import Number, Blank, ValidationException
+from slerp.validator import Number, Blank, Key, ValidationException
 from sqlalchemy import cast, func
 from sqlalchemy.dialects.mssql import DATE
 
@@ -83,7 +83,8 @@ class CashboxService(object):
 		cashbox_summary_list = list(map(lambda x: x._asdict(), cashbox_summary_q.items))
 		return {'payload': cashbox_summary_list, 'total': cashbox_summary_q.total, 'total_pages': cashbox_summary_q.pages}
 	
-	@Number(['id', 'card', 'cash', 'void', 'sales', 'end_at', 'pending'])
+	@Number(['id', 'card', 'cash'])
+	@Key(['end_at', 'void', 'sales', 'pending'])
 	def edit_cashbox_summary_by_id(self, domain):
 		sales = Decimal(domain['sales'])
 		void = Decimal(domain['void'])
