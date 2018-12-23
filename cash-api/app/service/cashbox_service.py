@@ -41,7 +41,7 @@ class CashboxService(object):
 		cashbox_summary.save()
 		cashbox_history.save()
 
-	@Number(['cash_box_summary_id', 'page', 'size', 'date'])
+	@Number(['cash_box_summary_id', 'page', 'size'])
 	def get_cashbox_history(self, domain):
 		page = int(domain['page'])
 		size = int(domain['size'])
