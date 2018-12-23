@@ -29,7 +29,7 @@ class CashboxService(object):
 			cashbox_summary.start_at = datetime.now()
 			
 		cashbox_history = CashboxHistory()
-		cashbox_history.cash_box_id = cashbox_summary.id
+		cashbox_history.cash_box_summary_id = cashbox_summary.id
 		cashbox_history.amount = total_amount
 		if total_amount > 0:
 			cashbox_history.payment_method = CashboxType.DEBIT
