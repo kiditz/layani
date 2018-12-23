@@ -35,10 +35,10 @@ class CashboxService(object):
 		cashbox_history.amount = total_amount
 		if total_amount > 0:
 			cashbox_history.payment_method = CashboxType.DEBIT
-			cashbox_history.refid = 1
+			cashbox_history.ref_id = 1
 		else:
 			cashbox_history.payment_method = CashboxType.CREDIT
-			cashbox_history.refid = 2
+			cashbox_history.ref_id = 2
 		cashbox_history.remark = remark
 		cashbox_summary.save()
 		cashbox_history.save()
