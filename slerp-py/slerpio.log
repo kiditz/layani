@@ -1,0 +1,88 @@
+2018-04-12 06:18:19,106 DEBUG 10851 [consulate.adapters] adapters.py:78 - GET http://localhost:8500/v1/kv/config/slerpio/dev?recurse=None
+2018-04-12 06:18:19,169 DEBUG 10851 [urllib3.connectionpool] connectionpool.py:208 - Starting new HTTP connection (1): localhost
+2018-04-12 06:18:19,174 DEBUG 10851 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "GET /v1/kv/config/slerpio/dev?recurse=None HTTP/1.1" 200 634
+2018-04-12 06:18:19,176 DEBUG 10851 [consulate.adapters] adapters.py:91 - PUT http://localhost:8500/v1/agent/service/register with '{"port": 3000, "name": "slerpio", "check": {"HTTP": "http://0.0.0.0:3000/health", "interval": "10s"}}'
+2018-04-12 06:18:19,322 DEBUG 10851 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "PUT /v1/agent/service/register HTTP/1.1" 200 0
+2018-04-12 06:19:32,705 DEBUG 10927 [consulate.adapters] adapters.py:78 - GET http://localhost:8500/v1/kv/config/slerpio/dev?recurse=None
+2018-04-12 06:19:32,715 DEBUG 10927 [urllib3.connectionpool] connectionpool.py:208 - Starting new HTTP connection (1): localhost
+2018-04-12 06:19:32,719 DEBUG 10927 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "GET /v1/kv/config/slerpio/dev?recurse=None HTTP/1.1" 200 634
+2018-04-12 06:19:32,721 DEBUG 10927 [consulate.adapters] adapters.py:91 - PUT http://localhost:8500/v1/agent/service/register with '{"port": 3000, "check": {"interval": "10s", "HTTP": "http://0.0.0.0:3000/health"}, "name": "slerpio"}'
+2018-04-12 06:19:32,886 DEBUG 10927 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "PUT /v1/agent/service/register HTTP/1.1" 200 0
+2018-04-12 06:20:09,122 DEBUG 10963 [consulate.adapters] adapters.py:78 - GET http://localhost:8500/v1/kv/config/slerpio/dev?recurse=None
+2018-04-12 06:20:09,132 DEBUG 10963 [urllib3.connectionpool] connectionpool.py:208 - Starting new HTTP connection (1): localhost
+2018-04-12 06:20:09,137 DEBUG 10963 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "GET /v1/kv/config/slerpio/dev?recurse=None HTTP/1.1" 200 634
+2018-04-12 06:20:09,139 DEBUG 10963 [consulate.adapters] adapters.py:91 - PUT http://localhost:8500/v1/agent/service/register with '{"port": 3000, "name": "slerpio", "check": {"HTTP": "http://0.0.0.0:3000/health", "interval": "10s"}}'
+2018-04-12 06:20:09,679 DEBUG 10963 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "PUT /v1/agent/service/register HTTP/1.1" 200 0
+2018-04-12 06:20:40,597 DEBUG 10998 [consulate.adapters] adapters.py:78 - GET http://localhost:8500/v1/kv/config/slerpio/dev?recurse=None
+2018-04-12 06:20:40,608 DEBUG 10998 [urllib3.connectionpool] connectionpool.py:208 - Starting new HTTP connection (1): localhost
+2018-04-12 06:20:40,612 DEBUG 10998 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "GET /v1/kv/config/slerpio/dev?recurse=None HTTP/1.1" 200 634
+2018-04-12 06:20:40,614 DEBUG 10998 [consulate.adapters] adapters.py:91 - PUT http://localhost:8500/v1/agent/service/register with '{"name": "slerpio", "port": 3000, "check": {"interval": "10s", "HTTP": "http://0.0.0.0:3000/health"}}'
+2018-04-12 06:20:40,793 DEBUG 10998 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "PUT /v1/agent/service/register HTTP/1.1" 200 0
+2018-04-12 06:21:11,961 DEBUG 11055 [consulate.adapters] adapters.py:78 - GET http://localhost:8500/v1/kv/config/slerpio/dev?recurse=None
+2018-04-12 06:21:11,971 DEBUG 11055 [urllib3.connectionpool] connectionpool.py:208 - Starting new HTTP connection (1): localhost
+2018-04-12 06:21:11,977 DEBUG 11055 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "GET /v1/kv/config/slerpio/dev?recurse=None HTTP/1.1" 200 634
+2018-04-12 06:21:11,979 DEBUG 11055 [consulate.adapters] adapters.py:91 - PUT http://localhost:8500/v1/agent/service/register with '{"name": "slerpio", "check": {"HTTP": "http://0.0.0.0:3000/health", "interval": "10s"}, "port": 3000}'
+2018-04-12 06:21:12,143 DEBUG 11055 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "PUT /v1/agent/service/register HTTP/1.1" 200 0
+2018-04-12 06:21:38,013 DEBUG 11083 [consulate.adapters] adapters.py:78 - GET http://localhost:8500/v1/kv/config/slerpio/dev?recurse=None
+2018-04-12 06:21:38,024 DEBUG 11083 [urllib3.connectionpool] connectionpool.py:208 - Starting new HTTP connection (1): localhost
+2018-04-12 06:21:38,028 DEBUG 11083 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "GET /v1/kv/config/slerpio/dev?recurse=None HTTP/1.1" 200 634
+2018-04-12 06:21:38,035 DEBUG 11083 [consulate.adapters] adapters.py:91 - PUT http://localhost:8500/v1/agent/service/register with '{"name": "slerpio", "port": 3000, "check": {"HTTP": "http://0.0.0.0:3000/health", "interval": "10s"}}'
+2018-04-12 06:21:38,211 DEBUG 11083 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "PUT /v1/agent/service/register HTTP/1.1" 200 0
+2018-04-12 06:22:50,240 DEBUG 11129 [consulate.adapters] adapters.py:78 - GET http://localhost:8500/v1/kv/config/slerpio/dev?recurse=None
+2018-04-12 06:22:50,251 DEBUG 11129 [urllib3.connectionpool] connectionpool.py:208 - Starting new HTTP connection (1): localhost
+2018-04-12 06:22:50,256 DEBUG 11129 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "GET /v1/kv/config/slerpio/dev?recurse=None HTTP/1.1" 200 634
+2018-04-12 06:22:50,258 DEBUG 11129 [consulate.adapters] adapters.py:91 - PUT http://localhost:8500/v1/agent/service/register with '{"check": {"HTTP": "http://0.0.0.0:3000/health", "interval": "10s"}, "name": "slerpio", "port": 3000}'
+2018-04-12 06:22:50,410 DEBUG 11129 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "PUT /v1/agent/service/register HTTP/1.1" 200 0
+2018-04-12 06:22:50,472 INFO 11129 [tests.test_entity] test_entity.py:28 - Notification : {}
+2018-04-12 06:23:20,924 DEBUG 11151 [consulate.adapters] adapters.py:78 - GET http://localhost:8500/v1/kv/config/slerpio/dev?recurse=None
+2018-04-12 06:23:20,935 DEBUG 11151 [urllib3.connectionpool] connectionpool.py:208 - Starting new HTTP connection (1): localhost
+2018-04-12 06:23:20,940 DEBUG 11151 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "GET /v1/kv/config/slerpio/dev?recurse=None HTTP/1.1" 200 634
+2018-04-12 06:23:20,943 DEBUG 11151 [consulate.adapters] adapters.py:91 - PUT http://localhost:8500/v1/agent/service/register with '{"name": "slerpio", "port": 3000, "check": {"interval": "10s", "HTTP": "http://0.0.0.0:3000/health"}}'
+2018-04-12 06:23:21,089 DEBUG 11151 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "PUT /v1/agent/service/register HTTP/1.1" 200 0
+2018-04-12 06:23:21,138 INFO 11151 [tests.test_entity] test_entity.py:28 - Notification : {}
+2018-04-12 06:23:49,614 DEBUG 11187 [consulate.adapters] adapters.py:78 - GET http://localhost:8500/v1/kv/config/slerpio/dev?recurse=None
+2018-04-12 06:23:49,624 DEBUG 11187 [urllib3.connectionpool] connectionpool.py:208 - Starting new HTTP connection (1): localhost
+2018-04-12 06:23:49,628 DEBUG 11187 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "GET /v1/kv/config/slerpio/dev?recurse=None HTTP/1.1" 200 634
+2018-04-12 06:23:49,630 DEBUG 11187 [consulate.adapters] adapters.py:91 - PUT http://localhost:8500/v1/agent/service/register with '{"name": "slerpio", "check": {"interval": "10s", "HTTP": "http://0.0.0.0:3000/health"}, "port": 3000}'
+2018-04-12 06:23:49,793 DEBUG 11187 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "PUT /v1/agent/service/register HTTP/1.1" 200 0
+2018-04-12 06:23:49,814 INFO 11187 [tests.test_entity] test_entity.py:28 - Notification : {}
+2018-04-12 06:24:04,777 DEBUG 11204 [consulate.adapters] adapters.py:78 - GET http://localhost:8500/v1/kv/config/slerpio/dev?recurse=None
+2018-04-12 06:24:04,787 DEBUG 11204 [urllib3.connectionpool] connectionpool.py:208 - Starting new HTTP connection (1): localhost
+2018-04-12 06:24:04,792 DEBUG 11204 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "GET /v1/kv/config/slerpio/dev?recurse=None HTTP/1.1" 200 634
+2018-04-12 06:24:04,794 DEBUG 11204 [consulate.adapters] adapters.py:91 - PUT http://localhost:8500/v1/agent/service/register with '{"check": {"interval": "10s", "HTTP": "http://0.0.0.0:3000/health"}, "port": 3000, "name": "slerpio"}'
+2018-04-12 06:24:04,951 DEBUG 11204 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "PUT /v1/agent/service/register HTTP/1.1" 200 0
+2018-04-12 06:24:21,857 DEBUG 11223 [consulate.adapters] adapters.py:78 - GET http://localhost:8500/v1/kv/config/slerpio/dev?recurse=None
+2018-04-12 06:24:21,875 DEBUG 11223 [urllib3.connectionpool] connectionpool.py:208 - Starting new HTTP connection (1): localhost
+2018-04-12 06:24:21,880 DEBUG 11223 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "GET /v1/kv/config/slerpio/dev?recurse=None HTTP/1.1" 200 634
+2018-04-12 06:24:21,882 DEBUG 11223 [consulate.adapters] adapters.py:91 - PUT http://localhost:8500/v1/agent/service/register with '{"check": {"interval": "10s", "HTTP": "http://0.0.0.0:3000/health"}, "port": 3000, "name": "slerpio"}'
+2018-04-12 06:24:22,051 DEBUG 11223 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "PUT /v1/agent/service/register HTTP/1.1" 200 0
+2018-04-12 06:24:40,133 DEBUG 11244 [consulate.adapters] adapters.py:78 - GET http://localhost:8500/v1/kv/config/slerpio/dev?recurse=None
+2018-04-12 06:24:40,142 DEBUG 11244 [urllib3.connectionpool] connectionpool.py:208 - Starting new HTTP connection (1): localhost
+2018-04-12 06:24:40,148 DEBUG 11244 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "GET /v1/kv/config/slerpio/dev?recurse=None HTTP/1.1" 200 634
+2018-04-12 06:24:40,150 DEBUG 11244 [consulate.adapters] adapters.py:91 - PUT http://localhost:8500/v1/agent/service/register with '{"name": "slerpio", "port": 3000, "check": {"HTTP": "http://0.0.0.0:3000/health", "interval": "10s"}}'
+2018-04-12 06:24:40,288 DEBUG 11244 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "PUT /v1/agent/service/register HTTP/1.1" 200 0
+2018-04-12 06:25:28,212 DEBUG 11290 [consulate.adapters] adapters.py:78 - GET http://localhost:8500/v1/kv/config/slerpio/dev?recurse=None
+2018-04-12 06:25:28,222 DEBUG 11290 [urllib3.connectionpool] connectionpool.py:208 - Starting new HTTP connection (1): localhost
+2018-04-12 06:25:28,228 DEBUG 11290 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "GET /v1/kv/config/slerpio/dev?recurse=None HTTP/1.1" 200 634
+2018-04-12 06:25:28,230 DEBUG 11290 [consulate.adapters] adapters.py:91 - PUT http://localhost:8500/v1/agent/service/register with '{"name": "slerpio", "port": 3000, "check": {"HTTP": "http://0.0.0.0:3000/health", "interval": "10s"}}'
+2018-04-12 06:25:28,384 DEBUG 11290 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "PUT /v1/agent/service/register HTTP/1.1" 200 0
+2018-04-12 06:25:41,009 DEBUG 11308 [consulate.adapters] adapters.py:78 - GET http://localhost:8500/v1/kv/config/slerpio/dev?recurse=None
+2018-04-12 06:25:41,019 DEBUG 11308 [urllib3.connectionpool] connectionpool.py:208 - Starting new HTTP connection (1): localhost
+2018-04-12 06:25:41,024 DEBUG 11308 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "GET /v1/kv/config/slerpio/dev?recurse=None HTTP/1.1" 200 634
+2018-04-12 06:25:41,027 DEBUG 11308 [consulate.adapters] adapters.py:91 - PUT http://localhost:8500/v1/agent/service/register with '{"port": 3000, "name": "slerpio", "check": {"HTTP": "http://0.0.0.0:3000/health", "interval": "10s"}}'
+2018-04-12 06:25:41,194 DEBUG 11308 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "PUT /v1/agent/service/register HTTP/1.1" 200 0
+2018-04-12 06:26:21,124 DEBUG 11341 [consulate.adapters] adapters.py:78 - GET http://localhost:8500/v1/kv/config/slerpio/dev?recurse=None
+2018-04-12 06:26:21,134 DEBUG 11341 [urllib3.connectionpool] connectionpool.py:208 - Starting new HTTP connection (1): localhost
+2018-04-12 06:26:21,139 DEBUG 11341 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "GET /v1/kv/config/slerpio/dev?recurse=None HTTP/1.1" 200 634
+2018-04-12 06:26:21,142 DEBUG 11341 [consulate.adapters] adapters.py:91 - PUT http://localhost:8500/v1/agent/service/register with '{"check": {"interval": "10s", "HTTP": "http://0.0.0.0:3000/health"}, "name": "slerpio", "port": 3000}'
+2018-04-12 06:26:21,301 DEBUG 11341 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "PUT /v1/agent/service/register HTTP/1.1" 200 0
+2018-04-12 06:29:54,889 DEBUG 11524 [consulate.adapters] adapters.py:78 - GET http://localhost:8500/v1/kv/config/slerpio/dev?recurse=None
+2018-04-12 06:29:54,898 DEBUG 11524 [urllib3.connectionpool] connectionpool.py:208 - Starting new HTTP connection (1): localhost
+2018-04-12 06:29:54,906 DEBUG 11524 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "GET /v1/kv/config/slerpio/dev?recurse=None HTTP/1.1" 200 634
+2018-04-12 06:29:54,913 DEBUG 11524 [consulate.adapters] adapters.py:91 - PUT http://localhost:8500/v1/agent/service/register with '{"name": "slerpio", "port": 3000, "check": {"HTTP": "http://0.0.0.0:3000/health", "interval": "10s"}}'
+2018-04-12 06:29:55,084 DEBUG 11524 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "PUT /v1/agent/service/register HTTP/1.1" 200 0
+2018-04-12 06:31:21,960 DEBUG 11580 [consulate.adapters] adapters.py:78 - GET http://localhost:8500/v1/kv/config/slerpio/dev?recurse=None
+2018-04-12 06:31:21,970 DEBUG 11580 [urllib3.connectionpool] connectionpool.py:208 - Starting new HTTP connection (1): localhost
+2018-04-12 06:31:21,975 DEBUG 11580 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "GET /v1/kv/config/slerpio/dev?recurse=None HTTP/1.1" 200 634
+2018-04-12 06:31:21,978 DEBUG 11580 [consulate.adapters] adapters.py:91 - PUT http://localhost:8500/v1/agent/service/register with '{"check": {"interval": "10s", "HTTP": "http://0.0.0.0:3000/health"}, "name": "slerpio", "port": 3000}'
+2018-04-12 06:31:22,130 DEBUG 11580 [urllib3.connectionpool] connectionpool.py:396 - http://localhost:8500 "PUT /v1/agent/service/register HTTP/1.1" 200 0
