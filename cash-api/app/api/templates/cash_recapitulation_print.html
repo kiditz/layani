@@ -1,0 +1,202 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Receipt</title>
+
+    <style>
+        img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .invoice-box {
+            max-width: 800px;
+            margin: auto;
+            padding: 10px;
+            border: 1px solid #eee;
+            box-shadow: 0 0 10px rgba(0, 0, 0, .15);
+            font-size: 16px;
+            line-height: 24px;
+            font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+            color: #000;
+        }
+        
+        .invoice-box table {
+            width: 100%;
+            line-height: inherit;
+            text-align: left;
+        }
+        
+        .invoice-box table td {
+            padding: 5px;
+            vertical-align: top;
+        }
+
+        .invoice-box table tr.item td.minus {
+            color:red;
+        }
+        .invoice-box table tr.child td {
+            font-size: 14px;
+        }
+
+        .invoice-box table tr.minus td {
+            font-size: 14px;
+        }
+        .invoice-box table tr.minus td:nth-child(2) {
+            color: red;
+        }
+
+        .invoice-box table tr td:nth-child(2) {
+            text-align: right;
+        }
+        
+        .invoice-box table tr.top table td {
+            padding-bottom: 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .invoice-box table tr.bottom table td {
+            padding-bottom: 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+        .invoice-box table tr.top table td.title h3 {
+            font-size: 45px;
+            line-height:45px;
+            color: #333;
+        }
+        
+        .invoice-box table tr.information table td {
+            padding-bottom: 40px;
+        }
+        
+        .invoice-box table tr.line td {
+            border-bottom: 0.5px solid #eee;
+        }
+        
+        .invoice-box table tr.details td {
+            padding-bottom: 20px;
+        }
+        .invoice-box table tr.total td:nth-child(2) {
+            border-bottom: 0.5px dashed rgb(0, 0, 0);
+        }
+        
+        @media only screen and (max-width: 600px) {
+            .invoice-box table tr.top table td {
+                width: 100%;
+                display: block;
+                text-align: center;
+            }
+            .invoice-box table tr.information table td {
+                width: 100%;
+                display: block;
+                text-align: center;
+            }
+        }
+
+
+    </style>
+</head>
+
+<body>
+<div class="invoice-box">
+    <table cellpadding="0" cellspacing="0">
+        <tr class="item">
+            <td>
+                <b>{{_('Sales')}}</b>
+            </td>
+
+            <td>
+                Rp{{thousand(summary.sales)}}
+            </td>
+        </tr>
+        <tr class="item">
+            <td>
+                <b>{{_('Void')}}</b>
+            </td>
+            <td>
+                Rp{{thousand(summary.refund)}}
+            </td>
+        </tr>
+        <tr class="item">
+            <td>
+                <b>{{_('Cash In')}}</b>
+            </td>
+            <td>
+                Rp{{thousand(summary.cash_in)}}
+            </td>
+        </tr>
+        {%for cash in summary.cash_in_list%}
+        <tr class="child">
+            <td>
+                &emsp;{{cash.remark}}
+            </td>
+            <td>
+                Rp{{thousand(cash.amount)}}
+            </td>
+        </tr>
+        {%endfor%}
+        <tr class="item">
+            <td>
+                <b>{{_('Cash Out')}}</b>
+            </td>
+            <td class="minus">
+                Rp{{thousand(summary.cash_out)}}
+            </td>
+        </tr>
+        {%for cash in summary.cash_out_list%}
+        <tr class="minus">
+            <td>
+                &emsp;{{cash.remark}}
+            </td>
+            <td>
+                Rp{{thousand(cash.amount)}}
+            </td>
+        </tr>
+        {%endfor%}
+         <tr class="line">
+            <td>
+            </td>
+            <td>
+            </td>
+        </tr>
+         <tr class="item">
+            <td>
+                <b>{{_('Request By System')}}</b>
+            </td>
+            <td>
+                Rp{{thousand(summary.transaction)}}
+            </td>
+        </tr>
+        <tr class="child">
+            <td>
+                &emsp;{{_('CASH')}}
+            </td>
+            <td>
+                Rp{{thousand(summary.cash)}}
+            </td>
+        </tr>
+        <tr class="child">
+            <td>
+                &emsp;{{_('CARD')}}
+            </td>
+            <td>
+                Rp{{thousand(summary.card)}}
+            </td>
+        </tr>
+        <tr class="item">
+            <td>
+                &emsp;{{_('Difference')}}
+            </td>
+            <td>
+                Rp{{thousand(summary.difference)}}
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+
+</html>

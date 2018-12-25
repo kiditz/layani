@@ -51,6 +51,7 @@ class OrderService(object):
 				cashbox_summary = CashboxSummary()
 				cashbox_summary.transaction = 0
 				cashbox_summary.start_at = datetime_now
+				cashbox_summary.end_at = datetime_now
 				cashbox_summary.user_id = domain['user_id']
 				cashbox_summary.outlet_id = outlet_id
 				cashbox_summary.status = 'O'
@@ -261,6 +262,7 @@ class OrderService(object):
 			User.fullname,
 			Outlet.name.label('outlet_name'),
 			Outlet.address.label('outlet_address'),
+			Outlet.phone_number.label('outlet_phone_number'),
 			Order.cashback,
 			Discount.name.label('discount_name'),
 			Discount.method.label('discount_method'),

@@ -20,11 +20,11 @@ msgstr ""
 
 #: api/templates/cash_recapitulation_view.html:109
 msgid "Sales"
-msgstr ""
+msgstr "Penjualan"
 
 #: api/templates/cash_recapitulation_view.html:118
 msgid "Void"
-msgstr ""
+msgstr "Dibatalkan"
 
 #: api/templates/cash_recapitulation_view.html:126
 msgid "Cash In"

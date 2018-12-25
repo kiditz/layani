@@ -126,6 +126,7 @@ class CashboxService(object):
 			.filter(CashboxHistory.ref_id == 2) \
 			.filter(CashboxHistory.cash_box_summary_id == cashbox_summary.id) \
 			.first().amount
+		
 		cashbox_summary.pending = domain["pending"]
 		cashbox_summary.transaction = sales - void + Decimal(cash_in) - Decimal(cash_out * -1)
 		cashbox_summary.cash = cash
