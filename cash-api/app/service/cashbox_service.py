@@ -105,9 +105,6 @@ class CashboxService(object):
 		cashbox_summary = CashboxSummary.query.with_entities(*entities) \
 			.join(User, CashboxSummary.user_id == User.id) \
 			.filter(CashboxSummary.id == summary_id).first()
-		total_cash_in = CashboxHistory.query.with_entities(func.coalesce(func.sum(CashboxHistory.amount), 0.0).label('total_cash_in'))\
-			.filter(CashboxHistory.cash_box_summary_id == cashbox_summary.id)\
-			.filter(CashboxHistory.ref_id == cashbox_summary.id)
 		return {'payload': cashbox_summary._asdict()}
 	
 	@Number(['id', 'card', 'cash'])
@@ -131,7 +128,7 @@ class CashboxService(object):
 			.filter(CashboxHistory.cash_box_summary_id == cashbox_summary.id) \
 			.first().amount
 		cashbox_summary.pending = domain["pending"]
-		cashbox_summary.transaction = sales - void + Decimal(cash_in) - Decimal(cash_out)
+		cashbox_summary.transaction = sales - void + Decimal(cash_in) - Decimal(cash_out * -1)
 		cashbox_summary.cash = cash
 		cashbox_summary.card = card
 		cashbox_summary.sales = sales
