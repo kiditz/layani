@@ -1,5 +1,6 @@
 package com.overflow.cash.fragment
 
+import android.accounts.AccountManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -18,6 +19,7 @@ import android.webkit.WebView
 import com.overflow.cash.BuildConfig
 import com.overflow.cash.activity.Constant
 import com.overflow.cash.R
+import com.overflow.cash.account.AccountGeneral
 import com.overflow.cash.utils.currentLocale
 import com.overflow.cash.utils.rupiah
 import com.overflow.cash.utils.shouldRequestPermissions
@@ -38,6 +40,8 @@ class ReceiptFragment:BaseFragment(){
     lateinit var preferences: SharedPreferences
     @Inject
     lateinit var translations: Translations
+    @Inject
+    lateinit var accountManager: AccountManager
     lateinit var order: Data
     private var source:String = ""
     private var listDialog:Array<String> = arrayOf()
@@ -64,47 +68,55 @@ class ReceiptFragment:BaseFragment(){
 
         this.order = Data(arguments!!.getString(Constant.ARG_SALES))
 
-        val stream = activity?.assets?.open("receipt/index.html")
-        this.source = StreamUtils.copyStreamToString(stream)
-        val outlet = Data(preferences.getString("outlet", "{}"))
-        if(order.containsKeyAndNotNull("customer_name")){
-            val customerName = addCustomInfo("Pelanggan", order.getString("customer_name"))
-            source = source.replace("{{customer}}", customerName)
-        }else{
-            source = source.replace("{{customer}}", Constant.TEXT_EMPTY)
+//        val stream = activity?.assets?.open("receipt/index.html")
+//        this.source = StreamUtils.copyStreamToString(stream)
+//        val outlet = Data(preferences.getString("outlet", "{}"))
+//        if(order.containsKeyAndNotNull("customer_name")){
+//            val customerName = addCustomInfo("Pelanggan", order.getString("customer_name"))
+//            source = source.replace("{{customer}}", customerName)
+//        }else{
+//            source = source.replace("{{customer}}", Constant.TEXT_EMPTY)
+//        }
+//        if(order.containsKeyAndNotNull("receiveable_date")){
+//            val receiveableDate = addCustomInfo("Jatuh Tempo", format.format(Date(order.getLong("receiveable_date"))))
+//            source = source.replace("{{tgl_jatuh_tempo}}", receiveableDate)
+//        }else{
+//            source = source.replace("{{tgl_jatuh_tempo}}", Constant.TEXT_EMPTY)
+//        }
+//        source = source.replace("{{title}}",outlet.getString("name"))
+//        source = source.replace("{{order.code}}","%23${order.getString("order_code")}")
+//        source = source.replace("{{items}}", loadItems(order.getList("order_items")))
+//        source = source.replace("{{order.total_amount}}", rupiah(order.getDouble("total_amount")))
+//        source = source.replace("{{order.total_payment}}", rupiah(order.getDouble("total_payment")))
+//
+//        if(order.getString("payment_method") == Constant.PaymentMethod.CASH){
+//            if(order.getDouble("cashback") > 0){
+//                source = source.replace("{{cashback_title}}", "Kembali")
+//                source = source.replace("{{order.cashback}}", rupiah(order.getDouble("cashback")))
+//            }else{
+//                source = source.replace("{{cashback_title}}", "")
+//                source = source.replace("{{order.cashback}}", "")
+//            }
+//        }else{
+//            if(order.containsKeyAndNotNull("total_credit") && order.getDouble("total_credit") > 0){
+//                source = source.replace("{{cashback_title}}", "Hutang")
+//                source = source.replace("{{order.cashback}}", rupiah(order.getDouble("total_credit")))
+//            }else{
+//                source = source.replace("{{cashback_title}}", "Kembali")
+//                source = source.replace("{{order.cashback}}", rupiah(order.getDouble("cashback")))
+//            }
+//        }
+//
+//        source = source.replace("{{order.create_at}}", format.format(Date(order.getLong("order_at"))))
+        if (accountManager.getAccountsByType(getString(R.string.account_type)).isEmpty()) {
+            return
         }
-        if(order.containsKeyAndNotNull("receiveable_date")){
-            val receiveableDate = addCustomInfo("Jatuh Tempo", format.format(Date(order.getLong("receiveable_date"))))
-            source = source.replace("{{tgl_jatuh_tempo}}", receiveableDate)
-        }else{
-            source = source.replace("{{tgl_jatuh_tempo}}", Constant.TEXT_EMPTY)
-        }
-        source = source.replace("{{title}}",outlet.getString("name"))
-        source = source.replace("{{order.code}}","%23${order.getString("order_code")}")
-        source = source.replace("{{items}}", loadItems(order.getList("order_items")))
-        source = source.replace("{{order.total_amount}}", rupiah(order.getDouble("total_amount")))
-        source = source.replace("{{order.total_payment}}", rupiah(order.getDouble("total_payment")))
-
-        if(order.getString("payment_method") == Constant.PaymentMethod.CASH){
-            if(order.getDouble("cashback") > 0){
-                source = source.replace("{{cashback_title}}", "Kembali")
-                source = source.replace("{{order.cashback}}", rupiah(order.getDouble("cashback")))
-            }else{
-                source = source.replace("{{cashback_title}}", "")
-                source = source.replace("{{order.cashback}}", "")
-            }
-        }else{
-            if(order.containsKeyAndNotNull("total_credit") && order.getDouble("total_credit") > 0){
-                source = source.replace("{{cashback_title}}", "Hutang")
-                source = source.replace("{{order.cashback}}", rupiah(order.getDouble("total_credit")))
-            }else{
-                source = source.replace("{{cashback_title}}", "Kembali")
-                source = source.replace("{{order.cashback}}", rupiah(order.getDouble("cashback")))
-            }
-        }
-
-        source = source.replace("{{order.create_at}}", format.format(Date(order.getLong("order_at"))))
-        webView.loadData(source, "text/html;charset=utf-8", "utf-8")
+        val account = accountManager.getAccountsByType(getString(R.string.account_type)).first()
+        var authToken = accountManager.peekAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS)
+        val params = mapOf<String, String>("Authorization" to "Bearer $authToken")
+        val url = BuildConfig.base_url + "/cash/receipt/order?id=${order.getLong("id")}&lang_code=${preferences.getString("lang_code", "id")}"
+        Timber.i("URL : %s", url)
+        webView.loadUrl(url, params)
     }
 
     private fun addCustomInfo(title:String, value:String): String {
