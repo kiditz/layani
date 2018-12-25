@@ -1,6 +1,6 @@
 from entity.models import OrderItem, StockHistory, Stock, AccountReceiveable, Customer, Product, \
 	Discount, ProductSellPrice, ProductPurchasePrice, \
-	CashboxSummary, User
+	CashboxSummary, User, CashboxHistory
 from slerp.logger import logging
 from slerp.validator import Number, Key, ValidationException
 from sqlalchemy import between
@@ -197,10 +197,11 @@ class OrderService(object):
 			.scalar()
 		return {'payload': {'count': count_order_saved}}
 	
-	@Key(['outlet_id', 'date'])
+	@Key(['summary_id', 'date'])
 	def get_order_amount_summary(self, domain):
 		date_now = domain['date']
-		outlet_id = domain['outlet_id']
+		cashbox_summary = CashboxSummary.query.filter(CashboxSummary.id == domain['summary_id']).first()
+		outlet_id = cashbox_summary.outlet_id
 		order_success_q = Order.query.with_entities(func.coalesce(func.sum(Order.total_amount), 0.0).label('order_summary'))\
 			.filter(and_(cast(Order.order_at, DATE) == date_now, Order.outlet_id == outlet_id, Order.status == OrderStatus.SUCCESS))\
 			.first()
@@ -225,6 +226,16 @@ class OrderService(object):
 			.filter(and_(cast(Order.order_at, DATE) == date_now, Order.outlet_id == outlet_id, Order.payment_method == PaymentMethod.CASH, Order.total_amount > 0.0)) \
 			.first()
 		
+		cash_in = CashboxHistory.query.with_entities(func.coalesce(func.sum(CashboxHistory.amount), 0).label('amount')) \
+			.filter(CashboxHistory.ref_id == 1) \
+			.filter(CashboxHistory.cash_box_summary_id == domain['summary_id']) \
+			.first().amount
+		
+		cash_out = CashboxHistory.query.with_entities(func.coalesce(func.sum(CashboxHistory.amount), 0).label('amount')) \
+			.filter(CashboxHistory.ref_id == 2) \
+			.filter(CashboxHistory.cash_box_summary_id == domain['summary_id']) \
+			.first().amount
+		
 		order_dict = {
 			'success': order_success_q.order_summary,
 			'void': order_void_q.order_summary,
@@ -232,6 +243,8 @@ class OrderService(object):
 			'card': order_card_q.order_summary,
 			'cash': order_cash_q.order_summary,
 			'in_progress': order_in_progress_q.order_summary,
+			'cash_in': cash_in,
+			'cash_out': cash_out
 		}
 		return {'payload': order_dict}
 		
