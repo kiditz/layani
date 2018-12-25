@@ -314,7 +314,9 @@ class CashboxSummary(db.Model, Entity):
 	difference = db.Column(db.Numeric, nullable=False, server_default='0', default=0)	
 	user_id = db.Column(db.ForeignKey(u'co_user.id'), index=True)	
 	outlet_id = db.Column(db.ForeignKey(u'co_outlet.id'), nullable=False)
-	
+	cash_in = db.Column(db.Numeric, nullable=False, server_default='0', default=0)
+	cash_out = db.Column(db.Numeric, nullable=False, server_default='0', default=0)	
+	sales = db.Column(db.Numeric, nullable=False, server_default='0', default=0)	
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)
 

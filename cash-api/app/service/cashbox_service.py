@@ -85,6 +85,31 @@ class CashboxService(object):
 		cashbox_summary_list = list(map(lambda x: x._asdict(), cashbox_summary_q.items))
 		return {'payload': cashbox_summary_list, 'total': cashbox_summary_q.total, 'total_pages': cashbox_summary_q.pages}
 	
+	@Number(['id', 'page', 'size'])
+	def find_cashbox_summary(self, domain):
+		summary_id = domain['id']
+		entities = (
+			CashboxSummary.id,
+			CashboxSummary.start_at,
+			CashboxSummary.end_at,
+			CashboxSummary.status,
+			CashboxSummary.pending,
+			CashboxSummary.cash,
+			CashboxSummary.card,
+			CashboxSummary.transaction,
+			CashboxSummary.difference,
+			CashboxSummary.outlet_id,
+			User.fullname
+		)
+		
+		cashbox_summary = CashboxSummary.query.with_entities(*entities) \
+			.join(User, CashboxSummary.user_id == User.id) \
+			.filter(CashboxSummary.id == summary_id).first()
+		total_cash_in = CashboxHistory.query.with_entities(func.coalesce(func.sum(CashboxHistory.amount), 0.0).label('total_cash_in'))\
+			.filter(CashboxHistory.cash_box_summary_id == cashbox_summary.id)\
+			.filter(CashboxHistory.ref_id == cashbox_summary.id)
+		return {'payload': cashbox_summary._asdict()}
+	
 	@Number(['id', 'card', 'cash'])
 	@Key(['end_at', 'void', 'sales', 'pending'])
 	def edit_cashbox_summary_by_id(self, domain):
@@ -102,13 +127,16 @@ class CashboxService(object):
 			.filter(CashboxHistory.cash_box_summary_id == cashbox_summary.id) \
 			.first().amount
 		cash_out = CashboxHistory.query.with_entities(func.coalesce(func.sum(CashboxHistory.amount), 0).label('amount'))\
-			.filter(CashboxHistory.ref_id == 1) \
+			.filter(CashboxHistory.ref_id == 2) \
 			.filter(CashboxHistory.cash_box_summary_id == cashbox_summary.id) \
 			.first().amount
 		cashbox_summary.pending = domain["pending"]
 		cashbox_summary.transaction = sales - void + Decimal(cash_in) - Decimal(cash_out)
 		cashbox_summary.cash = cash
 		cashbox_summary.card = card
+		cashbox_summary.sales = sales
+		cashbox_summary.cash_in = cash_in
+		cashbox_summary.cash_out = cash_out
 		cashbox_summary.refund = void
 		cashbox_summary.status = CashboxStatus.END
 		cashbox_summary.difference = (cash + card) - Decimal(cashbox_summary.transaction)

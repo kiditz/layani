@@ -82,134 +82,138 @@
                 text-align: center;
             }
         }
+
     </style>
 </head>
 
 <body>
-    <div class="invoice-box">
-        <div>
-            <table cellpadding="0" cellspacing="0">
-                <tr class="top">
-                    <td colspan="2">
-                        <table>
-                            <tr>
-                                <td class="title">
-                                    <h3>{{order.outlet_name}}</h3>
-                                    {{order.outlet_address}}
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr >
-                    <td>
-                        {{_('Payment Method')}}
-                    </td>
+<div class="invoice-box">
+    <div>
+        <table cellpadding="0" cellspacing="0">
+            <tr class="top">
+                <td colspan="2">
+                    <table>
+                        <tr>
+                            <td class="title">
+                                <h3>{{order.outlet_name}}</h3>
+                                {{order.outlet_address}}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {{_('Payment Method')}}
+                </td>
 
-                    <td>
-                        {{_(order.payment_method)}}
-                    </td>
-                </tr>
-                <tr >
-                    <td>
-                        {{order.order_at.strftime('%Y-%m-%d %H:%M:%S')}}
-                    </td>
+                <td>
+                    {{_(order.payment_method)}}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {{order.order_at.strftime('%Y-%m-%d %H:%M:%S')}}
+                </td>
 
-                    <td>
-                       {{order.fullname}}
-                    </td>
-                </tr>
-                <tr class="heading">
-                    <td>
-                        No
-                    </td>
+                <td>
+                    {{order.fullname}}
+                </td>
+            </tr>
+            <tr class="heading">
+                <td>
+                    No
+                </td>
 
-                    <td>
-                        {{order.order_code}}
-                    </td>
-                </tr>
-                {%for item in order.item_list-%}
-                <tr class="item">
-                    <td>
-                        <b>{{item.name}}</b>
-                    </td>
+                <td>
+                    {{order.order_code}}
+                </td>
+            </tr>
+            {%for item in order.item_list-%}
+            <tr class="item">
+                <td>
+                    <b>{{item.name}}</b>
+                </td>
 
-                    <td>
+                <td>
 
-                    </td>
-                </tr>
-                <tr class="item">
-                    <td>
-                       {{thousand(item.sell_price)}} x {{item.qty}}
-                        {%if item.discount_type == '%' %}
-                            - {{item.discount_amount}}%
-                        {%else%}
-                            {{-item.discount_amount if item.discount_amount else ''}}
-                        {%endif%}
-                    </td>
-                    <td>
-                       {{thousand(item.sub_total)}}
-                    </td>
-                </tr>
-                <!--Keluarkan nama jika metode discount adalah by one get one-->
+                </td>
+            </tr>
+            <tr class="item">
+                <td>
+                    {{thousand(item.sell_price)}} x {{item.qty}}
+                    {%if item.discount_type == '%' %}
+                    - {{item.discount_amount}}%
+                    {%else%}
+                    {{-item.discount_amount if item.discount_amount else ''}}
+                    {%endif%}
+                </td>
+                <td>
+                    {{thousand(item.sub_total)}}
+                </td>
+            </tr>
+            <!--Keluarkan nama jika metode discount adalah by one get one-->
 
-                {%if item.discount_method == 1 %}
-                <tr class="item">
-                    <td colspan="2">
-                        {{item.discount_name if item.discount_name else ''}}
-                    </td>
+            {%if item.discount_method == 1 %}
+            <tr class="item">
+                <td colspan="2">
+                    {{item.discount_name if item.discount_name else ''}}
+                </td>
 
-                </tr>
-                {%endif%}
-                {%-endfor%}
-                <tr class="heading"><td></td><td></td></tr>
-                <tr>
-                    <td>{{_('Total Shopping')}}: </td>
-                    <td>
-                        {{thousand(order.price_before_disc)}}
-                    </td>
-                </tr>
-                {%if order.discount_amount-%}
-                <tr  class="total">
-                    <td>{{_('Discount')}}: </td>
-                    <td>
-                       {{thousand(order.discount_amount)}}{%if order.discount_type == '%'%}%{%-endif%}
-                    </td>
-                </tr>
-                <tr>
-                    <td>{{_('Total')}}: </td>
-                    <td>
-                       {{thousand(order.total_amount)}}
-                    </td>
-                </tr>
-                {%-endif%}
-                <tr>
-                    <td>{{_('Pay')}}: </td>
-                    <td>
-                        {{thousand(order.total_payment)}}
-                    </td>
-                </tr>
-                <tr >
-                    <td>{{_('Cashback')}}: </td>
-                    <td>
-                        {{thousand(order.cashback)}}
-                    </td>
-                </tr>
-                 <tr class="bottom">
-                    <td colspan="2">
-                        <table>
-                            <tr>
-                                <td>
-                                    <!--<h3>Toko Sambas</h3>                                    -->
-                                    <p style="font-weight:bold;">Powered By Layani</p>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-        </div>
+            </tr>
+            {%endif%}
+            {%-endfor%}
+            <tr class="heading">
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>{{_('Total Shopping')}}:</td>
+                <td>
+                    {{thousand(order.price_before_disc)}}
+                </td>
+            </tr>
+            {%if order.discount_amount-%}
+            <tr class="total">
+                <td>{{_('Discount')}}:</td>
+                <td>
+                    {{thousand(order.discount_amount)}}{%if order.discount_type == '%'%}%{%-endif%}
+                </td>
+            </tr>
+            <tr>
+                <td>{{_('Total')}}:</td>
+                <td>
+                    {{thousand(order.total_amount)}}
+                </td>
+            </tr>
+            {%-endif%}
+            <tr>
+                <td>{{_('Pay')}}:</td>
+                <td>
+                    {{thousand(order.total_payment)}}
+                </td>
+            </tr>
+            <tr>
+                <td>{{_('Cashback')}}:</td>
+                <td>
+                    {{thousand(order.cashback)}}
+                </td>
+            </tr>
+            <tr class="bottom">
+                <td colspan="2">
+                    <table>
+                        <tr>
+                            <td>
+                                <!--<h3>Toko Sambas</h3>                                    -->
+                                <p style="font-weight:bold;">Powered By Layani</p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
     </div>
+</div>
 </body>
 
 </html>
