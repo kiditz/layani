@@ -9,3 +9,4 @@ kafka-python==1.4.3
 slerp-py==0.0.24
 SQLAlchemy==1.2.12
 Flask-Bcrypt==0.7.1
+Flask-Babel==0.12.2
