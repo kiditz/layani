@@ -10,7 +10,7 @@ receipt_api_blue_print = Blueprint('receipt_api_blue_print', __name__, url_prefi
 api = receipt_api_blue_print
 
 
-@api.route('/cash', methods=['GET'])
+@api.route('/order', methods=['GET'])
 def get_receipt_for_recap_cash():
 	domain = request.args.to_dict()
 	g.lang_code = domain['lang_code']
