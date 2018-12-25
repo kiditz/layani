@@ -240,7 +240,6 @@ class Order(db.Model, Entity):
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
 	user_id = db.Column(db.ForeignKey(u'co_user.id'), index=True)	
-
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)		
 
@@ -311,12 +310,14 @@ class CashboxSummary(db.Model, Entity):
 	cash = db.Column(db.Numeric, nullable=False, server_default='0', default=0)
 	card = db.Column(db.Numeric, nullable=False, server_default='0', default=0)
 	transaction = db.Column(db.Numeric, nullable=False, server_default='0', default=0)	
+	refund = db.Column(db.Numeric, nullable=False, server_default='0', default=0)	
 	difference = db.Column(db.Numeric, nullable=False, server_default='0', default=0)	
 	user_id = db.Column(db.ForeignKey(u'co_user.id'), index=True)	
 	outlet_id = db.Column(db.ForeignKey(u'co_outlet.id'), nullable=False)
 	
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)
+
 
 class CashboxHistory(db.Model, Entity):
 	__tablename__ = 'co_cash_box_history'

@@ -16,7 +16,7 @@ import com.overflow.cash.utils.currentLocale
 import com.overflow.cash.utils.rupiah
 import com.overflow.libs.core.Group
 import com.overflow.libs.core.Translations
-import kotlinx.android.synthetic.main.adapter_transaction_history.view.*
+import kotlinx.android.synthetic.main.adapter_order.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -47,9 +47,9 @@ class OrderAdapter(private val translations: Translations, private val format:Si
 
         val inflater = LayoutInflater.from(parent.context)
         val view = if(viewType == Group.GENERAL){
-            inflater.inflate(R.layout.adapter_transaction_history, parent, false)
+            inflater.inflate(R.layout.adapter_order, parent, false)
         }else{
-            inflater.inflate(R.layout.adapter_transaction_history_header, parent, false)
+            inflater.inflate(R.layout.adapter_order_header, parent, false)
         }
         return ViewHolder(view)
     }

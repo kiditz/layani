@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activity.CashboxHistoryDispatcherActivity"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:background="@color/colorPrimary"
+        android:visibility="gone"/>
+    <include layout="@layout/success_message"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:padding="@dimen/small_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/default_margin">
+
+            <TextView
+                android:id="@+id/tv_fullname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_size_extra_medium"
+                android:textStyle="bold"
+                tools:text="Rifky Aditya Bastara" />
+
+            <TextView
+                android:id="@+id/tv_datetime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_medium"
+                tools:text="12 Desember 2018 18:00" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_fill_cash_summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/btn_accent_radius"
+            android:padding="@dimen/small_margin"
+            android:text="@string/fill_cash_summary"
+            android:textColor="@drawable/btn_accent_text" />
+    </LinearLayout>
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_weight="1"
+        tools:context=".ReceiptFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+    </FrameLayout>
+</LinearLayout>

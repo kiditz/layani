@@ -17,6 +17,8 @@
     <string name="all_product">All Product</string>
     <string name="app_name">Layani</string>
     <string name="are_you_sure">Are you sure?</string>
+    <string name="are_you_sure_cash_in">Are you sure to save {0} money into the cash drawer</string>
+    <string name="are_you_sure_cash_out">Are you sure you want to take {0} money from the cash drawer?</string>
     <string name="are_you_sure_transaction">Are you sure want to pay this transaction?</string>
     <string name="are_you_sure_remove">Are you sure want to remove {0}?</string>
     <string name="are_you_sure_refund">Are you sure want to refund this transaction?</string>
@@ -161,5 +163,18 @@
     <string name="in_progress">In Progress</string>
     <string name="all">All</string>
     <string name="refund_reason">Reasonable Refund</string>
+    <string name="manage_cash">Manage Cash</string>
+    <string name="no_cashbox_found">No data for cash summary</string>
+    <string name="cashier">Cashier</string>
+    <string name="amount">Amount</string>
+    <string name="cash_in_out">Cash In &amp; Out</string>
+    <string name="fill_cash_summary">Fill Cash Summary</string>
+    <string name="no_cashbox_history_found">No CashBox History Found</string>
+    <string name="cash_in">Cash In</string>
+    <string name="cash_out">Cash Out</string>
+
+    <string name="note">Note</string>
+    <string name="total">Total</string>
+    <string name="total_should_be">Total Should Be</string>
 
 </resources>

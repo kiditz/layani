@@ -14,7 +14,7 @@
   "required.value.product_code": "Type with product code, e.g. tshirt",
   "required.value.product_weight": "Type with product weight e.g. 3",
   "required.value.product_unit": "Type with product units, e.g pcs, gr, kg",
-
+  "value.cannot.be.blank.remark": "Description cannot be blank",
   "required.value.product_qty": "Type with quantity, e.g 50",
   "required.value.product_sell_price": "Type with sell price, e.g 5000",
   "required.value.product_init_price": "Type with base price, e.g 5000",
@@ -69,5 +69,10 @@
   "P": "NOT YET PAID OFF",
   "S": "SUCCESS",
   "V": "VOID",
-  "C": "TERSIMPAN"
+  "C": "TERSIMPAN",
+  "O": "Terbuka",
+  "E": "Tertutup",
+  "CASHIER": "Cashier",
+  "cash_bank_in":"Cash In",
+  "cash_bank_out":"Cash Out"
 }

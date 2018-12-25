@@ -30,8 +30,14 @@ interface OrderService {
     fun payAccountReceiveable(@Body data:Data): Single<Data>
 
     @Headers("Content-Type:application/json")
+    @GET("/cash/order/summary")
+    fun getSummary(@Query("outlet_id") outletId: Long,@Query("date") date:String):Single<Data>
+
+    @Headers("Content-Type:application/json")
     @GET("/cash/chart/num_of_order_chart")
     fun getOrderChart(@QueryMap data: Data):Single<Data>
+
+
 
     @Headers("Content-Type:application/json")
     @GET("/cash/chart/profit_chart")

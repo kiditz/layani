@@ -23,7 +23,7 @@ class AccountReceiveablePaymentPresenter(private val context:Context, private va
         input["size"] = getSize()
         input["outlet_id"] = outlet.getLong("id")
         if(API.isConnected(context)){
-            this.disposable.add(this.service.getCashboxs(input).compose(RxUtils.applySingleAsync()).subscribe({ response ->
+            this.disposable.add(this.service.getCashboxSummary(input).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){
                     val payloads = API.payloads(response)
                     if(payloads.isEmpty()){

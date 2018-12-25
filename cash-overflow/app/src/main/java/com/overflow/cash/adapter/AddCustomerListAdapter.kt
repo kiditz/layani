@@ -20,7 +20,7 @@ import com.overflow.libs.core.Translations
 import kotlinx.android.synthetic.main.adapter_add_customer.view.*
 
 /**
- * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
+ * [RecyclerView.Adapter] that can display a [Data] and called by class [com.overflow.cash.activity.CustomerListAddActivity]
  */
 class AddCustomerListAdapter(private val translations: Translations) : RecyclerView.Adapter<AddCustomerListAdapter.ViewHolder>() {
     lateinit var context: Context

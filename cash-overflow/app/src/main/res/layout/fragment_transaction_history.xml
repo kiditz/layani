@@ -63,6 +63,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-            tools:listitem="@layout/adapter_transaction_history" />
+            tools:listitem="@layout/adapter_order" />
     </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

@@ -32,7 +32,7 @@ class SalesMainFragment:BaseFragment(), BottomNavigationView.OnNavigationItemSel
                 true
             }
             R.id.navigation_purchase ->{
-                activity?.replaceContent(R.id.bn_container, CashbankOutFragment())
+                activity?.replaceContent(R.id.bn_container, SalesOtherFragment())
                 true
             }
             else -> false

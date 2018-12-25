@@ -105,6 +105,6 @@ fun rupiah(value:Double, showPrefix:Boolean=true):String{
 
 
 fun parseRupiah(value:CharSequence):Double{
-    var input = value.toString()
+    val input = value.toString()
     return input.replace(Regex("[^\\d]"), "").toDouble()
 }

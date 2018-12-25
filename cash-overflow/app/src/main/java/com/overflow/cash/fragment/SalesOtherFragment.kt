@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.fragment_cashbank_out.*
 /**
  * @author Rifky Aditya Bastara
  * */
-class CashbankOutFragment : BaseFragment() {
+class SalesOtherFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_cashbank_out, container, false)

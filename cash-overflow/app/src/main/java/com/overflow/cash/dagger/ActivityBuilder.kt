@@ -58,6 +58,9 @@ abstract class ActivityBuilder {
     @ContributesAndroidInjector
     internal abstract fun bindViewSavedOrderActivity(): ViewSavedOrderActivity
 
+    @ContributesAndroidInjector
+    internal abstract fun bindSaveCashHistoryActivity(): SaveCashHistoryActivity
+
     //Fragment
     @ContributesAndroidInjector
     internal abstract fun bindProductListFragment(): ProductListFragment
@@ -111,7 +114,16 @@ abstract class ActivityBuilder {
     internal abstract fun bindOrderItemFragment(): OrderItemsFragment
 
     @ContributesAndroidInjector
-    internal abstract fun bindCashbankOutFragment(): CashbankOutFragment
+    internal abstract fun bindSalesOtherFragment(): SalesOtherFragment
+
+    @ContributesAndroidInjector
+    internal abstract fun bindCashboxSummaryFragment(): CashboxSummaryFragment
+
+    @ContributesAndroidInjector
+    internal abstract fun bindCashboxHistoryFragment(): CashboxHistoryFragment
+
+    @ContributesAndroidInjector
+    internal abstract fun bindCashboxHistoryDispatcherActivity(): CashboxHistoryDispatcherActivity
 
 
 

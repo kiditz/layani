@@ -18,9 +18,8 @@ class PaymentTransactionDispatcherActivity : BaseActivity(), HasSupportFragmentI
     lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_payment_transaction)
+        setContentView(R.layout.container_frame_layout)
         try {
             val fragment = PaymentTransactionFragment()
             fragment.arguments = intent.extras

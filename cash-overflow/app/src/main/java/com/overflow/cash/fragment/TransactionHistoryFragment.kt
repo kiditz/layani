@@ -24,7 +24,6 @@ import com.overflow.libs.core.Translations
 import kotlinx.android.synthetic.main.fragment_blank.*
 import kotlinx.android.synthetic.main.fragment_transaction_history.*
 import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 
 class TransactionHistoryFragment : BaseFragment(), LoadOrderContract.View{
@@ -51,7 +50,6 @@ class TransactionHistoryFragment : BaseFragment(), LoadOrderContract.View{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.format = SimpleDateFormat("dd MMMM yyyy", this.context!!.currentLocale())
-
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -159,34 +157,8 @@ class TransactionHistoryFragment : BaseFragment(), LoadOrderContract.View{
         if (currentPage == 1) {
             this.adapter.clearValues()
         }
-        // Grouping the list by order_at
-        val groupBy = orderList.groupBy { format.format(Date(it.getLong("order_at"))) }
-
-        groupBy.keys.forEach {
-            // Check if header has been exists on adapter values
-            if (!hashKey(adapter.values, it)) {
-                val itemHeader = Group()
-                itemHeader.type = Group.HEADER
-                itemHeader["order_at"] = it
-                adapter.values.add(itemHeader)
-            }
-
-            groupBy[it]?.forEach {
-                val itemData = Group()
-                itemData.putAll(it.map)
-                itemData.type = Group.GENERAL
-                adapter.values.add(itemData)
-            }
-        }
+        Group.generate(orderList, adapter.values, "order_at", format)
         adapter.notifyDataSetChanged()
-    }
-
-    private fun hashKey(payloads: List<Group>, key: String): Boolean {
-        for (payload in payloads) {
-            if (payload["order_at"] == key)
-                return true
-        }
-        return false
     }
 
     override fun showError(error: Throwable) {

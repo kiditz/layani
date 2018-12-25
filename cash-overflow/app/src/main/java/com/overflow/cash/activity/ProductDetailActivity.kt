@@ -21,7 +21,6 @@ import dagger.android.AndroidInjection
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import kotlinx.android.synthetic.main.activity_product_detail.*
-import kotlinx.android.synthetic.main.dialog_add_discount.view.*
 import kotlinx.android.synthetic.main.dialog_add_sub_stock.view.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -37,9 +36,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     @Inject
     lateinit var networkExHandler: NetworkExHandler
     private var stockDialog: AlertDialog? = null
-    private var discountDialog: AlertDialog? = null
     private var stockView: View? = null
-    private var discountView: View? = null
     private var stockMultiplier = 1L
     private var discountType:String = Constant.DiscountType.PERCENTAGE
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -185,30 +182,11 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         this.presenter.addStock(data)
     }
 
-    private fun handleAddDiscount() {
-        showDiscountProgress()
-        val data = Data()
-        data["discount_type"] = discountType
-        data["discount"] = discountView?.ed_discount_amount?.text.toString().toLong()
-        data["discount_when"] = discountView?.ed_discount_when?.text.toString().toLong()
-        data["product_id"] = intent.extras.getLong("product_id")
-
-        this.presenter.addDiscount(data)
-
-    }
-
-    private fun showDiscountProgress() {
-        this.discountView?.progress_bar_discount?.visibility = View.VISIBLE
-        this.discountView?.btn_submit_discount?.isEnabled = false
-    }
 
     private fun dismiss() {
         this.stockView?.progress_bar?.visibility = View.GONE
         this.stockView?.btn_submit?.isEnabled = true
-        this.discountView?.progress_bar_discount?.visibility = View.GONE
-        this.discountView?.btn_submit_discount?.isEnabled = true
         this.stockDialog?.dismiss()
-        this.discountDialog?.dismiss()
     }
 
     override fun onStockCreated(data: Data) {

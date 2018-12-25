@@ -2,9 +2,12 @@
   "required.value.phone_number": "Ketik dengan nomor handphone",
   "required.value.name": "Ketik dengan nama",
   "required.value.address": "Ketik dengan alamat",
+  "required.value.cash": "Tunai harus diisi",
+  "required.value.card": "Kartu harus diisi",
   "required.value.username": "Ketik dengan username",
   "password.minimum.length": "Panjang password minimum adalah 8 karakter",
   "required.value.cashbox": "Mohon untuk memilih tempat penyimpanan uang",
+
   "required.value.store_phone_number": "Ketik dengan nomor handphone toko",
   "required.value.store_name": "Ketik dengan nama toko",
   "required.value.store_address": "Ketik dengan alamat toko",
@@ -38,11 +41,14 @@
   "total_amount.must.be.greater_than": "Jumlah bayar harus lebih besar atau sama dengan {0}",
   "total_amount.must.be.less_than": "Jumlah bayar harus lebih kecil dari {0}",
   "category.created.successfully": "Kategori {0} tersimpan",
+  "value.cannot.be.blank.remark": "Keterangan tidak boleh kosong",
 
   "product.created.successfully": "Produk {0} tersimpan",
   "product.removed.successfully": "Produk {0} berhasil di hapus",
   "account_receiveable.created.successfully": "Hutang {0}, untuk transaksi {1} sudah lunas.",
   "account_receiveable.saved.successfully": "Hutang {0}, sudah terbayar sebanyak {1}",
+  "cashbox.saved.successfully": "Kas tersimpan",
+  "recap.cash.saved.successfully": "Rekap Kas berhasil dilakukan",
   "stock.created.successfully": "Stock tersimpan",
   "discount.created.successfully": "Diskon tersimpan",
   "sales.created.successfully": "Transaksi {0} tersimpan",
@@ -73,5 +79,11 @@
   "P": "BELUM LUNAS",
   "S": "SUKSES",
   "V": "DIBATALKAN",
-  "C": "TERSIMPAN"
+  "C": "TERSIMPAN",
+  // Status Cash
+  "O": "Terbuka",
+  "E": "Tertutup",
+  "CASHIER": "Kasir",
+  "cash_bank_in":"Kas Masuk",
+  "cash_bank_out":"Kas Keluar"
 }

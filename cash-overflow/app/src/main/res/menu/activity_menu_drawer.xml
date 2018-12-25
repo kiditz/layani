@@ -20,6 +20,11 @@
             android:title="@string/manage_product" />
 
         <item
+            android:id="@+id/nav_cash_summary"
+            android:icon="@drawable/ic_money"
+            android:title="@string/manage_cash" />
+
+        <item
             android:id="@+id/nav_customer"
             android:icon="@drawable/ic_user_o"
             android:title="@string/nav_customer" />
@@ -28,10 +33,7 @@
             android:id="@+id/nav_report"
             android:icon="@drawable/ic_file"
             android:title="@string/report_outlet" />
-        <!--<item-->
-            <!--android:id="@+id/nav_accounts_receiveable"-->
-            <!--android:icon="@drawable/ic_money"-->
-            <!--android:title="@string/accounts_receiveable" />-->
+
 
     </group>
 

@@ -141,6 +141,9 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_transaction_history -> {
                 replaceContent(TransactionHistoryFragment.newInstance(true))
             }
+            R.id.nav_cash_summary ->{
+                replaceContent(CashboxSummaryFragment())
+            }
         }
 
         drawer_layout.closeDrawer(GravityCompat.START)

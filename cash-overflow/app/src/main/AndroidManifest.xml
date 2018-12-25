@@ -51,19 +51,12 @@
         <activity
             android:name=".activity.ScannerActivity"
             android:label="" />
-        <activity
-            android:name=".EditProductActivity"
-            android:label="@string/edit_product" />
-        <activity
-            android:name=".AddPriceActivity"
-            android:label="@string/add_price" />
-        <activity android:name=".AddStockActivity" />
 
         <provider
             android:name=".account.AccountContentProvider"
             android:authorities="com.overflow.cash.provider"
             android:enabled="true"
-            android:exported="false"></provider>
+            android:exported="false"/>
 
         <service android:name=".account.AccountAuthenticatorService">
             <intent-filter>
@@ -115,6 +108,12 @@
 
         <activity android:name=".activity.ViewSavedOrderActivity"
             android:label="@string/saved_transaction" />
+
+        <activity android:name=".activity.CashboxHistoryDispatcherActivity"
+            android:label="@string/cash_in_out" />
+
+        <activity android:name=".activity.SaveCashHistoryActivity"
+            android:label="@string/manage_cash" />
     </application>
 
 </manifest>

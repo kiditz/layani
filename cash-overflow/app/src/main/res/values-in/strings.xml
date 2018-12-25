@@ -17,6 +17,8 @@
     <string name="all_product">Semua Produk</string>
     <string name="app_name">Layani</string>
     <string name="are_you_sure">Apakah anda yakin?</string>
+    <string name="are_you_sure_cash_in">Apakah anda untuk menyimpan uang sebesar {0} kedalam laci uang?</string>
+    <string name="are_you_sure_cash_out">Apakah anda untuk mengambil uang sebesar {0} dari laci uang?</string>
     <string name="are_you_sure_remove">Apakah anda yakin untuk menghapus pesanan {0}?</string>
     <string name="are_you_sure_transaction">Apakah anda yakin ingin membayar transaksi ini?</string>
     <string name="are_you_sure_refund">Apakah anda yakin ingin membatalkan transaksi ini?</string>
@@ -161,4 +163,17 @@
     <string name="saved_transaction">Transaksi Tersimpan</string>
     <string name="all">Semua</string>
     <string name="refund_reason">Alasan Pembatalan</string>
+    <string name="manage_cash">Kelola Kas</string>
+    <string name="no_cashbox_found">Tidak ada rekap kas yang aktif</string>
+    <string name="cashier">Kasir</string>
+    <string name="amount">Jumlah</string>
+    <string name="cash_in_out">Kas Masuk &amp; Keluar</string>
+    <string name="no_cashbox_history_found">Tidak ada Kas Masuk Dan Keluar</string>
+    <string name="cash_in">Kas Masuk</string>
+    <string name="cash_out">Kas Keluar</string>
+    <string name="note">Catatan</string>
+    <string name="fill_cash_summary">Rekap Kas</string>
+    <string name="total_should_be">Total Seharusnya</string>
+    <string name="required_value_cash">Nilai Tunai harus di isi</string>
+    <string name="required_value_card">Nilai Kartu harus di isi</string>
 </resources>

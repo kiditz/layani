@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-
     tools:ignore="HardcodedText">
     <ProgressBar
         android:id="@+id/progress"
@@ -17,7 +16,26 @@
         android:background="@color/colorPrimary"
         android:visibility="gone"/>
     <include layout="@layout/success_message"/>
-
+    <RadioGroup
+        android:id="@+id/rg_cash_type"
+        android:orientation="horizontal"
+        android:padding="@dimen/default_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RadioButton
+            android:id="@+id/rd_cash_in"
+            android:layout_weight="1"
+            android:checked="true"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/cash_in"/>
+        <RadioButton
+            android:id="@+id/rd_cash_out"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/cash_out"/>
+    </RadioGroup>
 
     <TextView
         android:background="@android:color/white"
@@ -27,17 +45,34 @@
         android:layout_weight="2.0"
         android:fontFamily="sans-serif"
         android:gravity="center_vertical|end"
-        android:hint="@string/total_payment"
+        android:hint="@string/amount"
         android:maxLines="1"
+        android:maxLength="15"
         android:paddingLeft="@dimen/payment_margin"
         android:paddingRight="@dimen/payment_margin"
         android:textSize="@dimen/display_text_size" />
 
+    <EditText
+        android:id="@+id/ed_remark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/small_margin"
+        android:layout_marginLeft="@dimen/small_margin"
+        android:layout_marginRight="@dimen/small_margin"
+        android:layout_marginStart="@dimen/small_margin"
+        android:layout_marginTop="@dimen/default_margin"
+        android:background="@drawable/bg_edit_text"
+        android:drawableLeft="@drawable/ic_sticky_note"
+        android:drawableTint="@color/colorAccent"
+        android:hint="@string/description"
+        android:padding="@dimen/default_margin" />
     <include layout="@layout/line_vert" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="2"
+        android:background="@android:color/white"
         android:orientation="horizontal">
 
         <Button
@@ -69,6 +104,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@android:color/white"
         android:layout_weight="2"
         android:orientation="horizontal">
 
@@ -99,6 +135,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:background="@android:color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="2"
@@ -131,6 +168,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:background="@android:color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="2"
@@ -153,13 +191,21 @@
             android:text="0"/>
 
         <Button
-            android:id="@+id/btn_done"
-            android:background="@drawable/btn_default"
-            android:textColor="@drawable/btn_accent_text"
-            android:enabled="false"
+            android:id="@+id/btn_backspace"
+            style="@style/MyButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="√" />
+            android:text="@string/backspace" />
+
+        <!--<Button-->
+            <!--android:id="@+id/btn_done"-->
+            <!--android:background="@drawable/btn_default"-->
+            <!--android:textColor="@drawable/btn_accent_text"-->
+            <!--android:enabled="false"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_weight="1"-->
+            <!--android:text="√" />-->
     </LinearLayout>
 </LinearLayout>

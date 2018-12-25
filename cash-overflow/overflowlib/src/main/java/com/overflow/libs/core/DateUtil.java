@@ -60,6 +60,9 @@ public class DateUtil {
     public static String printDefaultDate(Date date){
         return DATE_FORMAT_DEFAULT.format(date);
     }
+    public static String printDefaultDateTime(Date date){
+        return DATE_TIME_FORMAT_DEFAULT.format(date);
+    }
 
     public static String printDateTime(long dateLong){
         return printDateTime(new Date(dateLong));

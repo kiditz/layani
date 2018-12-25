@@ -1,22 +1,21 @@
 package com.overflow.cash.fragment
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import com.overflow.cash.R
-import com.overflow.cash.activity.SaveCashHistoryActivity
-import com.overflow.cash.adapter.CashboxHistoryAdapter
-import com.overflow.cash.mvp.cashbox.LoadCashboxHistoryContract
-import com.overflow.cash.mvp.cashbox.LoadCashboxHistoryPresenter
+import com.overflow.cash.activity.CashboxHistoryDispatcherActivity
+import com.overflow.cash.adapter.CashboxSummaryAdapter
+import com.overflow.cash.mvp.cashbox.LoadCashboxSummaryContract
+import com.overflow.cash.mvp.cashbox.LoadCashboxSummaryPresenter
 import com.overflow.cash.net.API
 import com.overflow.cash.net.NetworkExHandler
 import com.overflow.cash.utils.AbstractRecyclerPagination
 import com.overflow.cash.utils.currentLocale
-import com.overflow.cash.utils.home
 import com.overflow.cash.utils.moveTo
 import com.overflow.libs.core.Data
+import com.overflow.libs.core.Group
 import com.overflow.libs.core.Translations
 import kotlinx.android.synthetic.main.fragment_blank.*
 import kotlinx.android.synthetic.main.fragment_transaction_history.*
@@ -28,38 +27,32 @@ import javax.inject.Inject
  * @author Rifky Aditya Bastara
  * @since 22 Desember 2018
  *
- * this class called from the [com.overflow.cash.activity.CashboxHistoryDispatcherActivity] Activity
- * to inform the user about their cash in and cash out
+ * this class called from the [com.overflow.cash.activity.MenuActivity] Activity
+ * to inform the user about their cashbox summary
  */
-class CashboxHistoryFragment: BaseFragment(), LoadCashboxHistoryContract.View {
+class CashboxSummaryFragment: BaseFragment(), LoadCashboxSummaryContract.View {
     @Inject
-    lateinit var presenter: LoadCashboxHistoryPresenter
+    lateinit var presenter: LoadCashboxSummaryPresenter
     @Inject
     lateinit var translations: Translations
     @Inject
     lateinit var networkExHandler: NetworkExHandler
-    lateinit var adapter: CashboxHistoryAdapter
+    lateinit var adapter: CashboxSummaryAdapter
     private lateinit var format: SimpleDateFormat
     private var currentPage: Int = API.MIN_PAGE
-    var cashboxSummaryId:Long = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.format = SimpleDateFormat("dd MMMM yyyy", this.context!!.currentLocale())
     }
 
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        this.arguments?.let {
-            this.cashboxSummaryId = it.getLong(ARG_CASH_BOX_SUMMARY_ID)
-        }
-    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_cashbox_summary, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        this.adapter = CashboxHistoryAdapter(translations)
+        this.adapter = CashboxSummaryAdapter(translations, format)
         val manager = LinearLayoutManager(activity)
         recycler?.layoutManager = manager
         recycler?.isNestedScrollingEnabled = false
@@ -67,8 +60,7 @@ class CashboxHistoryFragment: BaseFragment(), LoadCashboxHistoryContract.View {
         recycler?.itemAnimator = DefaultItemAnimator()
         recycler?.adapter = adapter
         this.presenter.attach(this)
-        currentPage = API.MIN_PAGE
-        presenter.loadCashBoxSummary(currentPage, cashboxSummaryId)
+
         recycler?.addOnScrollListener(object : AbstractRecyclerPagination(manager) {
             override val isLoading: Boolean
                 get() = presenter.loading
@@ -78,13 +70,19 @@ class CashboxHistoryFragment: BaseFragment(), LoadCashboxHistoryContract.View {
                 get() = presenter.getSize()
 
             override fun loadMoreItems() {
-                currentPage += API.MIN_PAGE
-                presenter.loadCashBoxSummary(currentPage, cashboxSummaryId)
+                currentPage += 1
+                presenter.loadCashBoxSummary(currentPage)
             }
         })
         refresh?.setOnRefreshListener {
-            currentPage = API.MIN_PAGE
-            presenter.loadCashBoxSummary(currentPage, cashboxSummaryId)
+            currentPage = 1
+            presenter.loadCashBoxSummary(currentPage)
+        }
+
+        adapter.onItemClick = {data, _ ->
+            val bundle = data.toBundle()
+            bundle.putLong(CashboxHistoryFragment.ARG_CASH_BOX_SUMMARY_ID, data.getLong("id"))
+            activity!!.moveTo(CashboxHistoryDispatcherActivity::class.java, bundle)
         }
     }
     override fun onCashboxLoaded(item: List<Data>) {
@@ -94,7 +92,8 @@ class CashboxHistoryFragment: BaseFragment(), LoadCashboxHistoryContract.View {
         if (currentPage == 1) {
             this.adapter.clearValues()
         }
-        adapter.addValues(item)
+
+        Group.generate(item, adapter.values, "end_at", format)
         adapter.notifyDataSetChanged()
     }
 
@@ -107,7 +106,7 @@ class CashboxHistoryFragment: BaseFragment(), LoadCashboxHistoryContract.View {
     }
 
     override fun showEmpty() {
-        showMessageInBlankLayout(getString(R.string.no_cashbox_history_found))
+        showMessageInBlankLayout(getString(R.string.no_cashbox_found))
     }
 
     override fun showNotConnected(res: String) {
@@ -117,33 +116,11 @@ class CashboxHistoryFragment: BaseFragment(), LoadCashboxHistoryContract.View {
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
         menu?.clear()
-        inflater!!.inflate(R.menu.menu_edit, menu)
-    }
-
-
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when(item!!.itemId){
-            R.id.action_edit -> {
-                activity!!.moveTo(SaveCashHistoryActivity::class.java)
-                false
-            }
-            else -> activity!!.home(item)
-        }
     }
 
     override fun onDetach() {
         super.onDetach()
         this.presenter.detach()
     }
-    companion object {
-        const val ARG_CASH_BOX_SUMMARY_ID = "cash_box_summary_id"
-        @JvmStatic
-        fun newInstance(cashboxSummaryId: Long) =
-                CashboxHistoryFragment().apply {
-                    arguments = Bundle().apply {
-                        putLong(ARG_CASH_BOX_SUMMARY_ID, cashboxSummaryId)
-                    }
-                }
-    }
+
 }

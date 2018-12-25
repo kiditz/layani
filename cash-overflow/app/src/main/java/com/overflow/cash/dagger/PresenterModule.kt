@@ -3,6 +3,7 @@ package com.overflow.cash.dagger
 import android.accounts.AccountManager
 import android.content.Context
 import android.content.SharedPreferences
+import com.overflow.cash.mvp.cashbox.*
 import com.overflow.cash.mvp.chart.*
 import com.overflow.cash.mvp.customer.LoadCustomerPresenter
 import com.overflow.cash.mvp.chart.DashboardHeaderPresenter
@@ -101,8 +102,28 @@ class PresenterModule {
     }
 
     @Provides
-    internal fun provideCashboxPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, cashboxService: CashBoxService, preferences: SharedPreferences): LoadCashboxPresenter {
-        return LoadCashboxPresenter(context,preferences, translations, cashboxService, disposable)
+    internal fun provideLoadCashboxSummaryPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, cashboxService: CashBoxService, preferences: SharedPreferences): LoadCashboxSummaryPresenter {
+        return LoadCashboxSummaryPresenter(context, preferences, translations, cashboxService, disposable)
+    }
+
+    @Provides
+    internal fun provideLoadCashboxHistoryPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, cashboxService: CashBoxService, preferences: SharedPreferences): LoadCashboxHistoryPresenter {
+        return LoadCashboxHistoryPresenter(context, preferences, translations, cashboxService, disposable)
+    }
+
+    @Provides
+    internal fun provideSaveCashboxHistoryPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, cashboxService: CashBoxService, preferences: SharedPreferences): SaveCashboxHistoryPresenter {
+        return SaveCashboxHistoryPresenter(context, preferences, translations, cashboxService, disposable)
+    }
+
+    @Provides
+    internal fun provideSaveCashboxSummaryPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, cashboxService: CashBoxService, preferences: SharedPreferences): SaveCashboxSummaryPresenter {
+        return SaveCashboxSummaryPresenter(context, preferences, translations, cashboxService, disposable)
+    }
+
+    @Provides
+    internal fun provideSummaryOrderPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, orderService: OrderService, preferences: SharedPreferences): SummaryOrderPresenter {
+        return SummaryOrderPresenter(context, preferences, translations, orderService, disposable)
     }
 
     @Provides

@@ -102,6 +102,8 @@ class Constant {
 
             const val DISCOUNT_CREATED_SUCCESSFULLY = "discount.created.successfully"
             const val REQUIRED_VALUE_DUE_DATE ="required.value.due_date"
+            const val REQUIRED_VALUE_CASH ="required.value.cash"
+            const val REQUIRED_VALUE_CARD ="required.value.card"
             const val REQUIRED_VALUE_PRODUCT_CODE = "required.value.product_code"
             const val REQUIRED_VALUE_CUSTOMER_NAME = "required.value.customer_name"
             const val REQUIRED_VALUE_PRODUCT_NAME = "required.value.product_name"
@@ -129,7 +131,8 @@ class Constant {
             const val REFUND_SAVED_SUCCESSFULLY = "refund.saved.successfully"
             const val DELETE_ORDER_SUCCESSFULLY = "delete.order.successfully"
             const val INVALID_TOTAL_AMOUNT = "invalid.payment.amount"
-
+            const val CASHBOX_SAVED_SUCCESSFULLY = "cashbox.saved.successfully"
+            const val RECAP_CASH_SAVED_SUCCESSFULLY = "recap.cash.saved.successfully"
 
         }
     }
@@ -156,6 +159,20 @@ class Constant {
             const val CREATED: String = "C"
             const val VOID: String = "V"
 
+        }
+    }
+
+    interface CashboxStatus{
+        companion object {
+            const val OPEN = "O"
+            const val CLOSE = "E"
+        }
+    }
+
+    interface CashboxType{
+        companion object {
+            const val CASH_BANK_IN = "cash_bank_in"
+            const val CASH_BANK_OUT = "cash_bank_out"
         }
     }
 
