@@ -1,4 +1,5 @@
 IMAGE_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp4', 'html'}
+PAYLOAD = 'payload'
 
 
 def allowed_file(filename):
@@ -56,6 +57,7 @@ class ErrorCode(object):
 	PRODUCT_NOT_FOUND = 'product.not.found'
 	REFUND_FAILED = "refund.failed"
 	CASHBOX_NOT_FOUND = "cashbox.not.found"
+	CASHBOX_HAS_END = "cashbox.has.end"
 	UPLOAD_FAIL = 'upload.image.fail'
 	FILE_NOT_FOUND = 'file.not.found'
 	FILE_CANNOT_BE_EMPTY = 'file.cannot.be.empty'

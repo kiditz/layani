@@ -48,11 +48,13 @@ class CashboxService(object):
 	@Number(['cash_box_summary_id', 'page', 'size'])
 	def get_cashbox_history(self, domain):
 		page = int(domain['page'])
-		size = int(domain['size'])
+		size = int(domain['size'])		
 		cashbox_history_q = CashboxHistory.query\
-			.filter(CashboxHistory.cash_box_summary_id == domain['cash_box_summary_id'])\
-			.order_by(CashboxHistory.id.desc())\
-			.paginate(page, size, error_out=False)
+			.filter(CashboxHistory.cash_box_summary_id == domain['cash_box_summary_id'])
+		if 'ref_id' in domain:
+			cashbox_history_q = cashbox_history_q.filter(CashboxHistory.ref_id == domain['ref_id'])
+		cashbox_history_q = cashbox_history_q.order_by(CashboxHistory.id.desc())\
+			.paginate(page, size, error_out=False)			
 		cashbox_history_list = list(map(lambda x: x.to_dict(), cashbox_history_q.items))
 		return {'payload': cashbox_history_list, 'total': cashbox_history_q.total, 'total_pages': cashbox_history_q.pages}
 	
@@ -93,7 +95,8 @@ class CashboxService(object):
 		cashbox_summary = CashboxSummary.query.filter(CashboxSummary.id == domain['id']).first()
 		if cashbox_summary is None:
 			raise ValidationException(ErrorCode.CASHBOX_NOT_FOUND)
-		
+		if cashbox_summary.status == CashboxStatus.END:
+			raise ValidationException(ErrorCode.CASHBOX_HAS_END)
 		cash_in = CashboxHistory.query.with_entities(func.coalesce(func.sum(CashboxHistory.amount), 0).label('amount'))\
 			.filter(CashboxHistory.ref_id == 1) \
 			.filter(CashboxHistory.cash_box_summary_id == cashbox_summary.id) \

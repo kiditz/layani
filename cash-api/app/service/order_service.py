@@ -1,6 +1,6 @@
 from entity.models import OrderItem, StockHistory, Stock, AccountReceiveable, Customer, Product, \
 	Discount, ProductSellPrice, ProductPurchasePrice, \
-	CashboxSummary
+	CashboxSummary, User
 from slerp.logger import logging
 from slerp.validator import Number, Key, ValidationException
 from sqlalchemy import between
@@ -233,4 +233,51 @@ class OrderService(object):
 			'cash': order_cash_q.order_summary,
 			'in_progress': order_in_progress_q.order_summary,
 		}
+		return {'payload': order_dict}
+		
+	@Key(['id'])
+	def find_order_by_id(self, domain):
+		entities = (
+			Order.id,
+			Order.total_amount,
+			Order.total_payment,
+			Order.payment_method,
+			Order.order_code,
+			Order.order_at,
+			Order.status,
+			User.fullname,
+			Outlet.name.label('outlet_name'),
+			Outlet.address.label('outlet_address'),
+			Order.cashback,
+			Discount.name.label('discount_name'),
+			Discount.method.label('discount_method'),
+			Discount.discount_type,
+			func.coalesce(Discount.amount, 0.0).label('discount_amount')
+		)
+		order = Order.query.with_entities(*entities)\
+			.join(User, User.id == Order.user_id)\
+			.join(Outlet, Outlet.id == Order.outlet_id)\
+			.outerjoin(Discount, Discount.id == Order.discount_id)\
+			.filter(Order.id == domain['id'])\
+			.first()
+		price_before_disc = OrderItem.query.with_entities(func.coalesce(func.sum(OrderItem.sub_total), 0).label('amount')).filter(OrderItem.order_id == order.id).first()
+		entities = (
+			OrderItem.qty,
+			OrderItem.sub_total,
+			Product.name,
+			Discount.amount.label('discount_amount'),
+			Discount.discount_type,
+			Discount.method.label('discount_method'),
+			Discount.name.label('discount_name'),
+			ProductSellPrice.sell_price
+		)
+		order_item_list = OrderItem.query.with_entities(*entities)\
+			.join(Product, OrderItem.product_id == Product.id) \
+			.outerjoin(Discount, OrderItem.discount_id == Discount.id) \
+			.join(ProductSellPrice, OrderItem.sell_price_id == ProductSellPrice.id) \
+			.filter(OrderItem.order_id == order.id).all()
+		item_list = list(map(lambda x: x._asdict(), order_item_list))
+		order_dict = order._asdict()
+		order_dict['price_before_disc'] = price_before_disc.amount
+		order_dict['item_list'] = item_list
 		return {'payload': order_dict}

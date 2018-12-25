@@ -74,3 +74,16 @@ def count_saved_order_by_id():
 def get_order_amount_summary():
     domain = request.args.to_dict()
     return order_service.get_order_amount_summary(domain)
+
+
+
+@api.route('/find_order_by_id', methods=['GET'])
+def find_order_by_id():
+
+    """
+    {
+        "id": "Long"
+    }
+    """
+    domain = request.args.to_dict()
+    return order_service.find_order_by_id(domain)

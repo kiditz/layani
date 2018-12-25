@@ -10,3 +10,8 @@ from .order_api import order_api_blue_print
 from .outlet_api import outlet_api_blue_print
 from .product_api import product_api_blue_print
 from .stock_api import stock_api_blue_print
+from .receipt_api import receipt_api_blue_print
+
+from slerp.app import app
+from utils import splitThousands
+app.jinja_env.globals.update(thousand=splitThousands)
