@@ -22,7 +22,6 @@ def get_receipt_for_order():
 def get_receipt_for_recap_cash():
 	domain = request.args.to_dict()
 	g.lang_code = domain['lang_code']
-	summary = cashbox_service.get_cashbox_summary(domain)[PAYLOAD]
-	
+	summary = cashbox_service.find_cashbox_summary(domain)[PAYLOAD]
 	return render_template('cash_recapitulation_view.html', summary=summary)
 

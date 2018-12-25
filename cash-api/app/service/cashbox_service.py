@@ -85,27 +85,26 @@ class CashboxService(object):
 		cashbox_summary_list = list(map(lambda x: x._asdict(), cashbox_summary_q.items))
 		return {'payload': cashbox_summary_list, 'total': cashbox_summary_q.total, 'total_pages': cashbox_summary_q.pages}
 	
-	@Number(['id', 'page', 'size'])
+	@Number(['id'])
 	def find_cashbox_summary(self, domain):
 		summary_id = domain['id']
-		entities = (
-			CashboxSummary.id,
-			CashboxSummary.start_at,
-			CashboxSummary.end_at,
-			CashboxSummary.status,
-			CashboxSummary.pending,
-			CashboxSummary.cash,
-			CashboxSummary.card,
-			CashboxSummary.transaction,
-			CashboxSummary.difference,
-			CashboxSummary.outlet_id,
-			User.fullname
-		)
 		
-		cashbox_summary = CashboxSummary.query.with_entities(*entities) \
+		cashbox_summary = CashboxSummary.query\
 			.join(User, CashboxSummary.user_id == User.id) \
 			.filter(CashboxSummary.id == summary_id).first()
-		return {'payload': cashbox_summary._asdict()}
+		cash_in_q = CashboxHistory.query.filter(CashboxHistory.ref_id == 1) \
+			.filter(CashboxHistory.cash_box_summary_id == summary_id) \
+			.all()
+		cash_in_list = list(map(lambda x: x.to_dict(), cash_in_q))
+		
+		cash_out_q = CashboxHistory.query.filter(CashboxHistory.ref_id == 2) \
+			.filter(CashboxHistory.cash_box_summary_id == summary_id) \
+			.all()
+		cash_out_list = list(map(lambda x: x.to_dict(), cash_out_q))
+		cash_summary_dict = cashbox_summary.to_dict()
+		cash_summary_dict['cash_in_list'] = cash_in_list
+		cash_summary_dict['cash_out_list'] = cash_out_list
+		return {'payload': cash_summary_dict}
 	
 	@Number(['id', 'card', 'cash'])
 	@Key(['end_at', 'void', 'sales', 'pending'])

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-12-24 23:28+0700\n"
+"POT-Creation-Date: 2018-12-25 22:32+0700\n"
 "PO-Revision-Date: 2018-12-24 23:32+0700\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: id\n"
@@ -18,31 +18,59 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.6.0\n"
 
-#: api/templates/receipt_order.html:101
-msgid "Payment Method"
-msgstr "Metode Pembayaran"
+#: api/templates/cash_recapitulation_view.html:109
+msgid "Sales"
+msgstr ""
 
-#: api/templates/receipt_order.html:164
+#: api/templates/cash_recapitulation_view.html:118
+msgid "Void"
+msgstr ""
+
+#: api/templates/cash_recapitulation_view.html:126
+msgid "Cash In"
+msgstr "Kas Masuk"
+
+#: api/templates/cash_recapitulation_view.html:144
+msgid "Cash Out"
+msgstr "Kas Keluar"
+
+#: api/templates/cash_recapitulation_view.html:168
+msgid "Request By System"
+msgstr "Penjualan Sistem"
+
+#: api/templates/cash_recapitulation_view.html:176
 msgid "CASH"
 msgstr "Tunai"
 
-#: api/templates/receipt_order.html:164
+#: api/templates/cash_recapitulation_view.html:184
 msgid "CARD"
 msgstr "Kartu"
 
-#: api/templates/receipt_order.html:168
-msgid "Pay"
-msgstr "Bayar"
+#: api/templates/cash_recapitulation_view.html:192
+msgid "Difference"
+msgstr "Selisih"
 
-#: api/templates/receipt_order.html:174
-msgid "Cashback"
-msgstr "Kembali"
+#: api/templates/receipt_order.html:107
+msgid "Payment Method"
+msgstr "Metode Pembayaran"
 
-#: api/templates/receipt_order.html:156
+#: api/templates/receipt_order.html:171
+msgid "Total Shopping"
+msgstr "Total Belanja"
+
+#: api/templates/receipt_order.html:178
 msgid "Discount"
 msgstr "Diskon"
 
-#: api/templates/receipt_order.html:150
-msgid "Total Shopping"
-msgstr "Total Belanja"
+#: api/templates/receipt_order.html:184
+msgid "Total"
+msgstr ""
+
+#: api/templates/receipt_order.html:191
+msgid "Pay"
+msgstr "Bayar"
+
+#: api/templates/receipt_order.html:197
+msgid "Cashback"
+msgstr "Kembali"
 

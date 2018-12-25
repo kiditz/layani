@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-12-24 23:28+0700\n"
+"POT-Creation-Date: 2018-12-25 22:32+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,31 +17,59 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.6.0\n"
 
-#: api/templates/receipt_order.html:101
+#: api/templates/cash_recapitulation_view.html:109
+msgid "Sales"
+msgstr ""
+
+#: api/templates/cash_recapitulation_view.html:118
+msgid "Void"
+msgstr ""
+
+#: api/templates/cash_recapitulation_view.html:126
+msgid "Cash In"
+msgstr ""
+
+#: api/templates/cash_recapitulation_view.html:144
+msgid "Cash Out"
+msgstr ""
+
+#: api/templates/cash_recapitulation_view.html:168
+msgid "Request By System"
+msgstr ""
+
+#: api/templates/cash_recapitulation_view.html:176
+msgid "CASH"
+msgstr ""
+
+#: api/templates/cash_recapitulation_view.html:184
+msgid "CARD"
+msgstr ""
+
+#: api/templates/cash_recapitulation_view.html:192
+msgid "Difference"
+msgstr ""
+
+#: api/templates/receipt_order.html:107
 msgid "Payment Method"
 msgstr ""
 
-#: api/templates/receipt_order.html:164
-msgid "CASH"
-msgstr "Cash"
+#: api/templates/receipt_order.html:171
+msgid "Total Shopping"
+msgstr ""
 
-#: api/templates/receipt_order.html:164
-msgid "CARD"
-msgstr "Card"
-
-#: api/templates/receipt_order.html:168
-msgid "Pay"
-msgstr "Payment"
-
-#: api/templates/receipt_order.html:174
-msgid "Cashback"
-msgstr "Cashback"
-
-#: api/templates/receipt_order.html:156
+#: api/templates/receipt_order.html:178
 msgid "Discount"
 msgstr ""
 
-#: api/templates/receipt_order.html:150
-msgid "Total Shopping"
+#: api/templates/receipt_order.html:184
+msgid "Total"
+msgstr ""
+
+#: api/templates/receipt_order.html:191
+msgid "Pay"
+msgstr ""
+
+#: api/templates/receipt_order.html:197
+msgid "Cashback"
 msgstr ""
 
