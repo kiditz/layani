@@ -63,19 +63,41 @@
             text-align: center;
             font-size: 16px;
         }
+
+
         .invoice-box table tr.top table td.title h3 {
             font-size: 45px;
             line-height:45px;
             color: #333;
         }
-        
-        .invoice-box table tr.information table td {
-            padding-bottom: 40px;
-        }
+
         
         .invoice-box table tr.line td {
-            border-bottom: 0.5px solid #eee;
+            border-bottom: 0.5px dashed rgb(0, 0, 0);
         }
+
+        .invoice-box table tr.information td {
+            border-bottom: 0.5px dashed rgb(0, 0, 0);
+            border-top: 0.5px dashed rgb(0, 0, 0);
+            text-align: center;
+            font-size: 20px;
+            line-height:5px;
+        }
+
+        .invoice-box table tr.information_title td {
+            border-bottom: 0.5px dashed rgb(0, 0, 0);
+            /*border-top: 0.5px dashed rgb(0, 0, 0);*/
+            text-align: center;
+            font-size: 16px;
+            padding-top:15px;
+            padding-bottom:15px;
+        }
+        .invoice-box table tr.cashier_info td {
+
+            padding-top: 20px;
+        }
+
+
         
         .invoice-box table tr.details td {
             padding-bottom: 20px;
@@ -96,81 +118,72 @@
                 text-align: center;
             }
         }
-
-
     </style>
 </head>
 
 <body>
 <div class="invoice-box">
     <table cellpadding="0" cellspacing="0">
-        <tr class="item">
-            <td>
+        <tr class="top">
+            <td colspan="2">
+                <table>
+                    <tr>
+                        <td class="title">
+                            <h2>{{summary.outlet_name}}</h2>
+                            {{summary.outlet_address}}<br>
+                            {{summary.outlet_phone_number}}
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr class="information">
+            <td class="title" colspan="2">
+                <h4>{{_('REPORT SALES')}}</h4>
+            </td>
+        </tr>
+        <tr class="cashier_info">
+            <td colspan="2" class="">
+                {{_('Cashier')}}: {{summary.fullname}}<br>
+                {{_('First Trx')}}: {{summary.start_at.strftime('%d-%m-%Y %H:%M:%S')}}<br>
+                {{_('Last Trx')}}: {{summary.end_at.strftime('%d-%m-%Y %H:%M:%S')}}<br>
+                {{_('Pending Order')}}: {{summary.pending}}<br>
+            </td>
+        </tr>
+        <tr class="information_title">
+            <td colspan="2">
                 <b>{{_('Sales')}}</b>
             </td>
-
-            <td>
-                Rp{{thousand(summary.sales)}}
-            </td>
         </tr>
-        <tr class="item">
-            <td>
-                <b>{{_('Void')}}</b>
-            </td>
-            <td>
-                Rp{{thousand(summary.refund)}}
-            </td>
-        </tr>
-        <tr class="item">
-            <td>
-                <b>{{_('Cash In')}}</b>
-            </td>
-            <td>
-                Rp{{thousand(summary.cash_in)}}
-            </td>
-        </tr>
-        {%for cash in summary.cash_in_list%}
+        {%for item in order_items%}
         <tr class="child">
             <td>
-                &emsp;{{cash.remark}}
+                &emsp;{{item.name}} x {{item.quantity}}
             </td>
             <td>
-                Rp{{thousand(cash.amount)}}
+                Rp{{thousand(item.sub_total)}}
             </td>
         </tr>
         {%endfor%}
-        <tr class="item">
-            <td>
-                <b>{{_('Cash Out')}}</b>
-            </td>
-            <td class="minus">
-                Rp{{thousand(summary.cash_out)}}
+        <tr class="line">
+            <td colspan="2">
             </td>
         </tr>
-        {%for cash in summary.cash_out_list%}
-        <tr class="minus">
-            <td>
-                &emsp;{{cash.remark}}
-            </td>
-            <td>
-                Rp{{thousand(cash.amount)}}
-            </td>
-        </tr>
-        {%endfor%}
-         <tr class="line">
-            <td>
-            </td>
-            <td>
-            </td>
-        </tr>
-         <tr class="item">
-            <td>
-                <b>{{_('Request By System')}}</b>
+        <tr class="child">
+            <td class="">
+                &emsp;{{_('Sub Total')}}
             </td>
             <td>
                 Rp{{thousand(summary.transaction)}}
             </td>
         </tr>
+        <!--Receipt Actual-->
+        <tr class="information_title">
+            <td colspan="2">
+                <b>{{_('Actual Receipt')}}</b>
+            </td>
+        </tr>
+
         <tr class="child">
             <td>
                 &emsp;{{_('CASH')}}
@@ -179,6 +192,7 @@
                 Rp{{thousand(summary.cash)}}
             </td>
         </tr>
+
         <tr class="child">
             <td>
                 &emsp;{{_('CARD')}}
@@ -187,9 +201,70 @@
                 Rp{{thousand(summary.card)}}
             </td>
         </tr>
+        <tr class="line">
+            <td colspan="2">
+            </td>
+        </tr>
+        <tr class="child">
+            <td>
+                &emsp;{{_('Total')}}
+            </td>
+            <td>
+                Rp{{thousand(summary.transaction)}}
+            </td>
+        </tr>
+        <tr class="information_title">
+            <td colspan="2">
+                <b>{{_('Request By System')}}</b>
+            </td>
+        </tr>
+
+        <tr class="child">
+            <td>
+                &emsp;{{_('Sales')}}
+            </td>
+            <td>
+                Rp{{thousand(summary.sales)}}
+            </td>
+        </tr>
+
+        <tr class="child">
+            <td>
+                &emsp;{{_('Cash In')}}
+            </td>
+            <td>
+                Rp{{thousand(summary.cash_in)}}
+            </td>
+        </tr>
+        <tr class="child">
+            <td>
+                &emsp;{{_('Cash Out')}}
+            </td>
+            <td>
+                Rp{{thousand(summary.cash_out)}}
+            </td>
+        </tr>
+        <tr class="line">
+            <td colspan="2">
+            </td>
+        </tr>
+        <tr class="child">
+            <td class="">
+                &emsp;{{_('Total')}}
+            </td>
+            <td>
+                Rp{{thousand(summary.transaction)}}
+            </td>
+        </tr>
+        <!--Request By System-->
+        <tr class="information_title">
+            <td colspan="2">
+                {{_('Difference Receipt')}}
+            </td>
+        </tr>
         <tr class="item">
             <td>
-                &emsp;{{_('Difference')}}
+                {{_('Actual')}} - {{_('System')}}
             </td>
             <td>
                 Rp{{thousand(summary.difference)}}

@@ -76,8 +76,6 @@ def get_order_amount_summary():
     return order_service.get_order_amount_summary(domain)
 
 
-
-
 @api.route('/find_order_by_id', methods=['GET'])
 def find_order_by_id():
 
@@ -88,3 +86,15 @@ def find_order_by_id():
     """
     domain = request.args.to_dict()
     return order_service.find_order_by_id(domain)
+
+
+@api.route('/order_item_by_user_id', methods=['GET'])
+def find_order_item_by_user_id():
+
+    """
+    {
+        "id": "Long"
+    }
+    """
+    domain = request.args.to_dict()
+    return order_service.find_order_items_by_user_id(domain)

@@ -1,6 +1,6 @@
 from decimal import Decimal
 from datetime import datetime
-from entity.models import CashboxHistory, CashboxSummary, User
+from entity.models import CashboxHistory, CashboxSummary, User, Outlet
 from slerp.logger import logging
 from slerp.validator import Number, Blank, Key, ValidationException
 from sqlalchemy import cast, func
@@ -88,10 +88,30 @@ class CashboxService(object):
 	@Number(['id'])
 	def find_cashbox_summary(self, domain):
 		summary_id = domain['id']
-		
-		cashbox_summary = CashboxSummary.query\
+		entities = (
+			CashboxSummary.id,
+			CashboxSummary.start_at,
+			CashboxSummary.end_at,
+			CashboxSummary.status,
+			CashboxSummary.pending,
+			CashboxSummary.cash,
+			CashboxSummary.card,
+			CashboxSummary.transaction,
+			CashboxSummary.difference,
+			CashboxSummary.cash_in,
+			CashboxSummary.cash_out,
+			CashboxSummary.sales,
+			CashboxSummary.refund,
+			User.fullname,
+			Outlet.name.label('outlet_name'),
+			Outlet.phone_number.label('outlet_phone_number'),
+			Outlet.address.label('outlet_address')
+		)
+		cashbox_summary = CashboxSummary.query.with_entities(*entities)\
 			.join(User, CashboxSummary.user_id == User.id) \
+			.join(Outlet, CashboxSummary.outlet_id == Outlet.id) \
 			.filter(CashboxSummary.id == summary_id).first()
+		
 		cash_in_q = CashboxHistory.query.filter(CashboxHistory.ref_id == 1) \
 			.filter(CashboxHistory.cash_box_summary_id == summary_id) \
 			.all()
@@ -101,7 +121,7 @@ class CashboxService(object):
 			.filter(CashboxHistory.cash_box_summary_id == summary_id) \
 			.all()
 		cash_out_list = list(map(lambda x: x.to_dict(), cash_out_q))
-		cash_summary_dict = cashbox_summary.to_dict()
+		cash_summary_dict = cashbox_summary._asdict()
 		cash_summary_dict['cash_in_list'] = cash_in_list
 		cash_summary_dict['cash_out_list'] = cash_out_list
 		return {'payload': cash_summary_dict}
