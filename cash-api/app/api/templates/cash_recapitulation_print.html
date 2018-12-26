@@ -158,7 +158,7 @@
         {%for item in order_items%}
         <tr class="child">
             <td>
-                &emsp;{{item.name}} x {{item.quantity}}
+                {{item.name}} x {{item.quantity}}
             </td>
             <td>
                 Rp{{thousand(item.sub_total)}}
@@ -171,7 +171,7 @@
         </tr>
         <tr class="child">
             <td class="">
-                &emsp;{{_('Sub Total')}}
+                {{_('Sub Total')}}
             </td>
             <td>
                 Rp{{thousand(summary.transaction)}}
@@ -186,7 +186,7 @@
 
         <tr class="child">
             <td>
-                &emsp;{{_('CASH')}}
+                {{_('CASH')}}
             </td>
             <td>
                 Rp{{thousand(summary.cash)}}
@@ -195,7 +195,7 @@
 
         <tr class="child">
             <td>
-                &emsp;{{_('CARD')}}
+                {{_('CARD')}}
             </td>
             <td>
                 Rp{{thousand(summary.card)}}
@@ -207,7 +207,7 @@
         </tr>
         <tr class="child">
             <td>
-                &emsp;{{_('Total')}}
+                {{_('Total')}}
             </td>
             <td>
                 Rp{{thousand(summary.transaction)}}
@@ -221,7 +221,7 @@
 
         <tr class="child">
             <td>
-                &emsp;{{_('Sales')}}
+                {{_('Sales')}}
             </td>
             <td>
                 Rp{{thousand(summary.sales)}}
@@ -230,7 +230,7 @@
 
         <tr class="child">
             <td>
-                &emsp;{{_('Cash In')}}
+                {{_('Cash In')}}
             </td>
             <td>
                 Rp{{thousand(summary.cash_in)}}
@@ -238,7 +238,7 @@
         </tr>
         <tr class="child">
             <td>
-                &emsp;{{_('Cash Out')}}
+                {{_('Cash Out')}}
             </td>
             <td>
                 Rp{{thousand(summary.cash_out)}}
@@ -250,7 +250,7 @@
         </tr>
         <tr class="child">
             <td class="">
-                &emsp;{{_('Total')}}
+                {{_('Total')}}
             </td>
             <td>
                 Rp{{thousand(summary.transaction)}}
