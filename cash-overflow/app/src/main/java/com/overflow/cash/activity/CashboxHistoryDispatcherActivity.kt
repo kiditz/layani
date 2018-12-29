@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.View
 import com.overflow.cash.R
-import com.overflow.cash.fragment.CashboxReportView
+import com.overflow.cash.fragment.CashboxReportViewFragment
 import com.overflow.cash.fragment.CashboxHistoryFragment
 import com.overflow.cash.fragment.DialogOrderSummary
 import com.overflow.cash.mvp.cashbox.SaveCashboxSummaryContract
@@ -42,16 +42,18 @@ class CashboxHistoryDispatcherActivity : BaseActivity(), HasSupportFragmentInjec
         val cashboxSummaryId = intent.getLongExtra(CashboxHistoryFragment.ARG_CASH_BOX_SUMMARY_ID, -1)
         val status = intent.getStringExtra("status")
         tv_fullname.text = intent.getStringExtra("fullname")
-
         presenter.attach(this)
         saveCashboxSummaryPresenter.attach(this)
+
         if (status == Constant.CashboxStatus.CLOSE) {
             btn_fill_cash_summary.visibility = View.GONE
+            btn_receipt.visibility = View.VISIBLE
             tv_datetime.text = DateUtil.printDateTime(intent.getLongExtra("end_at", System.currentTimeMillis()))
-            val reportView = CashboxReportView.newInstance(cashboxSummaryId)
+            val reportView = CashboxReportViewFragment.newInstance(cashboxSummaryId)
             replaceContent(R.id.container, reportView)
         } else {
             tv_datetime.text = DateUtil.printDateTime(intent.getLongExtra("start_at", System.currentTimeMillis()))
+            btn_receipt.visibility = View.GONE
             btn_fill_cash_summary.visibility = View.VISIBLE
             val history = CashboxHistoryFragment.newInstance(cashboxSummaryId)
             replaceContent(R.id.container, history)
@@ -59,6 +61,10 @@ class CashboxHistoryDispatcherActivity : BaseActivity(), HasSupportFragmentInjec
 
         btn_fill_cash_summary.setOnClickListener {
             this.presenter.loadSummary(cashboxSummaryId, DateUtil.printDefaultDateTime(Date(System.currentTimeMillis())))
+        }
+
+        btn_receipt.setOnClickListener {
+            moveTo(CashboxHistoryReceiptActivity::class.java, intent.extras)
         }
 
     }

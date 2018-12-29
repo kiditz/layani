@@ -7,7 +7,8 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import com.overflow.cash.R
-import com.overflow.cash.fragment.ReceiptFragment
+import com.overflow.cash.fragment.CashboxHistoryFragment
+import com.overflow.cash.fragment.CashboxReportViewFragment
 import com.overflow.cash.utils.home
 import com.overflow.cash.utils.moveTo
 import com.overflow.cash.utils.replaceContent
@@ -18,30 +19,21 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
 
-class ReceiptActivity : BaseActivity(), HasSupportFragmentInjector {
+class CashboxHistoryReceiptActivity : BaseActivity(), HasSupportFragmentInjector {
 
 
     @Inject
     lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
-    lateinit var receiptFragment: ReceiptFragment
+    lateinit var reportFragment: CashboxReportViewFragment
     @SuppressLint("SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
         shouldRequestPermissions(Constant.REQUEST_PERMISSION_CODE)
         AndroidInjection.inject(this)
+        val cashboxSummaryId = intent.getLongExtra(CashboxHistoryFragment.ARG_CASH_BOX_SUMMARY_ID, -1)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.container_activity)
-        receiptFragment = ReceiptFragment.newInstance(intent.getStringExtra(Constant.ARG_SALES))
-        replaceContent(R.id.container, receiptFragment)
-    }
-
-
-
-    override fun onBackPressed() {
-        if(intent.getBooleanExtra("just_back", false)){
-            super.onBackPressed()
-            return
-        }
-        moveTo(MenuActivity::class.java, intent.extras)
+        reportFragment = CashboxReportViewFragment.newInstance(cashboxSummaryId, CashboxReportViewFragment.CASH_BOX_TYPE_RECEIPT)
+        replaceContent(R.id.container, reportFragment)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -51,8 +43,8 @@ class ReceiptActivity : BaseActivity(), HasSupportFragmentInjector {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when(item!!.itemId){
-            R.id.action_download -> receiptFragment.screenShoot()
-            R.id.action_share -> receiptFragment.share()
+            R.id.action_download -> reportFragment.screenShoot()
+            R.id.action_share -> reportFragment.share()
             else -> home(item)
         }
 

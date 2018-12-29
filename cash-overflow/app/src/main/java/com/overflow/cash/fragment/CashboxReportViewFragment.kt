@@ -30,7 +30,7 @@ import java.io.File
 import java.io.FileOutputStream
 import javax.inject.Inject
 
-class CashboxReportView:BaseFragment(){
+class CashboxReportViewFragment:BaseFragment(){
     @Inject
     lateinit var preferences: SharedPreferences
     @Inject
@@ -52,6 +52,7 @@ class CashboxReportView:BaseFragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.shouldRequestPermissions(Constant.REQUEST_PERMISSION_CODE)
+        this.outlet = Data(preferences.getString("outlet", "{}"))
         listDialog = resources.getStringArray(R.array.share_receipt_list)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             WebView.enableSlowWholeDocumentDraw()
@@ -64,9 +65,9 @@ class CashboxReportView:BaseFragment(){
         val authToken = accountManager.peekAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS)
         val params = mapOf<String, String>("Authorization" to "Bearer $authToken")
         val url = if(arguments!!.getInt(ARG_CASH_BOX_TYPE) == CASH_BOX_TYPE_DETAIL){
-            "${BuildConfig.base_url}/cash/receipt/cash/view?id=$summaryId&lang_code=${preferences.getString("lang_code", "id")}"
+            "${BuildConfig.base_url}/cash/receipt/cash/view?id=$summaryId&user_id=${outlet.getLong("user_id")}&lang_code=${preferences.getString("lang_code", "id")}"
         }else{
-            "${BuildConfig.base_url}/cash/receipt/cash/print?id=$summaryId&lang_code=${preferences.getString("lang_code", "id")}"
+            "${BuildConfig.base_url}/cash/receipt/cash/print?id=$summaryId&user_id=${outlet.getLong("user_id")}&lang_code=${preferences.getString("lang_code", "id")}"
         }
 
         webView.loadUrl(url, params)
@@ -127,7 +128,7 @@ class CashboxReportView:BaseFragment(){
         const val CASH_BOX_TYPE_RECEIPT = 1
         @JvmStatic
         fun newInstance(cashboxSummaryId: Long, cashboxType:Int = CASH_BOX_TYPE_DETAIL) =
-                CashboxReportView().apply {
+                CashboxReportViewFragment().apply {
                     arguments = Bundle().apply {
                         putLong(ARG_CASH_BOX_SUMMARY_ID, cashboxSummaryId)
                         putInt(ARG_CASH_BOX_TYPE, cashboxType)

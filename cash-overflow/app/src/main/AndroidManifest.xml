@@ -89,7 +89,10 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.ReceiptActivity"
-            android:label="" />
+            android:label="@string/receipt" />
+        <activity
+            android:name=".activity.CashboxHistoryReceiptActivity"
+            android:label="@string/receipt" />
         <activity
             android:name=".activity.TransactionHistoryDetailActivity"
             android:label="@string/transaction_detail" />

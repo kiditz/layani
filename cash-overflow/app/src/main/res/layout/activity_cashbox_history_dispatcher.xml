@@ -63,5 +63,13 @@
         android:layout_height="0dp">
 
     </FrameLayout>
-
+    <Button
+        android:id="@+id/btn_receipt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/btn_default"
+        android:padding="@dimen/small_margin"
+        android:text="@string/receipt"
+        android:textColor="@color/textLight" />
 </LinearLayout>

@@ -30,8 +30,8 @@ class DialogOrderSummary: DialogFragment(){
         arguments?.let {
             val amount = it.getDouble("success") + it.getDouble("in_progress")
             view.tv_card_should_be.text = rupiah(it.getDouble("card"))
-            view.tv_cash_should_be.text = rupiah(it.getDouble("cash") + it.getDouble("cash_in") + it.getDouble("cash_out"))
-            view.tv_total_should_be.text = rupiah(amount + it.getDouble("cash_in") + it.getDouble("cash_out"))
+            view.tv_cash_should_be.text = rupiah(it.getDouble("cash") + it.getDouble("cash_in") + it.getDouble("cash_out") - it.getDouble("void"))
+            view.tv_total_should_be.text = rupiah(amount + it.getDouble("cash_in") + it.getDouble("cash_out") - it.getDouble("void"))
             data["sales"] = amount
             data["void"] = it.getDouble("void")
             data["pending"] = it.getLong("created")

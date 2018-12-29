@@ -103,6 +103,8 @@ class OrderService(object):
 		order_cpy.order_at = datetime_now
 		order_cpy.id = None
 		order_cpy.total_amount = order.total_amount * -1
+		order_cpy.total_payment = -order.total_amount
+		order_cpy.cashback = 0.0
 		order_cpy.save()
 		cashbox_summary = CashboxSummary.query \
 			.filter(CashboxSummary.outlet_id == order.outlet_id) \
