@@ -157,6 +157,13 @@
                 {{_('Sales')}}
             </td>
         </tr>
+        {%if not order_items%}
+        <tr class="child">
+            <td colspan="2">
+                <p align="center">{{_('No Transaction')}}</p>
+            </td>
+        </tr>
+        {%endif%}
         {%for item in order_items%}
         <tr class="child">
             <td>
