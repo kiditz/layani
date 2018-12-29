@@ -91,6 +91,8 @@ class OrderService(object):
 	def refund_order(self, domain):
 		order_id = domain['order_id']
 		order = Order.query.get(order_id)
+		datetime_now = datetime.now()
+		date_now = datetime_now.date()
 		if order.status != OrderStatus.SUCCESS:
 			raise ValidationException(ErrorCode.REFUND_FAILED)
 		order.status = OrderStatus.VOID
@@ -98,10 +100,23 @@ class OrderService(object):
 			order.description = domain['description']
 		order.save()
 		order_cpy = Order(order.to_dict())
-		order_cpy.order_at = datetime.now()
+		order_cpy.order_at = datetime_now
 		order_cpy.id = None
 		order_cpy.total_amount = order.total_amount * -1
 		order_cpy.save()
+		cashbox_summary = CashboxSummary.query \
+			.filter(CashboxSummary.outlet_id == order.outlet_id) \
+			.filter(cast(CashboxSummary.start_at, DATE) == date_now) \
+			.filter(CashboxSummary.status == CashboxStatus.OPEN).first()
+		if cashbox_summary is None:
+			cashbox_summary = CashboxSummary()
+			cashbox_summary.transaction = 0
+			cashbox_summary.start_at = datetime_now
+			cashbox_summary.end_at = datetime_now
+			cashbox_summary.user_id = domain['user_id']
+			cashbox_summary.outlet_id = order.outlet_id
+			cashbox_summary.status = 'O'
+			cashbox_summary.save()				
 		return {'payload': order.to_dict()}
 	
 	@Number(['order_code'])
@@ -127,7 +142,7 @@ class OrderService(object):
 			.join(Product, Product.id == OrderItem.product_id)\
 			.join(ProductSellPrice, and_(Product.id == ProductSellPrice.product_id, ProductSellPrice.name == 'STANDARD')) \
 			.join(ProductPurchasePrice, and_(ProductPurchasePrice.product_id == Product.id, between(now, ProductPurchasePrice.start_at, ProductPurchasePrice.end_at))) \
-			.join(Order, Order.id == OrderItem.order_id) \
+			.join(Order, and_(Order.id == OrderItem.order_id, Order.status == OrderStatus.SUCCESS)) \
 			.filter(Order.order_code == order_code) \
 			.order_by("product_name asc")
 		order_item_list = list(map(lambda x: x._asdict(), order_items.all()))
@@ -331,5 +346,5 @@ class OrderService(object):
 		
 		order_q = Order.query.with_entities(*entities)\
 			.filter(between(Order.order_at, start_at, end_at))\
-			.filter(Order.user_id == user_id).first()
+			.filter(and_(Order.user_id == user_id, Order.status == OrderStatus.SUCCESS)).first()
 		return {'payload': order_q._asdict()}

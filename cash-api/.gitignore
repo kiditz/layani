@@ -13,3 +13,4 @@ lib64
 **/__pycache__/*
 /migrations/*
 /dist/*
+/app/config.json
