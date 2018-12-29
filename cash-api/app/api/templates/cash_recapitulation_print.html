@@ -208,7 +208,9 @@
                 {{_('Discount Order')}}
             </td>
             <td>
+                {%if order.discount_amount%}
                 Rp{{thousand(order.discount_amount)}}
+                {%endif%}
             </td>
         </tr>
         <tr class="line">
