@@ -333,6 +333,7 @@ class OrderService(object):
 			.join(ProductSellPrice, OrderItem.sell_price_id == ProductSellPrice.id) \
 			.filter(between(Order.order_at, start_at, end_at)) \
 			.filter(Order.user_id == user_id) \
+			.filter(Order.status == OrderStatus.SUCCESS) \
 			.group_by(Product.id, OrderItem.discount_name)\
 			.order_by('sub_total').all()
 		item_list = list(map(lambda x: x._asdict(), item_q))
