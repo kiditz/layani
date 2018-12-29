@@ -187,16 +187,6 @@
             </td>
 
         </tr>
-
-        <!--<tr class="child">-->
-        <!--<td>-->
-        <!--&emsp;{{_('Discount')}}-->
-        <!--</td>-->
-        <!--<td>-->
-        <!--{{thousand(item.discount_amount)}}-->
-        <!--</td>-->
-        <!--</tr>-->
-
         {%endfor%}
         <tr class="line">
             <td colspan="2">
@@ -215,9 +205,9 @@
                 {{_('Discount Order')}}
             </td>
             <td>
-                {%if order.discount_amount%}
-                {{thousand(order.discount_amount)}}
-                {%endif%}
+                <!--{%if order.discount_amount%}-->
+                ({{thousand(order.discount_amount)}})
+                <!--{%endif%}-->
             </td>
         </tr>
         <tr class="line">
