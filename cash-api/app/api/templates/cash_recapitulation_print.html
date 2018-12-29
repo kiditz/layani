@@ -152,18 +152,37 @@
         </tr>
         <tr class="information_title">
             <td colspan="2">
-                <b>{{_('Sales')}}</b>
+                {{_('Sales')}}
             </td>
         </tr>
         {%for item in order_items%}
         <tr class="child">
             <td>
-                {{item.name}} x {{item.quantity}}
+                {{item.product_name}} x {{item.qty}}
             </td>
             <td>
                 Rp{{thousand(item.sub_total)}}
             </td>
         </tr>
+        {%if item.discount_amount > 0.0 %}
+        <tr class="child">
+            <td>
+                &emsp;{{_('Discount')}}
+            </td>
+            <td>
+                Rp-{{thousand(item.discount_amount)}}
+            </td>
+        </tr>
+        {%else%}
+        <!--<tr class="child">-->
+            <!--<td>-->
+                <!--&emsp;{{_('Discount')}}-->
+            <!--</td>-->
+            <!--<td>-->
+                <!--Rp{{thousand(item.discount_amount)}}-->
+            <!--</td>-->
+        <!--</tr>-->
+        {%endif%}
         {%endfor%}
         <tr class="line">
             <td colspan="2">
@@ -180,7 +199,7 @@
         <!--Receipt Actual-->
         <tr class="information_title">
             <td colspan="2">
-                <b>{{_('Actual Receipt')}}</b>
+                {{_('Actual Receipt')}}
             </td>
         </tr>
 
@@ -215,7 +234,7 @@
         </tr>
         <tr class="information_title">
             <td colspan="2">
-                <b>{{_('Request By System')}}</b>
+                {{_('Request By System')}}
             </td>
         </tr>
 

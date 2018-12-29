@@ -24,13 +24,13 @@ import com.overflow.cash.utils.shouldRequestPermissions
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.fragment_receipt.*
+import kotlinx.android.synthetic.main.fragment_cash_report_view.*
 import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
 import javax.inject.Inject
 
-class ReceiptFragment:BaseFragment(){
+class CashboxReportView:BaseFragment(){
     @Inject
     lateinit var preferences: SharedPreferences
     @Inject
@@ -42,7 +42,7 @@ class ReceiptFragment:BaseFragment(){
     lateinit var outlet:Data
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_receipt, container, false)
+        return inflater.inflate(R.layout.fragment_cash_report_view, container, false)
     }
 
     override fun onAttach(context: Context?) {
@@ -52,22 +52,19 @@ class ReceiptFragment:BaseFragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.shouldRequestPermissions(Constant.REQUEST_PERMISSION_CODE)
-        this.outlet = Data(preferences.getString("outlet", "{}"))
         listDialog = resources.getStringArray(R.array.share_receipt_list)
-        //Add Content scroll for draw web view to image
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             WebView.enableSlowWholeDocumentDraw()
         }
-
-        this.order = Data(arguments!!.getString(Constant.ARG_SALES))
+        val summaryId = arguments!!.getLong(ARG_CASH_BOX_SUMMARY_ID)
         if (accountManager.getAccountsByType(getString(R.string.account_type)).isEmpty()) {
             return
         }
         val account = accountManager.getAccountsByType(getString(R.string.account_type)).first()
         val authToken = accountManager.peekAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS)
         val params = mapOf<String, String>("Authorization" to "Bearer $authToken")
-        val url = BuildConfig.base_url + "/cash/receipt/order?id=${order.getLong("id")}&lang_code=${preferences.getString("lang_code", "id")}"
-        Timber.i("URL : %s", url)
+        val url = "${BuildConfig.base_url}/cash/receipt/cash/view?id=$summaryId&lang_code=${preferences.getString("lang_code", "id")}"
+
         webView.loadUrl(url, params)
     }
 
@@ -120,11 +117,12 @@ class ReceiptFragment:BaseFragment(){
     }
 
     companion object {
+        const val ARG_CASH_BOX_SUMMARY_ID = "cash_box_summary_id"
         @JvmStatic
-        fun newInstance(sales: String) =
-                ReceiptFragment().apply {
+        fun newInstance(cashboxSummaryId: Long) =
+                CashboxReportView().apply {
                     arguments = Bundle().apply {
-                        putString(Constant.ARG_SALES, sales)
+                        putLong(ARG_CASH_BOX_SUMMARY_ID, cashboxSummaryId)
                     }
                 }
     }

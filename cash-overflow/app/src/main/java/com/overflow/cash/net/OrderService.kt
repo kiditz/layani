@@ -31,7 +31,7 @@ interface OrderService {
 
     @Headers("Content-Type:application/json")
     @GET("/cash/order/summary")
-    fun getSummary(@Query("outlet_id") outletId: Long,@Query("date") date:String):Single<Data>
+    fun getSummary(@Query("summary_id") summaryId: Long, @Query("date") date:String):Single<Data>
 
     @Headers("Content-Type:application/json")
     @GET("/cash/chart/num_of_order_chart")

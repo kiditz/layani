@@ -61,7 +61,7 @@
   "email.has.exists": "Email has been exists",
   "user.wrong.password": "Wrong password",
   "product.code.exists": "Product code exists",
-
+  "cashbox.has.end":"Cashbox has closed",
   //Payment Method
   "cash": "CASH",
   "credit": "CREDIT",

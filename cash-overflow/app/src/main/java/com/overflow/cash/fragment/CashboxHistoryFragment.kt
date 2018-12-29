@@ -146,4 +146,5 @@ class CashboxHistoryFragment: BaseFragment(), LoadCashboxHistoryContract.View {
                     }
                 }
     }
+
 }

@@ -73,6 +73,7 @@ class SalesOrderPreviewAdapter(private val imageService: ImageService, private v
         val method = data.getInt("method")
         val type = data.getString("discount_type")
         val amount = data.getDouble("amount")
+        var discountAmount = 0.0
         if (holder is SalesOrderPreviewAdapter.ViewHolder) {
             holder.freeProduct.visibility = View.VISIBLE
             if (method == Constant.DiscountMethod.BY_N_GET_ONE) {
@@ -81,10 +82,12 @@ class SalesOrderPreviewAdapter(private val imageService: ImageService, private v
             }else{
                 holder.freeProduct.text = data.getString("name")
                 if (type == Constant.DiscountType.PERCENTAGE) {
-                    val calculateDiscount = (amount / 100)
+                    val calculateDiscount = (amount / 100.0) * parseRupiah(holder.subTotal.text)
+                    discountAmount = calculateDiscount
                     holder.sellPrice.text = "${holder.sellPrice.text} - ${amount.toInt()}%"
                     holder.subTotal.text = rupiah(parseRupiah(holder.subTotal.text) - calculateDiscount )
                 }else{
+                    discountAmount = amount
                     holder.sellPrice.text = "${holder.sellPrice.text} - ${rupiah(amount)}"
                     holder.subTotal.text = rupiah( parseRupiah(holder.subTotal.text) - amount)
                 }
@@ -93,6 +96,8 @@ class SalesOrderPreviewAdapter(private val imageService: ImageService, private v
             val item = this.values[holder.adapterPosition]
             item["subTotal"] = parseRupiah(holder.subTotal.text)
             item["discountId"] = data.getLong("id")
+            item["discountAmount"] = discountAmount
+            item["discountName"] = data.getString("name")
             orderService.setItem(item)
         }
     }

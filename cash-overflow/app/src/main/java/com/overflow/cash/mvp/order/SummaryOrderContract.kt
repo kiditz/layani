@@ -10,6 +10,6 @@ class SummaryOrderContract {
     }
 
     interface Presenter : BasePresenter<View> {
-        fun loadSummary()
+        fun loadSummary(summaryId:Long=-1, date:String)
     }
 }

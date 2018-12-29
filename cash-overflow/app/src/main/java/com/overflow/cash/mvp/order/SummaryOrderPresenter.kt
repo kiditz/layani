@@ -14,10 +14,9 @@ import java.util.*
 
 class SummaryOrderPresenter(private val context: Context, private val preferences: SharedPreferences, private val translations: Translations, private val service: OrderService, private val disposable: CompositeDisposable):SummaryOrderContract.Presenter {
     lateinit var view: SummaryOrderContract.View
-    override fun loadSummary() {
-        val outlet = Data(preferences.getString("outlet", "{}"))
+    override fun loadSummary(summaryId:Long, date:String) {
         if(API.isConnected(context)){
-            this.disposable.add(this.service.getSummary(outlet.getLong("id"), DateUtil.printDefaultDate(Date())).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
+            this.disposable.add(this.service.getSummary(summaryId, date).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){
                     val payload = API.payload(response)
                     this.view.onSummaryLoaded(payload)

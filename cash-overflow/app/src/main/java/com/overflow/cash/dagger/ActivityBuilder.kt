@@ -120,6 +120,9 @@ abstract class ActivityBuilder {
     internal abstract fun bindCashboxSummaryFragment(): CashboxSummaryFragment
 
     @ContributesAndroidInjector
+    internal abstract fun bindCashboxReportView(): CashboxReportView
+
+    @ContributesAndroidInjector
     internal abstract fun bindCashboxHistoryFragment(): CashboxHistoryFragment
 
     @ContributesAndroidInjector

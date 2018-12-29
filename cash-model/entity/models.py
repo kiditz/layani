@@ -225,12 +225,13 @@ class Discount(db.Model, Entity):
 class Order(db.Model, Entity):
 	__tablename__ = 'co_order'
 	id = db.Column(db.BigInteger, primary_key=True)	
-	customer_id = db.Column(db.ForeignKey(u'co_customer.id'))	
-	discount_id = db.Column(db.ForeignKey(u'co_discount.id'))	
+	customer_id = db.Column(db.ForeignKey(u'co_customer.id'))		
 	description = db.Column(db.Text, nullable=False, server_default=' ', default=' ')
 	outlet_id = db.Column(db.ForeignKey(u'co_outlet.id'), nullable=False)
 	order_code = db.Column(db.Text, index=True)
-	total_amount = db.Column(db.Numeric, nullable=False, server_default='0', default=0)		
+	total_amount = db.Column(db.Numeric, nullable=False, server_default='0', default=0)
+	discount_amount = db.Column(db.Numeric, nullable=False, server_default='0', default=0)
+	discount_name = db.Column(db.Text)
 	total_payment = db.Column(db.Numeric, nullable=False, server_default='0', default=0)		
 	payment_method = db.Column(db.String(20), nullable=False, server_default='-', default='-')
 	cashback = db.Column(db.Numeric, nullable=False, server_default='0', default=0)	
@@ -260,8 +261,9 @@ class OrderItem(db.Model, Entity):
 	__tablename__ = 'co_order_item'
 	id = db.Column(db.BigInteger, primary_key=True)	
 	order_id = db.Column(db.ForeignKey(u'co_order.id'), nullable=False)
-	product_id = db.Column(db.ForeignKey(u'co_product.id'), nullable=False)
-	discount_id = db.Column(db.ForeignKey(u'co_discount.id'))	
+	product_id = db.Column(db.ForeignKey(u'co_product.id'), nullable=False)	
+	discount_amount = db.Column(db.Numeric, nullable=False, server_default='0', default=0)	
+	discount_name = db.Column(db.Text)
 	qty = db.Column(db.BigInteger, nullable=False, server_default='0', default=0)		
 	sub_total = db.Column(db.Numeric, nullable=False, server_default='0', default=0)		
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
@@ -269,7 +271,7 @@ class OrderItem(db.Model, Entity):
 	sell_price_id = db.Column(db.ForeignKey(u'co_product_sell_price.id'))
 	sell_price = db.Column(db.Numeric, nullable=False, server_default='0', default=0)
 	purchase_price_id = db.Column(db.ForeignKey(u'co_product_purchase_price.id'), nullable=False)	
-
+	
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)
 

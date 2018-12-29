@@ -14,6 +14,7 @@ import com.overflow.libs.core.DateUtil
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import kotlinx.android.synthetic.main.dialog_order_summary.view.*
+import timber.log.Timber
 import java.util.*
 
 
@@ -29,8 +30,8 @@ class DialogOrderSummary: DialogFragment(){
         arguments?.let {
             val amount = it.getDouble("success") + it.getDouble("in_progress")
             view.tv_card_should_be.text = rupiah(it.getDouble("card"))
-            view.tv_cash_should_be.text = rupiah(it.getDouble("cash"))
-            view.tv_total_should_be.text = rupiah(amount)
+            view.tv_cash_should_be.text = rupiah(it.getDouble("cash") + it.getDouble("cash_in") + it.getDouble("cash_out"))
+            view.tv_total_should_be.text = rupiah(amount + it.getDouble("cash_in") + it.getDouble("cash_out"))
             data["sales"] = amount
             data["void"] = it.getDouble("void")
             data["pending"] = it.getLong("created")
@@ -64,10 +65,13 @@ class DialogOrderSummary: DialogFragment(){
             view.cash_wrapper.isErrorEnabled = !res
         }
 
-        Observable.combineLatest(cashObserve, cardObserve, BiFunction{ isCash:Boolean, isCard:Boolean -> isCash && isCard}).subscribe {
+        // Can be error NumberFormat when backspace clicked until string is ''
+        Observable.combineLatest(cashObserve, cardObserve, BiFunction{ isCash:Boolean, isCard:Boolean -> isCash && isCard}).subscribe ({
             view.tv_total_amount.text = rupiah(parseRupiah(view.ed_cash.text) + parseRupiah(view.ed_card.text))
             view.btn_save.isEnabled = it
-        }
+        }, {
+            Timber.e(it)
+        })
     }
 
 }

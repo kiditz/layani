@@ -7,7 +7,7 @@
   "required.value.username": "Ketik dengan username",
   "password.minimum.length": "Panjang password minimum adalah 8 karakter",
   "required.value.cashbox": "Mohon untuk memilih tempat penyimpanan uang",
-
+  "cashbox.has.end":"Rekap kas sudah ditutup",
   "required.value.store_phone_number": "Ketik dengan nomor handphone toko",
   "required.value.store_name": "Ketik dengan nama toko",
   "required.value.store_address": "Ketik dengan alamat toko",

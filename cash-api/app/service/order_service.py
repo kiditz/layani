@@ -3,7 +3,7 @@ from entity.models import OrderItem, StockHistory, Stock, AccountReceiveable, Cu
 	CashboxSummary, User, CashboxHistory
 from slerp.logger import logging
 from slerp.validator import Number, Key, ValidationException
-from sqlalchemy import between
+from sqlalchemy import between, case, union_all
 from sqlalchemy.orm import aliased
 
 from utils import str2bool
@@ -133,10 +133,8 @@ class OrderService(object):
 			.join(product, product.id == OrderItem.product_id) \
 			.outerjoin(Discount, Discount.id == OrderItem.discount_id) \
 			.outerjoin(product_discount, Discount.free_product_id == product_discount.id) \
-			.join(ProductSellPrice,
-		          and_(product.id == ProductSellPrice.product_id, ProductSellPrice.name == 'STANDARD')) \
-			.join(ProductPurchasePrice, and_(ProductPurchasePrice.product_id == product.id,
-		                                     between(now, ProductPurchasePrice.start_at, ProductPurchasePrice.end_at))) \
+			.join(ProductSellPrice, and_(product.id == ProductSellPrice.product_id, ProductSellPrice.name == 'STANDARD')) \
+			.join(ProductPurchasePrice, and_(ProductPurchasePrice.product_id == product.id, between(now, ProductPurchasePrice.start_at, ProductPurchasePrice.end_at))) \
 			.join(Order, Order.id == OrderItem.order_id) \
 			.filter(Order.order_code == order_code) \
 			.order_by("product_name asc")
@@ -149,7 +147,6 @@ class OrderService(object):
 		outlet_id = domain['outlet_id']
 		status = domain['status'] if 'status' in domain else None
 		exclude_status = str2bool(domain['exclude']) if 'exclude' in domain else True
-		log.info('typeof %s', type(exclude_status))
 		page = int(domain['page'])
 		size = int(domain['size'])
 		entities = (
@@ -205,10 +202,11 @@ class OrderService(object):
 		date_now = domain['date']
 		cashbox_summary = CashboxSummary.query.filter(CashboxSummary.id == domain['summary_id']).first()
 		outlet_id = cashbox_summary.outlet_id
+		
 		order_success_q = Order.query.with_entities(
 			func.coalesce(func.sum(Order.total_amount), 0.0).label('order_summary')) \
-			.filter(and_(between(Order.order_at, cashbox_summary.start_at.strftime('%Y-%m-%d %H:%M:%S'), date_now), Order.outlet_id == outlet_id))\
-			.filter(Order.status == OrderStatus.SUCCESS)\
+			.filter(and_(between(Order.order_at, cashbox_summary.start_at.strftime('%Y-%m-%d %H:%M:%S'), date_now), Order.outlet_id == outlet_id)) \
+			.filter(Order.status == OrderStatus.SUCCESS) \
 			.first()
 		
 		order_in_progress_q = Order.query.with_entities(
@@ -309,29 +307,57 @@ class OrderService(object):
 		order_dict['item_list'] = item_list
 		return {'payload': order_dict}
 	
-	@Key(['user_id'])
+	@Key(['user_id', 'start_at', 'end_at'])
 	def find_order_items_by_user_id(self, domain):
 		user_id = domain['user_id']
 		start_at = domain['start_at']
 		end_at = domain['end_at']
-		log.debug("Start At %s", start_at)
-		log.debug("End At %s", start_at)
+		discount_amount = case(
+			[
+				(Discount.discount_type == '%', func.sum(Discount.amount / 100.0) * func.sum(OrderItem.sub_total))
+			],
+			else_=func.sum(Discount.amount)
+		).label('discount_amount')
 		entities = (
 			func.sum(OrderItem.qty).label('quantity'),
 			func.sum(OrderItem.sub_total).label('sub_total'),
-			Product.name,
-			ProductSellPrice.sell_price,
-			Discount.name.label('discount_name'),
-			func.sum(Discount.quantity).label('discount_qty'),
+			Product.name.label('product_name'),
+			discount_amount,
+			func.coalesce(None).label('discount_name')
 		)
-		order_item_list = OrderItem.query.with_entities(*entities) \
+		q1 = db.session.query(*entities) \
 			.join(Product, OrderItem.product_id == Product.id) \
 			.join(Order, OrderItem.order_id == Order.id) \
-			.outerjoin(Discount, OrderItem.discount_id == Discount.id) \
-			.join(ProductSellPrice, OrderItem.sell_price_id == ProductSellPrice.id) \
-			.filter(Order.user_id == user_id) \
+			.join(Discount, and_(OrderItem.discount_id == Discount.id, Discount.method != 1)) \
 			.filter(between(Order.order_at, start_at, end_at)) \
-			.group_by("discount_name", Product.name, ProductSellPrice.id).all()
+			.filter(Order.user_id == user_id) \
+			.group_by(Product.id, Discount.id).subquery().select() \
 		
-		item_list = list(map(lambda x: x._asdict(), order_item_list))
+		# Entities for q2
+		entities = (
+			func.sum(OrderItem.qty).label('quantity'),
+			func.sum(OrderItem.sub_total).label('sub_total'),
+			Product.name.label('product_name'),
+			func.coalesce(0.0).label('discount_amount'),
+			func.coalesce(None).label('discount_name')
+		)
+		q2 = db.session.query(*entities) \
+			.join(Product, OrderItem.product_id == Product.id) \
+			.join(Order, OrderItem.order_id == Order.id) \
+			.filter(between(Order.order_at, start_at, end_at)) \
+			.filter(Order.user_id == user_id) \
+			.filter(OrderItem.discount_id.is_(None)) \
+			.group_by(Product.id).subquery().select() \
+			
+		q3 = db.session.query('sub_total', 'discount_amount', 'product_name', 'quantity', 'discount_name').select_from(union_all(q1, q2).alias('t').select()).subquery()
+		merge = db.session.query(
+			func.sum(q3.c.sub_total).label('sub_total'),
+			func.sum(q3.c.discount_amount).label('discount_amount'),
+			func.sum(q3.c.quantity).label('qty'),
+			func.coalesce(func.sum(q3.c.sub_total) - func.sum(q3.c.discount_amount), 0.0).label('price_after_disc'),
+			q3.c.product_name,
+			q3.c.discount_name
+		).select_from(q1).group_by(q3.c.product_name, q3.c.discount_name).order_by('sub_total desc')
+		item_list = list(map(lambda x: x._asdict(), merge.all()))
+		
 		return {'payload': item_list}

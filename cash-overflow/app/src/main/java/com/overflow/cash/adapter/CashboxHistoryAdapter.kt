@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.adapter_cashbox_history.view.*
  */
 class CashboxHistoryAdapter(private val translations: Translations) : RecyclerView.Adapter<CashboxHistoryAdapter.ViewHolder>() {
     lateinit var context: Context
-    private val values: MutableList<Data> = mutableListOf()
+    val values: MutableList<Data> = mutableListOf()
     var onDeleteClick: ((Data, ViewHolder) -> Unit)? = null
     var onDoneClick: ((Data, ViewHolder) -> Unit)? = null
 

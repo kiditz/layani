@@ -40,9 +40,8 @@ class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View, LoadD
     lateinit var loadDiscountPresenter: LoadDiscountByBillAmountPresenter
     @Inject
     lateinit var orderItemRealm: OrderItemRealm
-    private var discountId:Long=0
     private var discountAmount:Double=0.0
-    private var discountType:String=Constant.TEXT_EMPTY
+    private var discountName:String=Constant.TEXT_EMPTY
     private var paymentMethod = Constant.PaymentMethod.CASH
     var totalAmount = 0.0
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -80,7 +79,8 @@ class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View, LoadD
         btn_other.setOnClickListener {
             arguments!!.putString("payment_method", paymentMethod)
             if(discountAmount > 0){
-                arguments!!.putLong("discount_id", discountId)
+                arguments!!.putDouble("discount_amount", discountAmount)
+                arguments!!.putString("discount_name", discountName)
                 arguments!!.putDouble("amount", parseRupiah(tv_total_amount.text))
             }
             context!!.moveTo(PaymentOtherActivity::class.java, arguments!!)
@@ -166,7 +166,8 @@ class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View, LoadD
             order["total_amount"] = totalAmount
             order["total_payment"] = totalPayment
             if(discountAmount > .0){
-                order["discount_id"] = discountId
+                order["discount_amount"] = discountAmount
+                order["discount_name"] = discountName
             }
             order["payment_method"] = paymentMethod
             if(this.containsKey("items")){
@@ -183,10 +184,9 @@ class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View, LoadD
     override fun onDiscountLoaded(data: Data) {
 
         this.l_discount_calculation.visibility = View.VISIBLE
-        this.discountId = data.getLong("id")
         this.discountAmount = data.getDouble("amount")
-        this.discountType = data.getString("discount_type")
-        if(discountType == Constant.DiscountType.FIXED_PRICE){
+        this.discountName = data.getString("name")
+        if(data.getString("discount_type") == Constant.DiscountType.FIXED_PRICE){
             this.tv_discount.text = rupiah(discountAmount)
             this.totalAmount = parseRupiah(tv_bill_amount.text) - discountAmount
             this.tv_total_amount.text = rupiah(totalAmount)
@@ -195,6 +195,7 @@ class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View, LoadD
             this.totalAmount = parseRupiah(tv_bill_amount.text) - calculateDiscount
             this.tv_discount.text = "${discountAmount.toInt()}%"
             this.tv_total_amount.text = rupiah(totalAmount)
+            this.discountAmount = calculateDiscount
         }
         initRound()
     }

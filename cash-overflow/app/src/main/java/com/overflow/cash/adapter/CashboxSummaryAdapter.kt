@@ -3,6 +3,8 @@ package com.overflow.cash.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -62,6 +64,12 @@ class CashboxSummaryAdapter(private val translations: Translations, private val 
 
             holder.fullName?.text = item.getString("fullname")
             holder.status?.text = translations.get(item.getString("status").toString())
+            if(item.getString("status") == Constant.CashboxStatus.OPEN){
+                val textColor = ContextCompat.getColor(context, android.R.color.holo_green_light)
+                holder.status?.setTextColor(textColor)
+            }else{
+                holder.status?.setTextColor(Color.BLACK)
+            }
             holder.endAt.text = if (endAt != null){
                 hoursFormat.format(Date(item.getLong("end_at")))
             }else{

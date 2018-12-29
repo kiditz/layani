@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/cash"
-            android:inputType="number"
+            android:inputType="numberSigned"
             android:maxLines="1" />
     </android.support.design.widget.TextInputLayout>
     <LinearLayout
@@ -59,7 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/card"
-            android:inputType="number"
+            android:inputType="numberSigned"
             android:maxLines="1" />
     </android.support.design.widget.TextInputLayout>
     <LinearLayout

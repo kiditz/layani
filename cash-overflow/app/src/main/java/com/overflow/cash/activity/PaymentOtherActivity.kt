@@ -162,7 +162,8 @@ class PaymentOtherActivity : BaseActivity(),  SaveOrderContract.View {
         order["total_amount"] = amount
         order["description"] = intent.getStringExtra("description")
         if(intent.hasExtra("discount_id")){
-            order["discount_id"] = intent.getLongExtra("discount_id", -1)
+            order["discount_amount"] = intent.getDoubleExtra("discount_amount", -1.0)
+            order["discount_name"] = intent.getStringExtra("discount_name", Constant.TEXT_EMPTY)
         }
         if(intent.hasExtra("order_id")){
             order["order_id"] = intent.getLongExtra("order_id", -1)

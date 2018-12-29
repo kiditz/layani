@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.View
 import com.overflow.cash.R
+import com.overflow.cash.fragment.CashboxReportView
 import com.overflow.cash.fragment.CashboxHistoryFragment
 import com.overflow.cash.fragment.DialogOrderSummary
 import com.overflow.cash.mvp.cashbox.SaveCashboxSummaryContract
@@ -20,6 +21,7 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_cashbox_history_dispatcher.*
+import java.util.*
 import javax.inject.Inject
 
 class CashboxHistoryDispatcherActivity : BaseActivity(), HasSupportFragmentInjector, SummaryOrderContract.View, SaveCashboxSummaryContract.View {
@@ -40,18 +42,23 @@ class CashboxHistoryDispatcherActivity : BaseActivity(), HasSupportFragmentInjec
         val cashboxSummaryId = intent.getLongExtra(CashboxHistoryFragment.ARG_CASH_BOX_SUMMARY_ID, -1)
         val status = intent.getStringExtra("status")
         tv_fullname.text = intent.getStringExtra("fullname")
-        tv_datetime.text = DateUtil.printDateTime(intent.getLongExtra("start_at", System.currentTimeMillis()))
 
         presenter.attach(this)
         saveCashboxSummaryPresenter.attach(this)
         if (status == Constant.CashboxStatus.CLOSE) {
             btn_fill_cash_summary.visibility = View.GONE
+            tv_datetime.text = DateUtil.printDateTime(intent.getLongExtra("end_at", System.currentTimeMillis()))
+            val reportView = CashboxReportView.newInstance(cashboxSummaryId)
+            replaceContent(R.id.container, reportView)
         } else {
+            tv_datetime.text = DateUtil.printDateTime(intent.getLongExtra("start_at", System.currentTimeMillis()))
             btn_fill_cash_summary.visibility = View.VISIBLE
-            replaceContent(R.id.container, CashboxHistoryFragment.newInstance(cashboxSummaryId))
+            val history = CashboxHistoryFragment.newInstance(cashboxSummaryId)
+            replaceContent(R.id.container, history)
         }
+
         btn_fill_cash_summary.setOnClickListener {
-            this.presenter.loadSummary()
+            this.presenter.loadSummary(cashboxSummaryId, DateUtil.printDefaultDateTime(Date(System.currentTimeMillis())))
         }
 
     }
@@ -81,7 +88,7 @@ class CashboxHistoryDispatcherActivity : BaseActivity(), HasSupportFragmentInjec
     }
 
     override fun onSummaryLoaded(summary: Data) {
-        summary["id"] = intent.getLongExtra("id", -1L)
+        summary["id"] = intent.getLongExtra(CashboxHistoryFragment.ARG_CASH_BOX_SUMMARY_ID, -1L)
         val dialog = DialogOrderSummary()
         dialog.arguments = summary.toBundle()
         dialog.onDoneClick = {
