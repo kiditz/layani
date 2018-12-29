@@ -237,11 +237,13 @@ class OrderService(object):
 		order_card_q = Order.query.with_entities(
 			func.coalesce(func.sum(Order.total_amount), 0.0).label('order_summary')) \
 			.filter(and_(between(Order.order_at, cashbox_summary.start_at.strftime('%Y-%m-%d %H:%M:%S'), date_now), Order.outlet_id == outlet_id, Order.payment_method == PaymentMethod.CARD, Order.total_amount > 0.0)) \
+			.filter(Order.status == OrderStatus.SUCCESS) \
 			.first()
 		
 		order_cash_q = Order.query.with_entities(
 			func.coalesce(func.sum(Order.total_amount), 0.0).label('order_summary')) \
 			.filter(and_(between(Order.order_at, cashbox_summary.start_at.strftime('%Y-%m-%d %H:%M:%S'), date_now), Order.outlet_id == outlet_id, Order.payment_method == PaymentMethod.CASH, Order.total_amount > 0.0)) \
+			.filter(Order.status == OrderStatus.SUCCESS) \
 			.first()
 		
 		cash_in = CashboxHistory.query.with_entities(func.coalesce(func.sum(CashboxHistory.amount), 0).label('amount')) \
