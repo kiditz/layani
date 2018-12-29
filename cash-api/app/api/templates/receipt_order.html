@@ -155,20 +155,19 @@
                     &emsp;{{item.discount_name}}
                 </td>
                 <td>
-                    {%if item.discount_amount%} ({{item.discount_amount}}) {%endif%}
+                    {%if item.discount_amount%} ({{thousand(item.discount_amount)}}) {%endif%}
                 </td>
             </tr>
             {%endif%}
             <!--Keluarkan nama jika metode discount adalah by one get one-->
 
-            {%if item.discount_method == 1 %}
+            {%if item.discount_name%}
             <tr class="item">
                 <td colspan="2">
-                    {{item.discount_name if item.discount_name else ''}}
+                    {{item.discount_name}}
                 </td>
-
             </tr>
-            {%endif%}
+            {%-endif%}
             {%-endfor%}
             <tr class="heading">
                 <td></td>
@@ -184,7 +183,7 @@
             <tr class="total">
                 <td>{{_('Discount')}}:</td>
                 <td>
-                    {{thousand(order.discount_amount)}}{%if order.discount_type == '%'%}%{%-endif%}
+                    ({{thousand(order.discount_amount)}})
                 </td>
             </tr>
             <tr>

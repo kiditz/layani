@@ -1,10 +1,9 @@
 from entity.models import OrderItem, StockHistory, Stock, AccountReceiveable, Customer, Product, \
-	Discount, ProductSellPrice, ProductPurchasePrice, \
+	ProductSellPrice, ProductPurchasePrice, \
 	CashboxSummary, User, CashboxHistory
 from slerp.logger import logging
 from slerp.validator import Number, Key, ValidationException
 from sqlalchemy import between
-from sqlalchemy.orm import aliased
 
 from utils import str2bool
 from utils.api_constant import StockRef, ErrorCode, CashboxStatus, PaymentMethod
