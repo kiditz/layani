@@ -346,7 +346,7 @@ class OrderService(object):
 		start_at = domain['start_at']
 		end_at = domain['end_at']
 		entities = (
-			func.sum(Order.discount_amount).label('discount_amount'),
+			func.coalesce(func.sum(Order.discount_amount).label('discount_amount'), 0.0),
 			func.sum(Order.total_amount).label('total_amount'),
 			func.coalesce(func.sum(Order.total_amount) + func.sum(Order.discount_amount), 0.0).label('price_before_disc')
 		)
