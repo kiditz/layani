@@ -228,6 +228,7 @@ class OrderService(object):
 			func.coalesce(func.sum(Order.total_amount), 0.0).label('order_summary')) \
 			.filter(and_(between(Order.order_at, cashbox_summary.start_at.strftime('%Y-%m-%d %H:%M:%S'), date_now), Order.outlet_id == outlet_id)) \
 			.filter(Order.status == OrderStatus.VOID) \
+			.filter(Order.total_amount > 0) \
 			.first()
 		
 		order_created_q = Order.query.with_entities(func.count(Order.id).label('order_summary')) \
