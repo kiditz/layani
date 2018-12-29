@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-12-29 23:38+0700\n"
+"POT-Creation-Date: 2018-12-30 05:00+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.5.1\n"
+"Generated-By: Babel 2.6.0\n"
 
 #: api/templates/cash_recapitulation_print.html:144
 msgid "REPORT SALES"
@@ -38,7 +38,7 @@ msgid "Pending Order"
 msgstr ""
 
 #: api/templates/cash_recapitulation_print.html:157
-#: api/templates/cash_recapitulation_print.html:270
+#: api/templates/cash_recapitulation_print.html:272
 #: api/templates/cash_recapitulation_view.html:109
 #: api/templates/cash_recapitulation_view.html:176
 msgid "Sales"
@@ -57,60 +57,61 @@ msgstr ""
 msgid "Discount Order"
 msgstr ""
 
-#: api/templates/cash_recapitulation_print.html:220
-#: api/templates/cash_recapitulation_print.html:256
-#: api/templates/cash_recapitulation_print.html:299
+#: api/templates/cash_recapitulation_print.html:222
+#: api/templates/cash_recapitulation_print.html:258
+#: api/templates/cash_recapitulation_print.html:308
 #: api/templates/receipt_order.html:190
 msgid "Total"
 msgstr ""
 
-#: api/templates/cash_recapitulation_print.html:229
+#: api/templates/cash_recapitulation_print.html:231
 #: api/templates/cash_recapitulation_view.html:182
 msgid "Actual Receipt"
 msgstr ""
 
-#: api/templates/cash_recapitulation_print.html:235
+#: api/templates/cash_recapitulation_print.html:237
 #: api/templates/cash_recapitulation_view.html:188
 msgid "CASH"
 msgstr ""
 
-#: api/templates/cash_recapitulation_print.html:244
+#: api/templates/cash_recapitulation_print.html:246
 #: api/templates/cash_recapitulation_view.html:196
 msgid "CARD"
 msgstr ""
 
-#: api/templates/cash_recapitulation_print.html:264
+#: api/templates/cash_recapitulation_print.html:266
 #: api/templates/cash_recapitulation_view.html:168
 msgid "Request By System"
 msgstr ""
 
-#: api/templates/cash_recapitulation_print.html:279
+#: api/templates/cash_recapitulation_print.html:280
+#: api/templates/cash_recapitulation_view.html:118
+#: api/templates/cash_recapitulation_view.html:176
+msgid "Void"
+msgstr ""
+
+#: api/templates/cash_recapitulation_print.html:288
 #: api/templates/cash_recapitulation_view.html:126
 #: api/templates/cash_recapitulation_view.html:176
 msgid "Cash In"
 msgstr ""
 
-#: api/templates/cash_recapitulation_print.html:287
+#: api/templates/cash_recapitulation_print.html:296
 #: api/templates/cash_recapitulation_view.html:144
 #: api/templates/cash_recapitulation_view.html:176
 msgid "Cash Out"
 msgstr ""
 
-#: api/templates/cash_recapitulation_print.html:308
+#: api/templates/cash_recapitulation_print.html:317
 msgid "Difference Receipt"
 msgstr ""
 
-#: api/templates/cash_recapitulation_print.html:313
+#: api/templates/cash_recapitulation_print.html:322
 msgid "Actual"
 msgstr ""
 
-#: api/templates/cash_recapitulation_print.html:313
+#: api/templates/cash_recapitulation_print.html:322
 msgid "System"
-msgstr ""
-
-#: api/templates/cash_recapitulation_view.html:118
-#: api/templates/cash_recapitulation_view.html:176
-msgid "Void"
 msgstr ""
 
 #: api/templates/cash_recapitulation_view.html:204

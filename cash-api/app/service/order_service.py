@@ -334,7 +334,6 @@ class OrderService(object):
 			.join(ProductSellPrice, OrderItem.sell_price_id == ProductSellPrice.id) \
 			.filter(between(Order.order_at, start_at, end_at)) \
 			.filter(Order.user_id == user_id) \
-			.filter(Order.status == OrderStatus.SUCCESS) \
 			.group_by(Product.id, OrderItem.discount_name)\
 			.order_by('sub_total').all()
 		item_list = list(map(lambda x: x._asdict(), item_q))
@@ -347,11 +346,13 @@ class OrderService(object):
 		end_at = domain['end_at']
 		entities = (
 			func.coalesce(func.sum(Order.discount_amount).label('discount_amount'), 0.0),
-			func.sum(Order.total_amount).label('total_amount'),
+			func.coalesce(func.sum(Order.total_amount), 0.0).label('total_amount'),
 			func.coalesce(func.sum(Order.total_amount) + func.sum(Order.discount_amount), 0.0).label('price_before_disc')
 		)
 		
 		order_q = Order.query.with_entities(*entities)\
 			.filter(between(Order.order_at, start_at, end_at))\
-			.filter(and_(Order.user_id == user_id, Order.status == OrderStatus.SUCCESS)).first()
+			.filter(and_(Order.user_id == user_id, Order.total_amount > 0)).first()
+		if order_q is None:
+			raise ValidationException(ErrorCode.ORDER_NOT_FOUND)
 		return {'payload': order_q._asdict()}

@@ -12,7 +12,7 @@ def str2bool(v):
 
 
 def splitThousands(val):
-	s = '%d' % val
+	s = '%d' % abs(val)
 	groups = []
 	while s and s[-1].isdigit():
 		groups.append(s[-3:])

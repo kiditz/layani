@@ -163,7 +163,7 @@
                 {{item.product_name}} x {{item.quantity}}
             </td>
             <td>
-                Rp{{thousand(item.sub_total + item.discount_amount)}}
+                {{thousand(item.sub_total + item.discount_amount)}}
             </td>
         </tr>
 
@@ -175,7 +175,7 @@
             </td>
             <td>
                 {%if item.discount_amount > 0.0 %}
-                Rp-{{thousand(item.discount_amount)}}
+                -{{thousand(item.discount_amount)}}
                 {%endif%}
             </td>
 
@@ -186,7 +186,7 @@
         <!--&emsp;{{_('Discount')}}-->
         <!--</td>-->
         <!--<td>-->
-        <!--Rp{{thousand(item.discount_amount)}}-->
+        <!--{{thousand(item.discount_amount)}}-->
         <!--</td>-->
         <!--</tr>-->
 
@@ -200,7 +200,7 @@
                 {{_('Sub Total')}}
             </td>
             <td>
-                Rp{{thousand(order.price_before_disc)}}
+                {{thousand(order.price_before_disc)}}
             </td>
         </tr>
         <tr class="child">
@@ -209,7 +209,7 @@
             </td>
             <td>
                 {%if order.discount_amount%}
-                Rp{{thousand(order.discount_amount)}}
+                {{thousand(order.discount_amount)}}
                 {%endif%}
             </td>
         </tr>
@@ -222,7 +222,7 @@
                 {{_('Total')}}
             </td>
             <td>
-                Rp{{thousand(order.total_amount)}}
+                {{thousand(order.total_amount)}}
             </td>
         </tr>
         <!--Receipt Actual-->
@@ -237,7 +237,7 @@
                 {{_('CASH')}}
             </td>
             <td>
-                Rp{{thousand(summary.cash)}}
+                {{thousand(summary.cash)}}
             </td>
         </tr>
 
@@ -246,7 +246,7 @@
                 {{_('CARD')}}
             </td>
             <td>
-                Rp{{thousand(summary.card)}}
+                {{thousand(summary.card)}}
             </td>
         </tr>
         <tr class="line">
@@ -258,7 +258,7 @@
                 {{_('Total')}}
             </td>
             <td>
-                Rp{{thousand(summary.transaction)}}
+                {{thousand(summary.transaction)}}
             </td>
         </tr>
         <tr class="information_title">
@@ -272,15 +272,15 @@
                 {{_('Sales')}}
             </td>
             <td>
-                Rp{{thousand(summary.sales)}}
+                {{thousand(summary.sales)}}
             </td>
         </tr>
         <tr class="child">
             <td>
-                {{_('Refund')}}
+                {{_('Void')}}
             </td>
             <td>
-                Rp{{thousand(summary.cash_out)}}
+                {{thousand(summary.cash_out)}}
             </td>
         </tr>
         <tr class="child">
@@ -288,7 +288,7 @@
                 {{_('Cash In')}}
             </td>
             <td>
-                Rp{{thousand(summary.cash_in)}}
+                {{thousand(summary.cash_in)}}
             </td>
         </tr>
         <tr class="child">
@@ -296,7 +296,7 @@
                 {{_('Cash Out')}}
             </td>
             <td>
-                Rp{{thousand(summary.cash_out)}}
+                {{thousand(summary.cash_out)}}
             </td>
         </tr>
         <tr class="line">
@@ -308,7 +308,7 @@
                 {{_('Total')}}
             </td>
             <td>
-                Rp{{thousand(summary.transaction)}}
+                {{thousand(summary.transaction)}}
             </td>
         </tr>
         <!--Request By System-->
@@ -322,7 +322,7 @@
                 {{_('Actual')}} - {{_('System')}}
             </td>
             <td>
-                Rp{{thousand(summary.difference)}}
+                {{thousand(summary.difference)}}
             </td>
         </tr>
     </table>
