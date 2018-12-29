@@ -302,8 +302,9 @@ class OrderService(object):
 		)
 		order_item_list = OrderItem.query.with_entities(*entities) \
 			.join(Product, OrderItem.product_id == Product.id)\
-			.join(ProductSellPrice, OrderItem.sell_price_id == ProductSellPrice.id)\
-			.filter(OrderItem.order_id == order.id).all()
+			.join(ProductSellPrice, OrderItem.sell_price_id == ProductSellPrice.id) \
+			.join(Order, Order.id == OrderItem.order_id) \
+			.filter(Order.order_code == order.order_code).all()
 		item_list = list(map(lambda x: x._asdict(), order_item_list))
 		order_dict = order._asdict()
 		order_dict['price_before_disc'] = price_before_disc.amount
