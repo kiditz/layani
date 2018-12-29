@@ -3,7 +3,7 @@ from entity.models import OrderItem, StockHistory, Stock, AccountReceiveable, Cu
 	CashboxSummary, User, CashboxHistory
 from slerp.logger import logging
 from slerp.validator import Number, Key, ValidationException
-from sqlalchemy import between, case, union_all
+from sqlalchemy import between
 from sqlalchemy.orm import aliased
 
 from utils import str2bool
@@ -114,11 +114,8 @@ class OrderService(object):
 			OrderItem.sub_total,
 			OrderItem.qty,
 			product.name.label('product_name'),
-			Discount.name.label('discount_name'),
-			Discount.free_product_id,
-			Discount.discount_type,
-			Discount.method,
-			Discount.amount.label('discount_amount'),
+			OrderItem.discount_amount,
+			OrderItem.discount_name,
 			product_discount.name.label('free_product'),
 			product.unit,
 			product.use_stock,
@@ -131,7 +128,6 @@ class OrderService(object):
 		now = datetime.now()
 		order_items = OrderItem.query.with_entities(*entities) \
 			.join(product, product.id == OrderItem.product_id) \
-			.outerjoin(Discount, Discount.id == OrderItem.discount_id) \
 			.outerjoin(product_discount, Discount.free_product_id == product_discount.id) \
 			.join(ProductSellPrice, and_(product.id == ProductSellPrice.product_id, ProductSellPrice.name == 'STANDARD')) \
 			.join(ProductPurchasePrice, and_(ProductPurchasePrice.product_id == product.id, between(now, ProductPurchasePrice.start_at, ProductPurchasePrice.end_at))) \
@@ -272,15 +268,12 @@ class OrderService(object):
 			Outlet.address.label('outlet_address'),
 			Outlet.phone_number.label('outlet_phone_number'),
 			Order.cashback,
-			Discount.name.label('discount_name'),
-			Discount.method.label('discount_method'),
-			Discount.discount_type,
-			func.coalesce(Discount.amount, 0.0).label('discount_amount')
+			Order.discount_amount,
+			Order.discount_name
 		)
 		order = Order.query.with_entities(*entities) \
 			.join(User, User.id == Order.user_id) \
 			.join(Outlet, Outlet.id == Order.outlet_id) \
-			.outerjoin(Discount, Discount.id == Order.discount_id) \
 			.filter(Order.id == domain['id']) \
 			.first()
 		price_before_disc = OrderItem.query.with_entities(
@@ -290,16 +283,13 @@ class OrderService(object):
 			OrderItem.qty,
 			OrderItem.sub_total,
 			Product.name,
-			Discount.amount.label('discount_amount'),
-			Discount.discount_type,
-			Discount.method.label('discount_method'),
-			Discount.name.label('discount_name'),
-			ProductSellPrice.sell_price
+			ProductSellPrice.sell_price,
+			OrderItem.discount_name,
+			OrderItem.discount_amount
 		)
 		order_item_list = OrderItem.query.with_entities(*entities) \
-			.join(Product, OrderItem.product_id == Product.id) \
-			.outerjoin(Discount, OrderItem.discount_id == Discount.id) \
-			.join(ProductSellPrice, OrderItem.sell_price_id == ProductSellPrice.id) \
+			.join(Product, OrderItem.product_id == Product.id)\
+			.join(ProductSellPrice, OrderItem.sell_price_id == ProductSellPrice.id)\
 			.filter(OrderItem.order_id == order.id).all()
 		item_list = list(map(lambda x: x._asdict(), order_item_list))
 		order_dict = order._asdict()
@@ -312,52 +302,38 @@ class OrderService(object):
 		user_id = domain['user_id']
 		start_at = domain['start_at']
 		end_at = domain['end_at']
-		discount_amount = case(
-			[
-				(Discount.discount_type == '%', func.sum(Discount.amount / 100.0) * func.sum(OrderItem.sub_total))
-			],
-			else_=func.sum(Discount.amount)
-		).label('discount_amount')
+		
 		entities = (
 			func.sum(OrderItem.qty).label('quantity'),
 			func.sum(OrderItem.sub_total).label('sub_total'),
 			Product.name.label('product_name'),
-			discount_amount,
-			func.coalesce(None).label('discount_name')
+			func.sum(OrderItem.discount_amount).label('discount_amount'),
+			OrderItem.discount_name,
+			func.coalesce(func.count(OrderItem.id), 0.0).label('count_order'),
 		)
-		q1 = db.session.query(*entities) \
-			.join(Product, OrderItem.product_id == Product.id) \
+		item_q = OrderItem.query.with_entities(*entities)\
+			.join(Product, OrderItem.product_id == Product.id)\
 			.join(Order, OrderItem.order_id == Order.id) \
-			.join(Discount, and_(OrderItem.discount_id == Discount.id, Discount.method != 1)) \
+			.join(ProductSellPrice, OrderItem.sell_price_id == ProductSellPrice.id) \
 			.filter(between(Order.order_at, start_at, end_at)) \
 			.filter(Order.user_id == user_id) \
-			.group_by(Product.id, Discount.id).subquery().select() \
-		
-		# Entities for q2
-		entities = (
-			func.sum(OrderItem.qty).label('quantity'),
-			func.sum(OrderItem.sub_total).label('sub_total'),
-			Product.name.label('product_name'),
-			func.coalesce(0.0).label('discount_amount'),
-			func.coalesce(None).label('discount_name')
-		)
-		q2 = db.session.query(*entities) \
-			.join(Product, OrderItem.product_id == Product.id) \
-			.join(Order, OrderItem.order_id == Order.id) \
-			.filter(between(Order.order_at, start_at, end_at)) \
-			.filter(Order.user_id == user_id) \
-			.filter(OrderItem.discount_id.is_(None)) \
-			.group_by(Product.id).subquery().select() \
-			
-		q3 = db.session.query('sub_total', 'discount_amount', 'product_name', 'quantity', 'discount_name').select_from(union_all(q1, q2).alias('t').select()).subquery()
-		merge = db.session.query(
-			func.sum(q3.c.sub_total).label('sub_total'),
-			func.sum(q3.c.discount_amount).label('discount_amount'),
-			func.sum(q3.c.quantity).label('qty'),
-			func.coalesce(func.sum(q3.c.sub_total) - func.sum(q3.c.discount_amount), 0.0).label('price_after_disc'),
-			q3.c.product_name,
-			q3.c.discount_name
-		).select_from(q1).group_by(q3.c.product_name, q3.c.discount_name).order_by('sub_total desc')
-		item_list = list(map(lambda x: x._asdict(), merge.all()))
-		
+			.group_by(Product.id, OrderItem.discount_name)\
+			.order_by('sub_total').all()
+		item_list = list(map(lambda x: x._asdict(), item_q))
 		return {'payload': item_list}
+	
+	@Key(['user_id', 'start_at', 'end_at'])
+	def find_order_by_user_id(self, domain):
+		user_id = domain['user_id']
+		start_at = domain['start_at']
+		end_at = domain['end_at']
+		entities = (
+			func.sum(Order.discount_amount).label('discount_amount'),
+			func.sum(Order.total_amount).label('total_amount'),
+			func.coalesce(func.sum(Order.total_amount) + func.sum(Order.discount_amount), 0.0).label('price_before_disc')
+		)
+		
+		order_q = Order.query.with_entities(*entities)\
+			.filter(between(Order.order_at, start_at, end_at))\
+			.filter(Order.user_id == user_id).first()
+		return {'payload': order_q._asdict()}

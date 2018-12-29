@@ -173,6 +173,7 @@ class PaymentOtherActivity : BaseActivity(),  SaveOrderContract.View {
         if(orderItems != null){
             order["items"] = orderItems
         }
+
         changeBtnStyle(false)
         presenter.saveOrder(order)
     }

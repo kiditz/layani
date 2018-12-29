@@ -50,32 +50,32 @@ class OrderItemsAdapter(private val imageService: ImageService) : RecyclerView.A
         val unit = item.getString("unit")
         val subTotal = rupiah(item.getDouble("sub_total"))
         val productName = item.getString("product_name")
-        val method = item["method"]?.toString()?.toInt()
-        val discountType = item.getString("discount_type")
         val discountName = item.getString("discount_name")
+        val discountAmount = item.getDouble("discount_amount")
         val documentId = item["document_id"]?.toString()?.toLong()
 
         holder.productName.text= productName
         holder.subTotal.text = subTotal
         holder.sellPrice.text = "$sellPrice x $qty $unit"
         imageService.loadDocument(holder.imgProduct, documentId, productName)
-        if (method != null){
-            holder.discountName.visibility = View.VISIBLE
-            if(method==Constant.DiscountMethod.BY_N_GET_ONE){
-                holder.discountName.text = discountName
-            }else{
-                val amount = item.getDouble("discount_amount")
-                holder.discountName.text = discountName
-                if (discountType == Constant.DiscountType.PERCENTAGE) {
-                    val calculateDiscount = (amount / 100)
-                    holder.sellPrice.text = "${holder.sellPrice.text} - ${amount.toInt()}%"
-                    holder.subTotal.text = rupiah(parseRupiah(holder.subTotal.text) - calculateDiscount )
-                }else{
-                    holder.sellPrice.text = "${holder.sellPrice.text} - ${rupiah(amount)}"
-                    holder.subTotal.text = rupiah( parseRupiah(holder.subTotal.text) - amount)
-                }
-            }
-        }
+//        if (method != null){
+        holder.discountName.visibility = View.VISIBLE
+        holder.discountName.text = discountName
+//            if(method==Constant.DiscountMethod.BY_N_GET_ONE){
+//                holder.discountName.text = discountName
+//            }else{
+//                val amount = item.getDouble("discount_amount")
+
+//                if (discountType == Constant.DiscountType.PERCENTAGE) {
+//                    val calculateDiscount = (amount / 100)
+//                    holder.sellPrice.text = "${holder.sellPrice.text} - ${amount.toInt()}%"
+//                    holder.subTotal.text = rupiah(parseRupiah(holder.subTotal.text) - calculateDiscount )
+//                }else{
+//                    holder.sellPrice.text = "${holder.sellPrice.text} - ${rupiah(amount)}"
+//                    holder.subTotal.text = rupiah( parseRupiah(holder.subTotal.text) - amount)
+//                }
+//            }
+//        }
 
     }
 

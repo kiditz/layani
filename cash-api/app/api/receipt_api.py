@@ -35,5 +35,6 @@ def get_receipt_for_print_cash():
 	order_input['start_at'] = summary['start_at'].strftime('%Y-%m-%d %H:%M:%S')
 	order_input['end_at'] = summary['end_at'].strftime('%Y-%m-%d %H:%M:%S')
 	order_items = order_service.find_order_items_by_user_id(order_input)[PAYLOAD]
-	return render_template('cash_recapitulation_print.html', summary=summary, order_items=order_items)
+	order = order_service.find_order_by_user_id(order_input)[PAYLOAD]
+	return render_template('cash_recapitulation_print.html', summary=summary, order_items=order_items, order=order)
 

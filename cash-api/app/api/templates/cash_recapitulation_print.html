@@ -118,6 +118,8 @@
                 text-align: center;
             }
         }
+
+
     </style>
 </head>
 
@@ -158,31 +160,36 @@
         {%for item in order_items%}
         <tr class="child">
             <td>
-                {{item.product_name}} x {{item.qty}}
+                {{item.product_name}} x {{item.quantity}}
             </td>
             <td>
-                Rp{{thousand(item.sub_total)}}
+                Rp{{thousand(item.sub_total + item.discount_amount)}}
             </td>
         </tr>
-        {%if item.discount_amount > 0.0 %}
+
         <tr class="child">
             <td>
-                &emsp;{{_('Discount')}}
+                {%if item.discount_name%}
+                &emsp;{{item.discount_name}} x {{item.count_order}}
+                {%endif%}
             </td>
             <td>
+                {%if item.discount_amount > 0.0 %}
                 Rp-{{thousand(item.discount_amount)}}
+                {%endif%}
             </td>
+
         </tr>
-        {%else%}
+
         <!--<tr class="child">-->
-            <!--<td>-->
-                <!--&emsp;{{_('Discount')}}-->
-            <!--</td>-->
-            <!--<td>-->
-                <!--Rp{{thousand(item.discount_amount)}}-->
-            <!--</td>-->
+        <!--<td>-->
+        <!--&emsp;{{_('Discount')}}-->
+        <!--</td>-->
+        <!--<td>-->
+        <!--Rp{{thousand(item.discount_amount)}}-->
+        <!--</td>-->
         <!--</tr>-->
-        {%endif%}
+
         {%endfor%}
         <tr class="line">
             <td colspan="2">
@@ -193,7 +200,27 @@
                 {{_('Sub Total')}}
             </td>
             <td>
-                Rp{{thousand(summary.transaction)}}
+                Rp{{thousand(order.price_before_disc)}}
+            </td>
+        </tr>
+        <tr class="child">
+            <td class="">
+                {{_('Discount Order')}}
+            </td>
+            <td>
+                Rp{{thousand(order.discount_amount)}}
+            </td>
+        </tr>
+        <tr class="line">
+            <td colspan="2">
+            </td>
+        </tr>
+        <tr class="child">
+            <td class="">
+                {{_('Total')}}
+            </td>
+            <td>
+                Rp{{thousand(order.total_amount)}}
             </td>
         </tr>
         <!--Receipt Actual-->

@@ -144,16 +144,21 @@
             <tr class="item">
                 <td>
                     {{thousand(item.sell_price)}} x {{item.qty}}
-                    {%if item.discount_type == '%' %}
-                    - {{item.discount_amount}}%
-                    {%else%}
-                    {{-item.discount_amount if item.discount_amount else ''}}
-                    {%endif%}
                 </td>
                 <td>
-                    {{thousand(item.sub_total)}}
+                    {{thousand(item.sell_price * item.qty)}}
                 </td>
             </tr>
+            {%if item.discount_name%}
+            <tr class="item">
+                <td >
+                    &emsp;{{item.discount_name}}
+                </td>
+                <td>
+                    {%if item.discount_amount%} ({{item.discount_amount}}) {%endif%}
+                </td>
+            </tr>
+            {%endif%}
             <!--Keluarkan nama jika metode discount adalah by one get one-->
 
             {%if item.discount_method == 1 %}
