@@ -63,7 +63,11 @@ class CashboxReportView:BaseFragment(){
         val account = accountManager.getAccountsByType(getString(R.string.account_type)).first()
         val authToken = accountManager.peekAuthToken(account, AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS)
         val params = mapOf<String, String>("Authorization" to "Bearer $authToken")
-        val url = "${BuildConfig.base_url}/cash/receipt/cash/view?id=$summaryId&lang_code=${preferences.getString("lang_code", "id")}"
+        val url = if(arguments!!.getInt(ARG_CASH_BOX_TYPE) == CASH_BOX_TYPE_DETAIL){
+            "${BuildConfig.base_url}/cash/receipt/cash/view?id=$summaryId&lang_code=${preferences.getString("lang_code", "id")}"
+        }else{
+            "${BuildConfig.base_url}/cash/receipt/cash/print?id=$summaryId&lang_code=${preferences.getString("lang_code", "id")}"
+        }
 
         webView.loadUrl(url, params)
     }
@@ -118,11 +122,15 @@ class CashboxReportView:BaseFragment(){
 
     companion object {
         const val ARG_CASH_BOX_SUMMARY_ID = "cash_box_summary_id"
+        const val ARG_CASH_BOX_TYPE = "cash_box_type"
+        const val CASH_BOX_TYPE_DETAIL = 0
+        const val CASH_BOX_TYPE_RECEIPT = 1
         @JvmStatic
-        fun newInstance(cashboxSummaryId: Long) =
+        fun newInstance(cashboxSummaryId: Long, cashboxType:Int = CASH_BOX_TYPE_DETAIL) =
                 CashboxReportView().apply {
                     arguments = Bundle().apply {
                         putLong(ARG_CASH_BOX_SUMMARY_ID, cashboxSummaryId)
+                        putInt(ARG_CASH_BOX_TYPE, cashboxType)
                     }
                 }
     }

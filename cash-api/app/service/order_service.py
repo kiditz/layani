@@ -108,29 +108,26 @@ class OrderService(object):
 	@Number(['order_code'])
 	def get_order_items(self, domain):
 		order_code = domain['order_code']
-		product_discount = aliased(Product, name='product_discount')
-		product = aliased(Product, name='product')
+		
 		entities = (
 			OrderItem.sub_total,
 			OrderItem.qty,
-			product.name.label('product_name'),
+			Product.name.label('product_name'),
 			OrderItem.discount_amount,
 			OrderItem.discount_name,
-			product_discount.name.label('free_product'),
-			product.unit,
-			product.use_stock,
-			product.id.label('product_id'),
-			product.document_id,
+			Product.unit,
+			Product.use_stock,
+			Product.id.label('product_id'),
+			Product.document_id,
 			ProductSellPrice.sell_price,
 			ProductSellPrice.id.label('sell_pricet_id'),
 		
 		)
 		now = datetime.now()
 		order_items = OrderItem.query.with_entities(*entities) \
-			.join(product, product.id == OrderItem.product_id) \
-			.outerjoin(product_discount, Discount.free_product_id == product_discount.id) \
-			.join(ProductSellPrice, and_(product.id == ProductSellPrice.product_id, ProductSellPrice.name == 'STANDARD')) \
-			.join(ProductPurchasePrice, and_(ProductPurchasePrice.product_id == product.id, between(now, ProductPurchasePrice.start_at, ProductPurchasePrice.end_at))) \
+			.join(Product, Product.id == OrderItem.product_id)\
+			.join(ProductSellPrice, and_(Product.id == ProductSellPrice.product_id, ProductSellPrice.name == 'STANDARD')) \
+			.join(ProductPurchasePrice, and_(ProductPurchasePrice.product_id == Product.id, between(now, ProductPurchasePrice.start_at, ProductPurchasePrice.end_at))) \
 			.join(Order, Order.id == OrderItem.order_id) \
 			.filter(Order.order_code == order_code) \
 			.order_by("product_name asc")
