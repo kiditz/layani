@@ -116,7 +116,7 @@ class OrderService(object):
 			cashbox_summary.user_id = domain['user_id']
 			cashbox_summary.outlet_id = order.outlet_id
 			cashbox_summary.status = 'O'
-			cashbox_summary.save()				
+			cashbox_summary.save()
 		return {'payload': order.to_dict()}
 	
 	@Number(['order_code'])
@@ -142,7 +142,7 @@ class OrderService(object):
 			.join(Product, Product.id == OrderItem.product_id)\
 			.join(ProductSellPrice, and_(Product.id == ProductSellPrice.product_id, ProductSellPrice.name == 'STANDARD')) \
 			.join(ProductPurchasePrice, and_(ProductPurchasePrice.product_id == Product.id, between(now, ProductPurchasePrice.start_at, ProductPurchasePrice.end_at))) \
-			.join(Order, and_(Order.id == OrderItem.order_id, Order.status == OrderStatus.SUCCESS)) \
+			.join(Order, Order.id == OrderItem.order_id) \
 			.filter(Order.order_code == order_code) \
 			.order_by("product_name asc")
 		order_item_list = list(map(lambda x: x._asdict(), order_items.all()))
