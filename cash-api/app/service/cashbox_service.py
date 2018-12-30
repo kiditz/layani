@@ -133,6 +133,7 @@ class CashboxService(object):
 		void = Decimal(domain['void'])
 		cash = Decimal(domain['cash'])
 		card = Decimal(domain['card'])
+		pending = Decimal(domain['pending'])
 		cashbox_summary = CashboxSummary.query.filter(CashboxSummary.id == domain['id']).first()
 		if cashbox_summary is None:
 			raise ValidationException(ErrorCode.CASHBOX_NOT_FOUND)
@@ -156,7 +157,7 @@ class CashboxService(object):
 		cashbox_summary.cash_out = cash_out
 		cashbox_summary.refund = void
 		cashbox_summary.status = CashboxStatus.END
-		cashbox_summary.pending = domain['pending']
+		cashbox_summary.pending = pending
 		cashbox_summary.difference = (cash + card) - Decimal(cashbox_summary.transaction)
 		cashbox_summary.end_at = domain['end_at']
 		cashbox_summary.save()
