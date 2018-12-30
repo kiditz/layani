@@ -77,10 +77,10 @@ class OrderService(object):
 					stock = Stock.query.filter_by(product_id=item['free_product_id']).first()
 					if stock.quantity - item['discount_qty'] < 0:
 						raise ValidationException(ErrorCode.NOT_ENOUGH_STOCK)
-					stock.quantity -= item['qty']
+					stock.quantity -= item['discount_qty']
 					stock.save()
 					stock_history = StockHistory()
-					stock_history.quantity = -item['qty']
+					stock_history.quantity = -item['discount_qty']
 					stock_history.ref_id = StockRef.DISCOUNT
 					stock_history.remark = 'cut.stock #{}'.format(order.order_code)
 					stock_history.stock_id = stock.id
