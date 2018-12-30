@@ -277,7 +277,7 @@
                 {{_('Void')}}
             </td>
             <td>
-                {{thousand(summary.cash_out)}}
+                -{{thousand(summary.refund)}}
             </td>
         </tr>
         <tr class="child">
@@ -285,7 +285,7 @@
                 {{_('Cash In')}}
             </td>
             <td>
-                {{thousand(summary.cash_in)}}
+                +{{thousand(summary.cash_in)}}
             </td>
         </tr>
         <tr class="child">
@@ -293,7 +293,7 @@
                 {{_('Cash Out')}}
             </td>
             <td>
-                {{thousand(summary.cash_out)}}
+                -{{thousand(summary.cash_out)}}
             </td>
         </tr>
         <tr class="line">

@@ -49,26 +49,7 @@ class ChartService(object):
 	@Number(["outlet_id"])
 	def get_dashboard_header(self, domain):
 		outlet_id = domain['outlet_id']
-		cashbox = Cashbox.query.with_entities(func.coalesce(func.sum(Cashbox.total_amount), 0).label("total_amount")) \
-			.filter(Cashbox.outlet_id == outlet_id) \
-			.first()._asdict()
-		total_profit = Order.query.with_entities(func.coalesce(func.sum(Order.profit), 0).label("total_profit")) \
-			.filter(Order.outlet_id == outlet_id) \
-			.filter(and_(Order.status != OrderStatus.VOID, Order.status != OrderStatus.CREATED)) \
-			.first()._asdict()
-		total_income = Order.query.with_entities(func.coalesce(func.sum(Order.total_amount), 0).label("total_income")) \
-			.filter(Order.outlet_id == outlet_id) \
-			.filter(Order.status == OrderStatus.SUCCESS) \
-			.first()._asdict()
-		total_receiveable = AccountReceiveable.query.with_entities(
-			func.coalesce(func.sum(AccountReceiveable.total_credit), 0).label("total_credit")).filter(
-			AccountReceiveable.outlet_id == outlet_id).first()._asdict()
-		result = {
-			'cashbox_amount': cashbox['total_amount'],
-			'total_receiveable': total_receiveable["total_credit"],
-			'total_profit': total_profit["total_profit"],
-			'total_income': total_income["total_income"]
-		}
+		order = Order.query.with_entities(func.sum(Order.total_amount))
 		return {'payload': result}
 	
 	@Number(['outlet_id', 'page', 'size'])

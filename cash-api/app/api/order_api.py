@@ -38,7 +38,6 @@ def refund_order():
     "order_id": "Long"
     }
     """
-    log.debug("REQUEST : %s", request.data)
     domain = request.get_json()
     return order_service.refund_order(domain)
 
