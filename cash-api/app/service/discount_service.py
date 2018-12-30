@@ -1,11 +1,12 @@
+from datetime import datetime
 from decimal import Decimal
-from sqlalchemy import func
+
 from entity.models import Discount, Product
 from slerp.logger import logging
 from slerp.validator import Key, Blank, ValidationException
 from sqlalchemy import cast, between, or_
 from sqlalchemy.dialects.mssql import DATE
-from datetime import datetime
+
 from utils.api_constant import ErrorCode, DiscountMethod
 
 log = logging.getLogger(__name__)
