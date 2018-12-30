@@ -147,7 +147,7 @@ class OrderService(object):
 			Product.id.label('product_id'),
 			Product.document_id,
 			ProductSellPrice.sell_price,
-			ProductSellPrice.id.label('sell_pricet_id'),
+			ProductSellPrice.id.label('sell_price_id'),
 		
 		)
 		now = datetime.now()
@@ -242,7 +242,7 @@ class OrderService(object):
 			.filter(Order.total_amount > 0) \
 			.first()
 		
-		order_created_q = Order.query.with_entities(func.count(Order.id).label('order_summary')) \
+		order_created_q = Order.query.with_entities(func.coalesce(func.count(Order.id), 0.0).label('order_summary')) \
 			.filter(and_(between(Order.order_at, cashbox_summary.start_at.strftime('%Y-%m-%d %H:%M:%S'), date_now), Order.outlet_id == outlet_id, Order.status == OrderStatus.CREATED)) \
 			.first()
 		
