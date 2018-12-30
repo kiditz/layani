@@ -1,9 +1,0 @@
-{
-  "name":"cash-api",
-  "interval":"20s",
-  "httpcheck": "http://ip-172-31-23-143.ap-southeast-1.compute.internal:5010/health",
-  "namespace": "config/cash-api,local/data",
-  "log_file":"cash-api.log",
-  "address": "ip-172-31-23-143.ap-southeast-1.compute.internal",
-  "port":5010
-}

@@ -13,4 +13,4 @@ lib64
 **/__pycache__/*
 /migrations/*
 /dist/*
-**config**
+**config.json**
