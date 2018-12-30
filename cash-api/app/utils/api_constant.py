@@ -10,6 +10,8 @@ class StockRef(object):
 	TRANSACTION = 100
 	IN = 101
 	OUT = 102
+	# Pemotongan stok yang di sebabkan oleh discount atau promo yang di lakukan oleh pemilik usaha
+	DISCOUNT = 103
 	NEW_STOCK = 'new.stock'
 	ADD_STOCK = 'add.stock'
 	EDIT_STOCK = 'edit.stock'

@@ -1,8 +1,9 @@
+from datetime import timedelta
+
 from entity.models import OrderItem, Product
 from slerp.logger import logging
 from slerp.validator import Blank, Number
-from sqlalchemy import cast
-from datetime import timedelta
+
 from .chart_query import *
 
 log = logging.getLogger(__name__)
@@ -51,27 +52,42 @@ class ChartService(object):
 	def get_dashboard_header(self, domain):
 		outlet_id = domain['outlet_id']
 		today = date.today()
-		end_value = Order.query.with_entities(func.coalesce(func.sum(Order.total_amount), 0.0).label('income')) \
+		sales_end_value = Order.query.with_entities(func.coalesce(func.sum(Order.total_amount), 0.0).label('income')) \
 			.filter(Order.outlet_id == outlet_id) \
 			.filter(Order.status == OrderStatus.SUCCESS)\
 			.filter(cast(Order.order_at, DATE) == today) \
 			.first()
-		yesterday = today - timedelta(days=1)
-		log.info("Yesterday : {}".format(yesterday))
-		starting_value = Order.query.with_entities(func.coalesce(func.sum(Order.total_amount), 0.0).label('income')) \
+		yesterday = today - timedelta(days=1)		
+		sales_starting_value = Order.query.with_entities(func.coalesce(func.sum(Order.total_amount), 0.0).label('income')) \
 			.filter(Order.outlet_id == outlet_id) \
 			.filter(Order.status == OrderStatus.SUCCESS) \
 			.filter(cast(Order.order_at, DATE) == yesterday) \
 			.first()
-		calculate_sales_increase = end_value.income - starting_value.income
-		log.info("Starting Value : {}".format(starting_value))
-		log.info("End Value : {}".format(end_value))
-		log.info("Calculate Sales Increase : {}".format(calculate_sales_increase))
-		percentage = calculate_sales_increase / starting_value.income if starting_value.income > 0.0 else 0.0
+		calculate_sales_increase = sales_end_value.income - sales_starting_value.income
+		
+		sales_increase_percentage = calculate_sales_increase / sales_starting_value.income if sales_starting_value.income > 0.0 else 0.0
+		
+		# Transaction
+		trx_end_value = Order.query.with_entities(func.coalesce(func.count(Order.id), 0.0).label('count')) \
+			.filter(Order.outlet_id == outlet_id) \
+			.filter(Order.status == OrderStatus.SUCCESS) \
+			.filter(cast(Order.order_at, DATE) == today) \
+			.first()
+		trx_starting_value = Order.query.with_entities(func.coalesce(func.count(Order.id), 0.0).label('count')) \
+			.filter(Order.outlet_id == outlet_id) \
+			.filter(Order.status == OrderStatus.SUCCESS) \
+			.filter(cast(Order.order_at, DATE) == yesterday) \
+			.first()
+		calculate_trx_increase = trx_end_value.count - trx_starting_value.count
+		
+		trx_increase_percentage = calculate_trx_increase / trx_starting_value.count if trx_starting_value.count > 0.0 else 0.0
 		result = {
-			'income': end_value.income,
-			'sales_increase_percentage': percentage
+			'income': sales_end_value.income,
+			'sales_increase_percentage': sales_increase_percentage * 100.0,
+			'trx': trx_end_value.count,
+			'trx_increase_percentage': trx_increase_percentage * 100.0
 		}
+		
 		return {'payload': result}
 	
 	@Number(['outlet_id', 'page', 'size'])
