@@ -1,5 +1,5 @@
 from decimal import Decimal
-
+from sqlalchemy import func
 from entity.models import Discount, Product
 from slerp.logger import logging
 from slerp.validator import Key, Blank, ValidationException
@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 class DiscountService(object):
 	def __init__(self):
 		super(DiscountService, self).__init__()
-
+	
 	@Key(['product_id', 'discount', 'quantity'])
 	def add_discount(self, domain):
 		discount = Discount(domain)
@@ -35,21 +35,22 @@ class DiscountService(object):
 			Discount.quantity,
 			Discount.bill_amount,
 			Discount.start_at,
+			Discount.free_product_id,
 			Discount.end_at,
 			Discount.name,
 			Discount.amount,
 			Discount.discount_type,
 			Product.name.label('free_product_name')
 		)
-		discount = Discount.query.with_entities(*entities)\
-			.outerjoin(Product, Discount.free_product_id == Product.id)\
-			.filter(Discount.outlet_id == outlet_id)\
-			.filter(Discount.product_id == product_id)\
-			.filter(Discount.quantity <= qty)\
-			.filter(or_(Discount.method == DiscountMethod.DISCOUNT_AMOUNT_PRODUCT, Discount.method == DiscountMethod.BY_N_GET_ONE))\
-			.filter(between(date, cast(Discount.start_at, DATE), cast(Discount.end_at, DATE)))\
+		discount = Discount.query.with_entities(*entities) \
+			.filter(Discount.outlet_id == outlet_id) \
+			.filter(Discount.product_id == product_id) \
+			.filter(Discount.quantity <= qty) \
+			.filter(or_(Discount.method == DiscountMethod.DISCOUNT_AMOUNT_PRODUCT,
+		                Discount.method == DiscountMethod.BY_N_GET_ONE)) \
+			.filter(between(date, cast(Discount.start_at, DATE), cast(Discount.end_at, DATE))) \
 			.order_by(Discount.quantity.desc()).first()
-	
+		
 		# Validate if discount not found
 		if discount is None:
 			raise ValidationException(ErrorCode.DISCOUNT_NOT_FOUND)
@@ -70,12 +71,12 @@ class DiscountService(object):
 		outlet_id = domain['outlet_id']
 		date = domain['date']
 		
-		discount = Discount.query\
+		discount = Discount.query \
 			.filter(Discount.outlet_id == outlet_id) \
 			.filter(between(date, cast(Discount.start_at, DATE), cast(Discount.end_at, DATE))) \
 			.filter(Discount.bill_amount <= bill_amount) \
 			.filter(Discount.method == DiscountMethod.DISCOUNT_AMOUNT_TRANSACTION) \
-			.order_by(Discount.bill_amount.desc())\
+			.order_by(Discount.bill_amount.desc()) \
 			.first()
 		# Validate if discount not found
 		if discount is None:
