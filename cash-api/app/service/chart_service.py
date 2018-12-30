@@ -82,9 +82,11 @@ class ChartService(object):
 		
 		trx_increase_percentage = calculate_trx_increase / trx_starting_value.count if trx_starting_value.count > 0.0 else 0.0
 		result = {
-			'income': sales_end_value.income,
+			'sales': sales_end_value.income,
+			'sales_increase': calculate_sales_increase,
 			'sales_increase_percentage': sales_increase_percentage * 100.0,
 			'trx': trx_end_value.count,
+			'trx_increase': calculate_trx_increase,
 			'trx_increase_percentage': trx_increase_percentage * 100.0
 		}
 		
