@@ -104,7 +104,8 @@ class ChartService(object):
 			.join(Product, Product.id == OrderItem.product_id) \
 			.join(Order, Order.id == OrderItem.order_id) \
 			.filter(Product.outlet_id == domain['outlet_id'])\
-			.filter(Order.status == OrderStatus.SUCCESS)\
+			.filter(Order.status == OrderStatus.SUCCESS) \
+			.filter(cast(Order.order_at, DATE) == date.today()) \
 			.group_by(Product.id).order_by("quantity desc")\
 			.paginate(page, size, error_out=False)
 		product_list = list(map(lambda x: x._asdict(), item_q.items))
