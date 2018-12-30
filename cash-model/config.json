@@ -1,8 +1,9 @@
 {
-  "name":"cash-service",
+  "name":"cash-api",
   "interval":"20s",
-  "httpcheck": "http://0.0.0.0:5005/health",
-  "namespace": "config/task-service/dev",
-  "log_file":"teachme-rest-api.log",
-  "address": "172.17.0.1"
+  "httpcheck": "http://ip-172-31-23-143.ap-southeast-1.compute.internal:5010/health",
+  "namespace": "config/cash-api,dev/data",
+  "log_file":"cash-api.log",
+  "address": "ip-172-31-23-143.ap-southeast-1.compute.internal",
+  "port":5010
 }

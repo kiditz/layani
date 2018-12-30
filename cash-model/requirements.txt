@@ -6,6 +6,6 @@ Flask-Migrate==2.3.0
 Flask-Script==2.0.6
 Flask-SQLAlchemy==2.3.2
 kafka-python==1.4.3
-slerp-py==0.0.23
+slerp-py==0.0.25
 SQLAlchemy==1.2.12
 Flask-Bcrypt==0.7.1

@@ -5,7 +5,6 @@ from flask_script import Manager
 from slerp.app import app
 from slerp.app import db
 from slerp.entity import Entity
-import os
 
 __author__ = "Rifky Aditya Bastara"
 
@@ -76,8 +75,7 @@ class Document(db.Model, Entity):
 
 class Authority(db.Model, Entity):
 	__tablename__ = 'co_authority'
-	id = db.Column(db.BigInteger, db.Sequence('co_authority_id_seq'),
-	               primary_key=True)
+	id = db.Column(db.BigInteger, db.Sequence('co_authority_id_seq'), primary_key=True)
 	authority = db.Column(db.String(255))
 	user_id = db.Column(db.ForeignKey(u'co_user.id'), nullable=False)
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
@@ -100,19 +98,7 @@ class Outlet(db.Model, Entity):
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
 	
 	def __init__(self, obj=None):
-		Entity.__init__(self, obj)		
-
-class OutletSetting(db.Model, Entity):
-	__tablename__ = 'co_outlet_setting'
-	outlet_id = db.Column(db.BigInteger, primary_key=True)
-	notify_when_stock_less_than = db.Column(db.BigInteger, nullable=False, server_default='5')
-	receipt_footer = db.Column(db.Text, nullable=False, server_default='')
-	generate_qr_code_per_order=db.Column(db.Text, nullable=False, server_default='')	
-	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
-	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
-	
-	def __init__(self, obj=None):
-		Entity.__init__(self, obj)		
+		Entity.__init__(self, obj)
 
 
 class Category(db.Model, Entity):
@@ -144,6 +130,7 @@ class Product(db.Model, Entity):
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)	
 	parent_id = db.Column(db.BigInteger, default=-1)
 	__table_args__ = (db.UniqueConstraint('code', 'outlet_id', name='co_product_code_outlet_id_key'),)
+	
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)		
 
@@ -173,6 +160,7 @@ class ProductPurchasePrice(db.Model, Entity):
 
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)
+
 
 class Stock(db.Model, Entity):
 	__tablename__ = 'co_product_stock'	
@@ -218,6 +206,7 @@ class Discount(db.Model, Entity):
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
 	outlet_id = db.Column(db.ForeignKey(u'co_outlet.id'), nullable=False)	
+	
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)
 
@@ -256,7 +245,6 @@ class AccountReceiveable(db.Model, Entity):
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
 
 
-
 class OrderItem(db.Model, Entity):
 	__tablename__ = 'co_order_item'
 	id = db.Column(db.BigInteger, primary_key=True)	
@@ -286,21 +274,10 @@ class Customer(db.Model, Entity):
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
 	active = db.Column(db.Boolean, nullable=False, server_default='t', default=True)
+
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)
 
-
-# class Cashbox(db.Model, Entity):
-# 	__tablename__ = 'co_cash_box'
-# 	id = db.Column(db.BigInteger, primary_key=True)				
-# 	name = db.Column(db.Text, nullable=False, server_default='-', default='-', index=True)	
-# 	total_amount = db.Column(db.Numeric, nullable=False, server_default='0', default=0)
-# 	outlet_id = db.Column(db.ForeignKey(u'co_outlet.id'), nullable=False)
-# 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
-# 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
-	
-# 	def __init__(self, obj=None):
-# 		Entity.__init__(self, obj)
 
 class CashboxSummary(db.Model, Entity):
 	__tablename__ = 'co_cash_box_summary'
@@ -319,6 +296,7 @@ class CashboxSummary(db.Model, Entity):
 	cash_in = db.Column(db.Numeric, nullable=False, server_default='0', default=0)
 	cash_out = db.Column(db.Numeric, nullable=False, server_default='0', default=0)	
 	sales = db.Column(db.Numeric, nullable=False, server_default='0', default=0)	
+
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)
 
@@ -340,7 +318,7 @@ class CashboxHistory(db.Model, Entity):
 						
 
 if __name__ == '__main__':
-	app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('db.name', 'postgresql://kiditz:rioters7@layaniio.ci9ii2u2cpyu.ap-southeast-1.rds.amazonaws.com:5432/layani')
+	#app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('db.name', 'postgresql://kiditz:rioters7@layaniio.ci9ii2u2cpyu.ap-southeast-1.rds.amazonaws.com:5432/layani')
 	migrate = Migrate(app, db)
 	manager = Manager(app)
 	manager.add_command('db', MigrateCommand)

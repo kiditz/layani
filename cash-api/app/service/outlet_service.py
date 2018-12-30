@@ -1,5 +1,6 @@
 from entity.models import Outlet, User, Authority
 from flask_bcrypt import Bcrypt
+from sqlalchemy import func
 from slerp.app import app
 from slerp.logger import logging
 from slerp.validator import Key, Blank, ValidationException
@@ -66,13 +67,12 @@ class OutletService(object):
 			Outlet.address,
 			Outlet.email,
 			Outlet.id,
+			func.coalesce(Outlet.document_id, -1),
 			User.id.label('user_id'),
-			User.outlet_name,
+			User.business_name,
 			User.username
 		)
-		outlet = Outlet.query.with_entities(*entities).join(User, User.id == Outlet.user_id) \
-			.filter(User.username == domain['username']) \
-			.first()
+		outlet = Outlet.query.with_entities(*entities).join(User, User.id == Outlet.user_id).filter(User.username == domain['username']).first()
 		outlet_dict = outlet._asdict()
 		outlet_dict['username'] = domain["username"]
 		return {'payload': outlet_dict}
