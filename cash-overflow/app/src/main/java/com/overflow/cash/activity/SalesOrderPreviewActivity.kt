@@ -20,6 +20,7 @@ import com.overflow.cash.realm.OrderItemRealm
 import com.overflow.cash.utils.moveTo
 import com.overflow.cash.utils.rupiah
 import com.overflow.cash.utils.snack
+import com.overflow.cash.utils.toast
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
 import io.reactivex.disposables.CompositeDisposable
@@ -134,6 +135,11 @@ class SalesOrderPreviewActivity : BaseActivity(), SaveOrderContract.View {
             dataItem["qty"] = it["qty"]
             dataItem["sub_total"] = it["subTotal"]
             dataItem["unit"] = it["unit"]
+            if(it.containsKeyAndNotNull("freeProductId")) {
+                dataItem["free_product_id"] = it.getLong("freeProductId")
+                dataItem["discount_qty"] = it.getLong("discountQty")
+                //toast(dataItem["discount_qty"].toString()).show()
+            }
             dataItem["product_name"] = it["productName"]
             dataItem["use_stock"] = it["useStock"]
             dataItem["discount_amount"] = it["discountAmount"]

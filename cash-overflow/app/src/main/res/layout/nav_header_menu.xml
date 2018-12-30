@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
-    android:background="@color/colorPrimary"
+    android:background="@color/colorAccent"
     android:gravity="center_vertical"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_margin"
@@ -19,8 +19,10 @@
         android:layout_height="wrap_content">
         <com.overflow.libs.view.CircleImageView
             android:id="@+id/iv_business"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            app:civ_border_width="1dp"
+            app:civ_border_color="@color/textLight"
             android:layout_gravity="center_vertical"
             android:contentDescription="@string/nav_header_desc"
 

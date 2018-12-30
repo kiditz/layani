@@ -36,10 +36,22 @@ class DashboardHeaderFragment:Fragment(), DashboardHeaderContract.View {
 
     @SuppressLint("SetTextI18n")
     override fun onHeaderLoaded(data: Data) {
+        if(data.getDouble("sales_increase_percentage") < 0){
+            iv_sales.setImageResource(R.drawable.ic_arrow_down)
+            tv_sales_percentage?.text = Math.round(data.getDouble("sales_increase_percentage") * -1.0).toString() + "%"
+        }else{
+            tv_sales_percentage?.text = Math.round(data.getDouble("sales_increase_percentage")).toString() + "%"
+            iv_sales.setImageResource(R.drawable.ic_arrow_up)
+        }
+        if(data.getDouble("trx_increase_percentage") < 0){
+            iv_trx.setImageResource(R.drawable.ic_arrow_down)
+            tv_trx_percentage?.text = Math.round(data.getDouble("trx_increase_percentage") * -1.0).toString() + "%"
+        }else{
+            tv_trx_percentage?.text = Math.round(data.getDouble("trx_increase_percentage")).toString() + "%"
+            iv_trx.setImageResource(R.drawable.ic_arrow_up)
+        }
         tv_sales?.text = rupiah(data.getDouble("sales"))
         tv_trx?.text = Math.round(data.getDouble("trx")).toString()
-        tv_sales_percentage?.text = Math.round(data.getDouble("sales_increase_percentage")).toString() + "%"
-        tv_trx_percentage?.text = Math.round(data.getDouble("trx_increase_percentage")).toString() + "%"
     }
 
     override fun showError(error: Throwable) {

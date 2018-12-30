@@ -44,6 +44,7 @@
                 android:gravity="center">
 
                 <ImageView
+                    android:id="@+id/iv_trx"
                     android:layout_width="14dp"
                     android:layout_height="14dp"
                     android:src="@drawable/ic_arrow_up"
@@ -105,6 +106,7 @@
                 android:gravity="center">
 
                 <ImageView
+                    android:id="@+id/iv_sales"
                     android:layout_width="14dp"
                     android:layout_height="14dp"
                     android:src="@drawable/ic_arrow_up"
