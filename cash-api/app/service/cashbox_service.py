@@ -156,6 +156,7 @@ class CashboxService(object):
 		cashbox_summary.cash_out = cash_out
 		cashbox_summary.refund = void
 		cashbox_summary.status = CashboxStatus.END
+		cashbox_summary.pending = domain['pending']
 		cashbox_summary.difference = (cash + card) - Decimal(cashbox_summary.transaction)
 		cashbox_summary.end_at = domain['end_at']
 		cashbox_summary.save()
