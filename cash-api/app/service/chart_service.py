@@ -1,7 +1,8 @@
-from entity.models import AccountReceiveable, OrderItem, Product
+from entity.models import OrderItem, Product
 from slerp.logger import logging
 from slerp.validator import Blank, Number
-
+from sqlalchemy import cast
+from datetime import timedelta
 from .chart_query import *
 
 log = logging.getLogger(__name__)
@@ -49,7 +50,28 @@ class ChartService(object):
 	@Number(["outlet_id"])
 	def get_dashboard_header(self, domain):
 		outlet_id = domain['outlet_id']
-		order = Order.query.with_entities(func.sum(Order.total_amount))
+		today = date.today()
+		end_value = Order.query.with_entities(func.coalesce(func.sum(Order.total_amount), 0.0).label('income')) \
+			.filter(Order.outlet_id == outlet_id) \
+			.filter(Order.status == OrderStatus.SUCCESS)\
+			.filter(cast(Order.order_at, DATE) == today) \
+			.first()
+		yesterday = today - timedelta(days=1)
+		log.info("Yesterday : {}".format(yesterday))
+		starting_value = Order.query.with_entities(func.coalesce(func.sum(Order.total_amount), 0.0).label('income')) \
+			.filter(Order.outlet_id == outlet_id) \
+			.filter(Order.status == OrderStatus.SUCCESS) \
+			.filter(cast(Order.order_at, DATE) == yesterday) \
+			.first()
+		calculate_sales_increase = end_value.income - starting_value.income
+		log.info("Starting Value : {}".format(starting_value))
+		log.info("End Value : {}".format(end_value))
+		log.info("Calculate Sales Increase : {}".format(calculate_sales_increase))
+		percentage = calculate_sales_increase / starting_value.income if starting_value.income > 0.0 else 0.0
+		result = {
+			'income': end_value.income,
+			'sales_increase_percentage': percentage
+		}
 		return {'payload': result}
 	
 	@Number(['outlet_id', 'page', 'size'])
@@ -64,7 +86,7 @@ class ChartService(object):
 			.join(Product, Product.id == OrderItem.product_id) \
 			.join(Order, Order.id == OrderItem.order_id) \
 			.filter(Product.outlet_id == domain['outlet_id'])\
-			.filter(and_(Order.status != OrderStatus.VOID, Order.status != OrderStatus.CREATED))\
+			.filter(Order.status == OrderStatus.SUCCESS)\
 			.group_by(Product.id).order_by("quantity desc")\
 			.paginate(page, size, error_out=False)
 		product_list = list(map(lambda x: x._asdict(), item_q.items))

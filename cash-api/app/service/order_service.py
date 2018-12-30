@@ -4,7 +4,6 @@ from entity.models import OrderItem, StockHistory, Stock, AccountReceiveable, Cu
 from slerp.logger import logging
 from slerp.validator import Number, Key, ValidationException
 from sqlalchemy import between
-
 from utils import str2bool
 from utils.api_constant import StockRef, ErrorCode, CashboxStatus, PaymentMethod
 from .chart_query import *
@@ -232,7 +231,7 @@ class OrderService(object):
 			.first()
 		
 		order_created_q = Order.query.with_entities(func.count(Order.id).label('order_summary')) \
-			.filter(and_(between(Order.order_at, cashbox_summary.start_at.strftime('%Y-%m-%d %H:%M:%S'), date_now), Order.outlet_id == outlet_id, Order.status == OrderStatus.CREATED, Order.total_amount > 0.0)) \
+			.filter(and_(between(Order.order_at, cashbox_summary.start_at.strftime('%Y-%m-%d %H:%M:%S'), date_now), Order.outlet_id == outlet_id, Order.status == OrderStatus.CREATED)) \
 			.first()
 		
 		order_card_q = Order.query.with_entities(

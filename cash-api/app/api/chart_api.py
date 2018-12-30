@@ -31,7 +31,7 @@ def get_income_data():
     return chart_service.get_income_chart_data(domain)
 
 
-@api.route('/dashboard_header', methods=['GET'])
+@api.route('/dashboard', methods=['GET'])
 @cache.cached(timeout=10, query_string=True)
 def get_dashboard():
     domain = request.args.to_dict()
