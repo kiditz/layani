@@ -67,7 +67,7 @@ class OutletService(object):
 			Outlet.address,
 			Outlet.email,
 			Outlet.id,
-			func.coalesce(Outlet.document_id, -1),
+			func.coalesce(Outlet.document_id, -1).label('document_id'),
 			User.id.label('user_id'),
 			User.business_name,
 			User.username,

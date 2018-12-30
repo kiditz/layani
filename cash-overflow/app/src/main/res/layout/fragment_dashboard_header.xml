@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
     android:orientation="vertical">
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,56 +25,53 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Kas"
-                android:textSize="20sp"
+                android:text="@string/transaction"
+                android:textSize="@dimen/text_size_small"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvCash"
+                android:id="@+id/tv_trx"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
                 android:textColor="@color/colorPrimary"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textSize="@dimen/text_size_extra_medium"
+                android:textStyle="bold"
+                tools:text="30" />
 
-        </LinearLayout>
-        <include layout="@layout/line_horz"/>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Keuntungan"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:gravity="center">
 
-            <TextView
-                android:id="@+id/tvProfit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:textColor="@color/colorPrimary"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/ic_arrow_up"
+                    android:tint="@color/colorAccent" />
 
+                <TextView
+                    android:id="@+id/tv_trx_percentage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textSize="@dimen/text_size_small"
+                    tools:text="10%" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/text_size_small"
+                    android:text="@string/compare_with_yesterday"
+                    android:layout_marginLeft="@dimen/small_margin"
+                    android:layout_marginStart="@dimen/small_margin"/>
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-    <include layout="@layout/line_vert"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:weightSum="2">
+
+        <include layout="@layout/line_horz" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -89,48 +86,48 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Pendapatan"
-                android:textSize="20sp"
+                android:text="@string/sales"
+                android:textSize="@dimen/text_size_small"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvOmzet"
+                android:id="@+id/tv_sales"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
                 android:textColor="@color/colorPrimary"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textSize="@dimen/text_size_extra_medium"
+                android:textStyle="bold"
+                tools:text="Rp.3000.000" />
 
-        </LinearLayout>
-        <include layout="@layout/line_horz"/>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Piutang"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:gravity="center">
 
-            <TextView
-                android:id="@+id/tvAccountReceiveable"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:textColor="@color/colorPrimary"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/ic_arrow_up"
+                    android:tint="@color/colorAccent" />
 
+                <TextView
+                    android:id="@+id/tv_sales_percentage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_size_small"
+                    tools:text="10%" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/text_size_small"
+                    android:text="@string/compare_with_yesterday"
+                    android:layout_marginLeft="@dimen/small_margin"
+                    android:layout_marginStart="@dimen/small_margin"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

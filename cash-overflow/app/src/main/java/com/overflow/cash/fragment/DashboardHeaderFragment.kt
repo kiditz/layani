@@ -1,5 +1,6 @@
 package com.overflow.cash.fragment
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -33,11 +34,12 @@ class DashboardHeaderFragment:Fragment(), DashboardHeaderContract.View {
         this.presenter.attach(this)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onHeaderLoaded(data: Data) {
-        tvAccountReceiveable?.text = rupiah(data.getDouble("total_receiveable"))
-        tvCash?.text = rupiah(data.getDouble("cashbox_amount"))
-        tvProfit?.text = rupiah(data.getDouble("total_profit"))
-        tvOmzet.text = rupiah(data.getDouble("total_income"))
+        tv_sales?.text = rupiah(data.getDouble("sales"))
+        tv_trx?.text = Math.round(data.getDouble("trx")).toString()
+        tv_sales_percentage?.text = Math.round(data.getDouble("sales_increase_percentage")).toString() + "%"
+        tv_trx_percentage?.text = Math.round(data.getDouble("trx_increase_percentage")).toString() + "%"
     }
 
     override fun showError(error: Throwable) {

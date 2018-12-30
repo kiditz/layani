@@ -13,7 +13,17 @@
         android:orientation="vertical"
         android:padding="5dp"
         tools:context=".fragment.DashboardFragment">
-
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardUseCompatPadding="true"
+            app:contentPadding="5dp">
+            <FrameLayout
+                android:id="@+id/headerContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </FrameLayout>
+        </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -27,21 +37,11 @@
                 android:layout_height="match_parent">
             </FrameLayout>
         </android.support.v7.widget.CardView>
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardUseCompatPadding="true"
-            app:contentPadding="5dp">
-            <FrameLayout
-                android:id="@+id/headerContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </FrameLayout>
-        </android.support.v7.widget.CardView>
+
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="280dp"
-            
+            android:visibility="gone"
             app:cardUseCompatPadding="true"
             app:contentPadding="5dp">
 
@@ -88,7 +88,7 @@
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="280dp"
-            
+            android:visibility="gone"
             app:cardUseCompatPadding="true"
             app:contentPadding="5dp">
 
@@ -135,7 +135,8 @@
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="280dp"
-            
+
+            android:visibility="gone"
             app:cardUseCompatPadding="true"
             app:contentPadding="5dp">
 
@@ -158,7 +159,7 @@
                         android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:text="@string/income"
-                        
+
                         android:textSize="18sp"
                         android:textStyle="bold" />
 

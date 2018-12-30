@@ -21,6 +21,7 @@ import com.overflow.cash.R
 import com.overflow.cash.fragment.*
 import com.overflow.cash.mvp.menu.MenuContract
 import com.overflow.cash.mvp.menu.MenuPresenter
+import com.overflow.cash.net.ImageService
 import com.overflow.cash.net.RxUtils
 import com.overflow.cash.utils.replaceContent
 import com.overflow.cash.utils.snack
@@ -36,6 +37,7 @@ import kotlinx.android.synthetic.main.toolbar.*
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+
 /**
  * @author Rifky Aditya Bastara
  * @since 15 December 2018 22:49
@@ -48,7 +50,8 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var presenter: MenuPresenter
     @Inject
     lateinit var preferences: SharedPreferences
-
+    @Inject
+    lateinit var imageService: ImageService
     var search: MaterialSearchView? = null
     private var countBackPressed = 0
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,8 +75,13 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val accountManager = AccountManager.get(this)
         val accountType = accountManager.getAccountsByType(getString(R.string.account_type))
         val outlet = Data(preferences.getString("outlet", "{}"))
-        this.navHeaderView.tv_outlet_name.text = outlet.getString("outlet_name")
-        this.navHeaderView.tv_outlet_email.text = outlet.getString("name")
+        this.navHeaderView.tv_business_name.text = outlet.getString("business_name")
+        this.navHeaderView.tv_outlet_name.text = outlet.getString("name")
+        this.navHeaderView.tv_fullname.text = outlet.getString("fullname")
+
+        if (!outlet.getString("business_name").isEmpty())
+            this.imageService.loadDocument(this.navHeaderView.iv_business, outlet.getLong("document_id"), outlet.getString("business_name"))
+
         if (accountType == null || accountType.isEmpty() && outlet.isEmpty()) {
             onNotLogin()
             return
@@ -100,9 +108,9 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
         } else {
-            if(countBackPressed == 1){
+            if (countBackPressed == 1) {
                 super.onBackPressed()
-            }else{
+            } else {
                 snack(getString(R.string.press_again_to_close)).show()
                 countBackPressed++
             }
@@ -141,7 +149,7 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_transaction_history -> {
                 replaceContent(TransactionHistoryFragment.newInstance(true))
             }
-            R.id.nav_cash_summary ->{
+            R.id.nav_cash_summary -> {
                 replaceContent(CashboxSummaryFragment())
             }
         }
@@ -149,7 +157,6 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }
-
 
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
@@ -196,8 +203,9 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun showEmpty() {
         TODO("not implemented")
     }
+
     // Moving fragment menu
-    fun goTo(menuId:Int){
+    fun goTo(menuId: Int) {
         onNavigationItemSelected(this.nav_view.menu.findItem(menuId))
     }
 

@@ -48,7 +48,7 @@ interface OrderService {
     fun getIncomeChart(@QueryMap data: Data):Single<Data>
 
     @Headers("Content-Type:application/json")
-    @GET("/cash/order/dashboard_header")
+    @GET("/cash/chart/dashboard")
     fun getDashboardHeader(@QueryMap data: Data):Single<Data>
 
     @GET("/cash/order/list")

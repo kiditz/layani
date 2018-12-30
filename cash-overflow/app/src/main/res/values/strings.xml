@@ -176,5 +176,7 @@
     <string name="note">Note</string>
     <string name="total">Total</string>
     <string name="total_should_be">Total Should Be</string>
+    <string name="transaction">Transaction</string>
+    <string name="compare_with_yesterday">Compare With Yesterday</string>
 
 </resources>
