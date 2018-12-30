@@ -1,5 +1,5 @@
 from datetime import timedelta
-
+from decimal import Decimal
 from entity.models import OrderItem, Product
 from slerp.logger import logging
 from slerp.validator import Blank, Number
@@ -84,10 +84,10 @@ class ChartService(object):
 		result = {
 			'sales': sales_end_value.income,
 			'sales_increase': calculate_sales_increase,
-			'sales_increase_percentage': sales_increase_percentage * 100.0,
+			'sales_increase_percentage': round(sales_increase_percentage * Decimal(100.0)),
 			'trx': trx_end_value.count,
 			'trx_increase': calculate_trx_increase,
-			'trx_increase_percentage': trx_increase_percentage * 100.0
+			'trx_increase_percentage': round(trx_increase_percentage * Decimal(100.0))
 		}
 		
 		return {'payload': result}
