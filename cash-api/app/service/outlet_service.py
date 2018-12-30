@@ -70,7 +70,8 @@ class OutletService(object):
 			func.coalesce(Outlet.document_id, -1),
 			User.id.label('user_id'),
 			User.business_name,
-			User.username
+			User.username,
+			User.fullname
 		)
 		outlet = Outlet.query.with_entities(*entities).join(User, User.id == Outlet.user_id).filter(User.username == domain['username']).first()
 		outlet_dict = outlet._asdict()
