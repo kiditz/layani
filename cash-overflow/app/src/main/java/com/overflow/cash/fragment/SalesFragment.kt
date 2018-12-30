@@ -163,10 +163,6 @@ class SalesFragment : BaseFragment(), LoadProductContract.View{
         if(holder.qty.visibility == View.VISIBLE){
             this.addOrSubtractOrderItemDialog?.show()
         }
-
-
-
-
     }
 
     private fun handleAddOrder(data: Data, viewHolder: SalesListAdapter.ViewHolder) {

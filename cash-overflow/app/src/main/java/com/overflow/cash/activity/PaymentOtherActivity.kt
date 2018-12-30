@@ -160,9 +160,13 @@ class PaymentOtherActivity : BaseActivity(),  SaveOrderContract.View {
         val order = Data()
         order["customer_id"] = this.customerId
         order["total_amount"] = amount
-        order["description"] = intent.getStringExtra("description")
-        if(intent.hasExtra("discount_id")){
-            order["discount_amount"] = intent.getDoubleExtra("discount_amount", -1.0)
+        order["description"] = if (intent.getStringExtra("description") != null){
+            intent.getStringExtra("description")
+        }else{
+            Constant.SPACE
+        }
+        if(intent.getDoubleExtra("discount_amount", 0.0) > 0){
+            order["discount_amount"] = intent.getDoubleExtra("discount_amount", 0.0)
             order["discount_name"] = intent.getStringExtra("discount_name")
         }
         if(intent.hasExtra("order_id")){

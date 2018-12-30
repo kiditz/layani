@@ -1,5 +1,6 @@
 package com.overflow.libs.core
 
+import android.util.Log
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -31,10 +32,11 @@ class Group : Data() {
 
             groupBy.keys.forEach {
                 // Only Add if header key not exists in the list
-                if (!hashKey(targetList, it)) {
+
+                if (!hashKey(targetList, key, it.toString())) {
                     val itemHeader = Group()
                     itemHeader.type = Group.HEADER
-                    itemHeader[key] = it
+                    itemHeader[key] = it.toString()
                     targetList.add(itemHeader)
                 }
 
@@ -48,9 +50,9 @@ class Group : Data() {
 
         }
         @JvmStatic
-        private fun hashKey(payloads: List<Group>, key: Any?): Boolean {
+        private fun hashKey(payloads: List<Group>, key:String?, value: String?): Boolean {
             for (payload in payloads) {
-                if (payload[key] == key)
+                if (payload[key] == value)
                     return true
             }
             return false

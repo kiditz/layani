@@ -34,6 +34,7 @@ class RefundPresenter(private val context: Context, private val preferences: Sha
 
     override fun refund(data:Data) {
         if (API.isConnected(context)) {
+            data["user_id"] = outlet.getDouble("user_id")
             this.disposable.add(this.orderService.refund(data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({
                 if (API.ok(it)) {
                     this.view.onRefundSuccess(API.payload(it))

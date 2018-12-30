@@ -184,9 +184,10 @@ class PaymentTransactionFragment : BaseFragment(), SaveOrderContract.View, LoadD
     override fun onDiscountLoaded(data: Data) {
 
         this.l_discount_calculation.visibility = View.VISIBLE
-        this.discountAmount = data.getDouble("amount")
+
         this.discountName = data.getString("name")
         if(data.getString("discount_type") == Constant.DiscountType.FIXED_PRICE){
+            this.discountAmount = data.getDouble("amount")
             this.tv_discount.text = rupiah(discountAmount)
             this.totalAmount = parseRupiah(tv_bill_amount.text) - discountAmount
             this.tv_total_amount.text = rupiah(totalAmount)
