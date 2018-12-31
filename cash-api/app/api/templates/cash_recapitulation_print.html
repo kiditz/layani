@@ -188,6 +188,16 @@
 
         </tr>
         {%endfor%}
+        {%if sales_other.total_amount > 0.0%}
+        <tr class="child">
+            <td class="">
+                {{_('Sales Other')}}
+            </td>
+            <td>
+                {{thousand(sales_other.total_amount)}}
+            </td>
+        </tr>
+        {%endif%}
         <tr class="line">
             <td colspan="2">
             </td>
@@ -200,16 +210,7 @@
                 {{thousand(order.price_before_disc)}}
             </td>
         </tr>
-        {%if sales_other.total_amount > 0.0%}
-        <tr class="child">
-            <td class="">
-                {{_('Sales Other')}}
-            </td>
-            <td>
-                {{thousand(sales_other.total_amount)}}
-            </td>
-        </tr>
-        {%endif%}
+
         <tr class="child">
             <td class="">
                 {{_('Discount Order')}}

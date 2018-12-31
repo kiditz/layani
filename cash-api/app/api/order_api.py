@@ -109,3 +109,14 @@ def find_order_by_user_id():
     """
     domain = request.args.to_dict()
     return order_service.find_order_by_user_id(domain)
+
+@api.route('/other_sales', methods=['GET'])
+def find_sales_other():
+
+    """
+    {
+        "id": "Long"
+    }
+    """
+    domain = request.args.to_dict()
+    return order_service.find_sales_other(domain)
