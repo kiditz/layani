@@ -173,7 +173,7 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return fragmentDispatchingAndroidInjector
     }
 
-    private fun onNotLogin() {
+    fun onNotLogin() {
         val intent = Intent(this, LoginActivity::class.java)
         startActivityForResult(intent, Constant.REQUEST_LOGIN)
 
