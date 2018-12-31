@@ -3,6 +3,7 @@ package com.overflow.cash.dagger
 import com.overflow.cash.account.AccountAuthenticatorService
 import com.overflow.cash.account.AccountSyncAdapterService
 import com.overflow.cash.activity.*
+import com.overflow.cash.fcm.LayaniFirebaseMessagingService
 import com.overflow.cash.fragment.*
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -137,6 +138,9 @@ abstract class ActivityBuilder {
 
     @ContributesAndroidInjector
     internal abstract fun bindAccountSyncAdapterService(): AccountSyncAdapterService
+
+    @ContributesAndroidInjector
+    internal abstract fun bindLayaniFirebaseMessagingService(): LayaniFirebaseMessagingService
 
 
 }

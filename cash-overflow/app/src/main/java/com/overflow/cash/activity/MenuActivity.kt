@@ -73,10 +73,7 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         this.navHeaderView = nav_view.getHeaderView(0)
         bindHeader()
 
-        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
-            val token = it.token
-            presenter.saveToken(token)
-        }
+
     }
 
     private fun bindHeader() {
@@ -108,6 +105,11 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             this.intent.removeExtra(Constant.SUCCESS_MESSAGE)
         } else {
             onNavigationItemSelected(nav_view.menu.findItem(R.id.nav_new_transaction))
+        }
+        // Saving firebase token
+        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
+            val token = it.token
+            presenter.saveToken(token)
         }
     }
 
