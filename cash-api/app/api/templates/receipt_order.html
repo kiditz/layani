@@ -132,7 +132,7 @@
                     {{order.order_code}}
                 </td>
             </tr>
-            {%if order.description and order.description != ' ' %}
+            {%if order.description and order.description|length > 1 %}
             <tr class="heading">
                 <td>
                     {{_('Note')}}
@@ -205,13 +205,13 @@
                     ({{thousand(order.discount_amount)}})
                 </td>
             </tr>
+            {%-endif%}
             <tr>
                 <td>{{_('Total')}}:</td>
                 <td>
                     {{thousand(order.total_amount)}}
                 </td>
             </tr>
-            {%-endif%}
             <tr>
                 <td>{{_('Pay')}}:</td>
                 <td>
