@@ -132,7 +132,7 @@ msgstr "Keterangan"
 
 #: api/templates/receipt_order.html:147
 msgid "No Order Items"
-msgstr "Transaksi custom tidak memiliki item"
+msgstr "Penjualan lainnya tidak memiliki item"
 
 #: api/templates/receipt_order.html:194
 msgid "Total Shopping"
