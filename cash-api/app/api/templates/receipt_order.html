@@ -132,6 +132,7 @@
                     {{order.order_code}}
                 </td>
             </tr>
+            {%if order.description and order.description != ' ' %}
             <tr class="heading">
                 <td>
                     {{_('Note')}}
@@ -141,6 +142,7 @@
                     {{order.description}}
                 </td>
             </tr>
+            {%endif%}
             {%if not order.item_list%}
             <tr class="child">
                 <td colspan="2">
