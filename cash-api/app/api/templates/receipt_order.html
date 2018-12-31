@@ -84,6 +84,7 @@
             }
         }
 
+
     </style>
 </head>
 
@@ -131,6 +132,22 @@
                     {{order.order_code}}
                 </td>
             </tr>
+            <tr class="heading">
+                <td>
+                    {{_('Note')}}
+                </td>
+
+                <td>
+                    {{order.description}}
+                </td>
+            </tr>
+            {%if not order.item_list%}
+            <tr class="child">
+                <td colspan="2">
+                    <p align="center">{{_('No Order Items')}}</p>
+                </td>
+            </tr>
+            {%endif%}
             {%for item in order.item_list-%}
             <tr class="item">
                 <td>
@@ -151,7 +168,7 @@
             </tr>
             {%if item.discount_name%}
             <tr class="item">
-                <td >
+                <td>
                     &emsp;{{item.discount_name}}
                 </td>
                 <td>

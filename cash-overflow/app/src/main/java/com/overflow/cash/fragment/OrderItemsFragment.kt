@@ -62,7 +62,8 @@ class OrderItemsFragment : BaseFragment(), LoadOrderItemContract.View{
     }
 
     override fun showEmpty() {
-
+        showMessageInBlankLayout(getString(R.string.transaction_custom_does_not_have_order_items))
+        this.onItemsLoaded?.invoke(listOf<Data>())
     }
 
     override fun showError(error: Throwable) {
@@ -85,11 +86,9 @@ class OrderItemsFragment : BaseFragment(), LoadOrderItemContract.View{
     companion object {
         const val ARG_ORDER_CODE = "order_code"
         @JvmStatic
-        fun newInstance(orderCode: String) =
+        fun newInstance(order: Bundle) =
                 OrderItemsFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(ARG_ORDER_CODE, orderCode)
-                    }
+                    arguments = order
                 }
     }
 }

@@ -24,7 +24,6 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_transaction_history_detail.*
 import kotlinx.android.synthetic.main.dialog_refund.view.*
-import timber.log.Timber
 import javax.inject.Inject
 
 class TransactionHistoryDetailActivity : BaseActivity(), HasSupportFragmentInjector, RefundContract.View, DeleteOrderContract.View {
@@ -63,12 +62,10 @@ class TransactionHistoryDetailActivity : BaseActivity(), HasSupportFragmentInjec
             showRefundDialog()
         }
 
-        val orderItems = OrderItemsFragment.newInstance(order.getString("order_code"))
+        val orderItems = OrderItemsFragment.newInstance(order.toBundle())
         orderItems.onItemsLoaded = { orderList ->
-
             this.btn_receipt.setOnClickListener{
                 order["order_items"] = orderList
-                Timber.w("Order : %s", order)
                 val bundle = Bundle()
                 bundle.putString(Constant.ARG_SALES, order.toString())
                 bundle.putBoolean("just_back", true)
@@ -79,8 +76,6 @@ class TransactionHistoryDetailActivity : BaseActivity(), HasSupportFragmentInjec
             }
         }
         replaceContent(R.id.container, orderItems)
-
-
     }
 
     private fun initHeader(order:Data){
@@ -196,6 +191,7 @@ class TransactionHistoryDetailActivity : BaseActivity(), HasSupportFragmentInjec
 
     override fun showEmpty() {
         showProgress(false)
+        //toast(order.getString("description")).show()
         showMessage(order.getString("description"))
     }
 

@@ -180,5 +180,6 @@
     <string name="transaction">Transaction</string>
     <string name="compare_with_yesterday">Compare With Yesterday</string>
     <string name="sales_other">Other Sales</string>
+    <string name="transaction_custom_does_not_have_order_items">Other transaction does\'nt have any item</string>
 
 </resources>

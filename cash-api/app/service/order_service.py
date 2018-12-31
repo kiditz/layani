@@ -290,6 +290,7 @@ class OrderService(object):
 			Order.payment_method,
 			Order.order_code,
 			Order.order_at,
+			Order.description,
 			Order.status,
 			User.fullname,
 			Outlet.name.label('outlet_name'),

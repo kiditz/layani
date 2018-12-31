@@ -180,4 +180,5 @@
     <string name="required_value_card">Nilai Kartu harus di isi</string>
     <string name="compare_with_yesterday">Dibandingkan Kemarin</string>
     <string name="sales_other">Penjualan Lainnya</string>
+    <string name="transaction_custom_does_not_have_order_items">Transaksi Lainnya tidak memiliki item</string>
 </resources>
