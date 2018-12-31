@@ -133,6 +133,8 @@ class Constant {
             const val INVALID_TOTAL_AMOUNT = "invalid.payment.amount"
             const val CASHBOX_SAVED_SUCCESSFULLY = "cashbox.saved.successfully"
             const val RECAP_CASH_SAVED_SUCCESSFULLY = "recap.cash.saved.successfully"
+            const val REQUIRED_VALUE_SALES_AMOUNT = "required.value.sales.amount"
+            const val REQUIRED_VALUE_DESCRIPTION = "required.value.description"
 
         }
     }

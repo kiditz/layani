@@ -58,7 +58,7 @@ class SalesOrderPreviewAdapter(private val imageService: ImageService, private v
 
         holder.subTotal.text = subTotal
         val documentId = item.getLong("documentId")
-        holder.sellPrice.text = "$sellPrice x $qty $unit"
+        holder.sellPrice.text = "$sellPrice x $qty"
         if (hasDiscount) {
             presenter.loadDiscount(qty, productId, holder)
         }
@@ -75,26 +75,25 @@ class SalesOrderPreviewAdapter(private val imageService: ImageService, private v
         val amount = data.getDouble("amount")
         var discountAmount = 0.0
         if (holder is SalesOrderPreviewAdapter.ViewHolder) {
-            holder.freeProduct.visibility = View.VISIBLE
+            holder.discountName.visibility = View.VISIBLE
             val item = this.values[holder.adapterPosition]
             if (method == Constant.DiscountMethod.BY_N_GET_ONE) {
-                holder.freeProduct.text = data.getString("name")
+                holder.discountName.text = data.getString("name")
                 item["freeProductId"] = data.getLong("free_product_id")
                 item["discountQty"] = data.getDouble("amount").toLong()
             }else{
-                holder.freeProduct.text = data.getString("name")
+                holder.discountName.text = data.getString("name")
                 if (type == Constant.DiscountType.PERCENTAGE) {
                     val calculateDiscount = (amount / 100.0) * parseRupiah(holder.subTotal.text)
                     discountAmount = calculateDiscount
-                    holder.sellPrice.text = "${holder.sellPrice.text} - ${amount.toInt()}%"
+                    holder.sellPrice.text = "${holder.sellPrice.text} - ${rupiah(discountAmount)}%"
                     holder.subTotal.text = rupiah(parseRupiah(holder.subTotal.text) - calculateDiscount )
                 }else{
                     discountAmount = amount
-                    holder.sellPrice.text = "${holder.sellPrice.text} - ${rupiah(amount)}"
+                    holder.sellPrice.text = "${holder.sellPrice.text} - ${rupiah(discountAmount)}"
                     holder.subTotal.text = rupiah( parseRupiah(holder.subTotal.text) - amount)
                 }
             }
-
 
             item["subTotal"] = parseRupiah(holder.subTotal.text)
             item["discountId"] = data.getLong("id")
@@ -107,7 +106,7 @@ class SalesOrderPreviewAdapter(private val imageService: ImageService, private v
     override fun onDiscountNotLoaded(data: Data, holder: RecyclerView.ViewHolder) {
         Timber.i("Discount Not Loaded : %s", data)
         if (holder is SalesOrderPreviewAdapter.ViewHolder) {
-            holder.freeProduct.visibility = View.GONE
+            holder.discountName.visibility = View.GONE
         }
     }
 
@@ -122,7 +121,7 @@ class SalesOrderPreviewAdapter(private val imageService: ImageService, private v
 
     inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val productName: TextView = view.tv_product_name
-        val freeProduct: TextView = view.tv_free_product
+        val discountName: TextView = view.tv_discount_name
         val sellPrice: TextView = view.tv_sell_price
         val imgProduct: ImageView = view.img_product
         val subTotal: TextView = view.tv_sub_total

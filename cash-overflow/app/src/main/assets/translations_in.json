@@ -1,4 +1,6 @@
 {
+  "required.value.sales.amount": "Nilai tagihan harus di isi",
+  "required.value.description": "Keterangan harus di isi",
   "required.value.phone_number": "Ketik dengan nomor handphone",
   "required.value.name": "Ketik dengan nama",
   "required.value.address": "Ketik dengan alamat",

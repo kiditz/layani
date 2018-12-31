@@ -118,6 +118,7 @@
     <string name="register_store">Daftarkan Toko</string>
     <string name="remaining_stock">Sisa Stock</string>
     <string name="sales">Penjualan</string>
+    <string name="sales_amount">Nilai tagihan</string>
     <string name="save">Simpan</string>
     <string name="scan_barcode">Scan Barcode</string>
     <string name="search">Cari..</string>
@@ -178,4 +179,5 @@
     <string name="required_value_cash">Nilai Tunai harus di isi</string>
     <string name="required_value_card">Nilai Kartu harus di isi</string>
     <string name="compare_with_yesterday">Dibandingkan Kemarin</string>
+    <string name="sales_other">Penjualan Lainnya</string>
 </resources>

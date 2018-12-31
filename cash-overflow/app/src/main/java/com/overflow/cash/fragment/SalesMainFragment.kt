@@ -31,7 +31,7 @@ class SalesMainFragment:BaseFragment(), BottomNavigationView.OnNavigationItemSel
             R.id.navigation_topup ->{
                 true
             }
-            R.id.navigation_purchase ->{
+            R.id.navigation_sales_other ->{
                 activity?.replaceContent(R.id.bn_container, SalesOtherFragment())
                 true
             }

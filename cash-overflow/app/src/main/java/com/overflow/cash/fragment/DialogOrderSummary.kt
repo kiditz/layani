@@ -9,7 +9,6 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import com.overflow.cash.R
 import com.overflow.cash.utils.parseRupiah
 import com.overflow.cash.utils.rupiah
-import com.overflow.cash.utils.toast
 import com.overflow.libs.core.Data
 import com.overflow.libs.core.DateUtil
 import io.reactivex.Observable
@@ -36,7 +35,6 @@ class DialogOrderSummary: DialogFragment(){
             data["sales"] = amount
             data["void"] = it.getDouble("void")
             data["pending"] = it.getDouble("created")
-            activity!!.toast(data["pending"].toString()).show()
             data["id"] = it.getLong("id")
         }
         validate(view)

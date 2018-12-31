@@ -13,7 +13,6 @@ import com.overflow.cash.R
 import com.overflow.cash.activity.Constant
 import com.overflow.cash.fragment.dummy.DummyContent.DummyItem
 import com.overflow.cash.net.ImageService
-import com.overflow.cash.utils.parseRupiah
 import com.overflow.cash.utils.rupiah
 import com.overflow.libs.core.Data
 import kotlinx.android.synthetic.main.adapter_order_items.view.*
@@ -25,7 +24,7 @@ class OrderItemsAdapter(private val imageService: ImageService) : RecyclerView.A
     lateinit var context: Context
     val values: MutableList<Data> = mutableListOf()
     var onItemClick: ((Data, ViewHolder) -> Unit)? = null
-    var onItemLongClick: ((Data, ViewHolder) -> Unit)? = null
+    //var onItemLongClick: ((Data, ViewHolder) -> Unit)? = null
     fun addValues(payloads:List<Data>) {
         values.addAll(payloads)
         notifyDataSetChanged()
@@ -50,43 +49,33 @@ class OrderItemsAdapter(private val imageService: ImageService) : RecyclerView.A
         val unit = item.getString("unit")
         val subTotal = rupiah(item.getDouble("sub_total"))
         val productName = item.getString("product_name")
-        val discountName = item.getString("discount_name")
+        val discountName = if (item.containsKeyAndNotNull("discount_name")){
+            holder.discountName.visibility = View.VISIBLE
+            item.getString("discount_name")
+        }else{
+            holder.discountName.visibility = View.GONE
+            Constant.TEXT_EMPTY
+        }
         val discountAmount = item.getDouble("discount_amount")
         val documentId = item["document_id"]?.toString()?.toLong()
-
         holder.productName.text= productName
         holder.subTotal.text = subTotal
-        holder.sellPrice.text = "$sellPrice x $qty $unit"
+        holder.sellPrice.text = "$sellPrice x $qty"
         imageService.loadDocument(holder.imgProduct, documentId, productName)
-//        if (method != null){
-        holder.discountName.visibility = View.VISIBLE
+
         holder.discountName.text = discountName
-//            if(method==Constant.DiscountMethod.BY_N_GET_ONE){
-//                holder.discountName.text = discountName
-//            }else{
-//                val amount = item.getDouble("discount_amount")
-
-//                if (discountType == Constant.DiscountType.PERCENTAGE) {
-//                    val calculateDiscount = (amount / 100)
-//                    holder.sellPrice.text = "${holder.sellPrice.text} - ${amount.toInt()}%"
-//                    holder.subTotal.text = rupiah(parseRupiah(holder.subTotal.text) - calculateDiscount )
-//                }else{
-//                    holder.sellPrice.text = "${holder.sellPrice.text} - ${rupiah(amount)}"
-//                    holder.subTotal.text = rupiah( parseRupiah(holder.subTotal.text) - amount)
-//                }
-//            }
-//        }
-
+        if(discountAmount > 0){
+            holder.sellPrice.text = "${holder.sellPrice.text} - ${rupiah(discountAmount)}"
+        }
     }
 
     override fun getItemCount(): Int = values.size
 
     inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val productName: TextView = view.tv_product_name
-        val discountName: TextView = view.tv_free_product
+        val discountName: TextView = view.tv_discount_name
         val sellPrice: TextView = view.tv_sell_price
         val imgProduct: ImageView = view.img_product
         val subTotal: TextView = view.tv_sub_total
-
     }
 }

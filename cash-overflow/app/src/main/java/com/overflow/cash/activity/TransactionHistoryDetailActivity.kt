@@ -195,6 +195,8 @@ class TransactionHistoryDetailActivity : BaseActivity(), HasSupportFragmentInjec
     }
 
     override fun showEmpty() {
+        showProgress(false)
+        showMessage(order.getString("description"))
     }
 
     override fun showNotConnected(res: String) {

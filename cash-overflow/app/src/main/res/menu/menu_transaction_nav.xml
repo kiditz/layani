@@ -10,7 +10,7 @@
         android:icon="@drawable/ic_smartphone"
         android:title="@string/top_up" />
     <item
-        android:id="@+id/navigation_purchase"
+        android:id="@+id/navigation_sales_other"
         android:icon="@drawable/ic_purchase_order"
-        android:title="@string/purchase" />
+        android:title="@string/sales_other" />
 </menu>

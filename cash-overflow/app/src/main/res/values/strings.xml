@@ -117,6 +117,7 @@
     <string name="register_store">Register Stock</string>
     <string name="remaining_stock">Remaining Stock</string>
     <string name="sales">Sales</string>
+    <string name="sales_amount">Sales Amount</string>
     <string name="save">Save</string>
     <string name="saved_transaction">Saved Transaction</string>
     <string name="scan_barcode">Scan Barcode</string>
@@ -178,5 +179,6 @@
     <string name="total_should_be">Total Should Be</string>
     <string name="transaction">Transaction</string>
     <string name="compare_with_yesterday">Compare With Yesterday</string>
+    <string name="sales_other">Other Sales</string>
 
 </resources>

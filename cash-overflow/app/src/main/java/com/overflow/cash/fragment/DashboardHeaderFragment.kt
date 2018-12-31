@@ -52,6 +52,8 @@ class DashboardHeaderFragment:Fragment(), DashboardHeaderContract.View {
         }
         tv_sales?.text = rupiah(data.getDouble("sales"))
         tv_trx?.text = Math.round(data.getDouble("trx")).toString()
+        tv_sales_yesterday.text = rupiah(data.getDouble("sales_yesterday"))
+        tv_trx_yesterday.text = Math.round(data.getDouble("trx_yesterday")).toString()
     }
 
     override fun showError(error: Throwable) {

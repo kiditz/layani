@@ -82,7 +82,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/tv_free_product"
+                android:id="@+id/tv_discount_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxWidth="120dp"
