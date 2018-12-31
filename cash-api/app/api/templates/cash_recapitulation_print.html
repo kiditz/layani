@@ -150,7 +150,6 @@
                 {{_('First Trx')}}: {{summary.start_at.strftime('%d-%m-%Y %H:%M:%S')}}<br>
                 {{_('Last Trx')}}: {{summary.end_at.strftime('%d-%m-%Y %H:%M:%S')}}<br>
                 {{_('Pending Order')}}: {{summary.pending}}<br>
-                {{_('Description')}}: {{order.description}}<br>
             </td>
         </tr>
         <tr class="information_title">
@@ -183,7 +182,7 @@
             </td>
             <td>
                 {%if item.discount_amount > 0.0 %}
-                -{{thousand(item.discount_amount)}}
+                ({{thousand(item.discount_amount)}})
                 {%endif%}
             </td>
 
@@ -201,6 +200,16 @@
                 {{thousand(order.price_before_disc)}}
             </td>
         </tr>
+        {%if sales_other.total_amount > 0.0%}
+        <tr class="child">
+            <td class="">
+                {{_('Sales Other')}}
+            </td>
+            <td>
+                {{thousand(sales_other.total_amount)}}
+            </td>
+        </tr>
+        {%endif%}
         <tr class="child">
             <td class="">
                 {{_('Discount Order')}}

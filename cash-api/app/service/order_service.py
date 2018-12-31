@@ -7,7 +7,7 @@ from sqlalchemy import between
 from utils import str2bool
 from utils.api_constant import StockRef, ErrorCode, CashboxStatus, PaymentMethod
 from .chart_query import *
-
+from sqlalchemy import exists
 log = logging.getLogger(__name__)
 
 
@@ -348,7 +348,7 @@ class OrderService(object):
 			.filter(between(Order.order_at, start_at, end_at)) \
 			.filter(Order.user_id == user_id) \
 			.group_by(Product.id, OrderItem.discount_name)\
-			.order_by('sub_total').all()
+			.order_by('sub_total desc').all()
 		item_list = list(map(lambda x: x._asdict(), item_q))
 		return {'payload': item_list}
 	
@@ -366,6 +366,24 @@ class OrderService(object):
 		order_q = Order.query.with_entities(*entities)\
 			.filter(between(Order.order_at, start_at, end_at))\
 			.filter(and_(Order.user_id == user_id, Order.total_amount > 0)).first()
+		if order_q is None:
+			raise ValidationException(ErrorCode.ORDER_NOT_FOUND)
+		return {'payload': order_q._asdict()}
+	
+	@Key(['user_id', 'start_at', 'end_at'])
+	def find_sales_other(self, domain):
+		user_id = domain['user_id']
+		start_at = domain['start_at']
+		end_at = domain['end_at']
+		entities = (
+			func.coalesce(func.sum(Order.total_amount), 0.0).label('total_amount'),
+		)
+		order_q = Order.query.with_entities(*entities) \
+			.filter(between(Order.order_at, start_at, end_at)) \
+			.filter(Order.status == OrderStatus.SUCCESS) \
+			.filter(Order.user_id == user_id) \
+			.filter(~exists().where(Order.id == OrderItem.order_id)) \
+			.first()
 		if order_q is None:
 			raise ValidationException(ErrorCode.ORDER_NOT_FOUND)
 		return {'payload': order_q._asdict()}
