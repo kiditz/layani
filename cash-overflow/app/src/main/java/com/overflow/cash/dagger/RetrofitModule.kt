@@ -24,6 +24,11 @@ class RetrofitModule {
     }
 
     @Provides
+    fun provideNotificationServiceService(@Named(AUTHENTICATED) retrofit: Retrofit): NotificationService {
+        return retrofit.create(NotificationService::class.java)
+    }
+
+    @Provides
     fun provideOutletService(@Named(AUTHENTICATED) retrofit: Retrofit): OutletService {
         return retrofit.create(OutletService::class.java)
     }

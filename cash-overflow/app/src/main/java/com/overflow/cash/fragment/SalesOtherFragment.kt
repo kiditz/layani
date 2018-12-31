@@ -85,7 +85,7 @@ class SalesOtherFragment : BaseFragment(), SaveOrderContract.View {
         try {
             this.tv_result.text = rupiah(parseRupiah(temp))
         }catch (e:Exception){
-
+            clearValues()
         }
     }
 

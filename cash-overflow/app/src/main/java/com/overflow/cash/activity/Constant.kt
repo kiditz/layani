@@ -24,6 +24,8 @@ class Constant {
         const val STRIP = "-"
         const val CREATE_ACCOUNT_SUCCESS = "create.account.success"
         const val ZERO: Int = 0
+        const val FIREBASE_TOKEN = "firebase_token"
+        const val FIREBASE_CHANNEL = "firebase_channel"
     }
 
     interface Sort{

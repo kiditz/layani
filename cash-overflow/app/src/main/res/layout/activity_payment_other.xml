@@ -27,12 +27,26 @@
         android:layout_weight="2.0"
         android:fontFamily="sans-serif"
         android:gravity="center_vertical|end"
-        android:hint="@string/total_payment"
+        android:hint="@string/sales_amount"
         android:maxLines="1"
         android:paddingLeft="@dimen/payment_margin"
         android:paddingRight="@dimen/payment_margin"
         android:textSize="@dimen/display_text_size" />
-
+    <EditText
+        android:id="@+id/tv_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/small_margin"
+        android:layout_marginLeft="@dimen/small_margin"
+        android:layout_marginRight="@dimen/small_margin"
+        android:layout_marginStart="@dimen/small_margin"
+        android:layout_marginTop="@dimen/default_margin"
+        android:background="@drawable/bg_edit_text"
+        android:drawableLeft="@drawable/ic_sticky_note"
+        android:drawableTint="@color/colorAccent"
+        android:hint="@string/description"
+        android:padding="@dimen/default_margin" />
     <include layout="@layout/line_vert" />
     <LinearLayout
         android:layout_width="match_parent"
@@ -153,13 +167,11 @@
             android:text="0"/>
 
         <Button
-            android:id="@+id/btn_done"
-            android:background="@drawable/btn_default"
-            android:textColor="@drawable/btn_accent_text"
-            android:enabled="false"
+            android:id="@+id/btn_backspace"
+            style="@style/MyButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="√" />
+            android:text="@string/backspace" />
     </LinearLayout>
 </LinearLayout>

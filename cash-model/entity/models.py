@@ -53,6 +53,35 @@ class Client(db.Model, Entity):
 	id = db.Column(db.BigInteger, db.Sequence('co_client_id_seq'), primary_key=True)
 	client_id = db.Column(db.String(255), unique=True)
 	client_secret = db.Column(db.String(255))
+	
+	def __init__(self, obj=None):
+		Entity.__init__(self, obj)
+
+
+class NotificationToken(db.Model, Entity):
+	__tablename__ = 'f_notification_token'
+	client_id = db.Column(db.String(255), unique=True, primary_key=True)
+	user_id = db.Column(db.ForeignKey(u'co_user.id'), index=True)
+	token = db.Column(db.Text, nullable=False)
+	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
+	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
+	
+	def __init__(self, obj=None):
+		Entity.__init__(self, obj)
+
+
+class Notification(db.Model, Entity):
+	__tablename__ = 'f_notification'
+	id = db.Column(db.BigInteger, db.Sequence('f_notification_id_seq'), primary_key=True)
+	user_id = db.Column(db.ForeignKey(u'co_user.id'), index=True)
+	title = db.Column(db.String(100), nullable=False)
+	message = db.Column(db.String(255), nullable=False)
+	description = db.Column(db.Text, nullable=False)
+	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
+	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
+	
+	def __init__(self, obj=None):
+		Entity.__init__(self, obj)
 
 
 class Document(db.Model, Entity):
@@ -166,7 +195,7 @@ class Stock(db.Model, Entity):
 	__tablename__ = 'co_product_stock'	
 	id = db.Column(db.BigInteger, primary_key=True)
 	product_id = db.Column(db.ForeignKey(u'co_product.id'), nullable=False)	
-	quantity = db.Column(db.BigInteger, nullable=False, server_default='0')	
+	quantity = db.Column(db.BigInteger, nullable=False, server_default='0')
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)	
 
@@ -230,6 +259,7 @@ class Order(db.Model, Entity):
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
 	user_id = db.Column(db.ForeignKey(u'co_user.id'), index=True)	
+	
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)		
 
@@ -243,6 +273,9 @@ class AccountReceiveable(db.Model, Entity):
 	outlet_id = db.Column(db.ForeignKey(u'co_outlet.id'), nullable=False)	
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
+	
+	def __init__(self, obj=None):
+		Entity.__init__(self, obj)
 
 
 class OrderItem(db.Model, Entity):
@@ -318,7 +351,6 @@ class CashboxHistory(db.Model, Entity):
 						
 
 if __name__ == '__main__':
-	#app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('db.name', 'postgresql://kiditz:rioters7@layaniio.ci9ii2u2cpyu.ap-southeast-1.rds.amazonaws.com:5432/layani')
 	migrate = Migrate(app, db)
 	manager = Manager(app)
 	manager.add_command('db', MigrateCommand)

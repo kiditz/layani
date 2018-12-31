@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "736649396462",
+    "firebase_url": "https://layani-push-notification.firebaseio.com",
+    "project_id": "layani-push-notification",
+    "storage_bucket": "layani-push-notification.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:736649396462:android:f2aea821cec52669",
+        "android_client_info": {
+          "package_name": "com.overflow.cash"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "736649396462-mtkoshljpcsgtsb0eco9tb0qnv8i65n4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmdDd65zlCzJQpiLX-hVrjphEUEh9NPFw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

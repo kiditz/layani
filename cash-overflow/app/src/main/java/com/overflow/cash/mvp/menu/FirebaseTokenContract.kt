@@ -2,14 +2,15 @@ package com.overflow.cash.mvp.menu
 
 import com.overflow.libs.BasePresenter
 import com.overflow.libs.BaseView
+import com.overflow.libs.core.Data
 
-class MenuContract() {
+class FirebaseTokenContract {
 
     interface View : BaseView {
-        fun onNotLogin()
+        fun onTokenSaved(data: Data)
     }
 
     interface Presenter : BasePresenter<View> {
-
+        fun saveToken(token:String)
     }
 }

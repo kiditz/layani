@@ -173,7 +173,6 @@
     <string name="no_cashbox_history_found">No CashBox History Found</string>
     <string name="cash_in">Cash In</string>
     <string name="cash_out">Cash Out</string>
-
     <string name="note">Note</string>
     <string name="total">Total</string>
     <string name="total_should_be">Total Should Be</string>
@@ -181,5 +180,6 @@
     <string name="compare_with_yesterday">Compare With Yesterday</string>
     <string name="sales_other">Other Sales</string>
     <string name="transaction_custom_does_not_have_order_items">Other transaction does\'nt have any item</string>
-
+    <string name="notification_channel">pulsa_channel</string>
+    <string name="notification_channel_description">pulsa_channel_description</string>
 </resources>

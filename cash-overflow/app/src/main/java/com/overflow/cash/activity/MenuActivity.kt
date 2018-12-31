@@ -14,13 +14,14 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import com.google.firebase.iid.FirebaseInstanceId
 import com.jaeger.library.StatusBarUtil
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.miguelcatalan.materialsearchview.MaterialSearchView
 import com.overflow.cash.R
 import com.overflow.cash.fragment.*
-import com.overflow.cash.mvp.menu.MenuContract
-import com.overflow.cash.mvp.menu.MenuPresenter
+import com.overflow.cash.mvp.menu.FirebaseTokenContract
+import com.overflow.cash.mvp.menu.FirebaseTokenPresenter
 import com.overflow.cash.net.ImageService
 import com.overflow.cash.net.RxUtils
 import com.overflow.cash.utils.replaceContent
@@ -42,12 +43,14 @@ import javax.inject.Inject
  * @author Rifky Aditya Bastara
  * @since 15 December 2018 22:49
  * */
-class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, HasSupportFragmentInjector, MenuContract.View {
+class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, HasSupportFragmentInjector, FirebaseTokenContract.View {
+
+
     lateinit var navHeaderView: View
     @Inject
     lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
     @Inject
-    lateinit var presenter: MenuPresenter
+    lateinit var presenter: FirebaseTokenPresenter
     @Inject
     lateinit var preferences: SharedPreferences
     @Inject
@@ -57,8 +60,8 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
+        this.presenter.attach(this)
         setContentView(R.layout.activity_menu)
-
         StatusBarUtil.setColorForDrawerLayout(this, drawer_layout, ContextCompat.getColor(this, android.R.color.transparent))
         this.search = search_view
         setSupportActionBar(toolbar)
@@ -69,6 +72,11 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
         this.navHeaderView = nav_view.getHeaderView(0)
         bindHeader()
+
+        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
+            val token = it.token
+            presenter.saveToken(token)
+        }
     }
 
     private fun bindHeader() {
@@ -163,7 +171,7 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return fragmentDispatchingAndroidInjector
     }
 
-    override fun onNotLogin() {
+    private fun onNotLogin() {
         val intent = Intent(this, LoginActivity::class.java)
         startActivityForResult(intent, Constant.REQUEST_LOGIN)
 
@@ -192,7 +200,7 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun showNotConnected(res: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        snack(res).show()
     }
 
     override fun showError(error: Throwable) {
@@ -201,7 +209,6 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
     override fun showEmpty() {
-        TODO("not implemented")
     }
 
     // Moving fragment menu
@@ -213,6 +220,8 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         //menuInflater.inflate(R.menu.menu, menu)
         return false
     }
-
+    override fun onTokenSaved(data: Data) {
+        Timber.i("TOKEN DATA : %s", data.toString())
+    }
 
 }

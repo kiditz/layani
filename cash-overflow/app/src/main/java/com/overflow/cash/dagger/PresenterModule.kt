@@ -11,7 +11,7 @@ import com.overflow.cash.mvp.customer.EditCustomerPresenter
 import com.overflow.cash.mvp.discount.LoadDiscountByBillAmountPresenter
 import com.overflow.cash.mvp.discount.LoadDiscountByQuantityPresenter
 import com.overflow.cash.mvp.login.LoginPresenter
-import com.overflow.cash.mvp.menu.MenuPresenter
+import com.overflow.cash.mvp.menu.FirebaseTokenPresenter
 import com.overflow.cash.mvp.order.*
 import com.overflow.cash.mvp.order.SaveOrderPresenter
 import com.overflow.cash.mvp.product.*
@@ -33,8 +33,8 @@ import io.reactivex.disposables.CompositeDisposable
 @Module
 class PresenterModule {
     @Provides
-    internal fun provideMenuPresenter(context: Context, accountManager: AccountManager, disposable: CompositeDisposable): MenuPresenter {
-        return MenuPresenter(context, accountManager, disposable)
+    internal fun provideFirebaseTokenPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, notificationService: NotificationService, preferences: SharedPreferences): FirebaseTokenPresenter {
+        return FirebaseTokenPresenter(context, preferences, translations, notificationService, disposable)
     }
 
     @Provides

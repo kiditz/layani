@@ -2,8 +2,7 @@ package com.overflow.cash.activity
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.ContextCompat.getDrawable
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import com.jakewharton.rxbinding2.widget.RxTextView
@@ -34,6 +33,7 @@ class PaymentOtherActivity : BaseActivity(),  SaveOrderContract.View {
     private var paymentMethod = Constant.PaymentMethod.CASH
     private var amount=0.0
     private var orderItems:List<Data>? = null
+    private var isOrderFinish=true
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
@@ -65,20 +65,19 @@ class PaymentOtherActivity : BaseActivity(),  SaveOrderContract.View {
         this.presenter.attach(this)
         this.tv_result.text = rupiah(Constant.ZERO.toDouble())
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_checked, menu)
         RxTextView.textChanges(tv_result).map { it.isNotBlank() && parseRupiah(it) >= amount }.debounce(100, TimeUnit.MILLISECONDS).subscribe {
             runOnUiThread{
-                btn_done.isEnabled = it
+                menu?.findItem(R.id.action_check)?.isEnabled = it
             }
         }
-
-        btn_done.setOnClickListener {
-            var message = "${getString(R.string.total_payment)} : ${tv_result.text}\n"
-            val cashBack = parseRupiah(tv_result.text) - amount
-            message += showDialogPayment(cashBack)
-
-        }
-
+        return true
     }
+
+
 
     /**
      * Show dialog preview before paid transaction
@@ -87,21 +86,23 @@ class PaymentOtherActivity : BaseActivity(),  SaveOrderContract.View {
         val totalPayment = parseRupiah(tv_result.text)
         val payFragment = DialogPaymentMakeSure.newInstance(totalPayment, cashBack, getString(R.string.are_you_sure_transaction))
         payFragment.onDoneClick = {
-            doOrder()
+            if(isOrderFinish){
+                doOrder()
+            }
         }
         payFragment.show(supportFragmentManager, Constant.PaymentMethod.CASH)
     }
 
-    @SuppressLint("ResourceType")
-    private fun changeBtnStyle(enabled:Boolean){
-        if(enabled){
-            btn_done.background = getDrawable(this, R.drawable.btn_default)
-            btn_done.setTextColor(ContextCompat.getColor(this, R.color.textLight))
-        }else{
-            btn_done.background = null
-            btn_done.setTextColor(ContextCompat.getColor(this, android.R.color.tab_indicator_text))
-        }
-    }
+//    @SuppressLint("ResourceType")
+//    private fun changeBtnStyle(enabled:Boolean){
+//        if(enabled){
+//            btn_done.background = getDrawable(this, R.drawable.btn_default)
+//            btn_done.setTextColor(ContextCompat.getColor(this, R.color.textLight))
+//        }else{
+//            btn_done.background = null
+//            btn_done.setTextColor(ContextCompat.getColor(this, android.R.color.tab_indicator_text))
+//        }
+//    }
 
 
 
@@ -110,6 +111,7 @@ class PaymentOtherActivity : BaseActivity(),  SaveOrderContract.View {
             it.setOnClickListener {
                 when (it.id) {
                     R.id.btn_clear -> clearValues()
+                    R.id.btn_backspace -> backSpace()
                     R.id.btn_0 -> addDigit(0)
                     R.id.btn_1 -> addDigit(1)
                     R.id.btn_2 -> addDigit(2)
@@ -137,10 +139,17 @@ class PaymentOtherActivity : BaseActivity(),  SaveOrderContract.View {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return home(item)
+        return when(item!!.itemId){
+            R.id.action_check -> {
+                val cashBack = parseRupiah(tv_result.text) - amount
+                showDialogPayment(cashBack)
+                false
+            }
+            else -> home(item)
+        }
     }
 
-    private fun getButtonIds() = arrayOf(btn_clear, btn_0, btn_1, btn_2, btn_3, btn_4, btn_5, btn_6, btn_7, btn_8, btn_9)
+    private fun getButtonIds() = arrayOf(btn_clear, btn_0, btn_1, btn_2, btn_3, btn_4, btn_5, btn_6, btn_7, btn_8, btn_9, btn_backspace)
 
 
     override fun onOrderCreated(data: Data) {
@@ -155,16 +164,13 @@ class PaymentOtherActivity : BaseActivity(),  SaveOrderContract.View {
     }
 
     private fun doOrder(){
-        btn_done.isEnabled = false
+        //btn_done.isEnabled = false
+        isOrderFinish = false
         progress.visibility = View.VISIBLE
         val order = Data()
         order["customer_id"] = this.customerId
         order["total_amount"] = amount
-        order["description"] = if (intent.getStringExtra("description") != null){
-            intent.getStringExtra("description")
-        }else{
-            Constant.SPACE
-        }
+        order["description"] = tv_description.text.toString()
         if(intent.getDoubleExtra("discount_amount", 0.0) > 0){
             order["discount_amount"] = intent.getDoubleExtra("discount_amount", 0.0)
             order["discount_name"] = intent.getStringExtra("discount_name")
@@ -178,29 +184,43 @@ class PaymentOtherActivity : BaseActivity(),  SaveOrderContract.View {
             order["items"] = orderItems
         }
 
-        changeBtnStyle(false)
+        //changeBtnStyle(false)
         presenter.saveOrder(order)
     }
 
     override fun showError(error: Throwable) {
         showErrorMessage(getString(R.string.system_err))
+        isOrderFinish = true
     }
 
     override fun showNoOk(res: String) {
         showErrorMessage(res)
+        isOrderFinish = true
+    }
+
+    private fun backSpace() {
+        var temp = this.tv_result.text
+        if(temp.isNotEmpty()) {
+            temp = temp.substring(0, temp.length - 1)
+        }
+        try {
+            this.tv_result.text = rupiah(parseRupiah(temp))
+        }catch (e:Exception){
+            clearValues()
+        }
     }
 
     override fun showEmpty() {
-
+        isOrderFinish = true
     }
 
     override fun showNotConnected(res: String) {
         showErrorMessage(res)
+        isOrderFinish = true
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        btn_done?.isEnabled = false
         presenter.detach()
     }
 
