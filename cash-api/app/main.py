@@ -33,7 +33,7 @@ app.register_blueprint(customer_api_blue_print)
 app.register_blueprint(discount_api_blue_print)
 app.register_blueprint(chart_api_blue_print)
 app.register_blueprint(receipt_api_blue_print)
-app.register_blueprint(notification_token_api_blue_print)
+app.register_blueprint(notification_api_blue_print)
 
 if __name__ == '__main__':
     run()

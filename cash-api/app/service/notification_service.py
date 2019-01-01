@@ -1,13 +1,13 @@
-from entity.models import NotificationToken
+from entity.models import NotificationToken, Notification
 from slerp.logger import logging
 from slerp.validator import Key
-
+from slerp.sender import send_message
 log = logging.getLogger(__name__)
 
 
-class NotificationTokenService(object):
+class NotificationService(object):
 	def __init__(self):
-		super(NotificationTokenService, self).__init__()
+		super(NotificationService, self).__init__()
 	
 	@Key(['client_id', 'user_id', 'token'])
 	def add_notification_token(self, domain):
@@ -18,3 +18,13 @@ class NotificationTokenService(object):
 		else:
 			notification_token.update(domain)
 		return {'payload': notification_token.to_dict()}
+	
+	@Key(['user_id', 'title', 'message', 'description'])
+	def add_notification(self, domain):
+		notification = Notification(domain)
+		notification.save()
+		notification_dict = {
+			'id': notification.id
+		}
+		send_message('notification', notification_dict)
+		return {'payload': notification_dict['id']}
