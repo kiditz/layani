@@ -19,7 +19,7 @@ class NotificationService(object):
 			notification_token.update(domain)
 		return {'payload': notification_token.to_dict()}
 	
-	@Key(['user_id', 'title', 'message', 'description'])
+	@Key(['user_id', 'title', 'body', 'data'])
 	def add_notification(self, domain):
 		notification = Notification(domain)
 		notification.save()

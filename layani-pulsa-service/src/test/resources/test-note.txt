@@ -1,0 +1,140 @@
+* AddUserPrincipalTest
+#REQUEST
+
+{
+  "password" : "cmlvdGVyczc=",
+  "username" : "aditya",
+  "email" : "kiditzbastara@gmail.com".
+  "userAuthorityList": []
+}
+
+#RESPONSE
+ {
+  "hashedPassword" : "W0JAMTJkNWMzMGU=",
+  "credentialsNonExpired" : true,
+  "accountNonExpired" : true,
+  "activationCode" : "ee9e1da2",
+  "userId" : 1,
+  "email" : "kiditzbastara@gmail.com",
+  "enabled" : false,
+  "username" : "kiditz",
+  "accountNonLocked" : true,
+  "userAuthorityList" : [ {
+    "authorityId" : 1,
+    "authority" : "STUDENT"
+  } ]
+}
+
+
+* AddClientTest
+
+#REQUEST
+
+{
+  "clientSecret" : "f3b501072306261738deef3f7d1e8df668be32be",
+  "authorizedGrantTypes" : [ "authorization_code" ],
+  "registeredRedirectUri" : [ "http://localhost:10021/oauth" ],
+  "clientId" : "42fbb2075d8de88d1fdb96f8f9fc296f269cb9cc",
+  "scope" : [ "read" ]
+}
+
+#RESPONSE
+
+{
+  "authorizedGrantTypes" : [ "authorization_code" ],
+  "clientId" : "42fbb2075d8de88d1fdb96f8f9fc296f269cb9cc",
+  "scope" : [ "read" ],
+  "registeredRedirectUri" : [ "http://localhost:10021/oauth" ],
+  "clientSecret" : "f3b501072306261738deef3f7d1e8df668be32be",
+  "id" : 1
+}
+
+* EditUserPrincipalTest
+
+#REQUEST
+
+ {  
+  "username" : "kiditz",  
+  "email" : "kiditzbastara@gmail.com",
+  "enabled" : true,  
+  "password" : "rioters7"
+}
+
+#RESPONSE
+
+ {
+  "hashedPassword" : "cmlvdGVyczc=",
+  "credentialsNonExpired" : true,
+  "accountNonExpired" : true,
+  "userId" : 2,
+  "email" : "kiditzbastara@gmail.com",
+  "enabled" : true,
+  "username" : "kiditz",
+  "accountNonLocked" : true,
+  "userAuthorityList" : [ ]
+}
+
+* FindClientByClientIdTest
+
+#REQUEST
+{
+  "clientId" : "26fb9f8d36b892e043f4a8b107809ac2960e73e0"
+}
+#RESPONSE
+{
+  "client" : {
+    "id" : 1,
+    "clientId" : "26fb9f8d36b892e043f4a8b107809ac2960e73e0",
+    "clientSecret" : "f3b501072306261738deef3f7d1e8df668be32be",
+    "scope" : [ ],
+    "authorizedGrantTypes" : [ ],
+    "registeredRedirectUri" : [ ]
+  }
+}
+
+* FindUserPrincipalByUsernameTest
+#REQUEST
+{
+  "username" : "kiditz"
+}
+
+#RESPONSE
+ {
+  "userPrincipal" : {
+    "userId" : 3,
+    "username" : "kiditz",
+    "hashedPassword" : "D/8A",
+    "email" : "kiditzbastara@gmail.com",
+    "accountNonExpired" : true,
+    "accountNonLocked" : true,
+    "credentialsNonExpired" : true,
+    "enabled" : true,
+    "userAuthorityList" : [ {
+      "authorityId" : 1,
+      "authority" : "TEACHER"
+    }, {
+      "authorityId" : 2,
+      "authority" : "STUDENT"
+    } ]
+  }
+}
+
+* GetAuthorityByUsernameTest
+#REQUEST
+{
+  "username" : "kiditz"
+}
+#RESPONSE
+{
+  "userAuthorityList" : [ "TEACHER", "STUDENT" ]
+}
+* RemoveUserPrincipalTest
+#REQUEST
+{
+  "userId" : 1
+}
+
+#RESPONSE
+{
+  "success" : true
+}

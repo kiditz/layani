@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.0.xsd
+http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+	<!-- Configures the database connection. -->
+	<!--<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+		<property name="driverClassName" value="${spring.database.driverClassName}" />
+		<property name="jdbcUrl" value="${spring.datasource.url}" />
+		<property name="username" value="${spring.datasource.username}" />
+		<property name="password" value="${spring.datasource.password}" />
+	</bean>-->
+	<bean id="dataSource"
+	    class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	    <property name="driverClassName" value="${spring.database.driverClassName}" />
+	    <property name="url" value="${spring.datasource.url}" />
+	    <property name="username" value="${spring.datasource.username}" />
+	    <property name="password" value="${spring.datasource.password}" />
+	</bean>	
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+	<tx:annotation-driven />
+	
+	<bean id="hibernateJpaVendorAdapter"
+		class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+
+	<!-- Creates the bean that creates the JPA entity manager factory. -->
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter" />
+		<property name="packagesToScan" value="com.slerpio.teachme.entity" />
+		<property name="jpaProperties">
+			<props>
+				<!-- Configures the used database dialect. This allows Hibernate to create 
+					SQL that is optimized for the used database. -->
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+
+				<!-- Specifies the action that is invoked to the database when the Hibernate 
+					SessionFactory is created or closed. -->
+				<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+
+				<!-- Configures the naming strategy that is used when Hibernate creates 
+					new database objects and schema elements -->
+				<prop key="hibernate.ejb.naming_strategy">${hibernate.ejb.naming_strategy}</prop>
+
+				<!-- If the value of this property is true, Hibernate writes all SQL 
+					statements to the console. -->
+				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+
+				<!-- If the value of this property is true, Hibernate will use prettyprint 
+					when it writes SQL to the console. -->
+				<prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+			</props>
+		</property>
+	</bean>
+	<jpa:repositories base-package="com.slerpio.teachme.repository" />
+</beans>

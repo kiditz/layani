@@ -1,0 +1,7 @@
+{
+  "packageRepo" : "com.layani.pulsa.repository",
+  "packageService" : "com.layani.pulsa.service.notification",
+  "enablePrepare" : true,
+  "packageEntity" : "com.layani.pulsa.entity",
+  "packageController" : "com.layani.pulsa.controller"
+}

@@ -4,6 +4,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.graphics.Color
+import android.media.AudioAttributes
 import android.media.RingtoneManager
 import android.os.Build
 import android.support.annotation.RequiresApi
@@ -11,7 +12,6 @@ import android.support.v4.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.overflow.cash.R
-import com.overflow.cash.activity.Constant
 import com.overflow.cash.mvp.menu.FirebaseTokenContract
 import com.overflow.cash.mvp.menu.FirebaseTokenPresenter
 import com.overflow.libs.core.Data
@@ -19,6 +19,7 @@ import dagger.android.AndroidInjection
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
+
 
 class LayaniFirebaseMessagingService : FirebaseMessagingService(), FirebaseTokenContract.View {
     @Inject
@@ -37,12 +38,13 @@ class LayaniFirebaseMessagingService : FirebaseMessagingService(), FirebaseToken
             setupChannels(notificationManager)
         }
         val notificationId = Random().nextInt(60000)
-
+        Timber.i("Message:  %s", remoteMessage!!.data.toString())
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(this, getString(R.string.notification_channel))
-                .setSmallIcon(R.drawable.ic_calendar)
-                .setContentTitle(remoteMessage!!.data["title"])
-                .setContentText(remoteMessage.data["message"])
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(remoteMessage.notification?.title)
+                .setContentText(remoteMessage.notification?.body)
+                .setTicker(remoteMessage.notification?.body)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
         notificationManager.notify(notificationId, notificationBuilder.build())
@@ -53,18 +55,24 @@ class LayaniFirebaseMessagingService : FirebaseMessagingService(), FirebaseToken
         val adminChannelName = getString(R.string.notification_channel)
         val adminChannelDescription = getString(R.string.notification_channel_description)
 
-        val adminChannel: NotificationChannel
-        adminChannel = NotificationChannel(Constant.FIREBASE_CHANNEL, adminChannelName, NotificationManager.IMPORTANCE_LOW)
+        val adminChannel = NotificationChannel(getString(R.string.notification_channel), adminChannelName, NotificationManager.IMPORTANCE_HIGH)
         adminChannel.description = adminChannelDescription
         adminChannel.enableLights(true)
         adminChannel.lightColor = Color.RED
         adminChannel.enableVibration(true)
+        val attributes = AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                .build()
+        val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+        adminChannel.setSound(defaultSoundUri, attributes)
         notificationManager?.createNotificationChannel(adminChannel)
     }
 
     override fun onNewToken(s: String?) {
         super.onNewToken(s)
-        Timber.i("Firebase Token : %s", s)
+        s?.let {
+            this.presenter.saveToken(it)
+        }
     }
 
     override fun onTokenSaved(data: Data) {

@@ -75,8 +75,8 @@ class Notification(db.Model, Entity):
 	id = db.Column(db.BigInteger, db.Sequence('f_notification_id_seq'), primary_key=True)
 	user_id = db.Column(db.ForeignKey(u'co_user.id'), index=True)
 	title = db.Column(db.String(100), nullable=False)
-	message = db.Column(db.String(255), nullable=False)
-	description = db.Column(db.Text, nullable=False)
+	body = db.Column(db.Text, nullable=False)
+	data = db.Column(db.Text, nullable=False)
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
 	
@@ -121,7 +121,7 @@ class Outlet(db.Model, Entity):
 	phone_number = db.Column(db.String(20), nullable=False, server_default='', unique=True)
 	address = db.Column(db.Text, nullable=False, server_default='')
 	email = db.Column(db.String(255), nullable=False, server_default='')
-	user_id = db.Column(db.ForeignKey(u'co_user.id'), nullable=False)
+	user_id = db.Column(db.ForeignKey(u'co_user.id'), nullable=False, index=True)
 	document_id = db.Column(db.ForeignKey(u'co_document.id'))
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
@@ -329,7 +329,9 @@ class CashboxSummary(db.Model, Entity):
 	cash_in = db.Column(db.Numeric, nullable=False, server_default='0', default=0)
 	cash_out = db.Column(db.Numeric, nullable=False, server_default='0', default=0)	
 	sales = db.Column(db.Numeric, nullable=False, server_default='0', default=0)	
-
+	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
+	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
+	
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)
 
@@ -348,7 +350,162 @@ class CashboxHistory(db.Model, Entity):
 	
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)
-						
+
+
+class Deposit(db.Model, Entity):
+	__tablename__ = 'ps_deposit'
+	id = db.Column(db.BigInteger, db.Sequence('ps_deposit_id_seq'), primary_key=True)		
+	outlet_id = db.Column(db.ForeignKey(u'co_outlet.id'), nullable=False)
+	amount = db.Column(db.Numeric(14, 2), nullable=False, server_default='0')
+	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
+	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
+	
+	def __init__(self, obj=None):
+		Entity.__init__(self, obj)
+
+
+class DepositLog(db.Model, Entity):
+	__tablename__ = 'ps_deposit_log'
+	id = db.Column(db.BigInteger, db.Sequence('ps_deposit_log_id_seq'), primary_key=True)		
+	outlet_id = db.Column(db.ForeignKey(u'co_outlet.id'), nullable=False, index=True)
+	deposit_id = db.Column(db.ForeignKey(u'ps_deposit.id'), nullable=False, index=True)
+	balance_amount = db.Column(db.Numeric(14, 2), nullable=False, server_default='0')
+	ref_id = db.Column(db.BigInteger, index=True, nullable=False, server_default='0', default='0')
+	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
+	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
+	
+	def __init__(self, obj=None):
+		Entity.__init__(self, obj)						
+
+
+class Provider(db.Model, Entity):
+	__tablename__ = 'ps_provider'
+	id = db.Column(db.BigInteger, db.Sequence('ps_provider_id_seq'), primary_key=True)		
+	name = db.Column(db.String(255), nullable=False)	
+	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
+	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
+	
+	def __init__(self, obj=None):
+		Entity.__init__(self, obj)
+
+
+class ProviderPrefix(db.Model, Entity):
+	__tablename__ = 'ps_provider_prefix'
+	id = db.Column(db.BigInteger, db.Sequence('ps_provider_prefix_id_seq'), primary_key=True)		
+	provider_id = db.Column(db.ForeignKey(u'ps_provider.id'), nullable=False, index=True)
+	prefix = db.Column(db.String(5), nullable=False)
+	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
+	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
+	
+	def __init__(self, obj=None):
+		Entity.__init__(self, obj)
+
+
+class ProductLayani(db.Model, Entity):
+	__tablename__ = 'ps_product'
+	id = db.Column(db.BigInteger, db.Sequence('ps_product_id_seq'), primary_key=True)			
+	name = db.Column(db.Text, nullable=False, server_default='-', index=True)		
+	code = db.Column(db.String(60), nullable=False, server_default='-', index=True)			
+	nominal = db.Column(db.Numeric(14, 2), nullable=False, server_default='0.0', default=0.0)	
+	provider_id = db.Column(db.ForeignKey(u'ps_provider.id'), index=True, nullable=False)
+	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
+	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
+	
+	def __init__(self, obj=None):
+		Entity.__init__(self, obj)
+
+
+class Partner(db.Model, Entity):
+	__tablename__ = 'ps_partner'
+	id = db.Column(db.BigInteger, db.Sequence('ps_partner_id_seq'), primary_key=True)			
+	name = db.Column(db.Text, nullable=False, server_default='-', index=True)
+	code = db.Column(db.String(60), nullable=False, server_default='-', index=True)
+	active = db.Column(db.Boolean, nullable=False, default=True, server_default='t')
+	partner_type = db.Column(db.String(60), nullable=False, default='DEPOSIT', server_default='DEPOSIT')	
+	provider_id = db.Column(db.ForeignKey(u'ps_provider.id'), index=True, nullable=False)
+	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
+	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
+	
+	def __init__(self, obj=None):
+		Entity.__init__(self, obj)								
+
+
+class PartnerProduct(db.Model, Entity):
+	__tablename__ = 'ps_partner_product'
+	id = db.Column(db.BigInteger, db.Sequence('ps__partner_product_id_seq'), primary_key=True)				
+	name = db.Column(db.Text, nullable=False, server_default='-', index=True)		
+	code = db.Column(db.String(60), nullable=False, server_default='-', index=True)			
+	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
+	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
+	
+	def __init__(self, obj=None):
+		Entity.__init__(self, obj)								
+
+
+class ProductLayaniSellPrice(db.Model, Entity):
+	__tablename__ = 'ps_product_sell_price'
+	id = db.Column(db.BigInteger, db.Sequence('ps_product_sell_price_id_seq'), primary_key=True)		
+	product_id = db.Column(db.ForeignKey(u'ps_product.id'), index=True, nullable=False)	
+	sell_price = db.Column(db.Numeric, nullable=False, server_default='0')	
+	flg_tax = db.Column(db.String(1), nullable=False, server_default=' ')			
+	tax_percentage = db.Column(db.Numeric(14, 2), nullable=False, server_default='0.0', default=0.0)		
+	start_at = db.Column(db.DateTime(timezone=False),  server_default='now()')
+	end_at = db.Column(db.DateTime(timezone=False), default=datetime(2101, 1, 1, 0, 0, 0))
+	active = db.Column(db.Boolean, nullable=False, server_default='t', default=True)
+	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
+	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
+	
+	def __init__(self, obj=None):
+		Entity.__init__(self, obj)
+
+
+class PartnerProductPurchasePrice(db.Model, Entity):
+	__tablename__ = 'ps_partner_product_purchase_price'
+	id = db.Column(db.BigInteger, db.Sequence('ps_partner_product_purchase_price_id_seq'), primary_key=True)		
+	partner_product_id = db.Column(db.ForeignKey(u'ps_partner_product.id'), index=True, nullable=False)	
+	sell_price = db.Column(db.Numeric, nullable=False, server_default='0')	
+	flg_tax = db.Column(db.String(1), nullable=False, server_default=' ')			
+	tax_percentage = db.Column(db.Numeric(14, 2), nullable=False, server_default='0.0', default=0.0)		
+	start_at = db.Column(db.DateTime(timezone=False),  server_default='now()')
+	end_at = db.Column(db.DateTime(timezone=False), default=datetime(2101, 1, 1, 0, 0, 0))
+	active = db.Column(db.Boolean, nullable=False, server_default='t', default=True)
+	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
+	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
+	
+	def __init__(self, obj=None):
+		Entity.__init__(self, obj)
+
+
+class PartnerDepositBalance(db.Model, Entity):
+	__tablename__ = 'ps_partner_deposit'
+	id = db.Column(db.BigInteger, db.Sequence('ps_partner_deposit_id_seq'), primary_key=True)		
+	partner_id = db.Column(db.ForeignKey(u'ps_partner.id'), index=True, nullable=False)	
+	balance_amount = db.Column(db.Numeric, nullable=False, server_default='0')	
+	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
+	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
+	
+	def __init__(self, obj=None):
+		Entity.__init__(self, obj)				
+
+
+class PartnerDepositBalanceLog(db.Model, Entity):
+	__tablename__ = 'ps_partner_deposit_log'
+	id = db.Column(db.BigInteger, db.Sequence('ps_partner_deposit_log_id_seq'), primary_key=True)		
+	partner_deposit_id = db.Column(db.ForeignKey(u'ps_partner_deposit.id'), index=True, nullable=False)	
+	ref_id = db.Column(db.BigInteger, nullable=False)
+	balance_amount = db.Column(db.Numeric, nullable=False, server_default='0')	
+	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
+	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
+	
+	def __init__(self, obj=None):
+		Entity.__init__(self, obj)						
+
+
+product_prefix = db.Table('ps_product_prefix',
+    db.Column('provider_prefix_id', db.Integer, db.ForeignKey('ps_provider_prefix.id')),
+    db.Column('product_id', db.Integer, db.ForeignKey('ps_product.id'))
+)
+
 
 if __name__ == '__main__':
 	migrate = Migrate(app, db)
