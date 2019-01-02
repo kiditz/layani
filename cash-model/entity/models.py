@@ -370,6 +370,7 @@ class DepositLog(db.Model, Entity):
 	outlet_id = db.Column(db.ForeignKey(u'co_outlet.id'), nullable=False, index=True)
 	deposit_id = db.Column(db.ForeignKey(u'ps_deposit.id'), nullable=False, index=True)
 	balance_amount = db.Column(db.Numeric(14, 2), nullable=False, server_default='0')
+	remark = db.Column(db.Text, nullable=False, server_default='-', index=True)
 	ref_id = db.Column(db.BigInteger, index=True, nullable=False, server_default='0', default='0')
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
@@ -501,6 +502,37 @@ class PartnerDepositBalanceLog(db.Model, Entity):
 		Entity.__init__(self, obj)						
 
 
+class OrderPulsa(db.Model, Entity):
+	__tablename__ = 'ps_order'
+	id = db.Column(db.BigInteger, db.Sequence('ps_order_id_seq'), primary_key=True)		
+	msisdn = db.Column(db.String(30), nullable=False)
+	customer_id = db.Column(db.ForeignKey(u'co_customer.id'))		
+	outlet_id = db.Column(db.ForeignKey(u'co_outlet.id'), nullable=False)
+	sales_type = db.Column(db.String(20), nullable=False, default='TRX')
+	product_id = db.Column(db.ForeignKey(u'ps_product.id'), nullable=False)
+	partner_product_id = db.Column(db.ForeignKey(u'ps_partner_product.id'))	
+	reqid = db.Column(db.Text, index=True, unique=True)	
+	sell_price = db.Column(db.Numeric, nullable=False, server_default='0', default=0)		
+	purchase_price = db.Column(db.Numeric, nullable=False, server_default='0', default=0)		
+	status = db.Column(db.String(1), nullable=False, server_default='I', default='I', index=True)
+	order_at = db.Column(db.DateTime(timezone=False), index=True, default=datetime.now)	
+	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
+	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)		
+	remark = db.Column(db.Text, nullable=False, server_default=' ', default=' ')
+	
+	def __init__(self, obj=None):
+		Entity.__init__(self, obj)		
+
+
+class OrderPulsaDetail(db.Model, Entity):
+	__tablename__ = 'ps_order_detail'	
+	id = db.Column(db.BigInteger, db.Sequence('ps_order_detail_id_seq'), primary_key=True)		
+	order_id = db.Column(db.ForeignKey(u'ps_order.id'), nullable=False)
+	api_response = db.Column(db.Text, nullable=False, server_default=' ', default=' ')
+	def __init__(self, obj=None):
+		Entity.__init__(self, obj)		
+	
+		
 product_prefix = db.Table('ps_product_prefix',
     db.Column('provider_prefix_id', db.Integer, db.ForeignKey('ps_provider_prefix.id')),
     db.Column('product_id', db.Integer, db.ForeignKey('ps_product.id'))
