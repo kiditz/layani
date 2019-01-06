@@ -11,7 +11,7 @@ services:
     networks:
       - cash_overlay_net
     volumes:
-      - cash_data_vol:/data/cash-api/
+      - layaniio:/data/cash-api/
     deploy:
       mode: global      
       placement:
@@ -34,7 +34,7 @@ services:
     networks:
       - cash_overlay_net
     volumes:
-      - cash_data_vol:/data/pulsa_api/
+      - layaniio:/data/pulsa_api/
     deploy:
       mode: global      
       placement:
@@ -58,7 +58,7 @@ services:
     networks:
       - cash_overlay_net
     volumes:
-      - cash_data_vol:/data/layani-pulsa-integration
+      - layaniio:/data/layani-pulsa-integration
     deploy:
       mode: global      
       placement:
@@ -84,7 +84,7 @@ services:
     networks:
       - cash_overlay_net
     volumes:
-      - cash_data_vol:/data/cash-oauth-api
+      - layaniio:/data/cash-oauth-api
     deploy:
       mode: global      
       placement:
@@ -110,7 +110,7 @@ services:
     networks:
       - cash_overlay_net
     volumes:
-      - cash_data_vol:/cash-gateway-api/data
+      - layaniio:/cash-gateway-api/data
     deploy:
       mode: global      
       placement:
