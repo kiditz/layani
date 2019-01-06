@@ -22,7 +22,56 @@ services:
         max_attempts: 3
         window: 120s
     ports:
-      - "5010:5010"
+      - "5002:5002"
+  pulsa_api:
+    image: slerp/pulsa_api
+    build: pulsa_api
+    environment:
+      - "CONSUL_HOST=172.31.21.33"
+      - "CONSUL_PORT=8500"
+      - "SERVICE_NAME=pulsa_api"
+      - "SERVICE_TAGS=service"      
+    networks:
+      - cash_overlay_net
+    volumes:
+      - cash_data_vol:/cash-overflow/data/layani-pulsa-integration/
+    deploy:
+      mode: global      
+      placement:
+        constraints: [node.role == worker]
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    ports:
+      - "5003:5003"      
+  layani-pulsa-integration:
+    environment:
+      CONSUL_HOST: 172.31.21.33
+      CONSUL_PORT: 8500
+      SPRING_PROFILES_ACTIVE: dev
+    ports:      
+      - "5004:5004"
+    image: slerp/layani-pulsa-integration
+    build: layani-pulsa-integration
+    networks:
+      - cash_overlay_net
+    volumes:
+      - cash_data_vol:/cash-gateway-api/data
+    deploy:
+      mode: global      
+      placement:
+        constraints: [node.role == worker]
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    logging:
+      options:
+        max-size: 10m
+        max-file: '10'  
   cash-oauth-api:
     environment:
       CONSUL_HOST: 172.31.21.33
@@ -48,7 +97,7 @@ services:
     logging:
       options:
         max-size: 10m
-        max-file: '10'
+        max-file: '10'        
   cash-gateway-api:
     environment:
       CONSUL_HOST: 172.31.21.33

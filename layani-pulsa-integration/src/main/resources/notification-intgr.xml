@@ -1,0 +1,23 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:int-kafka="http://www.springframework.org/schema/integration/kafka"
+       xsi:schemaLocation="
+		http://www.springframework.org/schema/integration/kafka http://www.springframework.org/schema/integration/kafka/spring-integration-kafka.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <int:channel id="notification_input"/>
+    <int:channel id="notification_sender"/>
+    <int-kafka:message-driven-channel-adapter
+            id="notificationListener"
+            listener-container="notificationContainer"
+            auto-startup="true"
+            phase="1000"
+            mode="record"
+            send-timeout="5000"
+            channel="notification_input"
+            error-channel="errorChannel" />
+
+    <int:transformer input-channel="notification_input" ref="notificationTransformer" method="execute" output-channel="notification_sender"/>
+    <int:transformer input-channel="notification_sender" ref="notificationSenderActivator" method="execute" output-channel="nullChannel"/>
+</beans>

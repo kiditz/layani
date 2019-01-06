@@ -421,9 +421,9 @@ class Partner(db.Model, Entity):
 	id = db.Column(db.BigInteger, db.Sequence('ps_partner_id_seq'), primary_key=True)			
 	name = db.Column(db.Text, nullable=False, server_default='-', index=True)
 	code = db.Column(db.String(60), nullable=False, server_default='-', index=True)
+	url = db.Column(db.Text, nullable=False, server_default='-')
 	active = db.Column(db.Boolean, nullable=False, default=True, server_default='t')
-	partner_type = db.Column(db.String(60), nullable=False, default='DEPOSIT', server_default='DEPOSIT')	
-	provider_id = db.Column(db.ForeignKey(u'ps_provider.id'), index=True, nullable=False)
+	partner_type = db.Column(db.String(60), nullable=False, default='DEPOSIT', server_default='DEPOSIT')		
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
 	
@@ -438,7 +438,7 @@ class PartnerProduct(db.Model, Entity):
 	code = db.Column(db.String(60), nullable=False, server_default='-', index=True)			
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
-	
+	partner_id = db.Column(db.ForeignKey(u'ps_partner.id'), index=True)	
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)								
 
@@ -464,7 +464,7 @@ class PartnerProductPurchasePrice(db.Model, Entity):
 	__tablename__ = 'ps_partner_product_purchase_price'
 	id = db.Column(db.BigInteger, db.Sequence('ps_partner_product_purchase_price_id_seq'), primary_key=True)		
 	partner_product_id = db.Column(db.ForeignKey(u'ps_partner_product.id'), index=True, nullable=False)	
-	sell_price = db.Column(db.Numeric, nullable=False, server_default='0')	
+	purchase_price = db.Column(db.Numeric, nullable=False, server_default='0')	
 	flg_tax = db.Column(db.String(1), nullable=False, server_default=' ')			
 	tax_percentage = db.Column(db.Numeric(14, 2), nullable=False, server_default='0.0', default=0.0)		
 	start_at = db.Column(db.DateTime(timezone=False),  server_default='now()')
@@ -515,22 +515,49 @@ class OrderPulsa(db.Model, Entity):
 	sell_price = db.Column(db.Numeric, nullable=False, server_default='0', default=0)		
 	purchase_price = db.Column(db.Numeric, nullable=False, server_default='0', default=0)		
 	status = db.Column(db.String(1), nullable=False, server_default='I', default='I', index=True)
+	sn = db.Column(db.Text, index=True)
 	order_at = db.Column(db.DateTime(timezone=False), index=True, default=datetime.now)	
+	remark = db.Column(db.Text, nullable=False, server_default=' ', default=' ')
+	user_id = db.Column(db.ForeignKey(u'co_user.id'), index=True)
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)		
-	remark = db.Column(db.Text, nullable=False, server_default=' ', default=' ')
 	
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)		
 
 
-class OrderPulsaDetail(db.Model, Entity):
-	__tablename__ = 'ps_order_detail'	
+class OrderPulsaApi(db.Model, Entity):
+	__tablename__ = 'ps_order_api'	
 	id = db.Column(db.BigInteger, db.Sequence('ps_order_detail_id_seq'), primary_key=True)		
 	order_id = db.Column(db.ForeignKey(u'ps_order.id'), nullable=False)
-	api_response = db.Column(db.Text, nullable=False, server_default=' ', default=' ')
+	request = db.Column(db.Text, nullable=False, server_default=' ', default=' ')
+	response = db.Column(db.Text, nullable=False, server_default=' ', default=' ')
+	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
+	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)		
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)		
+
+class OrderPayload(db.Model, Entity):
+	__tablename__ = 'ps_order_payload'	
+	id = db.Column(db.BigInteger, db.Sequence('ps_order_detail_id_seq'), primary_key=True)		
+	order_id = db.Column(db.ForeignKey(u'ps_order.id'), nullable=False)
+	payload = db.Column(db.Text, nullable=False, server_default=' ', default=' ')	
+	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
+	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)		
+	def __init__(self, obj=None):
+		Entity.__init__(self, obj)		
+
+class OrderPulsaMessageMapping(db.Model, Entity):
+	__tablename__ = 'ps_order_message_mapping'	
+	id = db.Column(db.BigInteger, db.Sequence('ps_order_detail_id_seq'), primary_key=True)		
+	order_id = db.Column(db.ForeignKey(u'ps_order.id'), nullable=False)
+	partner_id = db.Column(db.ForeignKey(u'ps_partner.id'), index=True, nullable=False)	
+	partner_message = db.Column(db.Text, nullable=False, server_default=' ', default=' ')
+	layani_message = db.Column(db.Text, nullable=False, server_default=' ', default=' ')
+	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
+	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)		
+	def __init__(self, obj=None):
+		Entity.__init__(self, obj)				
 	
 		
 product_prefix = db.Table('ps_product_prefix',
@@ -538,6 +565,11 @@ product_prefix = db.Table('ps_product_prefix',
     db.Column('product_id', db.Integer, db.ForeignKey('ps_product.id'))
 )
 
+
+partner_product_has_product = db.Table('ps_partner_product_has_product',
+    db.Column('partner_product_id', db.BigInteger, db.ForeignKey('ps_partner_product.id')),
+    db.Column('product_id', db.BigInteger, db.ForeignKey('ps_product.id'))
+)
 
 if __name__ == '__main__':
 	migrate = Migrate(app, db)

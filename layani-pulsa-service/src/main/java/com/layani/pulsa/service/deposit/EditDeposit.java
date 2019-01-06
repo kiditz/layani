@@ -42,10 +42,21 @@ public class EditDeposit extends DefaultBusinessTransaction {
 		if(deposit == null){
 			throw new CoreException(ErrorConstant.DEPOSIT_NOT_FOUND);
 		}
+
+		depositDomain.put("before", deposit.getAmount());
 		// Update Amount
-		deposit.setAmount(BigDecimal.valueOf(deposit.getAmount().doubleValue() + amount));
+        Double calculateAmount = deposit.getAmount().doubleValue() + amount;
+        if(calculateAmount < 0){
+            throw new CoreException(ErrorConstant.BALANCE_NOT_ENOUGH);
+        }
+        deposit.setAmount(BigDecimal.valueOf(calculateAmount));
+        depositDomain.put("after", deposit.getAmount());
+        depositDomain.put("numOfTransaction", amount);
+
 		deposit.setUpdateAt(new Date());
-		depositDomain.put("deposit", new Domain(deposit));
+		deposit.setOutletId(outletId);
+        depositDomain.put("deposit", new Domain(deposit));
+
 	}
 
 	@Override
@@ -66,8 +77,13 @@ public class EditDeposit extends DefaultBusinessTransaction {
 				depositLog.setRefId(ServiceConstant.REFID_DEPOSIT);
 				depositLog.setRemark(ServiceConstant.ADD_DEPOSIT);
 			}
+			depositLog.setOutletId(deposit.getOutletId());
 			this.depositLogRepository.save(depositLog);
-			return new Domain(deposit);
+			Domain result = new Domain(deposit);
+			result.put("before", depositDomain.getDouble("before"));
+            result.put("after", depositDomain.getDouble("after"));
+            result.put("numOfTransaction", depositDomain.getDouble("numOfTransaction"));
+			return result;
 		} catch (Exception e) {
 			throw new CoreException(e);
 		}

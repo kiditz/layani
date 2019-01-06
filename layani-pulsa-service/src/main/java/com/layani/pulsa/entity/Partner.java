@@ -1,21 +1,13 @@
 package com.layani.pulsa.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAccessType;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import javax.persistence.Id;
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.GenerationType;
-import javax.persistence.Basic;
+
+import javax.persistence.*;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import java.util.Date;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import java.util.List;
 import javax.persistence.OneToMany;
 import javax.persistence.CascadeType;
@@ -39,6 +31,9 @@ public class Partner {
 	@Basic(optional = false)
 	@Size(min = 1, max = 60)
 	private String code;
+	@Column(name = "url")
+	@Basic(optional = false)
+	private String url;
 	@Column(name = "active")
 	@Basic(optional = false)
 	private Boolean active;
@@ -46,9 +41,6 @@ public class Partner {
 	@Basic(optional = false)
 	@Size(min = 1, max = 60)
 	private String partnerType;
-	@Column(name = "provider_id")
-	@Basic(optional = false)
-	private Long providerId;
 	@Column(name = "created_at")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdAt;
@@ -102,15 +94,6 @@ public class Partner {
 	}
 
 	@JsonProperty
-	public Long getProviderId() {
-		return providerId;
-	}
-
-	public void setProviderId(Long providerId) {
-		this.providerId = providerId;
-	}
-
-	@JsonProperty
 	public Date getCreatedAt() {
 		return createdAt;
 	}
@@ -127,4 +110,14 @@ public class Partner {
 	public void setUpdateAt(Date updateAt) {
 		this.updateAt = updateAt;
 	}
+
+	@JsonProperty
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
 }

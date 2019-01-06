@@ -1,0 +1,1 @@
+Trx ${reqid} ${product.code} ${msisdn} tgl ${createdAt} GAGAL. ${remark}. Sisa Saldo: ${deposit.after}

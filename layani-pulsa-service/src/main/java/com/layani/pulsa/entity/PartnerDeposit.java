@@ -1,27 +1,13 @@
 package com.layani.pulsa.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAccessType;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import javax.persistence.Id;
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.GenerationType;
-import javax.persistence.Basic;
+
+import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import java.math.BigDecimal;
 import java.util.Date;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
-import java.util.List;
-import javax.persistence.OneToMany;
-import javax.persistence.CascadeType;
-import com.layani.pulsa.entity.PartnerDeposit;
 
 @Entity
 @Table(name = "ps_partner_deposit")
@@ -92,6 +78,4 @@ public class PartnerDeposit {
 	public void setPartnerId(Partner partnerId) {
 		this.partnerId = partnerId;
 	}
-
-
 }

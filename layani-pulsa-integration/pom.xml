@@ -44,6 +44,10 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-freemarker</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
@@ -57,6 +61,10 @@
 			<groupId>org.springframework.integration</groupId>
 			<artifactId>spring-integration-kafka</artifactId>
 			<version>3.0.0.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.integration</groupId>
+			<artifactId>spring-integration-http</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.kafka</groupId>
@@ -94,6 +102,11 @@
 			<groupId>com.layani.pulsa</groupId>
 			<artifactId>layani-pulsa-service</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>

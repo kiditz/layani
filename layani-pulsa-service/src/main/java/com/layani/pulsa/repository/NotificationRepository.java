@@ -5,6 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.jpa.repository.Query;
 
-public interface NotificationRepository extends	JpaRepository<Notification, Long> {
+public interface NotificationRepository
+		extends
+			JpaRepository<Notification, Long> {
+
+	@Query("SELECT n FROM Notification n WHERE n.id = :id")
+	public Notification findNotification(@Param("id") Long id);
 
 }

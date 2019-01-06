@@ -36,6 +36,3 @@ management:
   health:
     consul:
       enabled: false
-firebase:
-    token: "key=AAAAq4O5wO4:APA91bG6vywyeImiLK-zglWr3ySZlUykUhDi-ZGtRZD3gItD8iAKTZtEnPbmL37nYlxr4KsppXqF3skNmf38ewxyC0GbFwbp1rNMyRvMlumB1WesBBqf9p3y6kXmqIJY8gnQvILGA38m"
-    url: "https://fcm.googleapis.com/fcm/send"

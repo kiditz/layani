@@ -29,8 +29,9 @@ public class NotificationSenderActivator {
 
     public Message<Domain> execute(Message<Domain> message) {
         Domain payload = message.getPayload();
-        log.info("Payload : {}", payload);
+        log.debug("Payload : {}", payload);
         Map<String, Object> messageHeaders = message.getHeaders();
+
         // Prepare the header
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -38,9 +39,9 @@ public class NotificationSenderActivator {
         // Create Http Entity
         HttpEntity<Domain> request = new HttpEntity<>(payload, headers);
         // Send Message
-        log.info("Request : {}", request.toString());
+            log.debug("Request : {}", request.toString());
         ResponseEntity<Domain> response = template.exchange(url, HttpMethod.POST, request, Domain.class);
-        log.info("Result Http : {}", response.toString());
+        log.debug("TransactionResult Http : {}", response.toString());
         if(response.getStatusCode() == HttpStatus.OK){
             Domain body = response.getBody();
             assert body != null;

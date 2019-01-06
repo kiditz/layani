@@ -21,9 +21,9 @@ public class PartnerProductPurchasePrice {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PS_PARTNER_PRODUCT_PURCHASE_PRICE_ID_SEQ")
 	@SequenceGenerator(name = "PS_PARTNER_PRODUCT_PURCHASE_PRICE_ID_SEQ", sequenceName = "ps_partner_product_purchase_price_id_seq", initialValue = 1, allocationSize = 1)
 	private Long id;
-	@Column(name = "sell_price")
+	@Column(name = "purchase_price")
 	@Basic(optional = false)
-	private BigDecimal sellPrice;
+	private BigDecimal purchasePrice;
 	@Column(name = "flg_tax")
 	@Basic(optional = false)
 	@Size(min = 1, max = 1)
@@ -61,12 +61,12 @@ public class PartnerProductPurchasePrice {
 	}
 
 	@JsonProperty
-	public BigDecimal getSellPrice() {
-		return sellPrice;
+	public BigDecimal getPurchasePrice() {
+		return purchasePrice;
 	}
 
-	public void setSellPrice(BigDecimal sellPrice) {
-		this.sellPrice = sellPrice;
+	public void setPurchasePrice(BigDecimal purchasePrice) {
+		this.purchasePrice = purchasePrice;
 	}
 
 	@JsonProperty

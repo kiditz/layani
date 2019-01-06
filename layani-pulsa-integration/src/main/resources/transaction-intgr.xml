@@ -1,0 +1,60 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:int-kafka="http://www.springframework.org/schema/integration/kafka"
+       xsi:schemaLocation="
+		http://www.springframework.org/schema/integration/kafka http://www.springframework.org/schema/integration/kafka/spring-integration-kafka.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <int:channel id="transaction_input"/>
+    <int:channel id="transaction_sender"/>
+    <int:channel id="transaction_error"/>
+    <int:channel id="transaction_success"/>
+
+    <int:channel id="sub_deposit_outlet_in"/>
+    <int:channel id="sub_deposit_outlet_out"/>
+
+    <int:channel id="refund_deposit_outlet"/>
+
+    <int:channel id="transaction_third_party_in"/>
+    <int:channel id="transaction_third_party_out"/>
+    <int:channel id="notification_in"/>
+    <int-kafka:message-driven-channel-adapter
+            id="transactionListener"
+            listener-container="transactionContainer"
+            auto-startup="true"
+            phase="1000"
+            mode="record"
+            send-timeout="5000"
+            channel="transaction_input"
+            error-channel="errorChannel" />
+
+    <int:transformer input-channel="transaction_input" ref="transactionTransformer" method="execute" output-channel="transaction_sender"/>
+    <!--Routing Transaction-->
+    <int:router input-channel="transaction_sender" expression="payload.status">
+        <int:mapping value="I" channel="sub_deposit_outlet_in"/>
+        <int:mapping value="F" channel="transaction_error"/>
+    </int:router>
+
+    <int:service-activator input-channel="sub_deposit_outlet_in" ref="subtractDepositActivator" method="execute" output-channel="sub_deposit_outlet_out"/>
+    <int:router input-channel="sub_deposit_outlet_out" expression="payload.status">
+        <int:mapping value="I" channel="transaction_third_party_in"/>
+        <int:mapping value="F" channel="transaction_error"/>
+    </int:router>
+
+    <int:service-activator input-channel="transaction_error" ref="transactionErrorActivator" method="execute" output-channel="notification_in"/>
+
+    <int:service-activator input-channel="transaction_third_party_in" ref="transactionThirdPartyActivator" method="execute" output-channel="transaction_third_party_out"/>
+    <int:router input-channel="transaction_third_party_out" expression="payload.status">
+        <int:mapping value="S" channel="transaction_success"/>
+        <int:mapping value="I" channel="nullChannel"/>
+        <int:mapping value="F" channel="refund_deposit_outlet"/>
+    </int:router>
+
+    <int:service-activator input-channel="refund_deposit_outlet" ref="refundDepositActivator" method="execute" output-channel="transaction_error"/>
+
+    <int:service-activator input-channel="transaction_success" ref="transactionSuccessActivator" method="execute" output-channel="notification_in"/>
+
+    <int:service-activator input-channel="notification_in" ref="notificationTransactionSender" output-channel="nullChannel"/>
+</beans>

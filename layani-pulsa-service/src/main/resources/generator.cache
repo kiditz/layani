@@ -1,7 +1,7 @@
 {
   "packageRepo" : "com.layani.pulsa.repository",
-  "packageService" : "com.layani.pulsa.service.deposit",
-  "enablePrepare" : true,
+  "packageService" : "com.layani.pulsa.service.order",
+  "enablePrepare" : false,
   "packageEntity" : "com.layani.pulsa.entity",
   "packageController" : "com.layani.pulsa.controller"
 }

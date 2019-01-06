@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.OneToMany;
 import javax.persistence.CascadeType;
 import com.layani.pulsa.entity.Product;
@@ -44,6 +45,8 @@ public class Product {
 	@Column(name = "update_at")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date updateAt;
+	@ManyToMany(mappedBy = "products")
+	private Set<PartnerProduct> partnerProducts;
 
 	@JsonProperty
 	public Long getId() {
@@ -108,5 +111,13 @@ public class Product {
 		this.updateAt = updateAt;
 	}
 
+	// @JsonProperty
+	public Set<PartnerProduct> getPartnerProducts() {
+		return partnerProducts;
+	}
+
+	public void setPartnerProducts(Set<PartnerProduct> partnerProducts) {
+		this.partnerProducts = partnerProducts;
+	}
 
 }

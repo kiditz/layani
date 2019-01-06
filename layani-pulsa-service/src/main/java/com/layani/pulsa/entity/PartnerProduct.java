@@ -1,25 +1,20 @@
 package com.layani.pulsa.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAccessType;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import javax.persistence.Id;
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.GenerationType;
-import javax.persistence.Basic;
+
 import javax.validation.constraints.Size;
 import java.util.Date;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import java.util.List;
+import java.util.Set;
+
+import com.layani.pulsa.entity.PartnerProduct;
 import javax.persistence.OneToMany;
 import javax.persistence.CascadeType;
-import com.layani.pulsa.entity.PartnerProduct;
 
 @Entity
 @Table(name = "ps_partner_product")
@@ -45,6 +40,12 @@ public class PartnerProduct {
 	@Column(name = "update_at")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date updateAt;
+	@ManyToOne
+	@JoinColumn(name = "partner_id", referencedColumnName = "id")
+	private Partner partner;
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "ps_partner_product_has_product", joinColumns = @JoinColumn(name = "partner_product_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"))
+	private Set<Product> products;
 
 	@JsonProperty
 	public Long getId() {
@@ -89,5 +90,18 @@ public class PartnerProduct {
 
 	public void setUpdateAt(Date updateAt) {
 		this.updateAt = updateAt;
+	}
+
+	public void setProducts(Set<Product> products) {
+		this.products = products;
+	}
+
+	public Set<Product> getProducts() {
+		return products;
+	}
+
+	@JsonProperty
+	public Partner getPartner() {
+		return partner;
 	}
 }

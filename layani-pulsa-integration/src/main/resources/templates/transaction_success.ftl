@@ -1,0 +1,1 @@
+Trx ${reqid} ${product.code} ${msisdn} tgl ${createdAt} Sukses. ${remark}. Sisa Saldo: ${deposit.after}
