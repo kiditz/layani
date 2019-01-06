@@ -11,7 +11,7 @@ services:
     networks:
       - cash_overlay_net
     volumes:
-      - cash_data_vol:/cash-overflow/data/cash-api/
+      - cash_data_vol:/data/cash-api/
     deploy:
       mode: global      
       placement:
@@ -34,7 +34,7 @@ services:
     networks:
       - cash_overlay_net
     volumes:
-      - cash_data_vol:/cash-overflow/data/pulsa_api/
+      - cash_data_vol:/data/pulsa_api/
     deploy:
       mode: global      
       placement:
