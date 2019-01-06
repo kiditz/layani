@@ -1,19 +1,5 @@
 
 spring:
-#  jpa:
-#    properties:
-#      hibernate:
-#        temp:
-#          use_jdbc_metadata_defaults: false
-#    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
-#  data:
-#    elasticsearch:
-#      cluster-nodes: localhost:9300
-#      properties:
-#        "client.transport.ignore_cluster_name": true
-#        "client.transport.sniff": false
-#  session:
-#    store-type: redis
   profiles: dev
   application:
     name: layani-pulsa-integration
