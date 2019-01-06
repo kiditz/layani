@@ -27,7 +27,7 @@ public class TransactionSuccessActivator implements ActivatorMessageDomain {
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     @Override
     public Message<Domain> execute(Message<Domain> message) {
-        log.info("Input : {}", message.getPayload());
+        log.debug("Input : {}", message.getPayload());
         Domain payload = message.getPayload();
 
         Domain order = editOrder.handle(payload);
@@ -38,7 +38,7 @@ public class TransactionSuccessActivator implements ActivatorMessageDomain {
         String formatDatetime = format.format(new Date(payload.getLong("createdAt")));
         payload.put("createdAt", formatDatetime);
         String messageNotification  = template.build("transaction_success", payload);
-        log.info("Mesage Nontification : {}", messageNotification);
+        log.debug("Mesage Nontification : {}", messageNotification);
         Domain notification = new Domain();
         notification.put("title", localization.getMessage(Constant.NotificationValue.TRX_SUCCESS));
         notification.put("body", messageNotification);

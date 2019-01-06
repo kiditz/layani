@@ -31,6 +31,7 @@ public class TransactionErrorActivator implements ActivatorMessageDomain {
         Domain payload = message.getPayload();
         Domain order = editOrder.handle(payload);
         payload.put("remark", localization.getMessage(payload.getString("remark")));
+        payload.put("reqid", order.getString("reqid"));
         //Change Format Date for message
         String formatDatetime = format.format(new Date(payload.getLong("createdAt")));
         payload.put("createdAt", formatDatetime);
