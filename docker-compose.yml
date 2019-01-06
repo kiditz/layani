@@ -34,7 +34,7 @@ services:
     networks:
       - cash_overlay_net
     volumes:
-      - cash_data_vol:/cash-overflow/data/layani-pulsa-integration/
+      - cash_data_vol:/cash-overflow/data/pulsa_api/
     deploy:
       mode: global      
       placement:
@@ -58,7 +58,7 @@ services:
     networks:
       - cash_overlay_net
     volumes:
-      - cash_data_vol:/cash-gateway-api/data
+      - cash_data_vol:/data/layani-pulsa-integration
     deploy:
       mode: global      
       placement:
@@ -84,7 +84,7 @@ services:
     networks:
       - cash_overlay_net
     volumes:
-      - cash_data_vol:/cash-overflow/data/cash-oauth-api
+      - cash_data_vol:/data/cash-oauth-api
     deploy:
       mode: global      
       placement:
