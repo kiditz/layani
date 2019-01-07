@@ -7,7 +7,7 @@ services:
       - "CONSUL_HOST=172.31.21.33"
       - "CONSUL_PORT=8500"
       - "SERVICE_NAME=cash-api"
-      - "SERVICE_TAGS=service"      
+      - "SERVICE_TAGS=cash_api_service"      
     networks:
       - cash_overlay_net
     volumes:
@@ -25,12 +25,13 @@ services:
       - "5002:5002"
   pulsa_api:
     image: slerp/pulsa_api
-    build: pulsa_api
+    build: pulsa_api    
     environment:
       - "CONSUL_HOST=172.31.21.33"
       - "CONSUL_PORT=8500"
       - "SERVICE_NAME=pulsa_api"
-      - "SERVICE_TAGS=service"      
+      - "SERVICE_TAGS=pulsa_api_service"      
+      - "KAFKA_SERVER=172.17.0.1:9092"
     networks:
       - cash_overlay_net
     volumes:
