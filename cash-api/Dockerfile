@@ -2,7 +2,7 @@ FROM slerp/layani_python3
 MAINTAINER Rifky aditya bastara "kiditzbastara@gmail.com"
 
 
-EXPOSE 5010
+EXPOSE 5002
 #ENV TZ=Asia/Jakarta
 #RUN date
 
@@ -19,4 +19,4 @@ COPY ./app /app
 COPY ./cash-model-0.0.1.tar.gz /app/cash-model-0.0.1.tar.gz
 RUN pip3 install  --no-index --find-links file:///app/cash-model-0.0.1.tar.gz cash-model
 RUN pybabel compile -d translations
-CMD [ "uwsgi","--socket", "0.0.0.0:5010", "--processes", "2","--threads", "10", "--plugins", "python3", "--socket-timeout=60", "--protocol=http", "-w", "main:app", "--wsgi-disable-file-wrapper"]
+CMD [ "uwsgi","--socket", "0.0.0.0:5002", "--processes", "2","--threads", "10", "--plugins", "python3", "--socket-timeout=60", "--protocol=http", "-w", "main:app", "--wsgi-disable-file-wrapper"]

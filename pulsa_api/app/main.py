@@ -3,7 +3,7 @@ from api import *
 from utils import JsonEncoder
 
 app.json_encoder = JsonEncoder
-
+app.register_blueprint(health_api_blue_print)
 app.register_blueprint(order_pulsa_api_blue_print)
 
 
