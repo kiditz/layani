@@ -50,6 +50,7 @@ services:
     environment:
       CONSUL_HOST: 172.31.21.33
       CONSUL_PORT: 8500
+      HEALTH_IP: 172.31.23.143
       SPRING_PROFILES_ACTIVE: dev
     ports:      
       - "5004:5004"

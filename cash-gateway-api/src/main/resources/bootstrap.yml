@@ -11,15 +11,17 @@ spring:
         preferIpAddress: true        
         host: ${CONSUL_HOST:localhost}
         ip-address: ${CONSUL_HOST:localhost}
+        instanceId: ${spring.application.name}
+
       config:
         fail-fast: true
         format: yaml
-endpoints: 
-  health: 
+endpoints:
+  health:
     sensitive: false
 management:
   security:
     enabled: false
-  health: 
-    consul: 
+  health:
+    consul:
       enabled: false

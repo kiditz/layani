@@ -9,16 +9,16 @@ spring:
       port: ${CONSUL_PORT:8500}
       discovery:
         preferIpAddress: true
-        ip-address: ${CONSUL_HOST:localhost}
+        ip-address: ${HEALTH_IP:localhost}
       config:
         fail-fast: true
         format: yaml
-endpoints:
-  health:
-    sensitive: false
-management:
-  security:
-    enabled: false
-  health:
-    consul:
-      enabled: false
+#endpoints:
+#  health:
+#    sensitive: false
+#management:
+#  security:
+#    enabled: false
+#  health:
+#    consul:
+#      enabled: false
