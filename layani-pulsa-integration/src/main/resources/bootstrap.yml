@@ -13,12 +13,12 @@ spring:
       config:
         fail-fast: true
         format: yaml
-#endpoints:
-#  health:
-#    sensitive: false
-#management:
-#  security:
-#    enabled: false
-#  health:
-#    consul:
-#      enabled: false
+endpoints:
+  health:
+    sensitive: false
+management:
+  security:
+    enabled: false
+  health:
+    consul:
+      enabled: false
