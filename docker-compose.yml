@@ -132,4 +132,5 @@ networks:
 
 volumes:
     layaniio :
-      driver: rexray/sf3s
+      external: true
+
