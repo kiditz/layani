@@ -112,7 +112,7 @@ services:
     networks:
       - cash_overlay_net
     volumes:
-      - layaniio:/cash-gateway-api/data
+      - layaniio:/data/cash-gateway-api
     deploy:
       mode: global      
       placement:
@@ -132,5 +132,4 @@ networks:
 
 volumes:
     layaniio :
-      external: true
-
+      driver: rexray/sf3s

@@ -47,10 +47,6 @@ public class HokkyTronikApiCaller implements ApiCaller {
         input.put("kode", partnerProduct.getString("code"));
         input.put("tujuan", payload.getString("msisdn"));
 
-        //Add the Jackson Message converter
-//        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-//        converter.setSupportedMediaTypes(Collections.singletonList(MediaType.ALL));
-//        template.getMessageConverters().add(converter);
         HttpEntity<String> request = new HttpEntity<>(input.toString(), headers);
         try {
             log.info("<<Request>> :{}", request.toString());

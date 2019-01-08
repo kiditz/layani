@@ -84,7 +84,7 @@ class ProductService(object):
 		page = int(domain['page'])
 		size = int(domain['size'])
 		order = domain['order'] if 'order' in domain and is_not_blank(domain['order']) else 'product_name asc'
-		log.info('Order : %s', order)
+		#log.info('Order : %s', order)
 		entities = (
 			Product.id.label('product_id'),
 			func.upper(Product.name).label('product_name'),
