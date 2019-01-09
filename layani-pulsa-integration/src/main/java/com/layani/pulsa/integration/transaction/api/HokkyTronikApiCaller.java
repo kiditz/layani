@@ -28,7 +28,7 @@ public class HokkyTronikApiCaller implements ApiCaller {
     private MessageMapping messageMapping;
     @Override
     public Message<Domain> execute(Domain payload) {
-        String requestId = ServiceConstant.getReqid(payload.getLong("id"));
+        Long requestId = payload.getLong("id");
         Domain partnerProduct = payload.getDomain("partnerProduct");
         Domain partner = partnerProduct.getDomain("partner");
         String url = partner.getString("url");
@@ -53,7 +53,7 @@ public class HokkyTronikApiCaller implements ApiCaller {
                 return TransactionResult.progress(payload);
             }else{
                 if(body.containsKey("message")){
-                    String message = body.getString("message");
+                    String message = body.getString("mess   age");
                     String remark = messageMapping.getMessage(message, partner.getLong("id"));
                     return TransactionResult.fail(payload, remark, StringUtils.EMPTY);
                 }
