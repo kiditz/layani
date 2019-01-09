@@ -11,20 +11,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 @Component("API_HOKKYTRONIK")
 public class HokkyTronikApiCaller implements ApiCaller {
+
     @Value("${hokkytronik.apiKey}")
     private String apiKey;
     @Autowired
@@ -58,7 +52,6 @@ public class HokkyTronikApiCaller implements ApiCaller {
             if(resp.getStatusCode() == HttpStatus.OK || resp.getStatusCode() == HttpStatus.CREATED){
                 return TransactionResult.progress(payload);
             }else{
-                log.info("");
                 if(body.containsKey("message")){
                     String message = body.getString("message");
                     String remark = messageMapping.getMessage(message, partner.getLong("id"));
@@ -68,6 +61,13 @@ public class HokkyTronikApiCaller implements ApiCaller {
             }
         }catch (HttpClientErrorException e){
             log.error("Exception : {}", e.getResponseBodyAsString());
+            Domain resp = new Domain(e.getResponseBodyAsString());
+            if(resp.getString("response").equalsIgnoreCase("gagal")){
+                return TransactionResult.fail(payload, ErrorConstant.PRODUCT_NOT_EXISTS, StringUtils.EMPTY);
+            }
+            return TransactionResult.progress(payload);
+        }catch (Exception e){
+            log.error("Exception : {}", e);
             return TransactionResult.progress(payload);
         }
     }
