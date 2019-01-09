@@ -1,6 +1,7 @@
 package com.layani.pulsa.integration.transaction;
 
 import com.layani.pulsa.integration.transaction.api.ApiCaller;
+import com.layani.pulsa.integration.utils.Constant;
 import com.layani.pulsa.service.constant.ErrorConstant;
 import com.layani.pulsa.service.order.EditOrder;
 import org.apache.commons.lang.StringUtils;
@@ -47,7 +48,10 @@ public class TransactionThirdPartyActivator implements ActivatorMessageDomain {
 
         ApiCaller apiCaller = (ApiCaller) context.getBean("API_"+ partner.getString("code"));
         Message<Domain> caller = apiCaller.execute(payload);
-        editOrder.handle(payload);
+        //Edit Reqid untuk keperluan callback
+        if(payload.getString("status").equalsIgnoreCase(Constant.TransactionStatus.IN_PROGRESS)){
+            editOrder.handle(payload);
+        }
         return caller;
     }
 
