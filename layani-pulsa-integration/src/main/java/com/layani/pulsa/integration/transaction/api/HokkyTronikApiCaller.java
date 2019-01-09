@@ -15,6 +15,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -38,8 +39,8 @@ public class HokkyTronikApiCaller implements ApiCaller {
         Domain partner = partnerProduct.getDomain("partner");
         String url = partner.getString("url");
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
+        //headers.setContentType(MediaType.APPLICATION_JSON);
+        //headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
         headers.add("api-key", apiKey);
         // Create Http Entity
         Domain input = new Domain();
@@ -57,6 +58,7 @@ public class HokkyTronikApiCaller implements ApiCaller {
             if(resp.getStatusCode() == HttpStatus.OK || resp.getStatusCode() == HttpStatus.CREATED){
                 return TransactionResult.progress(payload);
             }else{
+                log.info("");
                 if(body.containsKey("message")){
                     String message = body.getString("message");
                     String remark = messageMapping.getMessage(message, partner.getLong("id"));
@@ -64,8 +66,8 @@ public class HokkyTronikApiCaller implements ApiCaller {
                 }
                 return TransactionResult.fail(payload, ErrorConstant.PRODUCT_NOT_EXISTS, StringUtils.EMPTY);
             }
-        }catch (Exception e){
-            log.error("Exception", e);
+        }catch (HttpClientErrorException e){
+            log.error("Exception : {}", e.getResponseBodyAsString());
             return TransactionResult.progress(payload);
         }
     }
