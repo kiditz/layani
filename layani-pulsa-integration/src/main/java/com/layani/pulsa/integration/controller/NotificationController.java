@@ -13,18 +13,18 @@ import org.slerp.core.Domain;
 @RequestMapping("/notification")
 public class NotificationController {
 
-	@Autowired
-	private KafkaMessageListenerContainer<String, String> notificationContainer;
-
-	private Logger log = LoggerFactory.getLogger(getClass());
-
-
-	@GetMapping("/stop")
-	@ResponseBody
-	public Domain stopConsumer(){
-		notificationContainer.stop(() -> {
-			log.info("Stoping Kafka Consumer");
-		});
-		return new Domain().put("stop", notificationContainer.isContainerPaused());
-	}
+//	@Autowired
+//	private KafkaMessageListenerContainer<String, String> notificationContainer;
+//
+//	private Logger log = LoggerFactory.getLogger(getClass());
+//
+//
+//	@GetMapping("/stop")
+//	@ResponseBody
+//	public Domain stopConsumer(){
+//		notificationContainer.stop(() -> {
+//			log.info("Stoping Kafka Consumer");
+//		});
+//		return new Domain().put("stop", notificationContainer.isContainerPaused());
+//	}
 }

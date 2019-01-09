@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HealthCheckerController {
 
-	@Autowired
-	private KafkaMessageListenerContainer<String, String> notificationContainer;
-
 	private Logger log = LoggerFactory.getLogger(getClass());
 
 

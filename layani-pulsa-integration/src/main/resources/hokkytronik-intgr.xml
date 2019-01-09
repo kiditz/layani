@@ -11,7 +11,8 @@
     <int-http:inbound-channel-adapter
             channel="hokkytronik_in" status-code-expression="T(org.springframework.http.HttpStatus).OK"
             supported-methods="POST" path="/hokkytronik/callback"
-            request-payload-type="java.lang.String">
+            >
+        <!--request-payload-type="org.slerp.core.Domain"-->
     </int-http:inbound-channel-adapter>
     <int:service-activator input-channel="hokkytronik_in" ref="hokkytronikHttpReceiver" method="execute" output-channel="hokkytronik_out"/>
     <int:router input-channel="hokkytronik_out" expression="payload.status">

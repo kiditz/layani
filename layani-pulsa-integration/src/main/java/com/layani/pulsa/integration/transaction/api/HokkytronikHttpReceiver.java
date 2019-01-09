@@ -1,6 +1,5 @@
 package com.layani.pulsa.integration.transaction.api;
 
-import com.layani.pulsa.integration.transaction.ActivatorMessageString;
 import com.layani.pulsa.integration.transaction.TransactionResult;
 import com.layani.pulsa.integration.utils.Constant;
 import com.layani.pulsa.integration.utils.MessageMapping;
@@ -15,9 +14,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Component
-public class HokkytronikHttpReceiver implements ActivatorMessageString {
+public class HokkytronikHttpReceiver {
     @Autowired
     private FindOrderPayloadByReqid findOrderPayloadByReqid;
     @Autowired
@@ -26,15 +31,27 @@ public class HokkytronikHttpReceiver implements ActivatorMessageString {
     private MessageMapping messageMapping;
 
     private Logger log = LoggerFactory.getLogger(getClass());
-    @Override
-    public Message<Domain> execute(Message<String> message) {
+
+    public Message<Domain> execute(Message<LinkedMultiValueMap<String, String[]>> message) {
+        log.info("Type : {}", message.getPayload().getClass());
         log.info("Message : {}", message.getPayload());
+        MultiValueMap<String, String[]> map = message.getPayload();
         try {
-            Domain payload = new Domain(message.getPayload());
+//
+            Domain payload = new Domain();
+            for (Map.Entry<String, ? extends List<String[]>> entry : map.entrySet()){
+                payload.put(entry.getKey(), entry.getValue().get(0)[0]);
+            }
             log.info("Payload : {}", payload);
             Domain inputPayload = new Domain();
             inputPayload.put("reqid", payload.getString("ref_idtrx"));
-            Domain orderPayload = new Domain(findOrderPayloadByReqid.handle(inputPayload).getString("payload"));
+            Domain orderPayload;
+            try {
+                orderPayload = new Domain(findOrderPayloadByReqid.handle(inputPayload).getString("payload"));
+            }catch (NullPointerException e){
+                log.info("Payload tidak di temukan :{}", inputPayload.toString());
+                return TransactionResult.progress(new Domain());
+            }
             Domain partnerProduct = orderPayload.getDomain("partnerProduct");
             Domain partner = partnerProduct.getDomain("partner");
             Domain orderExists = isOrderExistsById.handle(orderPayload);
@@ -46,16 +63,19 @@ public class HokkytronikHttpReceiver implements ActivatorMessageString {
             if(order.getString("status").equalsIgnoreCase(Constant.TransactionStatus.SUCCESS)){
                 throw new CoreException(ErrorConstant.ORDER_IS_NOT_IN_PROGRESS);
             }
-            if(payload.getString("status").equalsIgnoreCase("sukses")){
+            if(Objects.requireNonNull(payload.getString("status")).equalsIgnoreCase("sukses")){
                 if(payload.containsKey("catatan")){
-                    orderPayload.put("sn", TransactionResult.getSerialNumber(payload.getString("catatan")));
+                    orderPayload.put("sn", TransactionResult.getSerialNumber(payload.getString("catatan").toString()));
                     return TransactionResult.success(orderPayload);
+                }else{
+                    return TransactionResult.progress(orderPayload);
                 }
-            }else if (payload.getString("status").equalsIgnoreCase("gagal")){
+            }else if (Objects.requireNonNull(payload.getString("status")).equalsIgnoreCase("gagal")){
                 if(payload.containsKey("catatan")){
                     String note = payload.getString("catatan");
+                    log.info("Catatan : {}", note);
                     String remark = messageMapping.getMessage(note, partner.getLong("id"));
-                    return TransactionResult.fail(payload, remark, StringUtils.EMPTY);
+                    return TransactionResult.fail(orderPayload, remark, StringUtils.EMPTY);
                 }
             }
             return TransactionResult.progress(new Domain());
@@ -63,7 +83,7 @@ public class HokkytronikHttpReceiver implements ActivatorMessageString {
             log.error("CoreException : {}", e.getMessage());
             return TransactionResult.progress(new Domain());
         }catch (Exception e){
-            log.error("Exception : {}", e);
+            log.error("Exception : {}", e.getMessage());
             return TransactionResult.progress(new Domain());
         }
     }
