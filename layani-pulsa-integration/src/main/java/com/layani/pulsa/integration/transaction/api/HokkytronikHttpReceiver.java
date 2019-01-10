@@ -37,7 +37,6 @@ public class HokkytronikHttpReceiver {
         log.info("Message : {}", message.getPayload());
         MultiValueMap<String, String[]> map = message.getPayload();
         try {
-//
             Domain payload = new Domain();
             for (Map.Entry<String, ? extends List<String[]>> entry : map.entrySet()){
                 payload.put(entry.getKey(), entry.getValue().get(0)[0]);
