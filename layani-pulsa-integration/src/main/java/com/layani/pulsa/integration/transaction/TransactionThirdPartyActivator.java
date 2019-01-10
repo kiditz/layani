@@ -50,7 +50,7 @@ public class TransactionThirdPartyActivator implements ActivatorMessageDomain {
         Message<Domain> caller = apiCaller.execute(payload);
         //Edit Reqid untuk keperluan callback
         if(payload.getString("status").equalsIgnoreCase(Constant.TransactionStatus.IN_PROGRESS)){
-            editOrder.handle(payload);
+            editOrder.handle(caller.getPayload());
         }
         return caller;
     }

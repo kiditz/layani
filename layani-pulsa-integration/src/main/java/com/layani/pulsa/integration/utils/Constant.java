@@ -15,6 +15,7 @@ public class Constant {
         public static final String TRX_SUCCESS = "trx.success";
         public static final String TRX_IN_PROGRESS = "trx.in_progress";
         public static final String TRX_FAIL = "trx.fail";
+        public static final String TRX_ERROR = "trx.error";
     }
 }
 

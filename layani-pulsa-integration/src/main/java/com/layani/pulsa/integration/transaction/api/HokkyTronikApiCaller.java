@@ -3,6 +3,7 @@ package com.layani.pulsa.integration.transaction.api;
 import com.layani.pulsa.integration.RetrofitClient;
 import com.layani.pulsa.integration.model.HokkyTronik;
 import com.layani.pulsa.integration.transaction.TransactionResult;
+import com.layani.pulsa.integration.utils.Constant;
 import com.layani.pulsa.integration.utils.MessageMapping;
 import com.layani.pulsa.service.constant.ServiceConstant;
 import org.apache.commons.lang.StringUtils;
@@ -18,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import retrofit2.Response;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,8 +67,11 @@ public class HokkyTronikApiCaller implements ApiCaller {
             }
         } catch (IOException e) {
             log.error("Exception Call", e);
-            return TransactionResult.progress(new Domain());
+            if (e.getClass().isAssignableFrom(ConnectException.class)){
+                return TransactionResult.fail(payload, Constant.NotificationValue.TRX_ERROR, "Tidak dapat terhubung dengan hokky tronik");
+            }
+            return TransactionResult.progress(payload);
         }
-        return TransactionResult.progress(new Domain());
+        return TransactionResult.progress(payload);
     }
 }
