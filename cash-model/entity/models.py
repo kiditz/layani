@@ -549,8 +549,7 @@ class OrderPayload(db.Model, Entity):
 
 class OrderPulsaMessageMapping(db.Model, Entity):
 	__tablename__ = 'ps_order_message_mapping'	
-	id = db.Column(db.BigInteger, db.Sequence('ps_order_detail_id_seq'), primary_key=True)		
-	order_id = db.Column(db.ForeignKey(u'ps_order.id'), nullable=False)
+	id = db.Column(db.BigInteger, db.Sequence('ps_order_detail_id_seq'), primary_key=True)			
 	partner_id = db.Column(db.ForeignKey(u'ps_partner.id'), index=True, nullable=False)	
 	partner_message = db.Column(db.Text, nullable=False, server_default=' ', default=' ')
 	layani_message = db.Column(db.Text, nullable=False, server_default=' ', default=' ')

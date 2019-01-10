@@ -9,6 +9,6 @@ public interface OrderMessageMappingRepository
 		extends
 			JpaRepository<OrderMessageMapping, Long> {
 
-	@Query("SELECT m FROM OrderMessageMapping m WHERE m.partnerId.id = :partnerId AND lower(m.partnerMessage) like lower(concat('%', :partnerMessage, '%'))")
+	@Query("SELECT m FROM OrderMessageMapping m JOIN m.partnerId p WHERE p.id = :partnerId AND lower(:partnerMessage) like lower(concat('%', m.partnerMessage, '%'))")
 	OrderMessageMapping findMessageMapping(@Param("partnerId") Long partnerId, @Param("partnerMessage") String partnerMessage);
 }

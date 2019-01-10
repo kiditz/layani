@@ -6,13 +6,6 @@
 http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.0.xsd
 http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 
-	<!-- Configures the database connection. -->
-	<!--<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
-		<property name="driverClassName" value="${spring.database.driverClassName}" />
-		<property name="jdbcUrl" value="${spring.datasource.url}" />
-		<property name="username" value="${spring.datasource.username}" />
-		<property name="password" value="${spring.datasource.password}" />
-	</bean>-->
 	<bean id="dataSource"
 	    class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 	    <property name="driverClassName" value="${spring.database.driverClassName}" />
@@ -33,7 +26,7 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter" />
-		<property name="packagesToScan" value="com.slerpio.teachme.entity" />
+		<property name="packagesToScan" value="com.layani.pulsa.entity" />
 		<property name="jpaProperties">
 			<props>
 				<!-- Configures the used database dialect. This allows Hibernate to create 
@@ -58,5 +51,6 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
 			</props>
 		</property>
 	</bean>
-	<jpa:repositories base-package="com.slerpio.teachme.repository" />
+
+	<jpa:repositories base-package="com.layani.pulsa.repository" />
 </beans>
