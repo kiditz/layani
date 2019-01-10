@@ -51,6 +51,7 @@ public class HokkyTronikApiCaller implements ApiCaller {
         HokkyTronik hokkyTronik = RetrofitClient.retrofit(url, payload).create(HokkyTronik.class);
         try {
             Response<Domain> response = hokkyTronik.postOrder(input).execute();
+            //log.debug("Reponse : {}", response);
             if(response.isSuccessful()){
                 Domain body = response.body();
                 assert body != null;
