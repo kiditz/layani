@@ -67,7 +67,7 @@ public class HokkytronikHttpReceiver {
 
             if(Objects.requireNonNull(payload.getString("status")).equalsIgnoreCase("sukses")){
                 if(payload.containsKey("catatan")){
-                    orderPayload.put("sn", TransactionResult.getSerialNumber(payload.getString("catatan").toString()));
+                    orderPayload.put("sn", messageMapping.getSerialNumber(payload.getString("catatan")));
                     return TransactionResult.success(orderPayload);
                 }else{
                     return TransactionResult.progress(orderPayload);
