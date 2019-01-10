@@ -32,14 +32,14 @@ public class HokkytronikHttpReceiver {
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    public Message<Domain> execute(Message<LinkedMultiValueMap<String, String[]>> message) {
+    public Message<Domain> execute(Message<LinkedMultiValueMap<String, String>> message) {
         log.info("Type : {}", message.getPayload().getClass());
         log.info("Message : {}", message.getPayload());
-        MultiValueMap<String, String[]> map = message.getPayload();
+        MultiValueMap<String, String> map = message.getPayload();
         try {
             Domain payload = new Domain();
-            for (Map.Entry<String, ? extends List<String[]>> entry : map.entrySet()){
-                payload.put(entry.getKey(), entry.getValue().get(0)[0]);
+            for (Map.Entry<String, ? extends List<String>> entry : map.entrySet()){
+                payload.put(entry.getKey(), entry.getValue().get(0));
             }
             log.info("Payload : {}", payload);
             Domain inputPayload = new Domain();
