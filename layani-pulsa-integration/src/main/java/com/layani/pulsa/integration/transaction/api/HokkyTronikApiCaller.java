@@ -15,9 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -29,8 +27,7 @@ public class HokkyTronikApiCaller implements ApiCaller {
 
     @Value("${hokkytronik.apiKey}")
     private String apiKey;
-    @Autowired
-    private RestTemplate template;
+
     private Logger log = LoggerFactory.getLogger(getClass());
     @Autowired
     private MessageMapping messageMapping;
@@ -50,8 +47,8 @@ public class HokkyTronikApiCaller implements ApiCaller {
         input.put("tujuan", payload.getString("msisdn"));
         HokkyTronik hokkyTronik = RetrofitClient.retrofit(url, payload).create(HokkyTronik.class);
         try {
-            Response<Domain> response = hokkyTronik.postOrder(input).execute();
-            //log.debug("Reponse : {}", response);
+            Response<Domain> response = hokkyTronik.postOrder(apiKey, input).execute();
+            log.debug("Reponse : {}", response);
             if(response.isSuccessful()){
                 Domain body = response.body();
                 assert body != null;
@@ -63,9 +60,11 @@ public class HokkyTronikApiCaller implements ApiCaller {
             }else{
                 assert response.errorBody() != null;
                 Domain errorBody = new Domain(response.errorBody().string());
-                String message = errorBody.getString("message");
-                String remark = messageMapping.getMessage(message, partner.getLong("id"));
-                return TransactionResult.fail(payload, remark, StringUtils.EMPTY);
+                if(errorBody.containsKey("response") && errorBody.getString("response").equalsIgnoreCase("gagal")){
+                    String message = errorBody.getString("message");
+                    String remark = messageMapping.getMessage(message, partner.getLong("id"));
+                    return TransactionResult.fail(payload, remark, StringUtils.EMPTY);
+                }
             }
         } catch (IOException e) {
             log.error("Exception Call", e);
