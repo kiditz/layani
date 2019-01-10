@@ -3,6 +3,7 @@ package com.layani.pulsa.integration.transaction;
 import com.layani.pulsa.integration.utils.Constant;
 import com.layani.pulsa.integration.utils.DomainUtils;
 import com.layani.pulsa.service.constant.ErrorConstant;
+import com.layani.pulsa.service.order.IsProductPurchasePriceExistByProductId;
 import org.apache.commons.lang.StringUtils;
 import org.slerp.core.Domain;
 import org.slerp.core.business.BusinessFunction;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TransactionTransformer implements ActivatorMessageString {
     @Autowired
-    private BusinessFunction isProductPurchasePriceExistByProductId;
+    private IsProductPurchasePriceExistByProductId isProductPurchasePriceExistByProductId;
     @Autowired
     private BusinessFunction isProductSellPriceExistsByProductId;
     

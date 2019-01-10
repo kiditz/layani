@@ -208,7 +208,7 @@ public final class HttpLoggingInterceptor implements Interceptor {
                 String name = headers.name(i);
                 // Skip headers from the request body as they are explicitly logged above.
                 if (!"Content-Type".equalsIgnoreCase(name) && !"Content-Length".equalsIgnoreCase(name)) {
-                    logHeader(headers, i);
+                    logHeader(headers, i, requestBuilder);
                 }
             }
 
@@ -231,8 +231,8 @@ public final class HttpLoggingInterceptor implements Interceptor {
                 logger.log("");
 
                 if (isPlaintext(buffer)) {
-                    logger.log(buffer.readString(charset));
                     requestBuilder.append(buffer.readString(charset)).append("\n");
+                    logger.log(buffer.readString(charset));
                     logger.log("--> END " + request.method()
                             + " (" + requestBody.contentLength() + "-byte body)");
                     requestBuilder.append("--> END ").append(request.method()).append(" (").append(requestBody.contentLength()).append("-byte body)").append("\n");
@@ -270,7 +270,7 @@ public final class HttpLoggingInterceptor implements Interceptor {
         if (logHeaders) {
             Headers headers = response.headers();
             for (int i = 0, count = headers.size(); i < count; i++) {
-                logHeader(headers, i);
+                logHeader(headers, i, responseBuilder);
             }
 
             if (!logBody || !HttpHeaders.hasBody(response)) {
@@ -328,9 +328,10 @@ public final class HttpLoggingInterceptor implements Interceptor {
         return response;
     }
 
-    private void logHeader(Headers headers, int i) {
+    private void logHeader(Headers headers, int i, StringBuilder requestBuilder) {
         String value = headersToRedact.contains(headers.name(i)) ? "██" : headers.value(i);
         logger.log(headers.name(i) + ": " + value);
+        requestBuilder.append(headers.name(i) + ": " + value).append("\n");
     }
 
     /**
