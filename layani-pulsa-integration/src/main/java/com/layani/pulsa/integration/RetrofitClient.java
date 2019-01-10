@@ -3,7 +3,7 @@ package com.layani.pulsa.integration;
 import okhttp3.OkHttpClient;
 import org.slerp.core.Domain;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
 
 public class RetrofitClient {
@@ -15,7 +15,7 @@ public class RetrofitClient {
         //httpClient.addInterceptor(interceptor);
         return new Retrofit.Builder()
                 .baseUrl(url)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(JacksonConverterFactory.create())
                 .client(httpClient.build())
                 .build();
     }
