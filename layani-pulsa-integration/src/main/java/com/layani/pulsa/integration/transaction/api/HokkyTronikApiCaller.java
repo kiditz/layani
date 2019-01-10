@@ -34,7 +34,7 @@ public class HokkyTronikApiCaller implements ApiCaller {
 
     @Override
     public Message<Domain> execute(Domain payload) {
-        String requestId = payload.getLong("id").toString();
+        String requestId = ServiceConstant.getReqid(payload.getLong("id"));
         Domain partnerProduct = payload.getDomain("partnerProduct");
         Domain partner = partnerProduct.getDomain("partner");
         String url = partner.getString("url");

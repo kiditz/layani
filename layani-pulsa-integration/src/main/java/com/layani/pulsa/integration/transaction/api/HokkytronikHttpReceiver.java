@@ -4,6 +4,7 @@ import com.layani.pulsa.integration.transaction.TransactionResult;
 import com.layani.pulsa.integration.utils.Constant;
 import com.layani.pulsa.integration.utils.MessageMapping;
 import com.layani.pulsa.service.constant.ErrorConstant;
+import com.layani.pulsa.service.constant.ServiceConstant;
 import com.layani.pulsa.service.order.FindOrderPayloadByReqid;
 import com.layani.pulsa.service.order.IsOrderExistsById;
 import org.apache.commons.lang.StringUtils;
@@ -14,11 +15,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @Component
@@ -38,12 +38,13 @@ public class HokkytronikHttpReceiver {
         MultiValueMap<String, String> map = message.getPayload();
         try {
             Domain payload = new Domain(map.getFirst("content"));
-//            for (Map.Entry<String, ? extends List<String>> entry : map.entrySet()){
-//                payload.put(entry.getKey(), entry.getValue().get(0));
-//            }
             log.info("Payload : {}", payload);
             Domain inputPayload = new Domain();
-            inputPayload.put("reqid", payload.getString("ref_idtrx"));
+            String reqId = payload.getString("ref_idtrx");
+            if(!reqId.startsWith("0")){
+                reqId = ServiceConstant.getReqid(Long.valueOf(reqId));
+            }
+            inputPayload.put("reqid", reqId);
             Domain orderPayload;
             try {
                 orderPayload = new Domain(findOrderPayloadByReqid.handle(inputPayload).getString("payload"));
