@@ -17,6 +17,7 @@ import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -47,7 +48,7 @@ public class HokkyTronikApiCaller implements ApiCaller {
         input.put("ref_idtrx", requestId);
         input.put("kode", partnerProduct.getString("code"));
         input.put("tujuan", payload.getString("msisdn"));
-        HokkyTronik hokkyTronik = RetrofitClient.retrofit(url).create(HokkyTronik.class);
+        HokkyTronik hokkyTronik = RetrofitClient.retrofit(url, payload).create(HokkyTronik.class);
         try {
             Response<Domain> response = hokkyTronik.postOrder(input).execute();
             if(response.isSuccessful()){
