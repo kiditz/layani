@@ -34,6 +34,7 @@ public class MessageMapping {
     }
 
     public String getSerialNumber(String note){
+        logger.info("SN KEYWORD : {}", snKeyword);
         Pattern pattern = Pattern.compile(snKeyword);
         Matcher matcher = pattern.matcher(note);
         if(matcher.find()){
