@@ -62,6 +62,7 @@ public class HokkytronikHttpReceiver {
             if(order.getString("status").equalsIgnoreCase(Constant.TransactionStatus.SUCCESS)){
                 throw new CoreException(ErrorConstant.ORDER_IS_NOT_IN_PROGRESS);
             }
+
             if(Objects.requireNonNull(payload.getString("status")).equalsIgnoreCase("sukses")){
                 if(payload.containsKey("catatan")){
                     orderPayload.put("sn", TransactionResult.getSerialNumber(payload.getString("catatan").toString()));

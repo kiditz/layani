@@ -39,8 +39,6 @@ public class HokkyTronikApiCaller implements ApiCaller {
         Domain partner = partnerProduct.getDomain("partner");
         String url = partner.getString("url");
         HttpHeaders headers = new HttpHeaders();
-        //headers.setContentType(MediaType.APPLICATION_JSON);
-        //headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
         headers.add("api-key", apiKey);
         // Create Http Entity
         Map<String, String> input = new HashMap<>();
