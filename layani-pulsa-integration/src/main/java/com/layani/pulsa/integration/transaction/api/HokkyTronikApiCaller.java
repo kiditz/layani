@@ -51,7 +51,7 @@ public class HokkyTronikApiCaller implements ApiCaller {
             if(response.isSuccessful()){
                 Domain body = response.body();
                 assert body != null;
-                if(body.containsKey("response")){
+                if(body.containsKey("response") && body.getString("response").equalsIgnoreCase("gagal")){
                     String message = body.getString("message");
                     String remark = messageMapping.getMessage(message, partner.getLong("id"));
                     return TransactionResult.fail(payload, remark, StringUtils.EMPTY);
