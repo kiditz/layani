@@ -402,6 +402,15 @@ class ProviderPrefix(db.Model, Entity):
 		Entity.__init__(self, obj)
 
 
+class CategoryLayani(db.Model, Entity):
+	__tablename__ = 'ps_category'
+	id = db.Column(db.BigInteger,db.Sequence('ps_category_id_seq'), primary_key=True)
+	name = db.Column(db.Text, nullable=False, server_default='', index=True)	
+	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
+	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)	
+	def __init__(self, obj=None):
+		Entity.__init__(self, obj)
+
 class ProductLayani(db.Model, Entity):
 	__tablename__ = 'ps_product'
 	id = db.Column(db.BigInteger, db.Sequence('ps_product_id_seq'), primary_key=True)			
@@ -412,6 +421,7 @@ class ProductLayani(db.Model, Entity):
 	provider_id = db.Column(db.ForeignKey(u'ps_provider.id'), index=True, nullable=False)
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)	
+	category_id = db.Column(db.ForeignKey(u'ps_category.id'), index=True)
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)
 
