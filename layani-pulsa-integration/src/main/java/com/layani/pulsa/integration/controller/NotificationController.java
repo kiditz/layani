@@ -1,13 +1,11 @@
 package com.layani.pulsa.integration.controller;
 
+import org.slerp.core.Domain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.kafka.config.KafkaListenerContainerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.listener.KafkaMessageListenerContainer;
 import org.springframework.web.bind.annotation.*;
-import org.slerp.core.business.BusinessFunction;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.slerp.core.Domain;
 
 @RestController
 @RequestMapping("/notification")
@@ -29,10 +27,10 @@ public class NotificationController {
         }else{
             if(notificationContainer.isRunning()){
                 notificationContainer.stop(()->{
-                    log.info("");
+                    log.info("Notification Stoped");
                 });
             }
         }
-		return new Domain().put("stop", notificationContainer.isContainerPaused());
+		return new Domain().put("status", notificationContainer.isContainerPaused());
 	}
 }

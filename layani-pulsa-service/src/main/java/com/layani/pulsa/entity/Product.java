@@ -39,6 +39,8 @@ public class Product {
 	@Column(name = "provider_id")
 	@Basic(optional = false)
 	private Long providerId;
+	@Column(name = "active")
+	private Boolean active;
 	@Column(name = "created_at")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdAt;
@@ -109,6 +111,15 @@ public class Product {
 
 	public void setUpdateAt(Date updateAt) {
 		this.updateAt = updateAt;
+	}
+
+	@JsonProperty
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 
 	// @JsonProperty

@@ -34,6 +34,9 @@ public class PartnerProduct {
 	@Basic(optional = false)
 	@Size(min = 1, max = 60)
 	private String code;
+	@Column(name = "active")
+	@Basic(optional = false)
+	private Boolean active;
 	@Column(name = "created_at")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdAt;
@@ -103,5 +106,14 @@ public class PartnerProduct {
 	@JsonProperty
 	public Partner getPartner() {
 		return partner;
+	}
+
+	@JsonProperty
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 }

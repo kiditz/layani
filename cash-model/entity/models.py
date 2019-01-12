@@ -406,12 +406,12 @@ class ProductLayani(db.Model, Entity):
 	__tablename__ = 'ps_product'
 	id = db.Column(db.BigInteger, db.Sequence('ps_product_id_seq'), primary_key=True)			
 	name = db.Column(db.Text, nullable=False, server_default='-', index=True)		
-	code = db.Column(db.String(60), nullable=False, server_default='-', index=True)			
+	code = db.Column(db.String(60), nullable=False, server_default='-', index=True, unique=True)			
 	nominal = db.Column(db.Numeric(14, 2), nullable=False, server_default='0.0', default=0.0)	
+	active = db.Column(db.Boolean, nullable=False, default=True, server_default='t')
 	provider_id = db.Column(db.ForeignKey(u'ps_provider.id'), index=True, nullable=False)
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
-	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
-	
+	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)	
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)
 
@@ -435,10 +435,12 @@ class PartnerProduct(db.Model, Entity):
 	__tablename__ = 'ps_partner_product'
 	id = db.Column(db.BigInteger, db.Sequence('ps__partner_product_id_seq'), primary_key=True)				
 	name = db.Column(db.Text, nullable=False, server_default='-', index=True)		
-	code = db.Column(db.String(60), nullable=False, server_default='-', index=True)			
+	code = db.Column(db.String(60), nullable=False, server_default='-', index=True)
+	active = db.Column(db.Boolean, nullable=False, default=True, server_default='t')			
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
 	partner_id = db.Column(db.ForeignKey(u'ps_partner.id'), index=True)	
+	__table_args__ = (db.UniqueConstraint('code', 'partner_id', name='ps_partner_product_unique_key'),)
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)								
 

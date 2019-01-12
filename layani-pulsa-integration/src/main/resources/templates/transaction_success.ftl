@@ -1,1 +1,1 @@
-Trx ${reqid} ${product.code} ${msisdn} tgl ${createdAt} Sukses <#if sn?has_content>SN: ${(sn)!""}</#if>. ${remark}. Sisa Saldo: ${deposit.after}
+Trx ${reqid} ${product.code} ${msisdn} tgl ${createdAt} Sukses <#if sn?has_content>SN: ${(sn)!""}</#if>. Sisa Saldo: ${deposit.after}

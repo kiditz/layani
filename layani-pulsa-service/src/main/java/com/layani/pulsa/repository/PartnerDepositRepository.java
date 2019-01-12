@@ -10,5 +10,5 @@ public interface PartnerDepositRepository
 			JpaRepository<PartnerDeposit, Long> {
 
 	@Query("SELECT p FROM PartnerDeposit p WHERE p.partnerId.id = :partnerId")
-	public PartnerDeposit findPartnerDepositById(@Param("partnerId") Long partnerId);
+	PartnerDeposit findPartnerDepositById(@Param("partnerId") Long partnerId);
 }

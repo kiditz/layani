@@ -13,7 +13,7 @@ public interface PartnerProductPurchasePriceRepository
 		extends
 			JpaRepository<PartnerProductPurchasePrice, Long> {
 
-	@Query("SELECT pp FROM PartnerProductPurchasePrice pp JOIN pp.partnerProductId.products p WHERE p.id = :productId AND pp.active = true AND :date BETWEEN pp.startAt AND pp.endAt")
+	@Query("SELECT pp FROM PartnerProductPurchasePrice pp JOIN pp.partnerProductId.products p WHERE p.id = :productId AND pp.active = true AND p.active = true AND :date BETWEEN pp.startAt AND pp.endAt")
 	Page<PartnerProductPurchasePrice> findProductPurchasePrice(@Param("productId") Long productId, @Param("date") Date date, Pageable pageable);
 
 }
