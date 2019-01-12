@@ -4,6 +4,8 @@ import com.layani.pulsa.entity.OrderApi;
 import com.layani.pulsa.repository.OrderApiRepository;
 import com.layani.pulsa.service.constant.ErrorConstant;
 import com.layani.pulsa.service.constant.ServiceConstant;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,8 @@ public class EditOrder extends DefaultBusinessTransaction {
 	private OrderRepository orderRepository;
 	@Autowired
 	private OrderApiRepository orderApiRepository;
+	@Autowired
+	private JdbcTemplate template;
 	@Override
 	public void prepare(Domain orderDomain) throws Exception {
 		Optional<Order> optional = orderRepository.findById(orderDomain.getLong("id"));
@@ -50,6 +54,7 @@ public class EditOrder extends DefaultBusinessTransaction {
 		try {
 			Order order = orderDomain.convertTo(Order.class);
 			order = orderRepository.save(order);
+			updatePartnerBalance(order);
 			if(orderDomain.containsKey("request") || orderDomain.containsKey("response")){
 				addOrderApi(order, orderDomain);
 			}
@@ -66,5 +71,12 @@ public class EditOrder extends DefaultBusinessTransaction {
 		orderApi.setRequest(orderDomain.getString("request"));
 		orderApi.setResponse(orderDomain.getString("response"));
 		orderApiRepository.save(orderApi);
+	}
+
+	private void updatePartnerBalance(Order order){
+		Domain map = new Domain();
+		map.put("$1", order.getId());
+		SimpleJdbcCall call = new SimpleJdbcCall(template).withFunctionName("f_update_partner_balance");
+		call.executeFunction(Void.class, map);
 	}
 }

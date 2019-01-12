@@ -7,11 +7,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.sql.DataSource;
 import java.util.Locale;
 
 @Configuration
@@ -51,6 +53,11 @@ public class RepositoryConfiguration {
 	public ByteArrayHttpMessageConverter byteArrayHttpMessageConverter() {
 		ByteArrayHttpMessageConverter converter = new ByteArrayHttpMessageConverter();
 		return converter;
+	}
+
+	@Bean
+	JdbcTemplate jdbcTemplate(DataSource dataSource){
+		return new JdbcTemplate(dataSource);
 	}
 	
 }
