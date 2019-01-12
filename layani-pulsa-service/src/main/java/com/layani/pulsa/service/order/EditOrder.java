@@ -1,21 +1,23 @@
 package com.layani.pulsa.service.order;
 
+import com.layani.pulsa.entity.Order;
 import com.layani.pulsa.entity.OrderApi;
 import com.layani.pulsa.repository.OrderApiRepository;
+import com.layani.pulsa.repository.OrderRepository;
 import com.layani.pulsa.service.constant.ErrorConstant;
 import com.layani.pulsa.service.constant.ServiceConstant;
+import org.slerp.core.CoreException;
+import org.slerp.core.Domain;
+import org.slerp.core.business.DefaultBusinessTransaction;
+import org.slerp.core.validation.KeyValidation;
+import org.slerp.core.validation.NumberValidation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.layani.pulsa.repository.OrderRepository;
-import org.slerp.core.Domain;
-import com.layani.pulsa.entity.Order;
-import org.slerp.core.CoreException;
-import org.slerp.core.validation.KeyValidation;
-import org.slerp.core.validation.NumberValidation;
-import org.slerp.core.business.DefaultBusinessTransaction;
 
 import java.util.Date;
 import java.util.Optional;
@@ -74,8 +76,8 @@ public class EditOrder extends DefaultBusinessTransaction {
 	}
 
 	private void updatePartnerBalance(Order order){
-		Domain map = new Domain();
-		map.put("$1", order.getId());
+		MapSqlParameterSource map = new MapSqlParameterSource();
+		map.addValue("$1", order.getId());
 		SimpleJdbcCall call = new SimpleJdbcCall(template).withFunctionName("f_update_partner_balance");
 		call.executeFunction(Void.class, map);
 	}
