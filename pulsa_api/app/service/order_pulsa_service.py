@@ -14,7 +14,7 @@ class OrderPulsaService(object):
 
 	@Key(['msisdn', 'outlet_id', 'sales_type', 'code'])
 	def add_order_pulsa(self, domain):
-		product = ProductLayani.query.filter(ProductLayani.cide == domain['code']).first()
+		product = ProductLayani.query.filter(ProductLayani.code == domain['code']).first()
 		if product is None:
 			raise ValidationException('product.not.found')
 		order_pulsa = OrderPulsa.query.filter_by(msisdn=domain['msisdn']).filter_by(status='I').first()
