@@ -62,7 +62,7 @@ public class Order {
 	private Long userId;
 	@Column(name = "sn")
 	private String sn;
-	@Column(name = "partner_productId")
+	@Column(name = "partner_product_id")
 	private Long partnerProductId;
 	@JsonProperty
 	public Long getId() {
