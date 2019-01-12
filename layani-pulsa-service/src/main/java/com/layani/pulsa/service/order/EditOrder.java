@@ -56,7 +56,7 @@ public class EditOrder extends DefaultBusinessTransaction {
 		try {
 			Order order = orderDomain.convertTo(Order.class);
 			order = orderRepository.save(order);
-			updatePartnerBalance(order);
+
 			if(orderDomain.containsKey("request") || orderDomain.containsKey("response")){
 				addOrderApi(order, orderDomain);
 			}
@@ -73,6 +73,7 @@ public class EditOrder extends DefaultBusinessTransaction {
 		orderApi.setRequest(orderDomain.getString("request"));
 		orderApi.setResponse(orderDomain.getString("response"));
 		orderApiRepository.save(orderApi);
+		updatePartnerBalance(order);
 	}
 
 	private void updatePartnerBalance(Order order){
