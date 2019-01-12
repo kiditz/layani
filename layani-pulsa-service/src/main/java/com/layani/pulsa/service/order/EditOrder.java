@@ -46,6 +46,7 @@ public class EditOrder extends DefaultBusinessTransaction {
 		if(!order.getStatus().equalsIgnoreCase(ServiceConstant.IN_PROGRESS)){
 			throw new CoreException(ErrorConstant.ORDER_IS_NOT_IN_PROGRESS);
 		}
+
 		orderDomain.put("updateAt", new Date());
 		orderDomain.put("reqid", ServiceConstant.getReqid(orderDomain.getLong("id")));
 	}
@@ -56,7 +57,9 @@ public class EditOrder extends DefaultBusinessTransaction {
 		try {
 			Order order = orderDomain.convertTo(Order.class);
 			order = orderRepository.save(order);
-
+			if(order.getStatus().equalsIgnoreCase(ServiceConstant.SUCCESS)){
+				updatePartnerBalance(order);
+			}
 			if(orderDomain.containsKey("request") || orderDomain.containsKey("response")){
 				addOrderApi(order, orderDomain);
 			}
@@ -73,7 +76,6 @@ public class EditOrder extends DefaultBusinessTransaction {
 		orderApi.setRequest(orderDomain.getString("request"));
 		orderApi.setResponse(orderDomain.getString("response"));
 		orderApiRepository.save(orderApi);
-		updatePartnerBalance(order);
 	}
 
 	private void updatePartnerBalance(Order order){
