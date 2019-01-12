@@ -51,6 +51,9 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
 			</props>
 		</property>
 	</bean>
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
 
 	<jpa:repositories base-package="com.layani.pulsa.repository" />
 </beans>
