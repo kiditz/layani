@@ -12,12 +12,13 @@ class OrderPulsaService(object):
 	def __init__(self):
 		super(OrderPulsaService, self).__init__()
 
-	@Key(['msisdn', 'outlet_id', 'sales_type', 'product_id'])
+	@Key(['msisdn', 'outlet_id', 'sales_type', 'code'])
 	def add_order_pulsa(self, domain):
-		count_product = ProductLayani.query.with_entities(func.count(ProductLayani.id)).filter(ProductLayani.id == domain['product_id']).scalar()
-		if count_product == 0:
+		product = ProductLayani.query.filter(ProductLayani.id == domain['code']).first()
+		if product is None:
 			raise ValidationException('product.not.found')
 		order_pulsa = OrderPulsa.query.filter_by(msisdn=domain['msisdn']).filter_by(status='I').first()
+		domain['product_id'] = product.id
 		if order_pulsa is not None:
 			raise ValidationException('order.still.in.progress')
 		order_pulsa = OrderPulsa(domain)
