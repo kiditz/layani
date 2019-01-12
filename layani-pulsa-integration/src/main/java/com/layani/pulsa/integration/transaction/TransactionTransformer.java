@@ -51,6 +51,7 @@ public class TransactionTransformer implements ActivatorMessageString {
         input.put("purchasePrice", productPurchasePrice.getBigDecimal("purchasePrice"));
         input.put("id", input.getLong("orderPulsaId"));
         input.put("partnerProduct", productPurchasePrice.getDomain("partnerProductId"));
+        input.put("partnerProductId", productPurchasePrice.getDomain("partnerProductId").getLong("id"));
         input.put("status", Constant.TransactionStatus.IN_PROGRESS);
         log.debug("TransactionResult : {}", input);
         return MessageBuilder.withPayload(input).build();
