@@ -29,6 +29,9 @@ public class TransactionTransformer implements ActivatorMessageString {
         Domain productPurchasePrice = isProductPurchasePriceExistByProductId.handle(input);
         Domain productSellPrice = isProductSellPriceExistsByProductId.handle(input);
         input.put("id", input.getLong("orderPulsaId"));
+        input.put("sellPrice", 0D);
+        input.put("purchasePrice", 0D);
+
         if(!productPurchasePrice.getBoolean("exists")){
             log.info("Purchase not exists");
             return TransactionResult.fail(input, ErrorConstant.PRODUCT_NOT_EXISTS, StringUtils.EMPTY);
