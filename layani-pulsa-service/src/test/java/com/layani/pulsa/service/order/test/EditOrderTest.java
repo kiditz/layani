@@ -36,9 +36,6 @@ public class EditOrderTest
 
 	@Before
 	public void prepare() {
-//		executeSqlScript(
-//				"classpath:com/layani/pulsa/service/order/test/EditOrderTest.sql",
-//				false);
 	}
 
 	@Test

@@ -47,7 +47,6 @@ class PresenterModule {
     }
 
 
-
     @Provides
     internal fun provideLoadProductPresenter(context: Context,translations: Translations, disposable: CompositeDisposable, productService: ProductService, preferences: SharedPreferences): LoadProductPresenter {
         return LoadProductPresenter(context, translations, disposable, productService, preferences)

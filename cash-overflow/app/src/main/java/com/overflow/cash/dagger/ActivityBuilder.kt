@@ -30,8 +30,6 @@ abstract class ActivityBuilder {
     @ContributesAndroidInjector
     internal abstract fun bindAddProductActivity(): SaveProductActivity
 
-
-
     @ContributesAndroidInjector
     internal abstract fun bindPaymentTransactionivityPaymentTransaction(): PaymentOtherActivity
 

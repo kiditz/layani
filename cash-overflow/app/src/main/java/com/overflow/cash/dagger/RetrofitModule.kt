@@ -59,4 +59,8 @@ class RetrofitModule {
         return retrofit.create(DiscountService::class.java)
     }
 
+    @Provides
+    fun providePulsaSerivice(@Named(AUTHENTICATED) retrofit: Retrofit): PulsaService {
+        return retrofit.create(PulsaService::class.java)
+    }
 }

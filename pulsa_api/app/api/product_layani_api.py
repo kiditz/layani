@@ -5,7 +5,7 @@ from service.product_layani_service import ProductLayaniService
 
 log = logging.getLogger(__name__)
 
-product_layani_api_blue_print = Blueprint('product_layani_api_blue_print', __name__, url_prefix='product_layani')
+product_layani_api_blue_print = Blueprint('product_layani_api_blue_print', __name__, url_prefix='/product_layani')
 api = product_layani_api_blue_print
 product_layani_service = ProductLayaniService()
 
@@ -24,15 +24,24 @@ def add_product_layani():
     return product_layani_service.add_product_layani(domain)
 
 
-@api.route('/get', methods=['GET'])
-def get_product_layani_by_code():
-
+@api.route('/products', methods=['GET'])
+def get_product_layani_by_prefix():
     """
     {
         "page": "Long",
         "size": "Long",
-        "code": "String"
+        "phone_number": "String"
     }
     """
     domain = request.args.to_dict()
-    return product_layani_service.get_product_layani_by_code(domain)
+    return product_layani_service.get_product_pulsa_prefix(domain)
+
+
+@api.route('/categories', methods=['GET'])
+def get_category_layani_by_name():
+
+    """
+    {
+    }
+    """
+    return product_layani_service.get_category_layani()

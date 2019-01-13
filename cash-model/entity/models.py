@@ -408,8 +408,10 @@ class CategoryLayani(db.Model, Entity):
 	name = db.Column(db.Text, nullable=False, server_default='', index=True)	
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)	
+	
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)
+
 
 class ProductLayani(db.Model, Entity):
 	__tablename__ = 'ps_product'
@@ -422,6 +424,7 @@ class ProductLayani(db.Model, Entity):
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)	
 	category_id = db.Column(db.ForeignKey(u'ps_category.id'), index=True)
+	
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)
 
@@ -451,6 +454,7 @@ class PartnerProduct(db.Model, Entity):
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)
 	partner_id = db.Column(db.ForeignKey(u'ps_partner.id'), index=True)	
 	__table_args__ = (db.UniqueConstraint('code', 'partner_id', name='ps_partner_product_unique_key'),)
+
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)								
 
@@ -546,8 +550,10 @@ class OrderPulsaApi(db.Model, Entity):
 	response = db.Column(db.Text, nullable=False, server_default=' ', default=' ')
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)		
+	
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)		
+
 
 class OrderPayload(db.Model, Entity):
 	__tablename__ = 'ps_order_payload'	
@@ -556,8 +562,10 @@ class OrderPayload(db.Model, Entity):
 	payload = db.Column(db.Text, nullable=False, server_default=' ', default=' ')	
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)		
+
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)		
+
 
 class OrderPulsaMessageMapping(db.Model, Entity):
 	__tablename__ = 'ps_order_message_mapping'	
@@ -567,6 +575,7 @@ class OrderPulsaMessageMapping(db.Model, Entity):
 	layani_message = db.Column(db.Text, nullable=False, server_default=' ', default=' ')
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)		
+
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)				
 	
