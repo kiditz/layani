@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".fragment.ProductFragment">
 
-    <include layout="@layout/fragment_blank" />
 
+    <include layout="@layout/fragment_blank" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -34,7 +34,6 @@
             android:inputType="number"
             android:maxLines="1"
             android:padding="5dp" />
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler"
             android:name="com.overflow.cash.fragment.ProductFragment"
@@ -57,7 +56,6 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
-
                 <TextView
                     android:id="@+id/tv_total_sell_price"
                     android:layout_width="wrap_content"
@@ -84,5 +82,4 @@
                 android:textSize="@dimen/text_size_extra_medium" />
         </LinearLayout>
     </LinearLayout>
-    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 </RelativeLayout>

@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.fragment_pulsa_category.*
 
 import javax.inject.Inject
 
-class PulsaCategoryListFragment : BaseFragment(), LoadPulsaCategoryContract.View{
+class PulsaCategoryListFragment : BaseFragment(), LoadPulsaCategoryContract.View {
     @Inject
     lateinit var loadPulsaCategoryPresenter: LoadPulsaCategoryPresenter
     lateinit var adapter: ViewPagerAdapter
@@ -43,9 +43,19 @@ class PulsaCategoryListFragment : BaseFragment(), LoadPulsaCategoryContract.View
 
     private fun showFragmentByName(categoryList: List<Data>) {
         categoryList.forEach {
-            if(it.getString("name").equals("Pulsa Isi Ulang", ignoreCase = true)){
+            if (it.getString("name").equals("Pulsa Isi Ulang", ignoreCase = true)) {
                 adapter.addFragment(PulsaProductListFragment.newInstance(it.toString()), it.getString("name"))
-            }else{
+            } else if (it.getString("name").equals("Paket Internet", ignoreCase = true)
+                    || it.getString("name").equals("Paket Sms", ignoreCase = true)
+                    || it.getString("name").equals("Paket Telepon", ignoreCase = true)
+                    || it.getString("name").equals("Pulsa Transfer", ignoreCase = true)) {
+                adapter.addFragment(PulsaPaketProductListFragment.newInstance(it.toString()), it.getString("name"))
+            }else if (it.getString("name").equals("Voucher Game", ignoreCase = true)) {
+                adapter.addFragment(PulsaProductsByProviderListFragment.newInstance(it.toString(), getString(R.string.player_id)), it.getString("name"))
+            }else if (it.getString("name").equals("Saldo Gojek", ignoreCase = true)||it.getString("name").equals("Saldo Grab", ignoreCase = true)) {
+                adapter.addFragment(PulsaProductsByProviderListFragment.newInstance(it.toString(), getString(R.string.phone_number)), it.getString("name"))
+            }
+            else {
                 adapter.addFragment(BlankFragment.newInstance(it.getString("name")), it.getString("name"))
             }
         }

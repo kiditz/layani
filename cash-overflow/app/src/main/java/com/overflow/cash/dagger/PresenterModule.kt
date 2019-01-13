@@ -17,9 +17,7 @@ import com.overflow.cash.mvp.menu.FirebaseTokenPresenter
 import com.overflow.cash.mvp.order.*
 import com.overflow.cash.mvp.order.SaveOrderPresenter
 import com.overflow.cash.mvp.product.*
-import com.overflow.cash.mvp.pulsa.LoadPulsaCategoryPresenter
-import com.overflow.cash.mvp.pulsa.LoadPulsaProductPresenter
-import com.overflow.cash.mvp.pulsa.SendOrderPulsaPresenter
+import com.overflow.cash.mvp.pulsa.*
 import com.overflow.cash.mvp.receiveable.AccountReceiveableDetailPresenter
 import com.overflow.cash.mvp.receiveable.AccountReceiveablePaymentPresenter
 import com.overflow.cash.mvp.receiveable.AccountReceiveablePresenter
@@ -88,6 +86,16 @@ class PresenterModule {
     @Provides
     internal fun provideLoadPulsaProductPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, pulsaService: PulsaService, preferences: SharedPreferences): LoadPulsaProductPresenter {
         return LoadPulsaProductPresenter(context, translations, disposable, pulsaService, preferences)
+    }
+
+    @Provides
+    internal fun provideLoadPulsaProductByProviderPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, pulsaService: PulsaService, preferences: SharedPreferences): LoadPulsaProductByProviderPresenter {
+        return LoadPulsaProductByProviderPresenter(context, translations, disposable, pulsaService, preferences)
+    }
+
+    @Provides
+    internal fun provideLoadProviderByCategoryPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, pulsaService: PulsaService, preferences: SharedPreferences): LoadProviderByCategoryPresenter {
+        return LoadProviderByCategoryPresenter(context, translations, disposable, pulsaService, preferences)
     }
 
     @Provides

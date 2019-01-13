@@ -14,6 +14,14 @@ interface PulsaService {
     fun getCategories(): Single<Data>
 
     @Headers("Content-Type:application/json")
+    @GET("/pulsa/product_layani/providers")
+    fun getProviders(@Query("category_id") categoryId:Long): Single<Data>
+
+    @Headers("Content-Type:application/json")
+    @GET("/pulsa/product_layani/products_by_provider")
+    fun getProductsByProvider(@QueryMap input: Data): Single<Data>
+
+    @Headers("Content-Type:application/json")
     @POST("/pulsa/order_pulsa/add")
     fun sendOrder(@Body data:Data): Single<Data>
 

@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.LinearLayoutManager
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +12,7 @@ import android.view.ViewGroup
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.overflow.cash.R
 import com.overflow.cash.activity.Constant
-import com.overflow.cash.adapter.PulsaProductAdapter
+import com.overflow.cash.adapter.PulsaPaketProductAdapter
 import com.overflow.cash.mvp.pulsa.LoadPulsaProductContract
 import com.overflow.cash.mvp.pulsa.LoadPulsaProductPresenter
 import com.overflow.cash.mvp.pulsa.SendOrderPulsaContract
@@ -20,27 +20,26 @@ import com.overflow.cash.mvp.pulsa.SendOrderPulsaPresenter
 import com.overflow.cash.net.API
 import com.overflow.cash.net.NetworkExHandler
 import com.overflow.cash.utils.*
-import com.overflow.cash.utils.decoration.MarginItemDecoration
 import com.overflow.libs.core.Data
-import kotlinx.android.synthetic.main.fragment_pulsa_products.*
+import kotlinx.android.synthetic.main.fragment_pulsa_paket_products.*
 import timber.log.Timber
 import javax.inject.Inject
 
-class PulsaProductListFragment : BaseFragment(), LoadPulsaProductContract.View ,SendOrderPulsaContract.View{
+class PulsaPaketProductListFragment : BaseFragment(), LoadPulsaProductContract.View ,SendOrderPulsaContract.View{
     @Inject
     lateinit var loadPulsaProductPresenter: LoadPulsaProductPresenter
     @Inject
     lateinit var sendOrderPulsaPresenter: SendOrderPulsaPresenter
     @Inject
     lateinit var networkExHandler: NetworkExHandler
-    lateinit var adapter:PulsaProductAdapter
+    lateinit var adapter:PulsaPaketProductAdapter
     var currentPage = API.MIN_PAGE
     var categoryId = -1L
     var categoryName = ""
     var productCode:String = ""
     var phoneNumber:String = ""
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_pulsa_products, container, false)
+        return inflater.inflate(R.layout.fragment_pulsa_paket_products, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,15 +47,13 @@ class PulsaProductListFragment : BaseFragment(), LoadPulsaProductContract.View ,
         this.loadPulsaProductPresenter.attach(this)
         this.sendOrderPulsaPresenter.attach(this)
         hideMessage()
-        adapter = PulsaProductAdapter()
+        adapter = PulsaPaketProductAdapter()
 
-        val manager  = GridLayoutManager(context, 2)
+        val manager  = LinearLayoutManager(context)
         recycler?.layoutManager =  manager
         recycler?.isNestedScrollingEnabled = false
         recycler?.setHasFixedSize(true)
         recycler?.itemAnimator = DefaultItemAnimator()
-        val spaceInPixel = resources.getDimensionPixelSize(R.dimen.grid_margin)
-        recycler?.addItemDecoration(MarginItemDecoration(spaceInPixel))
         recycler.adapter = adapter
         recycler?.addOnScrollListener(object : AbstractRecyclerPagination(manager){
             override val isLoading: Boolean
@@ -94,6 +91,7 @@ class PulsaProductListFragment : BaseFragment(), LoadPulsaProductContract.View ,
         val data = Data()
         data["code"] = productCode
         data["msisdn"] = ed_phone_number.text.toString()
+
         showProgress(true)
         sendOrderPulsaPresenter.sendOrder(data)
     }
@@ -102,7 +100,6 @@ class PulsaProductListFragment : BaseFragment(), LoadPulsaProductContract.View ,
     private fun initLoadProduct(){
         RxTextView.textChanges(ed_phone_number).filter { it.isNotEmpty() && it.length >= 4}.filter { Patterns.PHONE.matcher(it).matches() }.subscribe( {
             this.phoneNumber = it.toString()
-
             currentPage = API.MIN_PAGE
             btn_buy_now.isEnabled = true
             this.loadPulsaProductPresenter.loadProduct(currentPage, categoryId, this.phoneNumber)
@@ -117,7 +114,7 @@ class PulsaProductListFragment : BaseFragment(), LoadPulsaProductContract.View ,
 
         btn_buy_now.setOnClickListener{
             if(this.productCode.isEmpty()){
-                activity!!.snack(getString(R.string.please_choose_product)).show()
+                showErrorMessage(getString(R.string.please_choose_product));
                 return@setOnClickListener
             }
             doOrder()
@@ -155,7 +152,7 @@ class PulsaProductListFragment : BaseFragment(), LoadPulsaProductContract.View ,
         const val ARG_CATEGORY = "category"
         @JvmStatic
         fun newInstance(category: String) =
-                PulsaProductListFragment().apply {
+                PulsaPaketProductListFragment().apply {
                     arguments = Data(category).toBundle()
                     categoryId = arguments!!.getLong("id")
                     categoryName = arguments!!.getString("name")

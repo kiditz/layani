@@ -39,9 +39,27 @@ def get_product_layani_by_prefix():
 
 @api.route('/categories', methods=['GET'])
 def get_category_layani_by_name():
-
     """
     {
     }
     """
     return product_layani_service.get_category_layani()
+
+
+@api.route('/providers', methods=['GET'])
+def get_provider():
+    domain = request.args.to_dict()
+    return product_layani_service.get_provider(domain)
+
+
+@api.route('/products_by_provider', methods=['GET'])
+def get_product_by_provider():
+    """
+    {
+        "page": "Long",
+        "size": "Long",
+        "phone_number": "String"
+    }
+    """
+    domain = request.args.to_dict()
+    return product_layani_service.get_product_by_provider(domain)

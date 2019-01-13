@@ -75,6 +75,10 @@ abstract class ActivityBuilder {
     @ContributesAndroidInjector
     internal abstract fun bindPulsaProductListFragment(): PulsaProductListFragment
 
+    @ContributesAndroidInjector
+    internal abstract fun bindPulsaPaketProductListFragment(): PulsaPaketProductListFragment
+    @ContributesAndroidInjector
+    internal abstract fun bindPulsaProductsByProviderListFragment(): PulsaProductsByProviderListFragment
 
     @ContributesAndroidInjector
     internal abstract fun bindSalesFragment(): SalesFragment

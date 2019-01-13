@@ -89,7 +89,7 @@
     <string name="no_customer_title">Pelanggan tidak di temukan</string>
     <string name="no_internet">Tidak ada koneksi internet</string>
     <string name="no_product_description">Tekan tombol + untuk menambahkan produk</string>
-    <string name="no_product_title">Belum ada produk</string>
+    <string name="no_product_title">Produk tidak tersedia</string>
     <string name="not_enough_stock">Stok habis</string>
     <string name="num_of_purchase">Nilai Pembelian</string>
     <string name="ok">OK</string>
@@ -103,7 +103,8 @@
     <string name="payer">Pengutang</string>
     <string name="pcs">pcs</string>
     <string name="percentage">Persentase</string>
-    <string name="phone_number">No Handphone</string>
+    <string name="phone_number">No Handphone*</string>
+    \
     <string name="press_again_to_close">Tekan sekali lagi untuk keluar dari aplikasi</string>
     <string name="print_receipt">Cetak struk</string>
     <string name="manage_product">Kelola Produk</string>
@@ -184,5 +185,6 @@
     <string name="sales_other">Penjualan Lainnya</string>
     <string name="transaction_custom_does_not_have_order_items">Transaksi Lainnya tidak memiliki item</string>
     <string name="transaction_in_progress">Transaksi {0}, sedang di proses.</string>
+    <string name="player_id">Id Pemain</string>
     <string name="please_choose_product">Mohon untuk memilih produk, sebelum melakukan pembelian.</string>
 </resources>

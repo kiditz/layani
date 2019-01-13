@@ -62,3 +62,40 @@ class ProductLayaniService(object):
 		category_layani_q = CategoryLayani.query.order_by(CategoryLayani.id.asc()).all()
 		category_layani_list = list(map(lambda x: x.to_dict(), category_layani_q))
 		return {'payload': category_layani_list}
+	
+	@Key(['category_id'])
+	def get_provider(self, domain):
+		provider_layani_q = Provider.query\
+			.join(ProductLayani, ProductLayani.provider_id == Provider.id)\
+			.join(CategoryLayani, ProductLayani.category_id == CategoryLayani.id)\
+			.filter(CategoryLayani.id == domain['category_id'])\
+			.group_by(Provider.id) \
+			.order_by(Provider.name) \
+			.all()
+		provider_layani_list = list(map(lambda x: x.to_dict(), provider_layani_q))
+		return {'payload': provider_layani_list}
+	
+	@Number(['provider_id', 'page', 'size'])
+	def get_product_by_provider(self, domain):
+		provider_id = domain['provider_id']
+		page = int(domain['page'])
+		size = int(domain['size'])
+		now = datetime.now()
+		entities = (
+			ProductLayani.id,
+			ProductLayani.code,
+			ProductLayani.name,
+			ProductLayani.nominal,
+			ProductLayaniSellPrice.sell_price,
+			Provider.name.label('provider')
+		)
+		product_layani_q = ProductLayani.query.with_entities(*entities) \
+			.join(ProductLayaniSellPrice, and_(ProductLayaniSellPrice.product_id == ProductLayani.id,
+		                                       ProductLayaniSellPrice.active == True,
+		                                       between(now, ProductLayaniSellPrice.start_at, ProductLayaniSellPrice.end_at)))\
+			.join(Provider, Provider.id == ProductLayani.provider_id)\
+			.filter(ProductLayani.provider_id == provider_id) \
+			.filter(ProductLayani.active == True) \
+			.order_by(ProductLayani.nominal.asc()).paginate(page, size, error_out=False)
+		product_layani_list = list(map(lambda x: x._asdict(), product_layani_q.items))
+		return {'payload': product_layani_list, 'total': product_layani_q.total, 'total_pages': product_layani_q.pages}

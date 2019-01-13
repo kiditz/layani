@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardCornerRadius="5dp"
+    app:cardUseCompatPadding="false"
+    android:layout_marginTop="@dimen/small_margin"
+    android:layout_marginLeft="@dimen/small_margin"
+    android:layout_marginStart="@dimen/small_margin"
+    android:layout_marginEnd="@dimen/small_margin"
+    android:layout_marginRight="@dimen/small_margin"
+    >
+
+    <LinearLayout
+        android:id="@+id/lv_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minWidth="120dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_product_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_promo"
+            android:paddingBottom="3dp"
+            android:paddingEnd="@dimen/small_margin"
+            android:paddingLeft="3dp"
+            android:paddingRight="@dimen/small_margin"
+            android:paddingStart="3dp"
+            android:paddingTop="3dp"
+            android:text="I5"
+            android:textAlignment="center"
+            android:textColor="@color/textLight"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_product_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/small_margin"
+            android:layout_marginLeft="@dimen/small_margin"
+            android:layout_marginRight="@dimen/small_margin"
+            android:layout_marginStart="@dimen/small_margin"
+            android:layout_marginTop="@dimen/small_margin"
+            android:maxLength="40"
+            android:maxLines="1"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="Paket Data 25MB 24 Jam Jaringan 3G/4G" />
+
+        <TextView
+            android:id="@+id/tv_product_name_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/small_margin"
+            android:textSize="12sp"
+            tools:text="Paket Data 25MB 24 Jam Jaringan 3G/4G disesuaikan dengan zona / 7 Hari" />
+
+        <TextView
+            android:id="@+id/tv_sell_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/small_margin"
+            android:textColor="@color/colorAccent"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="Rp4975" />
+    </LinearLayout>
+</android.support.v7.widget.CardView>

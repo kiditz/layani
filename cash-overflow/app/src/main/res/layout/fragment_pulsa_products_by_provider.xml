@@ -21,6 +21,11 @@
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:background="@color/colorPrimary"
             android:visibility="gone"/>
+        <Spinner
+            android:id="@+id/sp_provider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/adapter_customer" />
         <EditText
             android:id="@+id/ed_phone_number"
             android:layout_width="match_parent"
