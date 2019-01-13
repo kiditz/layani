@@ -20,10 +20,12 @@
     <string name="are_you_sure_cash_in">Are you sure to save {0} money into the cash drawer</string>
     <string name="are_you_sure_cash_out">Are you sure you want to take {0} money from the cash drawer?</string>
     <string name="are_you_sure_transaction">Are you sure want to pay this transaction?</string>
+    <string name="are_you_sure_topup">Are you sure want buy product {0}</string>
     <string name="are_you_sure_remove">Are you sure want to remove {0}?</string>
     <string name="are_you_sure_refund">Are you sure want to refund this transaction?</string>
     <string name="bill_amount">Bill Amount</string>
     <string name="backspace">⌫</string>
+    <string name="buy_now">Buy Now</string>
     <string name="cancel">Cancel</string>
     <string name="cannot_read_barcode">Cannot read barcode</string>
     <string name="card">Card</string>
@@ -182,4 +184,6 @@
     <string name="transaction_custom_does_not_have_order_items">Other transaction does\'nt have any item</string>
     <string name="notification_channel">pulsa_channel</string>
     <string name="notification_channel_description">pulsa_channel_description</string>
+    <string name="transaction_in_progress">Transaction {0}, in progress.</string>
+    <string name="please_choose_product">Please choose product.</string>
 </resources>

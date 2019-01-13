@@ -64,7 +64,7 @@ class SalesFragment : BaseFragment(), LoadProductContract.View{
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         productListPresenter.attach(this)
-        currentPage = 1
+        currentPage = API.MIN_PAGE
 
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

@@ -28,12 +28,14 @@ public class TransactionTransformer implements ActivatorMessageString {
         log.debug("Input : {}", input);
         Domain productPurchasePrice = isProductPurchasePriceExistByProductId.handle(input);
         Domain productSellPrice = isProductSellPriceExistsByProductId.handle(input);
-
+        input.put("id", input.getLong("orderPulsaId"));
         if(!productPurchasePrice.getBoolean("exists")){
+            log.info("Purchase not exists");
             return TransactionResult.fail(input, ErrorConstant.PRODUCT_NOT_EXISTS, StringUtils.EMPTY);
         }
 
         if(!productSellPrice.getBoolean("exists")){
+            log.info("Sellprice not exists");
             return TransactionResult.fail(input, ErrorConstant.PRODUCT_NOT_EXISTS, StringUtils.EMPTY);
         }
         //Manage Sell Price Domain after knowing it is exists
@@ -49,7 +51,7 @@ public class TransactionTransformer implements ActivatorMessageString {
         input.put("product", productSellPrice.getDomain("productId"));
         input.put("sellPrice", productSellPrice.getBigDecimal("sellPrice"));
         input.put("purchasePrice", productPurchasePrice.getBigDecimal("purchasePrice"));
-        input.put("id", input.getLong("orderPulsaId"));
+
         input.put("partnerProduct", productPurchasePrice.getDomain("partnerProductId"));
         input.put("partnerProductId", productPurchasePrice.getDomain("partnerProductId").getLong("id"));
         input.put("status", Constant.TransactionStatus.IN_PROGRESS);

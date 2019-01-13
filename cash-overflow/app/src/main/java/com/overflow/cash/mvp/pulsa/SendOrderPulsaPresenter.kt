@@ -6,39 +6,43 @@ import com.overflow.cash.activity.Constant
 import com.overflow.cash.net.API
 import com.overflow.cash.net.PulsaService
 import com.overflow.cash.net.RxUtils
+import com.overflow.libs.core.Data
 import com.overflow.libs.core.Translations
 import io.reactivex.disposables.CompositeDisposable
 
-class LoadPulsaCategoryPresenter(
+class SendOrderPulsaPresenter(
         private var context: Context,
         private var translations: Translations,
         private var disposable: CompositeDisposable,
         private val pulsaService: PulsaService,
         private val preferences:SharedPreferences
-): LoadPulsaCategoryContract.Presenter {
-    lateinit var view: LoadPulsaCategoryContract.View
-//    var outlet:Data = Data()
-//    init {
-//        outlet = Data(this.preferences.getString("outlet", "{}"))
-//    }
-    override fun attach(view: LoadPulsaCategoryContract.View) {
+): SendOrderPulsaContract.Presenter {
+    lateinit var view: SendOrderPulsaContract.View
+    var outlet:Data = Data()
+    init {
+        outlet = Data(this.preferences.getString("outlet", "{}"))
+    }
+    override fun attach(view: SendOrderPulsaContract.View) {
         this.view = view
-        loadCategory()
+
     }
 
     override fun detach() {
         disposable.clear()
     }
 
-    override fun loadCategory() {
+    override fun sendOrder(data:Data) {
         if(API.isConnected(context)){
-            this.disposable.add(this.pulsaService.getCategories().retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
+            data["outlet_id"] = outlet.getLong("id")
+            data["sales_type"] = "TRADITIONAL"
+            data["user_id"] = outlet.getLong("user_id")
+            this.disposable.add(this.pulsaService.sendOrder(data).retry(3).compose(RxUtils.applySingleAsync()).subscribe({ response ->
                 if(API.ok(response)){
-                    val payloads = API.payloads(response)
+                    val payloads = API.payload(response)
                     if(payloads.isEmpty()){
                         this.view.showEmpty()
                     }else{
-                        this.view.onCategoryLoaded(payloads)
+                        this.view.onOrderSended(payloads)
                     }
 
                 }else{

@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.overflow.cash.dagger
 
 import android.accounts.AccountManager
@@ -15,6 +17,9 @@ import com.overflow.cash.mvp.menu.FirebaseTokenPresenter
 import com.overflow.cash.mvp.order.*
 import com.overflow.cash.mvp.order.SaveOrderPresenter
 import com.overflow.cash.mvp.product.*
+import com.overflow.cash.mvp.pulsa.LoadPulsaCategoryPresenter
+import com.overflow.cash.mvp.pulsa.LoadPulsaProductPresenter
+import com.overflow.cash.mvp.pulsa.SendOrderPulsaPresenter
 import com.overflow.cash.mvp.receiveable.AccountReceiveableDetailPresenter
 import com.overflow.cash.mvp.receiveable.AccountReceiveablePaymentPresenter
 import com.overflow.cash.mvp.receiveable.AccountReceiveablePresenter
@@ -38,9 +43,10 @@ class PresenterModule {
     }
 
     @Provides
-    internal fun provideRegisterPresenter(context: Context,translations: Translations, disposable: CompositeDisposable, accountService: AccountService): RegisterPresenter {
+    internal fun provideRegisterPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, accountService: AccountService): RegisterPresenter {
         return RegisterPresenter(context, translations, disposable, accountService)
     }
+
     @Provides
     internal fun provideLoginPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, accountService: AccountService, outletService: OutletService, preferences: SharedPreferences, accountManager: AccountManager): LoginPresenter {
         return LoginPresenter(context, translations, disposable, accountService, outletService, preferences, accountManager)
@@ -48,49 +54,65 @@ class PresenterModule {
 
 
     @Provides
-    internal fun provideLoadProductPresenter(context: Context,translations: Translations, disposable: CompositeDisposable, productService: ProductService, preferences: SharedPreferences): LoadProductPresenter {
+    internal fun provideLoadProductPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, productService: ProductService, preferences: SharedPreferences): LoadProductPresenter {
         return LoadProductPresenter(context, translations, disposable, productService, preferences)
     }
 
 
     @Provides
-    internal fun provideAddProductPresenter(context: Context,translations: Translations, disposable: CompositeDisposable, productService: ProductService, preferences: SharedPreferences): AddProductPresenter {
+    internal fun provideAddProductPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, productService: ProductService, preferences: SharedPreferences): AddProductPresenter {
         return AddProductPresenter(context, translations, disposable, productService, preferences)
     }
 
     @Provides
-    internal fun provideEditProductPresenter(context: Context,translations: Translations, disposable: CompositeDisposable, productService: ProductService, preferences: SharedPreferences): EditProductPresenter {
+    internal fun provideEditProductPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, productService: ProductService, preferences: SharedPreferences): EditProductPresenter {
         return EditProductPresenter(context, translations, disposable, productService, preferences)
     }
 
     //Category
     @Provides
-    internal fun provideLoadCategoryPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, productService: ProductService, orderItemRealm: OrderItemRealm, preferences: SharedPreferences): LoadCategoryPresenter {
+    internal fun provideLoadCategoryPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, productService: ProductService, preferences: SharedPreferences): LoadCategoryPresenter {
         return LoadCategoryPresenter(context, translations, disposable, productService, preferences)
     }
 
     @Provides
-    internal fun provideFindCategoryPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, productService: ProductService, orderItemRealm: OrderItemRealm, preferences: SharedPreferences): FindCategoryPresenter {
+    internal fun provideLoadPulsaCategoryPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, pulsaService: PulsaService, preferences: SharedPreferences): LoadPulsaCategoryPresenter {
+        return LoadPulsaCategoryPresenter(context, translations, disposable, pulsaService, preferences)
+    }
+
+    @Provides
+    internal fun provideSendOrderPulsaPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, pulsaService: PulsaService, preferences: SharedPreferences): SendOrderPulsaPresenter {
+        return SendOrderPulsaPresenter(context, translations, disposable, pulsaService, preferences)
+    }
+
+    @Provides
+    internal fun provideLoadPulsaProductPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, pulsaService: PulsaService, preferences: SharedPreferences): LoadPulsaProductPresenter {
+        return LoadPulsaProductPresenter(context, translations, disposable, pulsaService, preferences)
+    }
+
+    @Provides
+    internal fun provideFindCategoryPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, productService: ProductService, preferences: SharedPreferences): FindCategoryPresenter {
         return FindCategoryPresenter(context, translations, disposable, productService, preferences)
     }
 
     @Provides
-    internal fun provideAddCategoryPresenter(context: Context,translations: Translations, disposable: CompositeDisposable, productService: ProductService, preferences: SharedPreferences): AddCategoryPresenter {
+    internal fun provideAddCategoryPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, productService: ProductService, preferences: SharedPreferences): AddCategoryPresenter {
         return AddCategoryPresenter(context, translations, disposable, productService, preferences)
     }
 
     @Provides
-    internal fun provideEditCategoryPresenter(context: Context,translations: Translations, disposable: CompositeDisposable, productService: ProductService, preferences: SharedPreferences): EditCategoryPresenter {
+    internal fun provideEditCategoryPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, productService: ProductService, preferences: SharedPreferences): EditCategoryPresenter {
         return EditCategoryPresenter(context, translations, disposable, productService, preferences)
     }
 
     @Provides
-    internal fun provideDeleteCategoryPresenter(context: Context,translations: Translations, disposable: CompositeDisposable, productService: ProductService, preferences: SharedPreferences): DeleteCategoryPresenter {
+    internal fun provideDeleteCategoryPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, productService: ProductService, preferences: SharedPreferences): DeleteCategoryPresenter {
         return DeleteCategoryPresenter(context, translations, disposable, productService, preferences)
     }
+
     //End Category
     @Provides
-    internal fun provideProductDetailPresenter(context: Context,translations: Translations, disposable: CompositeDisposable, productService: ProductService, preferences: SharedPreferences): ProductDetailPresenter {
+    internal fun provideProductDetailPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, productService: ProductService, preferences: SharedPreferences): ProductDetailPresenter {
         return ProductDetailPresenter(context, translations, disposable, productService, preferences)
     }
 
@@ -126,96 +148,97 @@ class PresenterModule {
     }
 
     @Provides
-    internal fun provideAccountReceiveablePaymentPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, cashboxService: CashBoxService, orderService:OrderService, preferences: SharedPreferences): AccountReceiveablePaymentPresenter {
+    internal fun provideAccountReceiveablePaymentPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, cashboxService: CashBoxService, orderService: OrderService, preferences: SharedPreferences): AccountReceiveablePaymentPresenter {
         return AccountReceiveablePaymentPresenter(context, preferences, translations, cashboxService, orderService, disposable)
     }
 
     @Provides
-    internal fun provideLoadCustomerPresenter(context: Context, translations: Translations, disposable: CompositeDisposable,customerService:CustomerService,  preferences: SharedPreferences): LoadCustomerPresenter {
+    internal fun provideLoadCustomerPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, customerService: CustomerService, preferences: SharedPreferences): LoadCustomerPresenter {
         return LoadCustomerPresenter(context, preferences, translations, customerService, disposable)
     }
 
     @Provides
-    internal fun provideEditCustomerPresenter(context: Context, translations: Translations, disposable: CompositeDisposable,customerService:CustomerService,  preferences: SharedPreferences): EditCustomerPresenter {
+    internal fun provideEditCustomerPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, customerService: CustomerService, preferences: SharedPreferences): EditCustomerPresenter {
         return EditCustomerPresenter(context, preferences, translations, customerService, disposable)
     }
 
     @Provides
-    internal fun provideLoadOrderPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, orderService:OrderService, preferences: SharedPreferences): LoadOrderPresenter {
+    internal fun provideLoadOrderPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, orderService: OrderService, preferences: SharedPreferences): LoadOrderPresenter {
         return LoadOrderPresenter(context, preferences, translations, orderService, disposable)
     }
 
     @Provides
-    internal fun provideLoadOrderItemPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, orderService:OrderService, preferences: SharedPreferences): LoadOrderItemPresenter {
+    internal fun provideLoadOrderItemPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, orderService: OrderService, preferences: SharedPreferences): LoadOrderItemPresenter {
         return LoadOrderItemPresenter(context, preferences, translations, orderService, disposable)
     }
 
     @Provides
-    internal fun provideAccountReceiveablePresenter(context: Context, translations: Translations, disposable: CompositeDisposable,orderService: OrderService,  preferences: SharedPreferences): AccountReceiveablePresenter {
+    internal fun provideAccountReceiveablePresenter(context: Context, translations: Translations, disposable: CompositeDisposable, orderService: OrderService, preferences: SharedPreferences): AccountReceiveablePresenter {
         return AccountReceiveablePresenter(context, preferences, translations, orderService, disposable)
     }
 
     @Provides
-    internal fun provideAccountReceiveableDetailPresenter(context: Context, translations: Translations, disposable: CompositeDisposable,orderService: OrderService,  preferences: SharedPreferences): AccountReceiveableDetailPresenter {
+    internal fun provideAccountReceiveableDetailPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, orderService: OrderService, preferences: SharedPreferences): AccountReceiveableDetailPresenter {
         return AccountReceiveableDetailPresenter(context, preferences, translations, orderService, disposable)
     }
 
     @Provides
-    internal fun provideOrderChartPresenter(context: Context, translations: Translations, disposable: CompositeDisposable,orderService: OrderService,  preferences: SharedPreferences): OrderChartPresenter {
+    internal fun provideOrderChartPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, orderService: OrderService, preferences: SharedPreferences): OrderChartPresenter {
         return OrderChartPresenter(context, preferences, translations, orderService, disposable)
     }
+
     @Provides
-    internal fun provideProfitChartPresenter(context: Context, translations: Translations, disposable: CompositeDisposable,orderService: OrderService,  preferences: SharedPreferences): ProfitChartPresenter {
+    internal fun provideProfitChartPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, orderService: OrderService, preferences: SharedPreferences): ProfitChartPresenter {
         return ProfitChartPresenter(context, preferences, translations, orderService, disposable)
     }
 
     @Provides
-    internal fun provideIncomeChartPresenter(context: Context, translations: Translations, disposable: CompositeDisposable,orderService: OrderService,  preferences: SharedPreferences): IncomeChartPresenter {
+    internal fun provideIncomeChartPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, orderService: OrderService, preferences: SharedPreferences): IncomeChartPresenter {
         return IncomeChartPresenter(context, preferences, translations, orderService, disposable)
     }
 
     @Provides
-    internal fun provideDashboardHeaderPresenter(context: Context, translations: Translations, disposable: CompositeDisposable,orderService: OrderService,  preferences: SharedPreferences): DashboardHeaderPresenter {
+    internal fun provideDashboardHeaderPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, orderService: OrderService, preferences: SharedPreferences): DashboardHeaderPresenter {
         return DashboardHeaderPresenter(context, preferences, translations, orderService, disposable)
     }
 
     @Provides
-    internal fun provideLoadDiscountByBillAmount(context: Context, translations: Translations, disposable: CompositeDisposable,discountService: DiscountService,  preferences: SharedPreferences): LoadDiscountByBillAmountPresenter {
+    internal fun provideLoadDiscountByBillAmount(context: Context, translations: Translations, disposable: CompositeDisposable, discountService: DiscountService, preferences: SharedPreferences): LoadDiscountByBillAmountPresenter {
         return LoadDiscountByBillAmountPresenter(context, preferences, translations, discountService, disposable)
     }
 
     @Provides
-    internal fun provideLoadDiscountByQuantityPresenter(context: Context, translations: Translations, disposable: CompositeDisposable,discountService: DiscountService,  preferences: SharedPreferences): LoadDiscountByQuantityPresenter {
+    internal fun provideLoadDiscountByQuantityPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, discountService: DiscountService, preferences: SharedPreferences): LoadDiscountByQuantityPresenter {
         return LoadDiscountByQuantityPresenter(context, preferences, translations, discountService, disposable)
     }
 
     @Provides
-    internal fun provideTopProductChartPresenter(context: Context, translations: Translations, disposable: CompositeDisposable,orderService: OrderService,  preferences: SharedPreferences): TopProductChartPresenter {
+    internal fun provideTopProductChartPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, orderService: OrderService, preferences: SharedPreferences): TopProductChartPresenter {
         return TopProductChartPresenter(context, preferences, translations, orderService, disposable)
     }
 
     @Provides
-    internal fun provideAccountReceiveableInAgeChartPresenter(context: Context, translations: Translations, disposable: CompositeDisposable,orderService: OrderService,  preferences: SharedPreferences): AccountReceiveableInAgeChartPresenter {
+    internal fun provideAccountReceiveableInAgeChartPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, orderService: OrderService, preferences: SharedPreferences): AccountReceiveableInAgeChartPresenter {
         return AccountReceiveableInAgeChartPresenter(context, preferences, translations, orderService, disposable)
     }
 
     @Provides
-    internal fun provideAccountReceiveableOutOfAgeChartPresenter(context: Context, translations: Translations, disposable: CompositeDisposable,orderService: OrderService,  preferences: SharedPreferences): AccountReceiveableOutOfAgeChartPresenter {
+    internal fun provideAccountReceiveableOutOfAgeChartPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, orderService: OrderService, preferences: SharedPreferences): AccountReceiveableOutOfAgeChartPresenter {
         return AccountReceiveableOutOfAgeChartPresenter(context, preferences, translations, orderService, disposable)
     }
 
     @Provides
-    internal fun provideRefundPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, orderService: OrderService,  preferences: SharedPreferences): RefundPresenter {
+    internal fun provideRefundPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, orderService: OrderService, preferences: SharedPreferences): RefundPresenter {
         return RefundPresenter(context, preferences, translations, orderService, disposable)
     }
 
     @Provides
     internal fun provideLoadCountSavedOrderPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, orderService: OrderService, preferences: SharedPreferences): LoadCountSavedOrderPresenter {
-        return LoadCountSavedOrderPresenter(context,preferences, translations, orderService, disposable)
+        return LoadCountSavedOrderPresenter(context, preferences, translations, orderService, disposable)
     }
 
     @Provides
     internal fun provideDeleteOrderPresenter(context: Context, translations: Translations, disposable: CompositeDisposable, orderService: OrderService, preferences: SharedPreferences): DeleteOrderPresenter {
-        return DeleteOrderPresenter(context,preferences, translations, orderService, disposable)
+        return DeleteOrderPresenter(context, preferences, translations, orderService, disposable)
     }
 }

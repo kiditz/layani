@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.ProductFragment">
+
+    <include layout="@layout/fragment_blank" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <include layout="@layout/success_message"/>
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:background="@color/colorPrimary"
+            android:visibility="gone"/>
+
+        <EditText
+            android:id="@+id/ed_phone_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/small_margin"
+            android:background="@color/textLight"
+
+            android:drawableLeft="@drawable/ic_smartphone"
+            android:drawableStart="@drawable/ic_smartphone"
+            android:drawableTint="@color/colorAccent"
+            android:hint="@string/phone_number"
+            android:inputType="number"
+            android:maxLines="1"
+            android:padding="5dp" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler"
+            android:name="com.overflow.cash.fragment.ProductFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            app:layoutManager="android.support.v7.widget.GridLayoutManager"
+            tools:listitem="@layout/adapter_pulsa_product" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".12"
+            android:background="@android:color/white"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_total_sell_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_promo"
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/small_margin"
+                    android:text="Bayar Rp10.000"
+                    android:textColor="@color/textLight"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_buy_now"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_default"
+                android:enabled="false"
+                android:gravity="center"
+                android:padding="@dimen/small_margin"
+                android:text="@string/buy_now"
+                android:textColor="@color/textLight"
+                android:textSize="@dimen/text_size_extra_medium" />
+        </LinearLayout>
+    </LinearLayout>
+    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
+</RelativeLayout>

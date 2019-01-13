@@ -22,7 +22,9 @@
     <string name="are_you_sure_remove">Apakah anda yakin untuk menghapus pesanan {0}?</string>
     <string name="are_you_sure_transaction">Apakah anda yakin ingin membayar transaksi ini?</string>
     <string name="are_you_sure_refund">Apakah anda yakin ingin membatalkan transaksi ini?</string>
+    <string name="are_you_sure_topup">Apakah anda yakin untuk membeli produk {0} ini?</string>
     <string name="bill_amount">Tagihan</string>
+    <string name="buy_now">Beli Sekarang</string>
     <string name="cancel">Batal</string>
 
     <string name="cannot_read_barcode">Tidak dapat membaca barcode</string>
@@ -181,4 +183,6 @@
     <string name="compare_with_yesterday">Dibandingkan Kemarin</string>
     <string name="sales_other">Penjualan Lainnya</string>
     <string name="transaction_custom_does_not_have_order_items">Transaksi Lainnya tidak memiliki item</string>
+    <string name="transaction_in_progress">Transaksi {0}, sedang di proses.</string>
+    <string name="please_choose_product">Mohon untuk memilih produk, sebelum melakukan pembelian.</string>
 </resources>

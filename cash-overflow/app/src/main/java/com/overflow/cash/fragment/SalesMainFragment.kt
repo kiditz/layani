@@ -29,6 +29,7 @@ class SalesMainFragment:BaseFragment(), BottomNavigationView.OnNavigationItemSel
                 true
             }
             R.id.navigation_topup ->{
+                activity?.replaceContent(R.id.bn_container, PulsaCategoryListFragment())
                 true
             }
             R.id.navigation_sales_other ->{
