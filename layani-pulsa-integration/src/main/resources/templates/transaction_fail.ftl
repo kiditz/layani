@@ -1,1 +1,1 @@
-Trx ${(reqid)!""} ${(product.code)!""} ${msisdn} tgl ${createdAt} GAGAL. ${remark}.  <#if deposit.after??> Sisa Saldo:${deposit.after}</#if>
+Trx ${(reqid)!""} ${(product.code)!""} ${msisdn} tgl ${createdAt} GAGAL. ${remark}.  <#if deposit??.after??> Sisa Saldo:${deposit.after}</#if>
