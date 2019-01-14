@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,12 +12,11 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.overflow.cash.R
 import com.overflow.cash.activity.Constant
-import com.overflow.cash.adapter.PulsaProductAdapter
+import com.overflow.cash.adapter.PulsaPaketProductAdapter
 import com.overflow.cash.mvp.pulsa.*
 import com.overflow.cash.net.API
 import com.overflow.cash.net.NetworkExHandler
 import com.overflow.cash.utils.*
-import com.overflow.cash.utils.decoration.MarginItemDecoration
 import com.overflow.libs.core.Data
 import kotlinx.android.synthetic.main.fragment_pulsa_products_by_provider.*
 import javax.inject.Inject
@@ -31,7 +30,7 @@ class PulsaProductsByProviderListFragment : BaseFragment(), LoadPulsaProductByPr
     lateinit var sendOrderPulsaPresenter: SendOrderPulsaPresenter
     @Inject
     lateinit var networkExHandler: NetworkExHandler
-    lateinit var adapter:PulsaProductAdapter
+    lateinit var adapter:PulsaPaketProductAdapter
     var currentPage = API.MIN_PAGE
     var categoryId = -1L
     var categoryName = ""
@@ -40,29 +39,35 @@ class PulsaProductsByProviderListFragment : BaseFragment(), LoadPulsaProductByPr
     var hint:String=""
     var providerList = listOf<Data>()
     var providerId = -1L
+    var showPhoneNumber = true
     lateinit var spAdapter:ArrayAdapter<String>
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_pulsa_products, container, false)
+        return inflater.inflate(R.layout.fragment_pulsa_products_by_provider, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        ed_phone_number.setText(hint)
+        if(showPhoneNumber){
+            ed_phone_number.hint = hint
+            ed_phone_number.visibility = View.VISIBLE
+        }else{
+            ed_phone_number.visibility = View.GONE
+        }
         this.loadPulsaProductByProviderPresenter.attach(this)
         this.loadProviderByCategoryPresenter.attach(this)
         this.sendOrderPulsaPresenter.attach(this)
         hideMessage()
-        adapter = PulsaProductAdapter()
+        adapter = PulsaPaketProductAdapter()
         this.spAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item)
         this.sp_provider?.adapter = spAdapter
+        this.loadProviderByCategoryPresenter.loadProvider(categoryId)
 
-        val manager  = GridLayoutManager(context, 2)
+        val manager  = LinearLayoutManager(context)
         recycler?.layoutManager =  manager
         recycler?.isNestedScrollingEnabled = false
         recycler?.setHasFixedSize(true)
         recycler?.itemAnimator = DefaultItemAnimator()
-        val spaceInPixel = resources.getDimensionPixelSize(R.dimen.grid_margin)
-        recycler?.addItemDecoration(MarginItemDecoration(spaceInPixel))
+
         recycler.adapter = adapter
         recycler?.addOnScrollListener(object : AbstractRecyclerPagination(manager){
             override val isLoading: Boolean
@@ -78,7 +83,7 @@ class PulsaProductsByProviderListFragment : BaseFragment(), LoadPulsaProductByPr
             }
         })
 
-        this.loadProviderByCategoryPresenter.loadProvider(categoryId)
+
         initLoadProduct()
     }
 
@@ -94,13 +99,19 @@ class PulsaProductsByProviderListFragment : BaseFragment(), LoadPulsaProductByPr
     }
 
     private fun sendOrder(){
-        if(ed_phone_number.text.length < 8){
-            showErrorMessage(getString(R.string.invalid_value_phone_number))
-            return
+        if(showPhoneNumber) {
+            if (ed_phone_number.text.length < 8) {
+                showErrorMessage("${ed_phone_number.hint} ${getString(R.string.invalid)}")
+                return
+            }
         }
         val data = Data()
         data["code"] = productCode
-        data["msisdn"] = ed_phone_number.text.toString()
+        if(!showPhoneNumber){
+            data["msisdn"] = Constant.STRIP
+        }else{
+            data["msisdn"] = ed_phone_number.text.toString()
+        }
         showProgress(true)
         sendOrderPulsaPresenter.sendOrder(data)
     }
@@ -108,11 +119,12 @@ class PulsaProductsByProviderListFragment : BaseFragment(), LoadPulsaProductByPr
     @SuppressLint("SetTextI18n")
     private fun initLoadProduct(){
         adapter.onDoneClick = {item, _ ->
+            btn_buy_now.isEnabled = true
             this.productCode = item.getString("code")
             this.tv_total_sell_price.text = "${getString(R.string.pay)} ${rupiah(item.getDouble("sell_price"))}"
         }
 
-        sp_provider.onItemSelectedListener = object:AdapterView.OnItemSelectedListener{
+        sp_provider?.onItemSelectedListener = object:AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
 
@@ -155,17 +167,7 @@ class PulsaProductsByProviderListFragment : BaseFragment(), LoadPulsaProductByPr
         showErrorMessage(res)
     }
 
-    companion object {
-        const val ARG_CATEGORY = "category"
-        @JvmStatic
-        fun newInstance(category: String, hint:String) =
-                PulsaProductsByProviderListFragment().apply {
-                    arguments = Data(category).toBundle()
-                    categoryId = arguments!!.getLong("id")
-                    categoryName = arguments!!.getString("name")
-                    this.hint = hint
-                }
-    }
+
 
     override fun onProviderLoaded(providerList: List<Data>) {
         val provider = providerList.map { it.getString("name") }
@@ -184,6 +186,7 @@ class PulsaProductsByProviderListFragment : BaseFragment(), LoadPulsaProductByPr
         adapter.notifyDataSetChanged()
         ed_phone_number.setText(Constant.TEXT_EMPTY)
         showProgress(false)
+        btn_buy_now.isEnabled = false
         activity!!.showMessage(categoryName, getString(R.string.transaction_in_progress).replace("{0}", productCode), object :MessageButtonHandle(){
 
         }).show()
@@ -197,5 +200,17 @@ class PulsaProductsByProviderListFragment : BaseFragment(), LoadPulsaProductByPr
         }
     }
 
+    companion object {
+        const val ARG_CATEGORY = "category"
+        @JvmStatic
+        fun newInstance(category: String, hint:String, showPhoneNumber:Boolean=true) =
+                PulsaProductsByProviderListFragment().apply {
+                    arguments = Data(category).toBundle()
+                    categoryId = arguments!!.getLong("id")
+                    categoryName = arguments!!.getString("name")
+                    this.showPhoneNumber = showPhoneNumber
+                    this.hint = hint
+                }
+    }
 
 }

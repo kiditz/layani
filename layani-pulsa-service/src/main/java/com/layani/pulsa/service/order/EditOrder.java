@@ -34,7 +34,7 @@ public class EditOrder extends DefaultBusinessTransaction {
 	@Autowired
 	private JdbcTemplate template;
 	@Override
-	public void prepare(Domain orderDomain) throws Exception {
+	public void prepare(Domain orderDomain) {
 		Optional<Order> optional = orderRepository.findById(orderDomain.getLong("id"));
 		// Validate order is present
 		if (!optional.isPresent()) {

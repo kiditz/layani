@@ -88,7 +88,7 @@ class PulsaProductListFragment : BaseFragment(), LoadPulsaProductContract.View ,
 
     private fun sendOrder(){
         if(ed_phone_number.text.length < 8){
-            showErrorMessage(getString(R.string.invalid_value_phone_number))
+            showErrorMessage("${ed_phone_number.hint} ${getString(R.string.invalid)}")
             return
         }
         val data = Data()
@@ -104,7 +104,6 @@ class PulsaProductListFragment : BaseFragment(), LoadPulsaProductContract.View ,
             this.phoneNumber = it.toString()
 
             currentPage = API.MIN_PAGE
-            btn_buy_now.isEnabled = true
             this.loadPulsaProductPresenter.loadProduct(currentPage, categoryId, this.phoneNumber)
         }, {
             Timber.i(it)
@@ -112,6 +111,7 @@ class PulsaProductListFragment : BaseFragment(), LoadPulsaProductContract.View ,
 
         adapter.onDoneClick = {item, _ ->
             this.productCode = item.getString("code")
+            btn_buy_now.isEnabled = true
             this.tv_total_sell_price.text = "${getString(R.string.pay)} ${rupiah(item.getDouble("sell_price"))}"
         }
 
@@ -167,6 +167,7 @@ class PulsaProductListFragment : BaseFragment(), LoadPulsaProductContract.View ,
         adapter.notifyDataSetChanged()
         ed_phone_number.setText(Constant.TEXT_EMPTY)
         showProgress(false)
+        btn_buy_now.isEnabled = false
         activity!!.showMessage(categoryName, getString(R.string.transaction_in_progress).replace("{0}", productCode), object :MessageButtonHandle(){
 
         }).show()

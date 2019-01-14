@@ -85,13 +85,12 @@ class PulsaPaketProductListFragment : BaseFragment(), LoadPulsaProductContract.V
 
     private fun sendOrder(){
         if(ed_phone_number.text.length < 8){
-            showErrorMessage(getString(R.string.invalid_value_phone_number))
+            showErrorMessage("${ed_phone_number.hint} ${getString(R.string.invalid)}")
             return
         }
         val data = Data()
         data["code"] = productCode
         data["msisdn"] = ed_phone_number.text.toString()
-
         showProgress(true)
         sendOrderPulsaPresenter.sendOrder(data)
     }
@@ -101,13 +100,14 @@ class PulsaPaketProductListFragment : BaseFragment(), LoadPulsaProductContract.V
         RxTextView.textChanges(ed_phone_number).filter { it.isNotEmpty() && it.length >= 4}.filter { Patterns.PHONE.matcher(it).matches() }.subscribe( {
             this.phoneNumber = it.toString()
             currentPage = API.MIN_PAGE
-            btn_buy_now.isEnabled = true
+
             this.loadPulsaProductPresenter.loadProduct(currentPage, categoryId, this.phoneNumber)
         }, {
             Timber.i(it)
         })
 
         adapter.onDoneClick = {item, _ ->
+            btn_buy_now.isEnabled = true
             this.productCode = item.getString("code")
             this.tv_total_sell_price.text = "${getString(R.string.pay)} ${rupiah(item.getDouble("sell_price"))}"
         }
@@ -164,8 +164,8 @@ class PulsaPaketProductListFragment : BaseFragment(), LoadPulsaProductContract.V
         adapter.notifyDataSetChanged()
         ed_phone_number.setText(Constant.TEXT_EMPTY)
         showProgress(false)
+        btn_buy_now.isEnabled = false
         activity!!.showMessage(categoryName, getString(R.string.transaction_in_progress).replace("{0}", productCode), object :MessageButtonHandle(){
-
         }).show()
     }
 

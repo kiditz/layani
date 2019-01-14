@@ -17,10 +17,11 @@ class OrderPulsaService(object):
 		product = ProductLayani.query.filter(ProductLayani.code == domain['code']).first()
 		if product is None:
 			raise ValidationException('product.not.found')
-		order_pulsa = OrderPulsa.query.filter_by(msisdn=domain['msisdn']).filter_by(status='I').first()
 		domain['product_id'] = product.id
-		if order_pulsa is not None:
-			raise ValidationException('order.still.in.progress')
+		if msisdn != '-':
+			order_pulsa = OrderPulsa.query.filter_by(msisdn=domain['msisdn']).filter_by(status='I').first()		
+			if order_pulsa is not None:
+				raise ValidationException('order.still.in.progress')
 		order_pulsa = OrderPulsa(domain)
 		order_pulsa.save()
 		millis = int(time.mktime(order_pulsa.order_at.timetuple()) * 1000)

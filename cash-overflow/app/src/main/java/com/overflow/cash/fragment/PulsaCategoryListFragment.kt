@@ -51,9 +51,15 @@ class PulsaCategoryListFragment : BaseFragment(), LoadPulsaCategoryContract.View
                     || it.getString("name").equals("Pulsa Transfer", ignoreCase = true)) {
                 adapter.addFragment(PulsaPaketProductListFragment.newInstance(it.toString()), it.getString("name"))
             }else if (it.getString("name").equals("Voucher Game", ignoreCase = true)) {
-                adapter.addFragment(PulsaProductsByProviderListFragment.newInstance(it.toString(), getString(R.string.player_id)), it.getString("name"))
-            }else if (it.getString("name").equals("Saldo Gojek", ignoreCase = true)||it.getString("name").equals("Saldo Grab", ignoreCase = true)) {
-                adapter.addFragment(PulsaProductsByProviderListFragment.newInstance(it.toString(), getString(R.string.phone_number)), it.getString("name"))
+                adapter.addFragment(PulsaProductsByProviderListFragment.newInstance(it.toString(), getString(R.string.customer_no), false), it.getString("name"))
+            }else if (it.getString("name").equals("Saldo Gojek", ignoreCase = true)) {
+                adapter.addFragment(PulsaProductsByProviderListFragment.newInstance(it.toString(), getString(R.string.phone_number_gojek)), it.getString("name"))
+            }else if (it.getString("name").equals("Saldo Grab", ignoreCase = true)) {
+                adapter.addFragment(PulsaProductsByProviderListFragment.newInstance(it.toString(), getString(R.string.phone_number_grab)), it.getString("name"))
+            } else if (it.getString("name").equals("Token Listrik", ignoreCase = true)) {
+                adapter.addFragment(PulsaProductsByProviderListFragment.newInstance(it.toString(), getString(R.string.no_meter)), it.getString("name"))
+            }else if (it.getString("name").equals("eMoney-eToll", ignoreCase = true)) {
+                adapter.addFragment(PulsaProductsByProviderListFragment.newInstance(it.toString(), getString(R.string.customer_no)), it.getString("name"))
             }
             else {
                 adapter.addFragment(BlankFragment.newInstance(it.getString("name")), it.getString("name"))

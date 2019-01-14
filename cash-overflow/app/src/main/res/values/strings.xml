@@ -103,6 +103,8 @@
     <string name="pcs">pcs</string>
     <string name="percentage">Percentage</string>
     <string name="phone_number">Phone Number</string>
+    <string name="phone_number_gojek">Gojek Phone Number</string>
+    <string name="phone_number_grab">Grab Phone Number</string>
     <string name="press_again_to_close">Press again to close app</string>
     <string name="print_receipt">Print Receipt</string>
     <string name="plus">+</string>
@@ -186,6 +188,9 @@
     <string name="notification_channel_description">pulsa_channel_description</string>
     <string name="transaction_in_progress">Transaction {0}, in progress.</string>
     <string name="please_choose_product">Please choose product.</string>
-    <string name="invalid_value_phone_number">No Handphone tidak valid</string>
+    <string name="invalid">tidak valid</string>
     <string name="player_id">Player Id</string>
+    <string name="no_meter">Customer Id</string>
+    <string name="customer_no">Customer Number</string>
 </resources>
+
