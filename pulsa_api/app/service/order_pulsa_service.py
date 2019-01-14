@@ -18,7 +18,7 @@ class OrderPulsaService(object):
 		if product is None:
 			raise ValidationException('product.not.found')
 		domain['product_id'] = product.id
-		if msisdn != '-':
+		if domain['msisdn'] != '-':
 			order_pulsa = OrderPulsa.query.filter_by(msisdn=domain['msisdn']).filter_by(status='I').first()		
 			if order_pulsa is not None:
 				raise ValidationException('order.still.in.progress')
