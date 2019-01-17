@@ -19,12 +19,7 @@ provider_image_service = ProviderImageService()
 def add_provider_image():
 	"""
 	{
-	"filename": "String",
-	"original_filename": "String",
-	"thumbnails": "String",
-	"mimetype": "String",
-	"folder": "String",
-	"secure": "Boolean",
+	"file": "String",
 	"provider_id": "Long"
 	}
 	"""
@@ -53,3 +48,9 @@ def add_provider_image():
 	final_file_path = os.path.join(directory, filename)
 	file.save(final_file_path)
 	return provider_image_service.add_provider_image(domain)
+
+
+@api.route('/find', methods=['GET'])
+def find_document():
+	domain = request.args.to_dict()
+	return provider_image_service.find_provider_image(domain)
