@@ -49,7 +49,7 @@ public class TransactionThirdPartyActivator implements ActivatorMessageDomain {
         ApiCaller apiCaller = (ApiCaller) context.getBean("API_"+ partner.getString("code"));
         Message<Domain> caller = apiCaller.execute(payload);
         //Edit Reqid untuk keperluan callback
-        if(payload.getString("status").equalsIgnoreCase(Constant.TransactionStatus.IN_PROGRESS)){
+        if(payload.getString("status").equalsIgnoreCase(Constant.TransactionStatus.IN_PROGRESS) || payload.getString("status").equalsIgnoreCase(Constant.TransactionStatus.CHECK_POST_PAID)){
             editOrder.handle(caller.getPayload());
         }
         return caller;

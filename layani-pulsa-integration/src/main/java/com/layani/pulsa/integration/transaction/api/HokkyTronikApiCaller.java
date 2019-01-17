@@ -5,7 +5,6 @@ import com.layani.pulsa.integration.model.HokkyTronik;
 import com.layani.pulsa.integration.transaction.TransactionResult;
 import com.layani.pulsa.integration.utils.Constant;
 import com.layani.pulsa.integration.utils.MessageMapping;
-import com.layani.pulsa.service.constant.ServiceConstant;
 import org.apache.commons.lang.StringUtils;
 import org.slerp.core.Domain;
 import org.slf4j.Logger;
@@ -34,7 +33,6 @@ public class HokkyTronikApiCaller implements ApiCaller {
 
     @Override
     public Message<Domain> execute(Domain payload) {
-        String requestId = ServiceConstant.getReqid(payload.getLong("id"));
         Domain partnerProduct = payload.getDomain("partnerProduct");
         Domain partner = partnerProduct.getDomain("partner");
         String url = partner.getString("url");
@@ -42,7 +40,7 @@ public class HokkyTronikApiCaller implements ApiCaller {
         headers.add("api-key", apiKey);
         // Create Http Entity
         Map<String, String> input = new HashMap<>();
-        input.put("ref_idtrx", requestId);
+        //input.put("ref_idtrx", requestId);
         input.put("kode", partnerProduct.getString("code"));
         input.put("tujuan", payload.getString("msisdn"));
         HokkyTronik hokkyTronik = RetrofitClient.retrofit(url, payload).create(HokkyTronik.class);
@@ -57,6 +55,7 @@ public class HokkyTronikApiCaller implements ApiCaller {
                     String remark = messageMapping.getMessage(message, partner.getLong("id"));
                     return TransactionResult.fail(payload, remark, StringUtils.EMPTY);
                 }
+                payload.put("reqid", body.getDomain("message").getString("idtrx"));
             }else{
                 assert response.errorBody() != null;
                 Domain errorBody = new Domain(response.errorBody().string());
@@ -73,6 +72,7 @@ public class HokkyTronikApiCaller implements ApiCaller {
             }
             return TransactionResult.progress(payload);
         }
+
         return TransactionResult.progress(payload);
     }
 }

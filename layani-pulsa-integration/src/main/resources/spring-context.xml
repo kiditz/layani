@@ -6,4 +6,5 @@
     <import resource="classpath:notification-intgr.xml"/>
     <import resource="classpath:transaction-intgr.xml"/>
     <import resource="classpath:hokkytronik-intgr.xml"/>
+    <import resource="classpath:postpaid-intgr.xml"/>
 </beans>

@@ -1,0 +1,42 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:int-kafka="http://www.springframework.org/schema/integration/kafka"
+       xsi:schemaLocation="
+		http://www.springframework.org/schema/integration/kafka http://www.springframework.org/schema/integration/kafka/spring-integration-kafka.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <int:channel id="post_paid_input_check"/>
+    <int:channel id="post_paid_input_post"/>
+    <int:channel id="post_paid_3rd_party"/>
+    <int:channel id="post_paid_error"/>
+
+    <int:channel id="post_paid_input_pay"/>
+
+
+    <int-kafka:message-driven-channel-adapter
+            id="postPaidCheckListener"
+            listener-container="postPaidCheckContainer"
+            auto-startup="true"
+            phase="1000"
+            send-timeout="5000"
+            channel="post_paid_input_check"
+            error-channel="errorChannel" />
+
+    <int:transformer input-channel="post_paid_input_check" ref="transactionTransformer" method="execute" output-channel="post_paid_3rd_party"/>
+    <int:router input-channel="post_paid_3rd_party_check" expression="payload.status">
+        <int:mapping value="I" channel="transaction_third_party_in"/>
+        <int:mapping value="F" channel="transaction_error"/>
+    </int:router>
+
+    <int-kafka:message-driven-channel-adapter
+            id="postPaidPayListener"
+            listener-container="postPaidPayContainer"
+            auto-startup="true"
+            phase="1000"
+            send-timeout="5000"
+            channel="post_paid_input_pay"
+            error-channel="errorChannel" />
+    <int:transformer input-channel="post_paid_input_pay" ref="transactionTransformerPostPaid" method="execute" output-channel="sub_deposit_outlet_in"/>
+</beans>

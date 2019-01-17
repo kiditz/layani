@@ -8,6 +8,7 @@
 
     <int:channel id="hokkytronik_in"/>
     <int:channel id="hokkytronik_out"/>
+    <int:channel id="check_post_paid"/>
     <int-http:inbound-channel-adapter
             channel="hokkytronik_in" status-code-expression="T(org.springframework.http.HttpStatus).OK"
             supported-methods="POST" path="/hokkytronik/callback"
@@ -19,5 +20,7 @@
         <int:mapping value="S" channel="transaction_success"/>
         <int:mapping value="I" channel="nullChannel"/>
         <int:mapping value="F" channel="refund_deposit_outlet"/>
+        <int:mapping value="C" channel="check_post_paid"/>
     </int:router>
+    <int:service-activator input-channel="check_post_paid" ref="transactionCheckPostPaidActivator" method="execute" output-channel="notification_in"/>
 </beans>

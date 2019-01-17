@@ -527,14 +527,30 @@ class OrderPulsa(db.Model, Entity):
 	sales_type = db.Column(db.String(20), nullable=False, default='TRX')
 	product_id = db.Column(db.ForeignKey(u'ps_product.id'), nullable=False)
 	partner_product_id = db.Column(db.ForeignKey(u'ps_partner_product.id'))	
-	reqid = db.Column(db.Text, index=True, unique=True)	
+	reqid = db.Column(db.Text, index=True)	
 	sell_price = db.Column(db.Numeric, nullable=False, server_default='0', default=0)		
 	purchase_price = db.Column(db.Numeric, nullable=False, server_default='0', default=0)		
 	status = db.Column(db.String(1), nullable=False, server_default='I', default='I', index=True)
-	sn = db.Column(db.Text, index=True)
+	sn = db.Column(db.Text, index=True)	
 	order_at = db.Column(db.DateTime(timezone=False), index=True, default=datetime.now)	
 	remark = db.Column(db.Text, nullable=False, server_default=' ', default=' ')
 	user_id = db.Column(db.ForeignKey(u'co_user.id'), index=True)
+	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
+	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)		
+	__table_args__ = (db.UniqueConstraint('msisdn', 'reqid', name='ps_order_msisdn_reqid_unique_key'),)	
+	def __init__(self, obj=None):
+		Entity.__init__(self, obj)		
+
+
+class OrderPostPaid(db.Model, Entity):
+	__tablename__ = 'ps_order_post_paid'		
+	order_id = db.Column(db.ForeignKey(u'ps_order.id'), nullable=False, primary_key=True)
+	adm_cost = db.Column(db.Numeric, nullable=False, server_default='0.0', default=0.0)
+	customer_name = db.Column(db.Text, nullable=False, server_default='-', default='-')
+	num_of_trx = db.Column(db.BigInteger, nullable=False, server_default='1', default=1)
+	post_paid_amount = db.Column(db.Numeric, nullable=False, server_default='0.0', default=0)
+	bill_amount = db.Column(db.Numeric, nullable=False, server_default='0.0', default=0)
+	post_paid_month = db.Column(db.String(20))
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)		
 	
@@ -544,7 +560,7 @@ class OrderPulsa(db.Model, Entity):
 
 class OrderPulsaApi(db.Model, Entity):
 	__tablename__ = 'ps_order_api'	
-	id = db.Column(db.BigInteger, db.Sequence('ps_order_detail_id_seq'), primary_key=True)		
+	id = db.Column(db.BigInteger, db.Sequence('ps_order_api_id_seq'), primary_key=True)		
 	order_id = db.Column(db.ForeignKey(u'ps_order.id'), nullable=False)
 	request = db.Column(db.Text, nullable=False, server_default=' ', default=' ')
 	response = db.Column(db.Text, nullable=False, server_default=' ', default=' ')
@@ -557,7 +573,7 @@ class OrderPulsaApi(db.Model, Entity):
 
 class OrderPayload(db.Model, Entity):
 	__tablename__ = 'ps_order_payload'	
-	id = db.Column(db.BigInteger, db.Sequence('ps_order_detail_id_seq'), primary_key=True)		
+	id = db.Column(db.BigInteger, db.Sequence('ps_order_payload_id_seq'), primary_key=True)		
 	order_id = db.Column(db.ForeignKey(u'ps_order.id'), nullable=False)
 	payload = db.Column(db.Text, nullable=False, server_default=' ', default=' ')	
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
@@ -569,7 +585,7 @@ class OrderPayload(db.Model, Entity):
 
 class OrderPulsaMessageMapping(db.Model, Entity):
 	__tablename__ = 'ps_order_message_mapping'	
-	id = db.Column(db.BigInteger, db.Sequence('ps_order_detail_id_seq'), primary_key=True)			
+	id = db.Column(db.BigInteger, db.Sequence('ps_order_message_mapping_id_seq'), primary_key=True)			
 	partner_id = db.Column(db.ForeignKey(u'ps_partner.id'), index=True, nullable=False)	
 	partner_message = db.Column(db.Text, nullable=False, server_default=' ', default=' ')
 	layani_message = db.Column(db.Text, nullable=False, server_default=' ', default=' ')

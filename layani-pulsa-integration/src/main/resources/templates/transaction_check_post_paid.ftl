@@ -1,0 +1,1 @@
+${product.name}, ${postPaid.customerName} adalah Rp${postPaid.billAmount}. Admin Rp${postPaid.admCost}

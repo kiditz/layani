@@ -7,6 +7,7 @@ public class ServiceConstant {
     public static final String ADD_DEPOSIT = "add.deposit";
     public static final String FAIL = "F";
     public static final String IN_PROGRESS = "I";
+    public static final String CHECK_POST_PAID = "C";
     public static final String SUCCESS = "S";
     
     //Deposit Remark

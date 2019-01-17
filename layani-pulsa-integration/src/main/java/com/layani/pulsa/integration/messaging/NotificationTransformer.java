@@ -30,7 +30,7 @@ public class NotificationTransformer implements ActivatorMessageString {
     @Override
     public Message<Domain> execute(Message<String> message){
         Domain payload = new Domain(message.getPayload());
-        log.debug("Input : {}", payload);
+        //log.debug("Input : {}", payload);
         Domain notificationDomain = findNotification.handle(payload).getDomain("notification");
         Domain tokenDomain = findNotificationToken.handle(notificationDomain).getDomain("notificationToken");
         Domain transform = new Domain();

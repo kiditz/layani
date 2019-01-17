@@ -32,12 +32,18 @@ public class TransactionResult {
         return MessageBuilder.withPayload(payload).build();
     }
 
+    public static Message<Domain> checkPostPaid(Domain payload){
+        payload.put("status", Constant.TransactionStatus.CHECK_POST_PAID);
+        payload.put("remark", Constant.NotificationValue.TRX_CHECK_POST_PAID);
+        return MessageBuilder.withPayload(payload).build();
+    }
+
     public static String getSerialNumber(String note){
         Pattern pattern = Pattern.compile("(SN):(.*)");
         Matcher matcher = pattern.matcher(note);
         if(matcher.find()){
             return matcher.group(2);
         }
-        return StringUtils.EMPTY;
+        return note;
     }
 }

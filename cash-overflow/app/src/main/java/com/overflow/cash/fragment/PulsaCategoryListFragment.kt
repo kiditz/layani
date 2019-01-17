@@ -51,7 +51,7 @@ class PulsaCategoryListFragment : BaseFragment(), LoadPulsaCategoryContract.View
                     || it.getString("name").equals("Pulsa Transfer", ignoreCase = true)) {
                 adapter.addFragment(PulsaPaketProductListFragment.newInstance(it.toString()), it.getString("name"))
             }else if (it.getString("name").equals("Voucher Game", ignoreCase = true)) {
-                adapter.addFragment(PulsaProductsByProviderListFragment.newInstance(it.toString(), getString(R.string.customer_no), false), it.getString("name"))
+                adapter.addFragment(PulsaProductsByProviderListFragment.newInstance(it.toString(), getString(R.string.customer_no)), it.getString("name"))
             }else if (it.getString("name").equals("Saldo Gojek", ignoreCase = true)) {
                 adapter.addFragment(PulsaProductsByProviderListFragment.newInstance(it.toString(), getString(R.string.phone_number_gojek)), it.getString("name"))
             }else if (it.getString("name").equals("Saldo Grab", ignoreCase = true)) {
