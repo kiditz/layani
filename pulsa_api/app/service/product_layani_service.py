@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from entity.models import ProductLayani, ProviderPrefix, ProductLayaniSellPrice, Provider, CategoryLayani
+from entity.models import ProductLayani, ProviderPrefix, ProductLayaniSellPrice, Provider, CategoryLayani, ProviderImage
 from slerp.logger import logging
 from slerp.validator import Key, Number, Blank
 from sqlalchemy import and_, between
@@ -33,7 +33,8 @@ class ProductLayaniService(object):
 			ProductLayani.name,
 			ProductLayani.nominal,
 			ProductLayaniSellPrice.sell_price,
-			Provider.name.label('provider')
+			Provider.name.label('provider'),
+			
 		)
 		if provider_prefix is not None:
 			product_layani_q = ProductLayani.query.with_entities(*entities)\
@@ -87,7 +88,8 @@ class ProductLayaniService(object):
 			ProductLayani.name,
 			ProductLayani.nominal,
 			ProductLayaniSellPrice.sell_price,
-			Provider.name.label('provider')
+			Provider.name.label('provider'),
+			Provider.id.labe('provider_id')
 		)
 		product_layani_q = ProductLayani.query.with_entities(*entities) \
 			.join(ProductLayaniSellPrice, and_(ProductLayaniSellPrice.product_id == ProductLayani.id,
