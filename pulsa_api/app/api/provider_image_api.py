@@ -32,7 +32,7 @@ def add_provider_image():
 	if 'file' not in request.files:
 		raise ValidationException(ErrorCode.FILE_NOT_FOUND)
 	upload_folder = app.config['UPLOAD_FOLDER']
-	#data = request.form.to_dict()
+	data = request.form.to_dict()
 	user_dir = 'provider'
 	directory = os.path.join(os.path.dirname(upload_folder), user_dir)
 	if not os.path.exists(directory):
@@ -47,7 +47,8 @@ def add_provider_image():
 		'filename': filename,
 		'folder': directory,
 		'mimetype': mimetype,
-		'original_filename': original_filename
+		'original_filename': original_filename,
+		'provider_id': data["provider_id"]
 	}
 	final_file_path = os.path.join(directory, filename)
 	file.save(final_file_path)
