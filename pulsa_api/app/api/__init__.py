@@ -1,3 +1,4 @@
 from .order_pulsa_api import order_pulsa_api_blue_print
 from .health_api import health_api_blue_print
 from .product_layani_api import product_layani_api_blue_print
+from .provider_image_api import provider_image_api_blue_print
