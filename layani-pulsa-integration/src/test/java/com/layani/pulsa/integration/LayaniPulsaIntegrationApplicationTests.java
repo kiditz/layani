@@ -1,4 +1,4 @@
-package com.layani.pulsa.layanipulsaintegration;
+package com.layani.pulsa.integration;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,9 +9,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class LayaniPulsaIntegrationApplicationTests {
 
-	@Test
-	public void contextLoads() {
-	}
+//	@Test
+//	public void contextLoads() {
+//	}
 
 }
 

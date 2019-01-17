@@ -595,7 +595,24 @@ class OrderPulsaMessageMapping(db.Model, Entity):
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)				
 	
-		
+
+class ProviderImage(db.Model, Entity):
+	__tablename__ = 'ps_provider_image'
+	id = db.Column(db.BigInteger, db.Sequence('ps_provider_image_id_seq'), primary_key=True)
+	filename = db.Column(db.Text, nullable=False)
+	original_filename = db.Column(db.Text, nullable=False, server_default='')
+	thumbnails = db.Column(db.Text)
+	mimetype = db.Column(db.String(60), nullable=False)
+	folder = db.Column(db.Text, nullable=False)	
+	provider_id = db.Column(db.ForeignKey(u'ps_provider.id'), index=True)
+
+	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
+	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)	
+	
+	def __init__(self, obj=None):
+		Entity.__init__(self, obj)
+
+
 product_prefix = db.Table('ps_product_prefix',
     db.Column('provider_prefix_id', db.Integer, db.ForeignKey('ps_provider_prefix.id')),
     db.Column('product_id', db.Integer, db.ForeignKey('ps_product.id'))
