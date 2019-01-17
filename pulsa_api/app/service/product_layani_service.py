@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from entity.models import ProductLayani, ProviderPrefix, ProductLayaniSellPrice, Provider, CategoryLayani, ProviderImage
+from entity.models import ProductLayani, ProviderPrefix, ProductLayaniSellPrice, Provider, CategoryLayani
 from slerp.logger import logging
 from slerp.validator import Key, Number, Blank
 from sqlalchemy import and_, between
