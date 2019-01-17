@@ -22,8 +22,6 @@ class OrderPulsaService(object):
 			order_pulsa = OrderPulsa.query.filter_by(msisdn=domain['msisdn']).filter_by(status='I').first()		
 			if order_pulsa is not None:
 				raise ValidationException('order.still.in.progress')
-
-		
 		if product.code.startswith('LCEK'):			
 			order_pulsa = OrderPulsa(domain)			
 			order_pulsa.sales_type = app.config['post_paid_check']			

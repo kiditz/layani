@@ -96,6 +96,6 @@ class ProductLayaniService(object):
 			.join(Provider, Provider.id == ProductLayani.provider_id)\
 			.filter(ProductLayani.provider_id == provider_id) \
 			.filter(ProductLayani.active == True) \
-			.order_by(ProductLayani.nominal.asc()).paginate(page, size, error_out=False)
+			.order_by(ProductLayani.id.asc(), ProductLayani.nominal.asc()).paginate(page, size, error_out=False)
 		product_layani_list = list(map(lambda x: x._asdict(), product_layani_q.items))
 		return {'payload': product_layani_list, 'total': product_layani_q.total, 'total_pages': product_layani_q.pages}
