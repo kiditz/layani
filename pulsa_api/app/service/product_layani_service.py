@@ -89,7 +89,7 @@ class ProductLayaniService(object):
 			ProductLayani.nominal,
 			ProductLayaniSellPrice.sell_price,
 			Provider.name.label('provider'),
-			Provider.id.labe('provider_id')
+			Provider.id.label('provider_id')
 		)
 		product_layani_q = ProductLayani.query.with_entities(*entities) \
 			.join(ProductLayaniSellPrice, and_(ProductLayaniSellPrice.product_id == ProductLayani.id,
