@@ -34,6 +34,7 @@ class ProductLayaniService(object):
 			ProductLayani.nominal,
 			ProductLayaniSellPrice.sell_price,
 			Provider.name.label('provider'),
+			Provider.id.label('provider_id'),
 			
 		)
 		if provider_prefix is not None:
