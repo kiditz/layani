@@ -52,7 +52,7 @@ def add_provider_image():
 
 
 @api.route('/find', methods=['GET'])
-@cache.cached(timeout=60, query_string=True)
+#@cache.cached(timeout=60, query_string=True)
 def find_document():
 	domain = request.args.to_dict()
 	return provider_image_service.find_provider_image(domain)
