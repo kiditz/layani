@@ -25,7 +25,7 @@ def add_product_layani():
 
 
 @api.route('/products', methods=['GET'])
-@cache.cached(timeout=30)
+@cache.cached(timeout=30, query_string=True)
 def get_product_layani_by_prefix():
     """
     {
@@ -39,7 +39,7 @@ def get_product_layani_by_prefix():
 
 
 @api.route('/categories', methods=['GET'])
-@cache.cached(timeout=30)
+@cache.cached(timeout=30, query_string=True)
 def get_category_layani_by_name():
     """
     {
@@ -49,14 +49,14 @@ def get_category_layani_by_name():
 
 
 @api.route('/providers', methods=['GET'])
-@cache.cached(timeout=30)
+@cache.cached(timeout=30, query_string=True)
 def get_provider():
     domain = request.args.to_dict()
     return product_layani_service.get_provider(domain)
 
 
 @api.route('/products_by_provider', methods=['GET'])
-@cache.cached(timeout=30)
+@cache.cached(timeout=30, query_string=True)
 def get_product_by_provider():
     """
     {
