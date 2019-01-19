@@ -1,11 +1,12 @@
 from flask import Blueprint, request
 from slerp import ValidationException
 from slerp.logger import logging
-from slerp.app import app
+from slerp.app import app, cache
 from service.provider_image_service import ProviderImageService
 from utils.api_constant import ErrorCode
 from datetime import datetime
 from werkzeug.utils import secure_filename
+
 import os
 
 log = logging.getLogger(__name__)
@@ -51,6 +52,7 @@ def add_provider_image():
 
 
 @api.route('/find', methods=['GET'])
+@cache.cached(timeout=60)
 def find_document():
 	domain = request.args.to_dict()
 	return provider_image_service.find_provider_image(domain)

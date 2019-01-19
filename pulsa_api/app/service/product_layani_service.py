@@ -61,7 +61,7 @@ class ProductLayaniService(object):
 		return {'payload': product_layani_list, 'total': product_layani_q.total, 'total_pages': product_layani_q.pages}
 	
 	def get_category_layani(self):
-		category_layani_q = CategoryLayani.query.order_by(CategoryLayani.id.asc()).all()
+		category_layani_q = CategoryLayani.query.order_by(CategoryLayani.name.asc()).all()
 		category_layani_list = list(map(lambda x: x.to_dict(), category_layani_q))
 		return {'payload': category_layani_list}
 	
