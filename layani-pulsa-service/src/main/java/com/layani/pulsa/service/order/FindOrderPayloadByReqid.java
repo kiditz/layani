@@ -22,7 +22,7 @@ public class FindOrderPayloadByReqid extends DefaultBusinessFunction {
 	private OrderPayloadRepository orderPayloadRepository;
 	@Override
 	public Domain handle(Domain orderPayloadDomain) {
-		Page<OrderPayload> orderPayload = orderPayloadRepository.findOrderPayloadByReqid(orderPayloadDomain.getString("reqid"), PageRequest.of(0, 1, Sort.Direction.ASC));
+		Page<OrderPayload> orderPayload = orderPayloadRepository.findOrderPayloadByReqid(orderPayloadDomain.getString("reqid"), PageRequest.of(0, 1, Sort.Direction.DESC, "id"));
 		return new Domain(orderPayload.getContent().get(0));
 	}
 }
