@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.*;
+import org.springframework.kafka.listener.AbstractMessageListenerContainer;
 import org.springframework.kafka.listener.KafkaMessageListenerContainer;
 import org.springframework.kafka.listener.config.ContainerProperties;
 import org.springframework.kafka.support.TopicPartitionInitialOffset;
@@ -39,18 +40,24 @@ public class KafkaConfiguration {
     @Bean
     KafkaMessageListenerContainer<String, String> transactionContainer() {
         ContainerProperties properties = new ContainerProperties(orderPulsa);
+        properties.setAckMode(AbstractMessageListenerContainer.AckMode.RECORD);
+        properties.setAckOnError(true);
         return new KafkaMessageListenerContainer<>(consumerFactory(), properties);
     }
 
     @Bean
     KafkaMessageListenerContainer<String, String> postPaidCheckContainer() {
         ContainerProperties properties = new ContainerProperties(this.postPaidCheck);
+        properties.setAckMode(AbstractMessageListenerContainer.AckMode.RECORD);
+        properties.setAckOnError(true);
         return new KafkaMessageListenerContainer<>(consumerFactory(), properties);
     }
 
     @Bean
     KafkaMessageListenerContainer<String, String> postPaidPayContainer() {
         ContainerProperties properties = new ContainerProperties(this.postPaidPay);
+        properties.setAckMode(AbstractMessageListenerContainer.AckMode.RECORD);
+        properties.setAckOnError(true);
         return new KafkaMessageListenerContainer<>(consumerFactory(), properties);
     }
 
