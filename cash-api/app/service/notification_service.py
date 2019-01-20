@@ -11,7 +11,10 @@ class NotificationService(object):
 	
 	@Key(['client_id', 'user_id', 'token'])
 	def add_notification_token(self, domain):
-		notification_token = NotificationToken.query.filter(NotificationToken.user_id == domain['user_id']).first()
+		notification_token = NotificationToken.query\
+			.filter(NotificationToken.user_id == domain['user_id'])\
+			.filter(NotificationToken.token == domain['token'])\
+			.first()
 		if notification_token is None:
 			notification_token = NotificationToken(domain)
 			notification_token.save()
