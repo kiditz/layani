@@ -48,7 +48,7 @@ class OrderPulsaService(object):
 			'msisdn': order_pulsa.msisdn,
 			'order_at': millis,
 			'user_id': order_pulsa.user_id,
-			'created_at': order_pulsa.created_at
+			'created_at': millis
 		}
 		if product.code.startswith('LCEK'):
 			send_message(app.config['post_paid_check'], order_pulsa_dict)
