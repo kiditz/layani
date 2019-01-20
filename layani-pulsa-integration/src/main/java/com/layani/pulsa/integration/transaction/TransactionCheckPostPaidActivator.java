@@ -35,8 +35,12 @@ public class TransactionCheckPostPaidActivator implements ActivatorMessageDomain
         payload.put("reqid", order.getString("reqid"));
         payload.put("remark", localization.getMessage(payload.getString("remark")));
         //Change Format Date for message
-        String formatDatetime = format.format(new Date(payload.getLong("createdAt")));
-        payload.put("createdAt", formatDatetime);
+        try {
+            String formatDatetime = format.format(new Date(payload.getLong("createdAt")));
+            payload.put("createdAt", formatDatetime);
+        }catch (Exception e){
+            payload.put("createdAt", format.format(new Date()));
+        }
         String messageNotification  = template.build("transaction_check_post_paid", payload);
         log.debug("Mesage Nontification : {}", messageNotification);
         Domain notification = new Domain();
