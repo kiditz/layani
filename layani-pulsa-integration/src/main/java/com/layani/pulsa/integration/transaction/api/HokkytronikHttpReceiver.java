@@ -109,6 +109,7 @@ public class HokkytronikHttpReceiver {
         inputPostPaid.put("postPaidAmount", postPaidAmount);
         inputPostPaid.put("postPaidMonth", postPaidMonth);
         inputPostPaid.put("billAmount", postPaidAmount - (admCost * numOfTrx));
+        inputPostPaid.put("id", payload.getLong("id"));
         orderPayload.put("postPaid", inputPostPaid);
         return TransactionResult.checkPostPaid(orderPayload);
     }
