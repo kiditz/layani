@@ -8,6 +8,6 @@ import retrofit2.http.POST
 
 interface NotificationService {
     @Headers("Content-Type:application/json")
-    @POST("/cash/notification/add")
+    @POST("/cash/notification/token/add")
     fun saveToken(@Body input: Data): Single<Data>
 }

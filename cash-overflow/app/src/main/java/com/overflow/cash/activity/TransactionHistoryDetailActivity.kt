@@ -192,7 +192,7 @@ class TransactionHistoryDetailActivity : BaseActivity(), HasSupportFragmentInjec
     override fun showEmpty() {
         showProgress(false)
         //toast(order.getString("description")).show()
-        showMessage(order.getString("description"))
+        showBlankMessage(order.getString("description"))
     }
 
     override fun showNotConnected(res: String) {

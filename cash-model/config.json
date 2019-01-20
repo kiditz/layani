@@ -1,9 +1,9 @@
 {
   "name":"cash-api",
   "interval":"20s",
-  "httpcheck": "http://ip-172-31-23-143.ap-southeast-1.compute.internal:5004/health",
+  "httpcheck": "http://ip-172-31-23-143.ap-southeast-1.compute.internal:5003/health",
   "namespace": "config/cash-api,dev/data",
   "log_file":"pulsa-api.log",
   "address": "ip-172-31-23-143.ap-southeast-1.compute.internal",
-  "port":5004
+  "port":5003
 }

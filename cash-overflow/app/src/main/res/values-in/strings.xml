@@ -190,4 +190,11 @@
     <string name="no_meter">No Meter</string>
     <string name="customer_no">No Pengguna</string>
     <string name="please_choose_product">Mohon untuk memilih produk, sebelum melakukan pembelian.</string>
+    <string name="check_payment">Cek Tagihan</string>
+    <string name="pay_the_payment">Bayar Tagihan</string>
+    <string name="pay_zero">Bayar Rp0</string>
+    <string name="invalid_no_meter">No meter tidak valid</string>
+    <string name="adm_cost">Biaya Admin</string>
+    <string name="payment_in_progress">Pembayaran Sedang di proses, kami akan mengirimkan anda notifikasi untuk hasil pembayaran anda</string>
 </resources>
+

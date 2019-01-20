@@ -101,19 +101,19 @@ class CustomerChooserActivity : BaseActivity(), LoadCustomerContract.View {
     }
 
     override fun showNoOk(res: String) {
-        showMessage(res, "")
+        showBlankMessage(res, "")
     }
 
     override fun showEmpty() {
-        showMessage(getString(R.string.no_customer_title), "")
+        showBlankMessage(getString(R.string.no_customer_title), "")
     }
 
     override fun showNotConnected(res: String) {
-        showMessage(res)
+        showBlankMessage(res)
     }
 
-    override fun showMessage(title: String, message: String) {
-        super.showMessage(title, message)
+    override fun showBlankMessage(title: String, message: String) {
+        super.showBlankMessage(title, message)
         refresh?.isRefreshing = false
     }
 

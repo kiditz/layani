@@ -6,6 +6,7 @@ import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.module.AppGlideModule
 import com.bumptech.glide.request.RequestOptions
+import com.overflow.cash.BuildConfig
 import com.overflow.cash.R
 
 
@@ -13,7 +14,9 @@ import com.overflow.cash.R
 class DefaultGlideModule : AppGlideModule(){
     override fun applyOptions(context: Context, builder: GlideBuilder) {
         super.applyOptions(context, builder)
-        builder.setLogLevel(Log.DEBUG)
+        if(BuildConfig.DEBUG){
+            builder.setLogLevel(Log.DEBUG)
+        }
         builder.setDefaultRequestOptions(RequestOptions())
     }
 }

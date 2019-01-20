@@ -118,6 +118,16 @@
         <activity android:name=".activity.SaveCashHistoryActivity"
             android:label="@string/manage_cash" />
 
+        <activity android:name=".activity.pulsa.CheckPaymentActivity"
+            android:label="@string/check_payment" />
+        <activity android:name=".activity.pulsa.PayThePaymentActivity" android:parentActivityName=".activity.MenuActivity"
+            android:label="@string/pay_the_payment">
+            <intent-filter>
+                <action android:name="CEK_TAGIHAN" />
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
         <service
             android:name=".fcm.LayaniFirebaseMessagingService"
             android:stopWithTask="false">

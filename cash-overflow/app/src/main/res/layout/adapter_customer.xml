@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
     android:focusable="true"
     android:clickable="true"
     android:background="?selectableItemBackground"
@@ -21,10 +20,10 @@
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
             android:maxWidth="120dp"
+            android:textColor="@android:color/black"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black"
-             />
+            tools:text="Rifky aditya Bastara" />
 
         <TextView
             android:id="@+id/tvPhoneNumber"
@@ -34,7 +33,7 @@
             android:maxWidth="120dp"
             android:textSize="12sp"
             android:textStyle="italic"
-            android:visibility="gone"
+            android:visibility="visible"
             tools:text="+6285847452017" />
 
         <TextView
@@ -44,7 +43,7 @@
             android:fontFamily="sans-serif"
             android:maxWidth="120dp"
             android:textSize="12sp"
-            android:visibility="gone"
+            android:visibility="visible"
             tools:text="kiditzbastara@gmail.com" />
     </LinearLayout>
     <include layout="@layout/line_vert" />

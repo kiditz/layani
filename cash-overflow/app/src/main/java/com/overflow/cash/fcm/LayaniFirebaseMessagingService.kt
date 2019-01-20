@@ -1,19 +1,26 @@
 package com.overflow.cash.fcm
 
+import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.media.AudioAttributes
 import android.media.RingtoneManager
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
+import android.support.v4.app.TaskStackBuilder
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.overflow.cash.R
+import com.overflow.cash.activity.MenuActivity
+import com.overflow.cash.activity.pulsa.PayThePaymentActivity
 import com.overflow.cash.mvp.menu.FirebaseTokenContract
 import com.overflow.cash.mvp.menu.FirebaseTokenPresenter
+import com.overflow.cash.utils.toast
 import com.overflow.libs.core.Data
 import dagger.android.AndroidInjection
 import timber.log.Timber
@@ -37,16 +44,38 @@ class LayaniFirebaseMessagingService : FirebaseMessagingService(), FirebaseToken
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             setupChannels(notificationManager)
         }
+
         val notificationId = Random().nextInt(60000)
-        Timber.i("Message:  %s", remoteMessage!!.data.toString())
+        Timber.i("Message:  %s", remoteMessage!!.data)
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+        val title = remoteMessage.notification!!.title
         val notificationBuilder = NotificationCompat.Builder(this, getString(R.string.notification_channel))
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(remoteMessage.notification?.title)
+                .setContentTitle(title)
                 .setContentText(remoteMessage.notification?.body)
                 .setTicker(remoteMessage.notification?.body)
-                .setAutoCancel(true)
+                .setAutoCancel(false)
+                .setStyle(NotificationCompat.BigTextStyle()
+                        .bigText(remoteMessage.notification?.body))
                 .setSound(defaultSoundUri)
+        // Show pending intent for do payment if the
+        if(title.equals("Cek Tagihan", true)){
+//            val notifyIntent = Intent(this, PayThePaymentActivity::class.java).apply {
+//                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+//            }
+
+            val notifyIntent = Intent(title!!.replace(" ", "_").toUpperCase())
+            //val parentIntent = Intent(this, MenuActivity::class.java)
+            val data = Data(remoteMessage.data)
+            Timber.i("Message : %s", data.toString())
+            notifyIntent.putExtras(data.toBundle())
+            val notifyPendingIntent = TaskStackBuilder.create(this).run {
+                addNextIntentWithParentStack(notifyIntent)
+                getPendingIntent(notificationId, PendingIntent.FLAG_CANCEL_CURRENT)
+            }
+            notificationBuilder.setContentIntent(notifyPendingIntent)
+        }
+
         notificationManager.notify(notificationId, notificationBuilder.build())
     }
 
@@ -70,25 +99,32 @@ class LayaniFirebaseMessagingService : FirebaseMessagingService(), FirebaseToken
 
     override fun onNewToken(s: String?) {
         super.onNewToken(s)
+
         s?.let {
+            applicationContext.toast(it).show()
             this.presenter.saveToken(it)
         }
     }
+
+
 
     override fun onTokenSaved(data: Data) {
         Timber.i("TOKEN DATA : %s", data.toString())
     }
 
     override fun showError(error: Throwable) {
+        Timber.e(error)
     }
 
     override fun showNoOk(res: String) {
+        Timber.e("No ok %s", res)
     }
 
     override fun showEmpty() {
     }
 
     override fun showNotConnected(res: String) {
+        Timber.e("No ok %s", res)
     }
 
 }

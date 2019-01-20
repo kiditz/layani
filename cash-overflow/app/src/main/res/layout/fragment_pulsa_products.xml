@@ -21,19 +21,39 @@
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:background="@color/colorPrimary"
             android:visibility="gone"/>
-        <EditText
-            android:id="@+id/ed_phone_number"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <LinearLayout
             android:layout_margin="@dimen/small_margin"
+            android:padding="@dimen/small_margin"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:background="@color/textLight"
-            android:drawableLeft="@drawable/ic_smartphone"
-            android:drawableStart="@drawable/ic_smartphone"
-            android:drawableTint="@color/colorAccent"
-            android:hint="@string/phone_number"
-            android:inputType="number"
-            android:maxLines="1"
-            android:padding="5dp" />
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical"
+                android:tint="@color/colorAccent"
+                android:src="@drawable/ic_smartphone"/>
+            <EditText
+                android:id="@+id/ed_phone_number"
+                android:layout_width="0dp"
+                android:background="@color/textLight"
+                android:layout_height="wrap_content"
+                android:hint="@string/phone_number"
+                android:inputType="phone"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:padding="5dp"
+                android:layout_weight="1"/>
+
+            <ImageView
+                android:id="@+id/provider_image"
+                android:layout_width="80dp"
+                android:maxWidth="100dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical"
+                android:visibility="gone" />
+        </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler"
@@ -50,14 +70,12 @@
             android:layout_weight=".12"
             android:background="@android:color/white"
             android:orientation="horizontal">
-
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
-
                 <TextView
                     android:id="@+id/tv_total_sell_price"
                     android:layout_width="wrap_content"
@@ -65,7 +83,7 @@
                     android:background="@drawable/bg_promo"
                     android:gravity="center_vertical"
                     android:padding="@dimen/small_margin"
-                    android:text="Bayar Rp10.000"
+                    android:text="@string/pay_zero"
                     android:textColor="@color/textLight"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -84,5 +102,4 @@
                 android:textSize="@dimen/text_size_extra_medium" />
         </LinearLayout>
     </LinearLayout>
-    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 </RelativeLayout>

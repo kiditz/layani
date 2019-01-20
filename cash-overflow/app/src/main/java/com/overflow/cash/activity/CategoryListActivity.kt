@@ -101,7 +101,7 @@ class CategoryListActivity : BaseActivity(), LoadCategoryContract.View, EditCate
     }
 
     override fun showNoOk(res: String) {
-        showMessage(res, "")
+        showBlankMessage(res, "")
         refresh?.isRefreshing = false
     }
 
@@ -114,7 +114,7 @@ class CategoryListActivity : BaseActivity(), LoadCategoryContract.View, EditCate
 
     override fun showNotConnected(res: String) {
         refresh?.isRefreshing = false
-        showMessage(getString(R.string.no_internet))
+        showBlankMessage(getString(R.string.no_internet))
     }
 
     override fun onCategoryLoaded(categoryList: List<Data>) {
@@ -127,8 +127,8 @@ class CategoryListActivity : BaseActivity(), LoadCategoryContract.View, EditCate
         adapter.addValues(categoryList)
     }
 
-    override fun showMessage(title: String, message: String) {
-        super.showMessage(title, message)
+    override fun showBlankMessage(title: String, message: String) {
+        super.showBlankMessage(title, message)
         recycler?.visibility = View.GONE
     }
 

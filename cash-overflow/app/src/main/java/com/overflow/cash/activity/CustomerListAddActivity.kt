@@ -112,11 +112,11 @@ class CustomerListAddActivity : BaseActivity(), LoadCustomerContract.View, EditC
     }
 
     override fun showError(error: Throwable) {
-        showMessage(getString(R.string.system_err))
+        showBlankMessage(getString(R.string.system_err))
     }
 
     override fun showNoOk(res: String) {
-        showMessage(res)
+        showBlankMessage(res)
     }
 
     override fun showEmpty() {
@@ -134,7 +134,7 @@ class CustomerListAddActivity : BaseActivity(), LoadCustomerContract.View, EditC
 
 
     override fun showNotConnected(res: String) {
-        showMessage(res)
+        showBlankMessage(res)
     }
 
 
@@ -150,8 +150,8 @@ class CustomerListAddActivity : BaseActivity(), LoadCustomerContract.View, EditC
     /**
      * Set isRefreshing to false when message show up
      * */
-    override fun showMessage(title: String, message: String) {
-        super.showMessage(title, message)
+    override fun showBlankMessage(title: String, message: String) {
+        super.showBlankMessage(title, message)
         refresh?.isRefreshing = false
 
     }

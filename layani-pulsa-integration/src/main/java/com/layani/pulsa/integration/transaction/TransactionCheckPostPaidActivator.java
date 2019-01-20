@@ -47,7 +47,6 @@ public class TransactionCheckPostPaidActivator implements ActivatorMessageDomain
         notification.put("title", localization.getMessage(Constant.NotificationValue.TRX_CHECK_POST_PAID));
         notification.put("body", messageNotification);
         notification.put("userId", order.getLong("userId"));
-
         Domain result =  new Domain();
         result.put("notification", notification);
         Domain postPaid = payload.getDomain("postPaid");

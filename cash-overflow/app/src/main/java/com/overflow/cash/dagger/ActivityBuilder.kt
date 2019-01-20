@@ -3,8 +3,11 @@ package com.overflow.cash.dagger
 import com.overflow.cash.account.AccountAuthenticatorService
 import com.overflow.cash.account.AccountSyncAdapterService
 import com.overflow.cash.activity.*
+import com.overflow.cash.activity.pulsa.CheckPaymentActivity
+import com.overflow.cash.activity.pulsa.PayThePaymentActivity
 import com.overflow.cash.fcm.LayaniFirebaseMessagingService
 import com.overflow.cash.fragment.*
+import com.overflow.cash.fragment.pulsa.*
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -59,7 +62,10 @@ abstract class ActivityBuilder {
 
     @ContributesAndroidInjector
     internal abstract fun bindSaveCashHistoryActivity(): SaveCashHistoryActivity
-
+    @ContributesAndroidInjector
+    internal abstract fun bindCheckPaymentActivity(): CheckPaymentActivity
+    @ContributesAndroidInjector
+    internal abstract fun bindPayThePaymentActivity(): PayThePaymentActivity
     //Fragment
     @ContributesAndroidInjector
     internal abstract fun bindProductListFragment(): ProductListFragment
@@ -72,13 +78,21 @@ abstract class ActivityBuilder {
 
     @ContributesAndroidInjector
     internal abstract fun bindPulsaCategoryListFragment(): PulsaCategoryListFragment
+
+    @ContributesAndroidInjector
+    internal abstract fun bindPulsaCheckPaymentFragment(): PulsaCheckPaymentFragment
+
     @ContributesAndroidInjector
     internal abstract fun bindPulsaProductListFragment(): PulsaProductListFragment
 
     @ContributesAndroidInjector
     internal abstract fun bindPulsaPaketProductListFragment(): PulsaPaketProductListFragment
+
     @ContributesAndroidInjector
-    internal abstract fun bindPulsaProductsByProviderListFragment(): PulsaProductsByProviderListFragment
+    internal abstract fun bindPulsaProductsByProviderListFragment(): PulsaProductListByProviderFragment
+
+    @ContributesAndroidInjector
+    internal abstract fun bindPulsaProviderPaymentFragment(): PulsaProviderPaymentFragment
 
     @ContributesAndroidInjector
     internal abstract fun bindSalesFragment(): SalesFragment
@@ -136,6 +150,7 @@ abstract class ActivityBuilder {
 
     @ContributesAndroidInjector
     internal abstract fun bindCashboxHistoryDispatcherActivity(): CashboxHistoryDispatcherActivity
+
     @ContributesAndroidInjector
     internal abstract fun bindCashboxHistoryReceiptActivity(): CashboxHistoryReceiptActivity
 

@@ -26,6 +26,7 @@ import com.overflow.cash.net.ImageService
 import com.overflow.cash.net.RxUtils
 import com.overflow.cash.utils.replaceContent
 import com.overflow.cash.utils.snack
+import com.overflow.cash.utils.toast
 import com.overflow.libs.core.Data
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
@@ -107,8 +108,14 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             onNavigationItemSelected(nav_view.menu.findItem(R.id.nav_new_transaction))
         }
         // Saving firebase token
+        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener {
+            val token = it.result!!.token
+            //toast(token).show()
+            presenter.saveToken(token)
+        }
         FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
             val token = it.token
+            //toast(token).show()
             presenter.saveToken(token)
         }
     }
@@ -206,7 +213,7 @@ class MenuActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun showError(error: Throwable) {
-
+        Timber.e(error)
     }
 
 

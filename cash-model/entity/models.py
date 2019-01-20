@@ -537,7 +537,7 @@ class OrderPulsa(db.Model, Entity):
 	user_id = db.Column(db.ForeignKey(u'co_user.id'), index=True)
 	created_at = db.Column(db.DateTime(timezone=False), default=datetime.now)
 	update_at = db.Column(db.DateTime(timezone=False), onupdate=datetime.now)		
-	__table_args__ = (db.UniqueConstraint('msisdn', 'reqid', name='ps_order_msisdn_reqid_unique_key'),)	
+	#__table_args__ = (db.UniqueConstraint('msisdn', 'reqid', name='ps_order_msisdn_reqid_unique_key'),)	
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)		
 
@@ -595,7 +595,7 @@ class OrderPulsaMessageMapping(db.Model, Entity):
 	def __init__(self, obj=None):
 		Entity.__init__(self, obj)				
 	
-
+		
 class ProviderImage(db.Model, Entity):
 	__tablename__ = 'ps_provider_image'
 	id = db.Column(db.BigInteger, db.Sequence('ps_provider_image_id_seq'), primary_key=True)

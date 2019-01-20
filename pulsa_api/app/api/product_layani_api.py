@@ -66,4 +66,4 @@ def get_product_by_provider():
     }
     """
     domain = request.args.to_dict()
-    return product_layani_service.get_product_by_provider(domain)
+    return product_layani_service.get_product_by_provider(domain)    

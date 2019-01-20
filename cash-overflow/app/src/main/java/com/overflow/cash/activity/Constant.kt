@@ -195,4 +195,11 @@ class Constant {
         }
     }
 
+    interface PaymentPrefix{
+        companion object {
+            const val CHECK = "LCEK"
+            const val PAYMENT = "LBYR"
+        }
+    }
+
 }

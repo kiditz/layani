@@ -7,6 +7,8 @@ import android.widget.TextView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.overflow.cash.R
 import io.reactivex.Observable
+import io.reactivex.Scheduler
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
 fun Context.validateNotEmpty(textView: TextView, textInputLayout: TextInputLayout, message:String="", resId:Int= R.style.AppTheme_TextInputLayout_ErrorRed, skipCount:Long=1L):Observable<Boolean>{
@@ -66,7 +68,7 @@ fun Context.validateLessThan(textView: TextView, textInputLayout: TextInputLayou
 }
 
 fun Context.validateLengthLessThan(textView: TextView, textInputLayout: TextInputLayout, value:Int=0, message:String="", resId:Int= R.style.AppTheme_TextInputLayout_ErrorRed, skipCount:Long=1L):Observable<Boolean>{
-    var emptyObserve = RxTextView.textChanges(textView).skip(skipCount).map { text -> text.length < value}
+    val emptyObserve = RxTextView.textChanges(textView).skip(skipCount).map { text -> text.length < value}
     emptyObserve.subscribe ({ valid ->
         textInputLayout.error = message
         textInputLayout.isErrorEnabled = !valid
@@ -74,6 +76,7 @@ fun Context.validateLengthLessThan(textView: TextView, textInputLayout: TextInpu
     }, {
         Timber.e(it)
     })
+
     return emptyObserve
 }
 
