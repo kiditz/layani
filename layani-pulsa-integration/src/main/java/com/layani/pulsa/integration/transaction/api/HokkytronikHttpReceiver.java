@@ -88,7 +88,7 @@ public class HokkytronikHttpReceiver {
             log.error("CoreException : {}", e.getMessage());
             return TransactionResult.progress(new Domain());
         } catch (Exception e) {
-            log.error("Exception : {}", e.getMessage());
+            log.error("Exception : {}", e);
             return TransactionResult.progress(new Domain());
         }
     }
