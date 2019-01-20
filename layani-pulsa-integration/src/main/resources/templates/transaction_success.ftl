@@ -1,1 +1,1 @@
-Trx ${reqid} ${product.code} ke no ${msisdn} tgl ${createdAt} Sukses <#if sn?has_content>SN: ${(sn)!""}</#if>. Sisa Saldo: Rp${deposit.after}
+Trx ${reqid} ${product.code} ke no ${msisdn} tgl ${createdAt} Sukses <#if sn?has_content>SN: ${(sn)!""}</#if>. Sisa Saldo: Rp${deposit.after} <#if cashBack>Diskon : ${(cashback)!""}</#if>

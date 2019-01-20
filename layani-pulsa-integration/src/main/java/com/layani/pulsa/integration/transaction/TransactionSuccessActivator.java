@@ -47,7 +47,9 @@ public class TransactionSuccessActivator implements ActivatorMessageDomain {
         notification.put("title", localization.getMessage(Constant.NotificationValue.TRX_SUCCESS));
         notification.put("body", messageNotification);
         notification.put("userId", order.getLong("userId"));
+
         payload.put("notification", notification);
+
         return MessageBuilder.withPayload(payload).build();
     }
 }

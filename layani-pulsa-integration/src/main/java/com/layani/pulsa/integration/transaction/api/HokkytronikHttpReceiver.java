@@ -62,7 +62,7 @@ public class HokkytronikHttpReceiver {
                 throw new CoreException(ErrorConstant.ORDER_IS_NOT_IN_PROGRESS);
             }
             //PPOB Check
-            if (payload.getString("kode_produk").startsWith("HC")) {
+            if (payload.getString("kode_produk").startsWith("HCEK")) {
                 return buildMessageForCheck(orderPayload, payload);
             }
 

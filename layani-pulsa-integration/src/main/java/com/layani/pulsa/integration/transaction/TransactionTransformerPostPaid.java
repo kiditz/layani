@@ -3,7 +3,6 @@ package com.layani.pulsa.integration.transaction;
 import com.layani.pulsa.integration.utils.Constant;
 import com.layani.pulsa.integration.utils.DomainUtils;
 import com.layani.pulsa.service.constant.ErrorConstant;
-import com.layani.pulsa.service.order.IsProductPurchasePriceExistByProductId;
 import org.apache.commons.lang.StringUtils;
 import org.slerp.core.Domain;
 import org.slerp.core.business.BusinessFunction;
@@ -61,18 +60,22 @@ public class TransactionTransformerPostPaid implements ActivatorMessageString {
         Long numOfTrx = postPaid.getLong("numOfTrx");
         Double billAmount = postPaid.getBigDecimal("billAmount").doubleValue();
         Double postPaidAmount = postPaid.getBigDecimal("postPaidAmount").doubleValue();
+
         Double purchasePriceValue = productPurchasePrice.getBigDecimal("purchasePrice").doubleValue();
         Double sellPriceValue = productSellPrice.getBigDecimal("sellPrice").doubleValue();
+
         log.debug("Post Purchase Price = {} + {} ", postPaidAmount, purchasePriceValue);
         Double calculatePurchasePrice =  postPaidAmount + purchasePriceValue;
         Double calculateSellPrice =  billAmount + (admCost * numOfTrx) + purchasePriceValue + sellPriceValue;
         log.debug("Sell Price = {} + ({} * {}) + {} + {}", billAmount, admCost, numOfTrx, purchasePriceValue, sellPriceValue);
+        Double cashBack = (admCost * numOfTrx) - sellPrice;
         input.put("product", productSellPrice.getDomain("productId"));
         input.put("sellPrice", calculateSellPrice);
         input.put("purchasePrice", calculatePurchasePrice);
         input.put("partnerProduct", productPurchasePrice.getDomain("partnerProductId"));
         input.put("partnerProductId", productPurchasePrice.getDomain("partnerProductId").getLong("id"));
         input.put("status", Constant.TransactionStatus.IN_PROGRESS);
+        input.put("cashBack", cashBack);
         log.debug("TransactionResult : {}", input);
         return MessageBuilder.withPayload(input).build();
     }

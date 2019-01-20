@@ -48,7 +48,8 @@ public class TransactionCheckPostPaidActivator implements ActivatorMessageDomain
         notification.put("body", messageNotification);
         notification.put("userId", order.getLong("userId"));
         payload.put("notification", notification);
-        payload.put("data", payload.getDomain("postPaid"));
+        Domain postPaid = payload.getDomain("postPaid");
+        payload.put("data", postPaid);
         return MessageBuilder.withPayload(payload).build();
     }
 }
