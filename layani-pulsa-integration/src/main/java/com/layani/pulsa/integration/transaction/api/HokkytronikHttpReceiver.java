@@ -38,7 +38,7 @@ public class HokkytronikHttpReceiver {
             log.info("Payload : {}", payload);
             Domain inputPayload = new Domain();
             String reqId = payload.getString("idtrx");
-            inputPayload.put("reqid", reqId);
+
             Domain orderPayload;
             try {
                 orderPayload = new Domain(findOrderPayloadByReqid.handle(inputPayload).getString("payload"));
@@ -46,7 +46,7 @@ public class HokkytronikHttpReceiver {
                 log.info("Payload tidak di temukan :{}", inputPayload.toString());
                 return TransactionResult.progress(new Domain());
             }
-
+            orderPayload.put("reqid", reqId);
             orderPayload.put("request", "Callback");
             orderPayload.put("response", payload.toString());
             Domain partnerProduct = orderPayload.getDomain("partnerProduct");
