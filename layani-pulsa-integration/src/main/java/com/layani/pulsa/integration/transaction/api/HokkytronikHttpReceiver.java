@@ -38,7 +38,7 @@ public class HokkytronikHttpReceiver {
             log.info("Payload : {}", payload);
             Domain inputPayload = new Domain();
             String reqId = payload.getString("idtrx");
-
+            inputPayload.put("reqid", reqId);
             Domain orderPayload;
             try {
                 orderPayload = new Domain(findOrderPayloadByReqid.handle(inputPayload).getString("payload"));
@@ -62,7 +62,6 @@ public class HokkytronikHttpReceiver {
             }
             //PPOB Check
 
-
             if (Objects.requireNonNull(payload.getString("status")).equalsIgnoreCase("sukses")) {
                 if (payload.getString("kode_produk").startsWith("HCEK")) {
                     return buildMessageForCheck(orderPayload, payload);
@@ -70,6 +69,7 @@ public class HokkytronikHttpReceiver {
                 if (payload.containsKey("catatan")) {
                     String sn = messageMapping.getSerialNumber(payload.getString("catatan"));
                     log.info("SN:{}", sn);
+
                     orderPayload.put("sn", sn);
                     return TransactionResult.success(orderPayload);
                 } else {
